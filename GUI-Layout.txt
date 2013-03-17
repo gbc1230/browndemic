@@ -1,0 +1,8 @@
+Main Layout: Border Layout
+	North: Information Bar (Horizontal Flow Layout)
+
+	South: Disease Bar (Horizontal Flow Layout)
+		Multiple Grid Layouts for each category of upgrades.
+		Additional Information/Chat
+
+	Content: Custom JComponent
