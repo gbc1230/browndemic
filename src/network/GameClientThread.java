@@ -13,17 +13,26 @@ import java.io.*;
  */
 public class GameClientThread extends Thread{
 
+    //the socket this thread runs on
     private Socket _socket;
+    //the client this thread is running for
     private GameClient _client;
+    //the input to this thread
     private DataInputStream _input;
-    
+
+    //constructor
     public GameClientThread(GameClient client, Socket socket) throws IOException{
         _client = client;
+        System.out.println(socket);
         _socket = socket;
-        _input = new DataInputStream(socket.getInputStream());
+        _input = new DataInputStream(_socket.getInputStream());
         start();
     }
 
+    /**
+     * Close down this thread
+     * @throws java.io.IOException
+     */
     public void close() throws IOException{
         _input.close();
     }
@@ -32,7 +41,11 @@ public class GameClientThread extends Thread{
     public void run(){
         while (true){
             try{
-                _client.handle(_input.readUTF());
+                System.out.println("aww shit");
+                String input = _input.readUTF();
+                System.out.println("got " + input);
+                _client.handle(input);
+                System.out.println("sent " + input);
             }
             catch(IOException e){
                 _client.stop();

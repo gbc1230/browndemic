@@ -15,11 +15,16 @@ import java.util.ArrayList;
  */
 public class GameServer implements Runnable{
 
+    //one thread per client
     private List<GameServerThread> _clients;
+    //the socket this server runs on
     private ServerSocket _server;
+    //the thread this server runs on
     private Thread _thread;
+    //whether or not this thread is running
     private boolean _threadOn;
 
+    // constructor
     public GameServer(int port){
         try{
             System.out.println("Binding to " + port);
@@ -34,6 +39,7 @@ public class GameServer implements Runnable{
         }
     }
 
+    @Override
     public void run(){
         while (_threadOn){
             try{
@@ -49,6 +55,11 @@ public class GameServer implements Runnable{
         }
     }
 
+    /**
+     * Given a client's ID, find its location in the list
+     * @param ID The ID to search
+     * @return The client's position in the list
+     */
     public int findClient(int ID){
         for (int i = 0; i < _clients.size(); i++){
             if (_clients.get(i).getID() == ID)
@@ -57,18 +68,30 @@ public class GameServer implements Runnable{
         return -1;
     }
 
+    /**
+     * Given a message from a client, handle it
+     * @param ID The ID of the client
+     * @param input The message being sent
+     * @throws java.io.IOException
+     */
     public synchronized void handle(int ID, String input) throws IOException{
         if (input.equals("EXIT")){
             _clients.get(findClient(ID)).sendMessage("EXIT");
             remove(ID);
         }
         else{
+            System.out.println("got here");
             for (int i = 0; i < _clients.size(); i++){
                 _clients.get(i).sendMessage(input);
             }
         }
     }
 
+    /**
+     * Remove a client from our list of clients
+     * @param ID The ID of the client to remove
+     * @throws java.io.IOException
+     */
     public synchronized void remove(int ID) throws IOException{
         int pos = findClient(ID);
         if (pos != -1){
@@ -79,6 +102,11 @@ public class GameServer implements Runnable{
         }
     }
 
+    /**
+     * Add a new thread to our list of threads
+     * @param socket The socket of the thread
+     * @throws java.io.IOException
+     */
     private void addThread(Socket socket) throws IOException{
         GameServerThread temp = new GameServerThread(this, socket);
         temp.open();

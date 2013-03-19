@@ -13,19 +13,25 @@ import java.net.*;
  */
 public class GameClient implements Runnable{
 
+    //the socket this client is at
     private Socket _socket;
+    //the thread this client will run on
     private Thread _thread;
-    private BufferedReader _console;
-    private DataOutputStream _streamOut;
+    //the reader for this file
+    private BufferedReader _input;
+    //writer for this file
+    private DataOutputStream _output;
+    //Thread for this file's communications
     private GameClientThread _client;
 
+    //constructor
     public GameClient(String serverName, int serverPort) throws Exception{
         System.out.println("Connecting...");
         try{
             _socket = new Socket(serverName, serverPort);
             System.out.println("Connected: " + _socket);
-            _console = new BufferedReader(new InputStreamReader(System.in));
-            _streamOut = new DataOutputStream(_socket.getOutputStream());
+            _input = new BufferedReader(new InputStreamReader(System.in));
+            _output = new DataOutputStream(_socket.getOutputStream());
             _client = new GameClientThread(this, _socket);
             _thread = new Thread(this);
             _thread.start();
@@ -38,10 +44,15 @@ public class GameClient implements Runnable{
         }
     }
 
+    @Override
     public void run(){
+        System.out.println("running");
         while(_thread != null){
             try{
-                _streamOut.writeUTF(_console.readLine());
+                String out = _input.readLine();
+                System.out.println("got " + out);
+                _output.writeUTF(out);
+                System.out.println("sent " + out);
             }
             catch(IOException e){
                 System.out.println("ERROR");
@@ -50,14 +61,21 @@ public class GameClient implements Runnable{
         }
     }
 
+    /**
+     * Handle and print an incoming message
+     * @param msg The message
+     */
     public void handle(String msg){
         System.out.println(msg);
     }
 
+    /**
+     * Close down this client
+     */
     public void stop(){
         try{
-            _console.close();
-            _streamOut.close();
+            _input.close();
+            _output.close();
             _socket.close();
             _thread = null;
             _client.close();

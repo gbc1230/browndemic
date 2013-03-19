@@ -13,6 +13,7 @@ import java.io.*;
  */
 public class GameServerThread extends Thread{
 
+    //the 
     private GameServer _server;
     private Socket _socket;
     private int _ID;
@@ -22,13 +23,16 @@ public class GameServerThread extends Thread{
     public GameServerThread(GameServer server, Socket socket){
         super();
         _server = server;
+        System.out.println(socket);
         _socket = socket;
         _ID = _socket.getPort();
     }
 
     public void sendMessage(String msg) throws IOException{
         try{
+            System.out.println("SUP!");
             _output.writeUTF(msg);
+            System.out.println("sent " + msg);
         }
         catch(IOException e){
             System.out.println("ERROR: " + _ID + " couldn't send: " + e.getMessage());
