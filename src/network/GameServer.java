@@ -71,20 +71,15 @@ public class GameServer implements Runnable{
     /**
      * Given a message from a client, handle it
      * @param ID The ID of the client
-     * @param input The message being sent
+     * @param o The object being sent
      * @throws java.io.IOException
      */
-    public synchronized void handle(int ID, String input) throws IOException{
-        if (input.equals("EXIT")){
-            _clients.get(findClient(ID)).sendMessage("EXIT");
-            remove(ID);
-        }
-        else{
-            //System.out.println("got here");
-            for (int i = 0; i < _clients.size(); i++){
-                if (_clients.get(i).getID() != ID)
-                    _clients.get(i).sendMessage(input);
-            }
+    public synchronized void handle(int ID, Object o) throws IOException, ClassNotFoundException{
+        TestWorld test = (TestWorld)o;
+        //System.out.println("got here");
+        for (int i = 0; i < _clients.size(); i++){
+            if (_clients.get(i).getID() != ID)
+                _clients.get(i).sendMessage(test);
         }
     }
 

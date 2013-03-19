@@ -18,14 +18,13 @@ public class GameClientThread extends Thread{
     //the client this thread is running for
     private GameClient _client;
     //the input to this thread
-    private DataInputStream _input;
+    private ObjectInputStream _input;
 
     //constructor
     public GameClientThread(GameClient client, Socket socket) throws IOException{
         _client = client;
         System.out.println(socket);
         _socket = socket;
-        _input = new DataInputStream(_socket.getInputStream());
         start();
     }
 
@@ -39,17 +38,26 @@ public class GameClientThread extends Thread{
 
     @Override
     public void run(){
-        while (true){
-            try{
-                //System.out.println("aww shit");
-                String input = _input.readUTF();
-                //System.out.println("got " + input);
-                _client.handle(input);
-                //System.out.println("sent " + input);
+        try{
+            _input = new ObjectInputStream(_socket.getInputStream());
+            while (true){
+                try{
+                    //System.out.println("aww shit");
+                    TestWorld input = (TestWorld)_input.readObject();
+                    //System.out.println("got " + input);
+                    _client.handle(input);
+                    //System.out.println("sent " + input);
+                }
+                catch(IOException e){
+                    _client.stop();
+                }
+                catch(ClassNotFoundException e){
+                    _client.stop();
+                }
             }
-            catch(IOException e){
-                _client.stop();
-            }
+        }
+        catch(Exception e){
+            System.out.println("Couldn't get it done man.");
         }
     }
 

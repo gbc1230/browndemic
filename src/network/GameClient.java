@@ -20,7 +20,7 @@ public class GameClient implements Runnable{
     //the reader for this file
     private BufferedReader _input;
     //writer for this file
-    private DataOutputStream _output;
+    private ObjectOutputStream _output;
     //Thread for this file's communications
     private GameClientThread _client;
 
@@ -31,7 +31,7 @@ public class GameClient implements Runnable{
             _socket = new Socket(serverName, serverPort);
             System.out.println("Connected: " + _socket);
             _input = new BufferedReader(new InputStreamReader(System.in));
-            _output = new DataOutputStream(_socket.getOutputStream());
+            _output = new ObjectOutputStream(_socket.getOutputStream());
             _client = new GameClientThread(this, _socket);
             _thread = new Thread(this);
             _thread.start();
@@ -51,7 +51,8 @@ public class GameClient implements Runnable{
             try{
                 String out = _input.readLine();
                 //System.out.println("got " + out);
-                _output.writeUTF(out);
+                TestWorld temp = new TestWorld(out);
+                _output.writeObject(temp);
                 _output.flush();
                 //System.out.println("sent " + out);
             }
@@ -66,8 +67,8 @@ public class GameClient implements Runnable{
      * Handle and print an incoming message
      * @param msg The message
      */
-    public void handle(String msg){
-        System.out.println(msg);
+    public void handle(TestWorld msg){
+        System.out.println(msg.getData());
     }
 
     /**

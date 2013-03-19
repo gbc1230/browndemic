@@ -17,8 +17,8 @@ public class GameServerThread extends Thread{
     private GameServer _server;
     private Socket _socket;
     private int _ID;
-    private DataInputStream _input;
-    private DataOutputStream _output;
+    private ObjectInputStream _input;
+    private ObjectOutputStream _output;
 
     public GameServerThread(GameServer server, Socket socket){
         super();
@@ -28,10 +28,10 @@ public class GameServerThread extends Thread{
         _ID = _socket.getPort();
     }
 
-    public void sendMessage(String msg) throws IOException{
+    public void sendMessage(TestWorld msg) throws IOException{
         try{
             //System.out.println("SUP!");
-            _output.writeUTF(msg);
+            _output.writeObject(msg);
             _output.flush();
             //System.out.println("sent " + msg);
         }
@@ -49,10 +49,19 @@ public class GameServerThread extends Thread{
     public void run(){
         while (true){
             try{
-                _server.handle(_ID, _input.readUTF());
+                _server.handle(_ID, _input.readObject());
             }
             catch(IOException e){
                 System.out.println("ERROR: " + _ID + " can't read.");
+                try{
+                    _server.remove(_ID);
+                    break;
+                }
+                catch(IOException e2){
+                    System.out.println("Oh come on.");
+                }
+            }
+            catch(ClassNotFoundException e){
                 try{
                     _server.remove(_ID);
                     break;
@@ -65,8 +74,8 @@ public class GameServerThread extends Thread{
     }
 
     public void open() throws IOException{
-        _input = new DataInputStream(new BufferedInputStream(_socket.getInputStream()));
-        _output = new DataOutputStream(new BufferedOutputStream(_socket.getOutputStream()));
+        _input = new ObjectInputStream(new BufferedInputStream(_socket.getInputStream()));
+        _output = new ObjectOutputStream(new BufferedOutputStream(_socket.getOutputStream()));
     }
 
     public void close() throws IOException{
