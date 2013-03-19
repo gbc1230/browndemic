@@ -25,6 +25,7 @@ public class GameServer implements Runnable{
             System.out.println("Binding to " + port);
             _server = new ServerSocket(port);
             _thread = new Thread(this);
+            _clients = new ArrayList<GameServerThread>();
             _threadOn = true;
             _thread.start();
         }
@@ -82,6 +83,7 @@ public class GameServer implements Runnable{
         GameServerThread temp = new GameServerThread(this, socket);
         temp.open();
         temp.start();
+        System.out.println(temp);
         _clients.add(temp);
     }
 

@@ -59,7 +59,8 @@ public class GameServerThread extends Thread{
     }
 
     public void open() throws IOException{
-
+        _input = new DataInputStream(new BufferedInputStream(_socket.getInputStream()));
+        _output = new DataOutputStream(new BufferedOutputStream(_socket.getOutputStream()));
     }
 
     public void close() throws IOException{
