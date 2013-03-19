@@ -25,7 +25,7 @@ public class GameClient implements Runnable{
     private GameClientThread _client;
 
     //constructor
-    public GameClient(String serverName, int serverPort) throws Exception{
+    public GameClient(InetAddress serverName, int serverPort) throws Exception{
         System.out.println("Connecting...");
         try{
             _socket = new Socket(serverName, serverPort);
@@ -89,6 +89,7 @@ public class GameClient implements Runnable{
 
 
     public static void main(String [] args) throws Exception{
-        GameClient client = new GameClient(null, Integer.parseInt(args[0]));
+        InetAddress local = InetAddress.getByName(args[0]);
+        GameClient client = new GameClient(local, Integer.parseInt(args[1]));
     }
 }
