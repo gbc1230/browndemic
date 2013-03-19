@@ -39,6 +39,7 @@ public class GameServer implements Runnable{
         }
     }
 
+    //run method: catches new threads as they come in
     @Override
     public void run(){
         while (_threadOn){

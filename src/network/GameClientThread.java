@@ -20,8 +20,8 @@ public class GameClientThread extends Thread{
     //the input to this thread
     private ObjectInputStream _input;
 
-    //constructor
-    public GameClientThread(GameClient client, Socket socket) throws IOException{
+    //constructor, sets up basic stuff
+    public GameClientThread(GameClient client, Socket socket){
         _client = client;
         System.out.println(socket);
         _socket = socket;
@@ -36,6 +36,9 @@ public class GameClientThread extends Thread{
         _input.close();
     }
 
+    //run method: this runs as soon as the constructor finishes, this is how
+    //a thread works. it BLOCKS at the initializtation of _input, then reads
+    //in a loop
     @Override
     public void run(){
         try{

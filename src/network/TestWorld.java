@@ -7,7 +7,7 @@ package network;
 import java.io.Serializable;
 
 /**
- *
+ * Test class for my object sending 
  * @author gcarling
  */
 public class TestWorld implements Serializable{

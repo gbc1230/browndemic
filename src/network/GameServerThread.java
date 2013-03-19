@@ -28,6 +28,11 @@ public class GameServerThread extends Thread{
         _ID = _socket.getPort();
     }
 
+    /**
+     * Send a message to the the client
+     * @param msg The message to send
+     * @throws java.io.IOException
+     */
     public void sendMessage(TestWorld msg) throws IOException{
         try{
             //System.out.println("SUP!");
@@ -45,6 +50,7 @@ public class GameServerThread extends Thread{
         return _ID;
     }
 
+    //this runs: waits for a new message to come in, and has the server handle it
     @Override
     public void run(){
         while (true){
@@ -73,11 +79,19 @@ public class GameServerThread extends Thread{
         }
     }
 
+    /**
+     * Opens the streams
+     * @throws java.io.IOException
+     */
     public void open() throws IOException{
         _input = new ObjectInputStream(new BufferedInputStream(_socket.getInputStream()));
         _output = new ObjectOutputStream(new BufferedOutputStream(_socket.getOutputStream()));
     }
 
+    /**
+     * Closes the streams
+     * @throws java.io.IOException
+     */
     public void close() throws IOException{
         _socket.close();
         _input.close();

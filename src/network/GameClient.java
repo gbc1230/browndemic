@@ -44,6 +44,8 @@ public class GameClient implements Runnable{
         }
     }
 
+    //run method for runnable: runs immediately, loops reading input and sending
+    //it out
     @Override
     public void run(){
         System.out.println("running");
