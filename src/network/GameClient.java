@@ -15,7 +15,7 @@ public class GameClient implements Runnable{
 
     private Socket _socket;
     private Thread _thread;
-    private DataInputStream _console;
+    private BufferedReader _console;
     private DataOutputStream _streamOut;
     private GameClientThread _client;
 
@@ -24,7 +24,7 @@ public class GameClient implements Runnable{
         try{
             _socket = new Socket(serverName, serverPort);
             System.out.println("Connected: " + _socket);
-            _console = new DataInputStream(System.in);
+            _console = new BufferedReader(new InputStreamReader(System.in));
             _streamOut = new DataOutputStream(_socket.getOutputStream());
             _client = new GameClientThread(this, _socket);
             _thread = new Thread(this);
@@ -69,7 +69,7 @@ public class GameClient implements Runnable{
     }
 
 
-    public static void Main(String [] args) throws Exception{
+    public static void main(String [] args) throws Exception{
         GameClient client = new GameClient(null, Integer.parseInt(args[0]));
     }
 }
