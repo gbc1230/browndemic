@@ -11,11 +11,13 @@ import java.net.*;
  *
  * @author gcarling
  */
-public class GameClient{
+public class GameClient implements Runnable{
 
     private Socket _socket;
+    private Thread _thread;
     private DataInputStream _console;
     private DataOutputStream _streamOut;
+    private GameClientThread _client;
 
     public GameClient(String serverName, int serverPort) throws Exception{
         System.out.println("Connecting...");
@@ -24,6 +26,9 @@ public class GameClient{
             System.out.println("Connected: " + _socket);
             _console = new DataInputStream(System.in);
             _streamOut = new DataOutputStream(_socket.getOutputStream());
+            _client = new GameClientThread(this, _socket);
+            _thread = new Thread(this);
+            _thread.start();
         }
         catch(UnknownHostException e){
             System.out.println("Host Unknown: " + e.getMessage());
@@ -31,17 +36,22 @@ public class GameClient{
         catch(IOException e){
             System.out.println("Error: " + e.getMessage());
         }
-        String line = "";
-        while (!line.equals("EXIT")){
+    }
+
+    public void run(){
+        while(_thread != null){
             try{
-                line = _console.readLine();
-                _streamOut.writeUTF(line);
-                _streamOut.flush();
+                _streamOut.writeUTF(_console.readLine());
             }
             catch(IOException e){
-                System.out.println("ERORR: " + e.getMessage());
+                System.out.println("ERROR");
+                stop();
             }
         }
+    }
+
+    public void handle(String msg){
+        System.out.println(msg);
     }
 
     public void stop(){
@@ -49,35 +59,17 @@ public class GameClient{
             _console.close();
             _streamOut.close();
             _socket.close();
+            _thread = null;
+            _client.close();
+            //_client.stop();
         }
         catch(Exception e){
             System.out.println("Error closing...");
         }
     }
-    /*public void getMessage(String message){
-        _output.println(message);
-    }
 
-    public void run(){
-        String line;
-        try{
-            while(true){
-                line = _input.readLine();
-                if (line.equals("EXIT")){
-                    _server.removeClient(this);
-                    break;
-                }
-                _server.broadcast(line);
-            }
-        }
-        catch(Exception e){
-            System.out.println(e.getMessage());
-        }
-    }*/
 
     public static void Main(String [] args) throws Exception{
-        URL url = new URL("6000");
-        URLConnection con = url.openConnection();
-        con.connect();
+        GameClient client = new GameClient(null, Integer.parseInt(args[0]));
     }
 }

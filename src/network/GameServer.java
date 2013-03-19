@@ -13,41 +13,80 @@ import java.util.ArrayList;
  *
  * @author gcarling
  */
-public class GameServer {
+public class GameServer implements Runnable{
 
-    //the port to run the server on, the maximum number of clients
-    private final int _PORT, _MAX;
-    //the clients that connect
-    private List<GameClient> _clients;
+    private List<GameServerThread> _clients;
+    private ServerSocket _server;
+    private Thread _thread;
+    private boolean _threadOn;
 
-    public GameServer(int p, int m){
-        _PORT = p;
-        _MAX = m;
-        _clients = new ArrayList<GameClient>();
-    }
-
-    public void run() throws Exception{
-        ServerSocket server = new ServerSocket(_PORT, _MAX);
-        while (true){
-            Socket client = server.accept();
-            GameClient c = new GameClient(this, client);
-            _clients.add(c);
+    public GameServer(int port){
+        try{
+            System.out.println("Binding to " + port);
+            _server = new ServerSocket(port);
+            _thread = new Thread(this);
+            _threadOn = true;
+            _thread.start();
+        }
+        catch(IOException e){
+            System.out.println("Cannot bind to port " + port);
         }
     }
 
-    public void broadcast(String message){
-        for (GameClient c : _clients){
-            c.getMessage(message);
+    public void run(){
+        while (_threadOn){
+            try{
+                addThread(_server.accept());
+            }
+            catch(IOException e){
+                System.out.println("Server accept error");
+                if (_thread != null){
+                    _threadOn = false;
+                    _thread = null;
+                }
+            }
         }
     }
 
-    public void removeClient(GameClient c){
-        _clients.remove(c);
+    public int findClient(int ID){
+        for (int i = 0; i < _clients.size(); i++){
+            if (_clients.get(i).getID() == ID)
+                return i;
+        }
+        return -1;
     }
 
-    public static void main() throws Exception{
-        GameServer server = new GameServer(6000, 5);
-        server.run();
+    public synchronized void handle(int ID, String input) throws IOException{
+        if (input.equals("EXIT")){
+            _clients.get(findClient(ID)).sendMessage("EXIT");
+            remove(ID);
+        }
+        else{
+            for (int i = 0; i < _clients.size(); i++){
+                _clients.get(i).sendMessage(input);
+            }
+        }
+    }
+
+    public synchronized void remove(int ID) throws IOException{
+        int pos = findClient(ID);
+        if (pos != -1){
+            GameServerThread toKill = _clients.get(pos);
+            _clients.remove(toKill);
+            toKill.close();
+            //toKill.stop();
+        }
+    }
+
+    private void addThread(Socket socket) throws IOException{
+        GameServerThread temp = new GameServerThread(this, socket);
+        temp.open();
+        temp.start();
+        _clients.add(temp);
+    }
+
+    public static void main(String [] args) throws Exception{
+        GameServer server = new GameServer(Integer.parseInt(args[0]));
     }
 
 }
