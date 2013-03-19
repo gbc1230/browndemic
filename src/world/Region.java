@@ -20,7 +20,10 @@ public class Region {
     private ArrayList<String> _neighbors;
 
     //ArrayList of diseases in this Region
-    private ArrayList<Disease> _diseases;
+    private ArrayList<String> _diseases;
+
+    //Total Region Population
+    private int _population;
 
     //Healthy population count
     private int _healthy;
@@ -35,10 +38,10 @@ public class Region {
     //emphasis on the unique, some code in here runs on that assumption (hash, equals, etc.)
     private String _name;
 
-    //booleans for if this Region has open transportation facilities
-    private boolean _sea;
-    private boolean _air;
-
+    //number of seaports and airports open in this Region
+    private int _sea;
+    private int _air;
+    
 
     /**
      * constructs a new Region with the given info
@@ -49,8 +52,9 @@ public class Region {
      * @param air if this Region has open airports
      */
     public Region(String name, int population, Collection<String> neighbors,
-            boolean sea, boolean air){
+            int sea, int air){
         _name = name;
+        _population = population;
         _healthy = population;
         _infected = new ArrayList<Integer>();
         _dead = new ArrayList<Integer>();
@@ -61,20 +65,66 @@ public class Region {
 
     }
 
+    public void infect(String disease, int number){
+        if (_diseases.contains(disease)) {
+            for (int i = 0; i < _diseases.size(); i++) {
+                if (_diseases.get(i).equals(disease)) {
+                    if(_healthy < number){
+                        _infected.set(i, _infected.get(i) + _healthy);
+                        _healthy = 0;
+                    }else{
+                    _infected.set(i, _infected.get(i) + number);
+                    _healthy = _healthy - number;
+                    }
+                    break;
+                }
+            }
+        }else{
+            _diseases.add(disease);
+            if(_healthy < number){
+                _infected.add(_healthy);
+                _healthy = 0;
+            }else{
+                _infected.add(number);
+                _healthy = _healthy - number;
+            }
+        }
+    }
+
+    public void kill(String disease, int number){
+        if (_diseases.contains(disease)) {
+            for (int i = 0; i < _diseases.size(); i++) {
+                if (_diseases.get(i).equals(disease)) {
+                    if(_infected.get(i) < number){
+                        _dead.set(i, _dead.get(i) + _infected.get(i));
+                        _infected.set(i, 0);
+                    }else{
+                    _dead.set(i, _dead.get(i) + number);
+                    _infected.set(i, _infected.get(i) - number);
+                    }
+                    break;
+                }
+            }
+        }else{
+            throw new Error ("ERROR: Cannot kill " + number + " people because \'"
+                    + disease + "\' has not infected Region " + getName());
+        }
+    }
+
     /**
-     * hasAir() gets a boolean indicating if this Region has open airports
+     * getAir() gets a the number of open airports in this Region
      * @return _air;
      */
-    public boolean hasAir(){
+    public int getAir(){
         return _air;
     }
 
     /**
-     * hasSea() gets a boolean indicating if this Region has open seaports
+     * getSea() gets the number of open seaports in this Region
      * @return _sea
      */
-    boolean hasSea(){
-        return _sea;
+    public int getSea(){
+        return _sea ;
     }
 
     /**
@@ -103,7 +153,7 @@ public class Region {
      */
     public int getInfected(String disease){
         for(int i = 0; i < _diseases.size(); i++){
-            if(_diseases.get(i).getName().equals(disease))
+            if(_diseases.get(i).equals(disease))
                 return _infected.get(i);
         }
         return 0;
