@@ -41,11 +41,11 @@ public class GameClientThread extends Thread{
     public void run(){
         while (true){
             try{
-                System.out.println("aww shit");
+                //System.out.println("aww shit");
                 String input = _input.readUTF();
-                System.out.println("got " + input);
+                //System.out.println("got " + input);
                 _client.handle(input);
-                System.out.println("sent " + input);
+                //System.out.println("sent " + input);
             }
             catch(IOException e){
                 _client.stop();

@@ -27,7 +27,7 @@ public class GameServer implements Runnable{
     // constructor
     public GameServer(int port){
         try{
-            System.out.println("Binding to " + port);
+            System.out.println("Binding to port" + port);
             _server = new ServerSocket(port);
             _thread = new Thread(this);
             _clients = new ArrayList<GameServerThread>();
@@ -80,9 +80,10 @@ public class GameServer implements Runnable{
             remove(ID);
         }
         else{
-            System.out.println("got here");
+            //System.out.println("got here");
             for (int i = 0; i < _clients.size(); i++){
-                _clients.get(i).sendMessage(input);
+                if (_clients.get(i).getID() != ID)
+                    _clients.get(i).sendMessage(input);
             }
         }
     }

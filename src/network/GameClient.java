@@ -50,9 +50,10 @@ public class GameClient implements Runnable{
         while(_thread != null){
             try{
                 String out = _input.readLine();
-                System.out.println("got " + out);
+                //System.out.println("got " + out);
                 _output.writeUTF(out);
-                System.out.println("sent " + out);
+                _output.flush();
+                //System.out.println("sent " + out);
             }
             catch(IOException e){
                 System.out.println("ERROR");

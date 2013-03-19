@@ -30,9 +30,10 @@ public class GameServerThread extends Thread{
 
     public void sendMessage(String msg) throws IOException{
         try{
-            System.out.println("SUP!");
+            //System.out.println("SUP!");
             _output.writeUTF(msg);
-            System.out.println("sent " + msg);
+            _output.flush();
+            //System.out.println("sent " + msg);
         }
         catch(IOException e){
             System.out.println("ERROR: " + _ID + " couldn't send: " + e.getMessage());
@@ -54,6 +55,7 @@ public class GameServerThread extends Thread{
                 System.out.println("ERROR: " + _ID + " can't read.");
                 try{
                     _server.remove(_ID);
+                    break;
                 }
                 catch(IOException e2){
                     System.out.println("Oh come on.");
