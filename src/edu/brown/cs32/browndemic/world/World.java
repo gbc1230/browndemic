@@ -10,12 +10,14 @@ import java.util.ArrayList;
 import java.io.Serializable;
 
 import edu.brown.cs32.browndemic.disease.Disease;
+import edu.brown.cs32.browndemic.region.Region;
 
 /**
  *
- * @author ckilfoyl
+ * @author gcarling
  */
 public abstract class World implements Serializable{
+
     //ArrayList of Regions
     private ArrayList<Region> _regions;
 
@@ -27,6 +29,9 @@ public abstract class World implements Serializable{
 
     //An ArrayList of all diseases present in this world
     private ArrayList<Disease> _diseases;
+
+    //Progress towards the cure
+    private double _cureProgress;
 
     /**
      * addRegion() puts the Region into _regions, increments _regCount, and adds it to _index
@@ -77,5 +82,9 @@ public abstract class World implements Serializable{
         for(Region r : _regions)
             count = count + r.getDead();
         return count;
+    }
+
+    public void updateCureProgress(){
+        
     }
 }

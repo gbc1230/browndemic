@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package edu.brown.cs32.browndemic.world;
+package edu.brown.cs32.browndemic.region;
 
 import java.util.ArrayList;
 import java.util.Collection;
