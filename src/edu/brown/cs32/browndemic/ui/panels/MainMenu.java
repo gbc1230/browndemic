@@ -1,4 +1,4 @@
-package ui.panels;
+package edu.brown.cs32.browndemic.ui.panels;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -14,10 +14,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-import ui.MainFrame;
-import ui.Resources;
-import ui.UIConstants.Images;
-import ui.UIConstants.Strings;
+import edu.brown.cs32.browndemic.ui.MainFrame;
+import edu.brown.cs32.browndemic.ui.Resources;
+import edu.brown.cs32.browndemic.ui.UIConstants.Images;
+import edu.brown.cs32.browndemic.ui.UIConstants.Strings;
 
 /**
  * 

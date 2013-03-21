@@ -1,4 +1,4 @@
-package ui.panels;
+package edu.brown.cs32.browndemic.ui.panels;
 
 import javax.swing.JPanel;
 

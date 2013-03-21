@@ -3,12 +3,12 @@
  * and open the template in the editor.
  */
 
-package world;
+package edu.brown.cs32.browndemic.world;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
-import disease.Disease;
+import edu.brown.cs32.browndemic.disease.Disease;
 
 
 /**

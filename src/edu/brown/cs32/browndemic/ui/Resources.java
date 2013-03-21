@@ -1,4 +1,4 @@
-package ui;
+package edu.brown.cs32.browndemic.ui;
 
 import java.awt.image.BufferedImage;
 import java.io.File;

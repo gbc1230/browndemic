@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package browndemic;
+package edu.brown.cs32.browndemic;
 
 /**
  *

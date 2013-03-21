@@ -1,4 +1,4 @@
-package ui.panels;
+package edu.brown.cs32.browndemic.ui.panels;
 
 import java.awt.Dimension;
 import java.beans.PropertyChangeEvent;
@@ -9,9 +9,9 @@ import javax.swing.JLabel;
 import javax.swing.JProgressBar;
 import javax.swing.SwingWorker;
 
-import ui.MainFrame;
-import ui.Resources;
-import ui.UIConstants.Images;
+import edu.brown.cs32.browndemic.ui.MainFrame;
+import edu.brown.cs32.browndemic.ui.Resources;
+import edu.brown.cs32.browndemic.ui.UIConstants.Images;
 
 public class Loading extends UIPanel implements PropertyChangeListener {
 	private static final long serialVersionUID = 5754745059440665566L;

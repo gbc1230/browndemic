@@ -1,4 +1,4 @@
-package ui;
+package edu.brown.cs32.browndemic.ui;
 
 public class UIConstants {
 	public class Strings {

@@ -3,13 +3,13 @@
  * and open the template in the editor.
  */
 
-package world;
+package edu.brown.cs32.browndemic.world;
 
 import java.util.Hashtable;
 import java.util.ArrayList;
 import java.io.Serializable;
 
-import disease.Disease;
+import edu.brown.cs32.browndemic.disease.Disease;
 
 /**
  *

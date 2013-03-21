@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package network;
+package edu.brown.cs32.browndemic.network;
 import java.net.*;
 import java.io.*;
 

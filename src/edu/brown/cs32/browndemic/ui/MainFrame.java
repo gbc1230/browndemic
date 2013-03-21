@@ -1,13 +1,13 @@
-package ui;
+package edu.brown.cs32.browndemic.ui;
 
 import java.awt.FlowLayout;
 
 import javax.swing.JFrame;
 
-import ui.UIConstants.Strings;
-import ui.panels.Loading;
-import ui.panels.MainMenu;
-import ui.panels.UIPanel;
+import edu.brown.cs32.browndemic.ui.UIConstants.Strings;
+import edu.brown.cs32.browndemic.ui.panels.Loading;
+import edu.brown.cs32.browndemic.ui.panels.MainMenu;
+import edu.brown.cs32.browndemic.ui.panels.UIPanel;
 
 /**
  * 
