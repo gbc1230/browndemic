@@ -10,11 +10,15 @@ public class UIConstants {
 	
 	public static class Images {		
 		public static final String DEFAULT = "src/ui/placeholder.jpg";
+		public static final String SINGLE_PLAYER = DEFAULT;
+		public static final String MULTI_PLAYER = DEFAULT;
 		public static final String TEST = "src/ui/noise.jpg";
 		
 		public static final String[] MENU_IMAGES = {
 			DEFAULT,
 			TEST,
+			SINGLE_PLAYER,
+			MULTI_PLAYER,
 		};
 		
 		public static final String[] GAME_IMAGES = {
