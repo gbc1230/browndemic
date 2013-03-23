@@ -35,6 +35,9 @@ public abstract class Disease {
 
     //IMPORTANT PLEASE READ
     //The following code relies on the uniqueness of the String name
+    //TODO: BEN - the World object will refer to each disease by a unique
+    //ID, will be one of 0, 1, 2, etc. depending on how many players.
+    //Look at the method headers of World to see how this is used
 
     /**
      * toString gets a String of the unique name, the infectivity, the mortality
