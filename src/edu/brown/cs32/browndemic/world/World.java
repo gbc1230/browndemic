@@ -6,7 +6,7 @@
 package edu.brown.cs32.browndemic.world;
 
 import java.util.List;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.ArrayList;
 import java.io.Serializable;
 
@@ -26,13 +26,13 @@ public abstract class World implements Serializable{
     protected int _population, _infected, _dead;
 
     //Hashtable pairing Region names to their index in _regions
-    protected Hashtable<String, Integer> _regIndex;
+    protected HashMap<String, Integer> _regIndex;
 
     //An ArrayList of all diseases present in this world
     protected List<Disease> _diseases;
     
-    //An ArrayList keeping track of how many people each disease has won
-    protected List<Integer> _killed;
+    //An ArrayList keeping track of how many people each disease has killed / infected
+    protected List<Integer> _kills, _infects;
 
     //Progress towards the cure
     protected List<Double> _cures;
@@ -44,17 +44,17 @@ public abstract class World implements Serializable{
  
     
     public World(){
-        _regions = new ArrayList<Region>();
-        _regIndex = new Hashtable<String, Integer>();
-        _diseases = new ArrayList<Disease>();
-        _killed = new ArrayList<Integer>();
-        _cures = new ArrayList<Double>();
+        _regions = new ArrayList<>();
+        _regIndex = new HashMap<>();
+        _diseases = new ArrayList<>();
+        _kills = new ArrayList<>();
+        _cures = new ArrayList<>();
         _dead = 0;
         _infected = 0;
     }
 
     /**
-     * addRegion() puts the Region into _regions, increments _regCount, and adds it to _index
+     * addRegion() puts the Region into _regions and adds it to _regIndex
      * @param r the Region to add
      */
     public void addRegion(Region r){
@@ -67,7 +67,9 @@ public abstract class World implements Serializable{
      * @param d the Disease to add
      */
     public void addDisease(Disease d){
+        int id = _diseases.size();
         _diseases.add(d);
+        d.setID(id);
     }
 
     /**
@@ -101,42 +103,110 @@ public abstract class World implements Serializable{
     public int getDead(){
         return _dead;
     }
-
-    public void updateInfected(int inc){
-        _infected += inc;
+    
+    /**
+     * Updates the number of people killed by all diseases
+     */
+    public void updateKilled(){
+        int dead = 0;
+        List<Integer> deaths = new ArrayList<>();
+        for (Region r : _regions){
+            List<Integer> rKills = r.getKilled();
+            for (int i = 0; i < rKills.size(); i++){
+                int d = deaths.get(i);
+                deaths.set(i, rKills.get(i) + d);
+                dead += rKills.get(i);
+            }
+        }
+        _kills = deaths;
+        _dead = dead;
+    }
+    
+    
+    /**
+     * Updates the number of infected people
+     */
+    public void updateInfected(){
+        int infected = 0;
+        List<Integer> infects = new ArrayList<>();
+        for (Region r : _regions){
+            List<Integer> rInfected = r.getInfected();
+            for (int i = 0; i < rInfected.size(); i++){
+                int d = infects.get(i);
+                infects.set(i, infects.get(i) + d);
+                infected += rInfected.get(i);
+            }
+        }
+        _infects = infects;
+        _infected = infected;
     }
     
     /**
-     * Updates the number of people killed by a certain disease
-     * @param ind The ID of the disease that killed the people
-     * @param inc The number of kills
+     * Update the cure progress for every disease
      */
-    public void updateKilled(int ind, int inc){
-        int cur = _killed.get(ind);
-        _killed.set(ind, cur + inc);
-        _dead += inc;
+    public void updateCures(){
+        List<Double> cures = new ArrayList<>();
+        for (Region r : _regions){
+            List<Double> rCures = r.getCures();
+            for (int i = 0; i < rCures.size(); i++){
+                double c = cures.get(i);
+                cures.set(i, c + rCures.get(i));
+            }
+        }
+        _cures = cures;
     }
     
     /**
-     * Update the cure progress
+     * Tells each region to start curing a disease
      */
-    public void updateCure(int ind, double add){
-        double cur = _cures.get(ind);
-        _cures.set(ind, cur + add);
+    public void sendCures(int d){
+        for (Region r : _regions){
+            r.cure(d);
+        }
+    }
+    
+    public void checkCures(){
+        for (int i = 0; i < _cures.size(); i++){
+            if (_cures.get(i) >= 100.0){
+                sendCures(i);
+                _cures.set(i, -1.0);
+            }
+        }
     }
     
     /**
-     * Tells me if the game is over, and if it is, what the result is
-     * @return 1 if everyone is dead, -1 if the humans have beat the disease,
-     * 
+     * Updates all the regions
      */
-    public int isGameOver(int ind){
-        if (_cures.get(ind) >= 100.0)
-            return -1;
-        if (_dead >= _population)
-            return 1;
-        else return 0;
+    public void updateRegions(){
+        for (Region r : _regions)
+            r.update();
     }
     
+    /**
+     * Updates everything necessary from regions
+     */
+    public void update(){
+        updateKilled();
+        updateInfected();
+        updateCures();
+    }
+    
+    @Override
+    public String toString(){
+        StringBuilder ans = new StringBuilder();
+        ans.append("Population: ").append(_population).append("\n");
+        ans.append("Infected: ").append(_infected).append("\n");
+        ans.append("Dead: ").append(_dead).append("\n");
+        ans.append("Diseases: ");
+        for (Disease d : _diseases){
+            ans.append(d.getID()).append(", ");
+        }
+        ans.append("\nRegions: ");
+        for (Region r : _regions){
+            ans.append(r.getName()).append(", ");
+        }
+        ans.append("\n");
+        return ans.toString();
+    }
     
 }

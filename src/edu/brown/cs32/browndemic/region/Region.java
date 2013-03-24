@@ -225,4 +225,8 @@ public class Region {
     public int hashCode(){
         return _name.hashCode();
     }
+    
+    public void update(){
+        
+    }
 }
