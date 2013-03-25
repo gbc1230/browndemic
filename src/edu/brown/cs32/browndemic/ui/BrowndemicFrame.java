@@ -3,7 +3,6 @@ package edu.brown.cs32.browndemic.ui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.FontFormatException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -41,7 +40,7 @@ public class BrowndemicFrame extends JFrame {
 	private class InitialLoadingDone implements DoneLoadingListener {
 		public void doneLoading() {
 			defaultTitle();
-			setPanel(new MainMenu(BrowndemicFrame.this));
+			setPanel(new MainMenu());
 		}
 	}
 
@@ -67,6 +66,7 @@ public class BrowndemicFrame extends JFrame {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setUndecorated(true);
 		setSize(UI.WIDTH, UI.HEIGHT);
+		setLocationRelativeTo(null);
 		setResizable(false);
 		setLayout(new BorderLayout());
 		

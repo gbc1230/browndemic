@@ -28,6 +28,7 @@ public class UIConstants {
 		public static final String MULTI_PLAYER = "Multiplayer";
 		public static final String EXIT = "Exit";
 		public static final String MINIMIZE = "Minimize";
+		public static final String ENTER_DISEASE_NAME = "Enter Disease Name";
 	}
 	
 	public static class Images {
@@ -61,9 +62,11 @@ public class UIConstants {
 	
 	public static class Fonts {
 		public static Font TITLE_BAR;
+		public static Font NORMAL_TEXT;
 		
 		public static void init() throws FileNotFoundException, FontFormatException, IOException {
 			TITLE_BAR = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream(new File(RESOURCE_PATH + "fonts/GhostWriter.ttf"))).deriveFont(22f);
+			NORMAL_TEXT = TITLE_BAR.deriveFont(16f);
 		}
 	}
 }

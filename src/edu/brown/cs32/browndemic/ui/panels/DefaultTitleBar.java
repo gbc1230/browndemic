@@ -76,6 +76,7 @@ public class DefaultTitleBar extends TitleBar implements MouseListener {
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
+		if (e.getButton() != MouseEvent.BUTTON1) return;
 		if (e.getSource() == close) {
 			System.exit(0);
 		} else if (e.getSource() == minimize) {

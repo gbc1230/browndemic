@@ -3,22 +3,18 @@ package edu.brown.cs32.browndemic.ui.panels;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-import edu.brown.cs32.browndemic.ui.BrowndemicFrame;
 import edu.brown.cs32.browndemic.ui.Resources;
 import edu.brown.cs32.browndemic.ui.UIConstants.Colors;
 import edu.brown.cs32.browndemic.ui.UIConstants.Images;
-import edu.brown.cs32.browndemic.ui.UIConstants.Strings;
 
 /**
  * 
@@ -29,10 +25,9 @@ public class MainMenu extends UIPanel implements MouseListener {
 
 	private static final long serialVersionUID = -1199792392732674767L;
 	JLabel single_, multi_;
-	BrowndemicFrame parent_;
 	
-	public MainMenu(BrowndemicFrame parent) {
-		parent_ = parent;
+	public MainMenu() {
+		super();
 		makeUI();
 	}
 
@@ -86,8 +81,9 @@ public class MainMenu extends UIPanel implements MouseListener {
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
+		if (e.getButton() != MouseEvent.BUTTON1) return;
 		if (e.getSource() == single_) {
-			System.out.println("SINGLEPLAYER CLICKED");
+			getParentFrame().setPanel(new SinglePlayer());
 		} else if (e.getSource() == multi_) {
 			System.out.println("MULTIPLAYER CLICKED");
 		}
