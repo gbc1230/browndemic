@@ -6,36 +6,38 @@ import java.beans.PropertyChangeListener;
 
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.SwingWorker;
 
-import edu.brown.cs32.browndemic.ui.MainFrame;
 import edu.brown.cs32.browndemic.ui.Resources;
 import edu.brown.cs32.browndemic.ui.UIConstants.Images;
 
-public class Loading extends UIPanel implements PropertyChangeListener {
+/**
+ * A JPanel that will load the images defined in the constructor.
+ * When loading is done the doneLoading() method on the DoneLoadingListener
+ * will be called.
+ * @author Ben
+ *
+ */
+public class Loading extends JPanel implements PropertyChangeListener {
 	private static final long serialVersionUID = 5754745059440665566L;
 	
-	private MainFrame parent_;
-	private UIPanel next_;
-	private JProgressBar progress_;
+	private JProgressBar _progress;
+	private DoneLoadingListener _doneLoadingListener;
 	
-	public Loading(MainFrame parent, UIPanel next) {
-		parent_ = parent;
-		next_ = next;
-	}
-	
-	@Override
-	public void makeUI() {
+	public Loading(DoneLoadingListener d, String... resources) {
+		_doneLoadingListener = d;
+		
 		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		setPreferredSize(new Dimension(400, 600));
 		JLabel l = new JLabel();
 		l.setText("Loading...");
 		add(l);
 		
-		progress_ = new JProgressBar(0, 100);
-		progress_.setValue(0);
-		add(progress_);
+		_progress = new JProgressBar(0, 100);
+		_progress.setValue(0);
+		add(_progress);
 		
 		Task t = new Task();
 		t.addPropertyChangeListener(this);
@@ -45,7 +47,7 @@ public class Loading extends UIPanel implements PropertyChangeListener {
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		if (evt.getPropertyName().equals("progress"))
-			progress_.setValue((int)evt.getNewValue());
+			_progress.setValue((int)evt.getNewValue());
 	}
 	
 	private class Task extends SwingWorker<Void, Void> {
@@ -64,7 +66,7 @@ public class Loading extends UIPanel implements PropertyChangeListener {
 		
 		@Override
 		public void done() {
-			parent_.setPanel(next_);
+			_doneLoadingListener.doneLoading();
 		}
 	}
 
