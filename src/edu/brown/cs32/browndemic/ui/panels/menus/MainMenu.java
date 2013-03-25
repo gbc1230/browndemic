@@ -1,20 +1,24 @@
-package edu.brown.cs32.browndemic.ui.panels;
+package edu.brown.cs32.browndemic.ui.panels.menus;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 
 import edu.brown.cs32.browndemic.ui.Resources;
 import edu.brown.cs32.browndemic.ui.UIConstants.Colors;
 import edu.brown.cs32.browndemic.ui.UIConstants.Images;
+import edu.brown.cs32.browndemic.ui.Utils;
+import edu.brown.cs32.browndemic.ui.components.HoverLabel;
+import edu.brown.cs32.browndemic.ui.panels.UIPanel;
 
 /**
  * 
@@ -30,37 +34,39 @@ public class MainMenu extends UIPanel implements MouseListener {
 		super();
 		makeUI();
 	}
+	
+	@Override
+	public void setupForDisplay() {
+		Utils.getParentFrame(this).defaultTitle();
+	}
 
 	public void makeUI() {
 		setBackground(Colors.MENU_BACKGROUND);
-		setLayout(new BorderLayout());
+		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		setPreferredSize(new Dimension(800, 600));
-		JLabel banner = new JLabel(new ImageIcon(Resources.getImage(Images.TITLE)));
-		banner.setPreferredSize(new Dimension(800, 117));
-		add(banner, BorderLayout.NORTH);
-
 		
-		JPanel content = new JPanel();
-		content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
-		content.setBackground(Colors.MENU_BACKGROUND);
+		add(Box.createRigidArea(new Dimension(0, 20)));
+		
+		JLabel banner = new JLabel(new ImageIcon(Resources.getImage(Images.TITLE)));
+		banner.setPreferredSize(new Dimension(800, 200));
+		banner.setAlignmentX(Component.CENTER_ALIGNMENT);
+		add(banner);
+		
+		add(Box.createVerticalGlue());
 
-		single_ = new JLabel(new ImageIcon(Resources.getImage(Images.SINGLE_PLAYER)));
+		single_ = new HoverLabel(Resources.getImage(Images.SINGLE_PLAYER), Resources.getImage(Images.SINGLE_PLAYER_HOVER)); 
 		single_.setAlignmentX(Component.CENTER_ALIGNMENT);
 		single_.addMouseListener(this);
-		multi_ = new JLabel(new ImageIcon(Resources.getImage(Images.MULTI_PLAYER)));
+		multi_ = new HoverLabel(Resources.getImage(Images.MULTI_PLAYER), Resources.getImage(Images.MULTI_PLAYER_HOVER));
 		multi_.setAlignmentX(Component.CENTER_ALIGNMENT);
 		multi_.addMouseListener(this);
 		
-		content.add(single_);
-		content.add(multi_);
-		content.setPreferredSize(new Dimension(800, 100));
+		add(single_);
+		add(multi_);
 		
-		add(content, BorderLayout.CENTER);
+		add(Box.createVerticalGlue());
 		
-		JLabel info = new JLabel("Info");
-		info.setPreferredSize(new Dimension(800, 100));
-		info.setHorizontalAlignment(SwingConstants.CENTER);
-		add(info, BorderLayout.SOUTH);
+		add(Box.createRigidArea(new Dimension(0, 80)));
 	}
 
 	@Override
@@ -82,8 +88,10 @@ public class MainMenu extends UIPanel implements MouseListener {
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		if (e.getButton() != MouseEvent.BUTTON1) return;
+		if (!(e.getSource() instanceof Container)) return;
+		if (!((Container)e.getSource()).contains(e.getPoint())) return;
 		if (e.getSource() == single_) {
-			getParentFrame().setPanel(new SinglePlayer());
+			Utils.getParentFrame(this).setPanel(new SinglePlayer());
 		} else if (e.getSource() == multi_) {
 			System.out.println("MULTIPLAYER CLICKED");
 		}

@@ -1,4 +1,4 @@
-package edu.brown.cs32.browndemic.ui.panels;
+package edu.brown.cs32.browndemic.ui.panels.titlebars;
 
 import java.awt.Container;
 import java.awt.Dimension;

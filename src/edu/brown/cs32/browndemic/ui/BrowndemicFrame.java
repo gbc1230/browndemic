@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FontFormatException;
+import java.awt.Graphics;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
@@ -14,12 +15,12 @@ import javax.swing.JPanel;
 import edu.brown.cs32.browndemic.ui.UIConstants.Images;
 import edu.brown.cs32.browndemic.ui.UIConstants.Strings;
 import edu.brown.cs32.browndemic.ui.UIConstants.UI;
-import edu.brown.cs32.browndemic.ui.panels.DefaultTitleBar;
-import edu.brown.cs32.browndemic.ui.panels.DoneLoadingListener;
-import edu.brown.cs32.browndemic.ui.panels.Loading;
-import edu.brown.cs32.browndemic.ui.panels.MainMenu;
-import edu.brown.cs32.browndemic.ui.panels.TitleBar;
+import edu.brown.cs32.browndemic.ui.listeners.DoneLoadingListener;
 import edu.brown.cs32.browndemic.ui.panels.UIPanel;
+import edu.brown.cs32.browndemic.ui.panels.menus.Loading;
+import edu.brown.cs32.browndemic.ui.panels.menus.MainMenu;
+import edu.brown.cs32.browndemic.ui.panels.titlebars.DefaultTitleBar;
+import edu.brown.cs32.browndemic.ui.panels.titlebars.TitleBar;
 
 /**
  * 
@@ -62,6 +63,7 @@ public class BrowndemicFrame extends JFrame {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 		setTitle(Strings.TITLE);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setUndecorated(true);
@@ -100,11 +102,12 @@ public class BrowndemicFrame extends JFrame {
 		_titleContainer.add(t);
 	}
 	
-	public void setPanel(JPanel p) {
+	public void setPanel(UIPanel p) {
 		_content.removeAll();
 		revalidate();
 		repaint();
 		_content.add(p);
+		p.setupForDisplay();
 		setVisible(true);
 	}
 	

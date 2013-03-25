@@ -1,4 +1,4 @@
-package edu.brown.cs32.browndemic.ui.panels;
+package edu.brown.cs32.browndemic.ui.panels.menus;
 
 import java.awt.Dimension;
 import java.awt.Image;
@@ -17,6 +17,9 @@ import edu.brown.cs32.browndemic.ui.UIConstants.Fonts;
 import edu.brown.cs32.browndemic.ui.UIConstants.Images;
 import edu.brown.cs32.browndemic.ui.UIConstants.Strings;
 import edu.brown.cs32.browndemic.ui.UIConstants.UI;
+import edu.brown.cs32.browndemic.ui.Utils;
+import edu.brown.cs32.browndemic.ui.panels.UIPanel;
+import edu.brown.cs32.browndemic.ui.panels.titlebars.BackTitleBar;
 
 public class SinglePlayer extends UIPanel {
 
@@ -31,23 +34,32 @@ public class SinglePlayer extends UIPanel {
 		makeUI();
 	}
 	
+	@Override
+	public void setupForDisplay() {
+		Utils.getParentFrame(this).setTitle(new BackTitleBar(new MainMenu()));
+	}
+	
 	private void makeUI() {
+		
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		setPreferredSize(new Dimension(UI.WIDTH, UI.CONTENT_HEIGHT));
 		setBackground(Colors.MENU_BACKGROUND);
+		
 		
 		add(Box.createRigidArea(new Dimension(1, 100)));
 		
 		JPanel diseaseName = new JPanel();
 		diseaseName.setLayout(new BoxLayout(diseaseName, BoxLayout.X_AXIS));
-		diseaseName.setMaximumSize(new Dimension(UI.WIDTH/2, 200));
+		diseaseName.setMaximumSize(new Dimension(UI.WIDTH-150, 200));
 		diseaseName.setBackground(Colors.MENU_BACKGROUND);
 		
 		JLabel l = new JLabel(Strings.ENTER_DISEASE_NAME);
-		l.setFont(Fonts.NORMAL_TEXT);
+		l.setFont(Fonts.BIG_TEXT);
 		l.setForeground(Colors.RED_TEXT);
 		_diseaseName = new JTextField();
-		_diseaseName.setFont(Fonts.NORMAL_TEXT);
+		_diseaseName.setFont(Fonts.BIG_TEXT);
+		_diseaseName.setForeground(Colors.RED_TEXT);
+		_diseaseName.setBackground(Colors.MENU_BACKGROUND);
 		diseaseName.add(l);
 		diseaseName.add(_diseaseName);
 		add(diseaseName);

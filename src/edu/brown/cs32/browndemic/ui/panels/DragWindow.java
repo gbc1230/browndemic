@@ -1,13 +1,13 @@
 package edu.brown.cs32.browndemic.ui.panels;
 
-import java.awt.Container;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
 import javax.swing.JComponent;
-import javax.swing.JFrame;
+
+import edu.brown.cs32.browndemic.ui.Utils;
 
 public class DragWindow implements MouseListener, MouseMotionListener {
 	private Point _startDrag, _startLoc;
@@ -17,12 +17,6 @@ public class DragWindow implements MouseListener, MouseMotionListener {
 		_component = c;
 		c.addMouseListener(this);
 		c.addMouseMotionListener(this);
-	}
-	
-	private JFrame getFrame(Container c) {
-		if (c instanceof JFrame)
-			return (JFrame) c;
-		return getFrame(c.getParent());
 	}
 	
 	Point getScreenLocation(MouseEvent e) {
@@ -40,7 +34,7 @@ public class DragWindow implements MouseListener, MouseMotionListener {
 		        (int) p.getY() - (int) _startDrag.getY());
 		Point location = new Point((int) (_startLoc.getX() + offset.getX()),
 				(int) (_startLoc.getY() + offset.getY()));
-		getFrame(_component).setLocation(location);
+		Utils.getParentFrame(_component).setLocation(location);
 	}
 	
 	@Override
@@ -62,7 +56,7 @@ public class DragWindow implements MouseListener, MouseMotionListener {
 	@Override
 	public void mousePressed(MouseEvent e) {
 		_startDrag = getScreenLocation(e);
-		_startLoc = getFrame(_component).getLocation();
+		_startLoc = Utils.getParentFrame(_component).getLocation();
 	}
 	
 	@Override

@@ -1,4 +1,4 @@
-package edu.brown.cs32.browndemic.ui.panels;
+package edu.brown.cs32.browndemic.ui.panels.menus;
 
 import java.awt.Dimension;
 import java.beans.PropertyChangeEvent;
@@ -6,12 +6,13 @@ import java.beans.PropertyChangeListener;
 
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.SwingWorker;
 
 import edu.brown.cs32.browndemic.ui.Resources;
 import edu.brown.cs32.browndemic.ui.UIConstants.Images;
+import edu.brown.cs32.browndemic.ui.listeners.DoneLoadingListener;
+import edu.brown.cs32.browndemic.ui.panels.UIPanel;
 
 /**
  * A JPanel that will load the images defined in the constructor.
@@ -20,13 +21,14 @@ import edu.brown.cs32.browndemic.ui.UIConstants.Images;
  * @author Ben
  *
  */
-public class Loading extends JPanel implements PropertyChangeListener {
+public class Loading extends UIPanel implements PropertyChangeListener {
 	private static final long serialVersionUID = 5754745059440665566L;
 	
 	private JProgressBar _progress;
 	private DoneLoadingListener _doneLoadingListener;
 	
 	public Loading(DoneLoadingListener d, String... resources) {
+		super();
 		_doneLoadingListener = d;
 		
 		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
@@ -42,6 +44,11 @@ public class Loading extends JPanel implements PropertyChangeListener {
 		Task t = new Task();
 		t.addPropertyChangeListener(this);
 		t.execute();
+	}
+	
+	@Override
+	public void setupForDisplay() {
+		
 	}
 
 	@Override
