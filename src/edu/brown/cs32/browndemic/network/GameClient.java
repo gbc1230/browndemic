@@ -4,6 +4,7 @@
  */
 
 package edu.brown.cs32.browndemic.network;
+import edu.brown.cs32.browndemic.world.World;
 import java.io.*;
 import java.net.*;
 
@@ -53,7 +54,7 @@ public class GameClient implements Runnable{
             try{
                 String out = _input.readLine();
                 //System.out.println("got " + out);
-                TestWorld temp = new TestWorld(out);
+                World temp = new World(out);
                 _output.writeObject(temp);
                 _output.flush();
                 //System.out.println("sent " + out);
@@ -69,8 +70,8 @@ public class GameClient implements Runnable{
      * Handle and print an incoming message
      * @param msg The message
      */
-    public void handle(TestWorld msg){
-        System.out.println(msg.getData());
+    public void handle(World msg){
+        System.out.println(msg.toString());
     }
 
     /**

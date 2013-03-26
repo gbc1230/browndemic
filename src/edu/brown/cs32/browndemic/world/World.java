@@ -23,7 +23,7 @@ public abstract class World implements Serializable{
     protected List<Region> _regions;
     
     //various population stats
-    protected int _population, _infected, _dead;
+    protected long _population, _infected, _dead;
 
     //Hashtable pairing Region names to their index in _regions
     protected HashMap<String, Integer> _regIndex;
@@ -76,7 +76,7 @@ public abstract class World implements Serializable{
      * Get the population
      * @return integer population value
      */
-    public int getPopulation(){
+    public long getPopulation(){
         return _population;
     }
     
@@ -84,7 +84,7 @@ public abstract class World implements Serializable{
      * getHealthy() gets the number of healthy people in this world
      * @return integer healthy people value
      */
-    public int getHealthy(){
+    public long getHealthy(){
         return _population - _infected;
     }
 
@@ -92,7 +92,7 @@ public abstract class World implements Serializable{
      * getInfected() gets the number of infected people in this world (not dead people)
      * @return integer infected value
      */
-    public int getInfected(){
+    public long getInfected(){
         return _infected - _dead;
     }
 
@@ -100,7 +100,7 @@ public abstract class World implements Serializable{
      * getDead() gets the number of dead people in this world
      * @return integer dead value
      */
-    public int getDead(){
+    public long getDead(){
         return _dead;
     }
     
@@ -186,6 +186,7 @@ public abstract class World implements Serializable{
      * Updates everything necessary from regions
      */
     public void update(){
+        updateRegions();
         updateKilled();
         updateInfected();
         updateCures();

@@ -4,6 +4,7 @@
  */
 
 package edu.brown.cs32.browndemic.network;
+import edu.brown.cs32.browndemic.world.World;
 import java.net.*;
 import java.io.*;
 
@@ -33,7 +34,7 @@ public class GameServerThread extends Thread{
      * @param msg The message to send
      * @throws java.io.IOException
      */
-    public void sendMessage(TestWorld msg) throws IOException{
+    public void sendMessage(World msg) throws IOException{
         try{
             //System.out.println("SUP!");
             _output.writeObject(msg);

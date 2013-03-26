@@ -4,6 +4,7 @@
  */
 
 package edu.brown.cs32.browndemic.network;
+import edu.brown.cs32.browndemic.world.World;
 import java.io.*;
 import java.net.*;
 import java.util.List;
@@ -76,7 +77,7 @@ public class GameServer implements Runnable{
      * @throws java.io.IOException
      */
     public synchronized void handle(int ID, Object o) throws IOException, ClassNotFoundException{
-        TestWorld test = (TestWorld)o;
+        World test = (World)o;
         //System.out.println("got here");
         for (int i = 0; i < _clients.size(); i++){
             if (_clients.get(i).getID() != ID)

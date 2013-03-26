@@ -4,6 +4,7 @@
  */
 
 package edu.brown.cs32.browndemic.network;
+import edu.brown.cs32.browndemic.world.World;
 import java.net.*;
 import java.io.*;
 
@@ -46,7 +47,7 @@ public class GameClientThread extends Thread{
             while (true){
                 try{
                     //System.out.println("aww shit");
-                    TestWorld input = (TestWorld)_input.readObject();
+                    World input = (World)_input.readObject();
                     //System.out.println("got " + input);
                     _client.handle(input);
                     //System.out.println("sent " + input);
