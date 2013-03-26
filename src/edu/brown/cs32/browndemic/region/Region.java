@@ -20,7 +20,7 @@ public class Region {
     private ArrayList<String> _neighbors;
 
     //ArrayList of diseases in this Region
-    private ArrayList<String> _diseases;
+    private ArrayList<Disease> _diseases;
 
     //Total Region Population
     private int _population;
@@ -33,6 +33,12 @@ public class Region {
 
     //ArrayList of dead, order corresponds to the diseases in _disease
     private ArrayList<Integer> _dead;
+    
+    //ArrrayList of cured, order corresponds to diseases in _disease
+    private ArrayList<Integer> _cured;
+    
+    //ArrayList of boolean isCure, order corresponds to diseases in _disease
+    private ArrayList<boolean> _hasCure;
 
     //Unique Region name
     //emphasis on the unique, some code in here runs on that assumption (hash, equals, etc.)
@@ -41,6 +47,9 @@ public class Region {
     //number of seaports and airports open in this Region
     private int _sea;
     private int _air;
+    
+    //wealth of this Region (reflects infrastructure, productivity, actual wealth, etc.)
+    private double _wealth
     
 
     /**
@@ -52,63 +61,109 @@ public class Region {
      * @param air if this Region has open airports
      */
     public Region(String name, int population, Collection<String> neighbors,
-            int sea, int air){
+            int sea, int air, double wealth){
         _name = name;
         _population = population;
         _healthy = population;
         _infected = new ArrayList<Integer>();
         _dead = new ArrayList<Integer>();
+        _cured = new ArrayList<Integer>();
+        _hasCure = new ArrayList<boolean>();
         _neighbors = new ArrayList<String>(neighbors.size());
         _neighbors.addAll(neighbors);
         _sea = sea;
         _air = air;
-
+        _wealth = wealth;
     }
 
-    public void infect(String disease, int number){
-        if (_diseases.contains(disease)) {
-            for (int i = 0; i < _diseases.size(); i++) {
-                if (_diseases.get(i).equals(disease)) {
+    /**
+     * infect(Disease) updates the infected for the given disease, or adds the disease if it's new
+     * @param disease the disease to update for
+     **/
+    public void infect(Disease disease){
+      int index = disease.getID();
+        if (_diseases.size() > index && null != _diseases.get(index)) {
+          int number = 0;// TODO THIS NEEDS TO BE THE CALC FOR INFECTION
                     if(_healthy < number){
-                        _infected.set(i, _infected.get(i) + _healthy);
+                        _infected.set(index, _infected.get(index) + _healthy);
                         _healthy = 0;
                     }else{
-                    _infected.set(i, _infected.get(i) + number);
+                    _infected.set(index, _infected.get(index) + number);
                     _healthy = _healthy - number;
                     }
                     break;
-                }
-            }
-        }else{
-            _diseases.add(disease);
-            if(_healthy < number){
-                _infected.add(_healthy);
-                _healthy = 0;
+                }else{
+            _diseases.add(index, disease);
+            if(_healthy == 0){
+                _infected.add(index, _healthy);
             }else{
-                _infected.add(number);
-                _healthy = _healthy - number;
+                _infected.add(index, 1);
+                _healthy = _healthy - 1;
             }
+            _hasCure.add(index, false);
+            _dead.add(index, 0);
+            _cured.add(index, 0);
         }
     }
 
-    public void kill(String disease, int number){
-        if (_diseases.contains(disease)) {
-            for (int i = 0; i < _diseases.size(); i++) {
-                if (_diseases.get(i).equals(disease)) {
-                    if(_infected.get(i) < number){
-                        _dead.set(i, _dead.get(i) + _infected.get(i));
-                        _infected.set(i, 0);
+    /**
+     * infect(Disease, int) updates the dead for a given disease
+     * @param disease the disease to update dead for
+     **/
+    public void kill(Disease disease){
+      int index = disease.getID();
+        if (_diseases.size() > index && null != _diseases.get(index)) {
+          int number = Math.floor(disease.getLethality() * _infected.get(index));
+                    if(_healthy < number){
+                        _dead.set(index, _dead.get(index) + _healthy);
+                        _healthy = 0;
                     }else{
-                    _dead.set(i, _dead.get(i) + number);
-                    _infected.set(i, _infected.get(i) - number);
+                    _dead.set(index, _dead.get(index) + number);
+                    _healthy = _healthy - number;
                     }
                     break;
-                }
-            }
-        }else{
-            throw new Error ("ERROR: Cannot kill " + number + " people because \'"
-                    + disease + "\' has not infected Region " + getName());
+                }else{
+                  throw new Error("ERROR: Disease " + index + " does not exist region " + _name + ". Cannot kill anyone.");
         }
+    }
+    
+    /**
+     * cure(Disease) updates the number of cured for this disease
+     * @param d the disease to update cured for
+     */
+    public void cure(Disease d){
+      int index = d.getID();
+      if(_disease.size() > index && null != _diseases.get(index) && _hasCure.get(index) == true){
+        int number = 0; // TODO NEED TO WRITE CALC FOR HOW MANY TO CURE
+        if(_infected.get(index) < number){
+          _cured.set(index, _cured.get(index) + _infected.get(index));
+          _infected.set(index, 0);
+        }else{
+          _cured.set(index, _cured.get(index) + number);
+          _infected.set(index, _infected.get(index) - number);
+        }
+      }
+    }
+    
+    /**
+     * cure(int) sets the boolean cured for the disease at int to true
+     * int d the index of the disease to cure
+     */
+    public void cure(int d){
+      int index = d.getID();
+      if(_disease.size() > index && null != _diseases.get(d)){
+        _hasCude.set(d, true);
+      }else{
+          throw new Error("ERROR: Cannot cure disease " + d + " because it doesn't exist in Region " + _name + ".");
+        }
+    }
+    
+    public void update(){
+      for(Disease d : _diseases){
+        if(null != d){
+          // TODO FILL IN THE UPDATE METHOD
+        }
+      }
     }
 
     /**
@@ -126,6 +181,14 @@ public class Region {
     public int getSea(){
         return _sea ;
     }
+    
+    /**
+     * getWealth() returns the wealth of this region
+     * @return _wealth
+     */
+    public double getWealth(){
+      return _wealth;
+    }
 
     /**
      * getNeighbors() gets the names of all bordering Regions
@@ -136,42 +199,31 @@ public class Region {
     }
 
     /**
-     * getInfected() gets the number of infected people in this Region
+     * getInfected() gets the ArrayList of infected people in this Region
      * @return _infected
      */
-    public int getInfected(){
-        int count = 0;
-        for(int i : _infected)
-            count = count + i;
-        return count;
+    public ArrayList<Integer> getInfected(){
+        return _infected;
     }
 
     /**
-     * getInfected(String) gets the infected count for a particular disease
-     * @param disease the String disease name to find
-     * @return the number infected by this disease
-     */
-    public int getInfected(String disease){
-        for(int i = 0; i < _diseases.size(); i++){
-            if(_diseases.get(i).equals(disease))
-                return _infected.get(i);
-        }
-        return 0;
-    }
-
-    /**
-     * getDead() gets the number of dead people in this Region
+     * getKilled() gets the ArrayList of dead people in this Region
      * @return _dead;
      */
-    public int getDead(){
-        int count = 0;
-        for(int i : _dead)
-            count = count + i;
-        return count;
+    public ArrayList<Integer> getKilled(){
+        return _dead;
+    }
+    
+    /**
+     * getCured() gets the ArrayList of cured people in this Region
+     * @return _cured;
+     **/
+    public ArrayList<Integer> getCured(){
+      return _cured;
     }
 
     /**
-     * getAlive() gets the number of healthy people in String str =this Region
+     * getAlive() gets the number of healthy people in this Region
      * @return _healthy
      */
     public int getHealthy(){
