@@ -1,4 +1,4 @@
-package disease;
+package edu.brown.cs32.browndemic.disease;
 import java.util.HashMap;
 
 /**
@@ -24,7 +24,7 @@ public abstract class Disease {
     protected double _visibility;
     
     //A double reflecting how many points this disease has
-    protected integer _points;
+    protected Integer _points;
     
     /**
      * setID(int newID) sets the _id of this Disease to newID

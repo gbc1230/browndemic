@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.io.Serializable;
+import java.util.Queue;
+import java.util.concurrent.ArrayBlockingQueue;
 
 import edu.brown.cs32.browndemic.disease.Disease;
 import edu.brown.cs32.browndemic.region.Region;
@@ -37,6 +39,9 @@ public abstract class World implements Serializable{
     //Progress towards the cure
     protected List<Double> _cures;
     
+    //used for sending commands for threading
+    protected Queue<World> _commands;
+    
     //NOTE: each index of diseases, killed, cures refers to the same disease:
     //i.e. index 2 of each refers to the disease object, how many it has killed,
     //and how far its cure is, respectively
@@ -53,6 +58,14 @@ public abstract class World implements Serializable{
         _infected = 0;
     }
 
+    /**
+     * 
+     * @return 
+     */
+    public World getNextCommand(){
+        return _commands.poll();
+    }
+    
     /**
      * addRegion() puts the Region into _regions and adds it to _regIndex
      * @param r the Region to add
