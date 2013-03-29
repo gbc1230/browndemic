@@ -29,6 +29,7 @@ public class UIConstants {
 		public static final String EXIT = "Exit";
 		public static final String MINIMIZE = "Minimize";
 		public static final String ENTER_DISEASE_NAME = "Disease Name: ";
+		public static final String LOADING = "Loading";
 	}
 	
 	public static class Images {
@@ -73,6 +74,7 @@ public class UIConstants {
 		public static final Color RED_TEXT = new Color(197, 14, 14);
 		public static final Color TRANSPARENT = new Color(0, 0, 0, 0);
 		public static final Color MENU_BACKGROUND = Color.BLACK;
+		public static final Color LIGHT_GRAY = Color.gray;
 	}
 	
 	public static class Fonts {

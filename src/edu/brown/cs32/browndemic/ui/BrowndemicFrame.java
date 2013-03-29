@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FontFormatException;
-import java.awt.Graphics;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
@@ -23,16 +22,23 @@ import edu.brown.cs32.browndemic.ui.panels.titlebars.DefaultTitleBar;
 import edu.brown.cs32.browndemic.ui.panels.titlebars.TitleBar;
 
 /**
- * 
+ * BrowndemicFrame is the main JFrame for the project.
+ * The Frame has two sections, a Title Bar and a Content
+ * section.  The Title Bar and Content can be changed
+ * independently and both are UIPanels.
  * @author bmost
  *
  */
 public class BrowndemicFrame extends JFrame {
 
 	private static final long serialVersionUID = -8808883923263763897L;
-	JPanel _content;
-	JPanel _titleContainer;
+	private JPanel _content;
+	private JPanel _titleContainer;
 	
+	/**
+	 * Creates a BrowndemicFrame and does initial loading.  When
+	 * loading is done it will go the the MainMenu
+	 */
 	public BrowndemicFrame() {
 		init();
 		setPanel(new Loading(new InitialLoadingDone(), Images.MENU_IMAGES));
@@ -45,23 +51,31 @@ public class BrowndemicFrame extends JFrame {
 		}
 	}
 
+	/**
+	 * Creates a BrowndemicFrame with the specified UIPanel.
+	 * @param p The UIPanel to set the content area to.
+	 */
 	public BrowndemicFrame(UIPanel p) {
 		init();
 		setPanel(p);
+		defaultTitle();
 	}
 	
 	private void init() {
 		try {
 			UIConstants.init();
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
+			System.out.println("Could not load file: ");
 			e.printStackTrace();
+			System.exit(1);
 		} catch (FontFormatException e) {
-			// TODO Auto-generated catch block
+			System.out.println("Invalid Font");
 			e.printStackTrace();
+			System.exit(2);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			System.out.println("Could not read file: ");
 			e.printStackTrace();
+			System.exit(3);
 		}
 		
 		setTitle(Strings.TITLE);
@@ -87,14 +101,17 @@ public class BrowndemicFrame extends JFrame {
 		
 	}
 	
-	public void load(String... paths) {
-		Resources.loadImages(paths);
-	}
-	
+	/**
+	 * Sets the Title Bar to the default.
+	 */
 	public void defaultTitle() {
 		setTitle(new DefaultTitleBar());
 	}
 	
+	/**
+	 * Sets a custom Title Bar
+	 * @param t The TitleBar to be set.
+	 */
 	public void setTitle(TitleBar t) {
 		_titleContainer.removeAll();
 		revalidate();
@@ -102,6 +119,10 @@ public class BrowndemicFrame extends JFrame {
 		_titleContainer.add(t);
 	}
 	
+	/**
+	 * Sets the content panel
+	 * @param p The UIPanel to be set.
+	 */
 	public void setPanel(UIPanel p) {
 		_content.removeAll();
 		revalidate();

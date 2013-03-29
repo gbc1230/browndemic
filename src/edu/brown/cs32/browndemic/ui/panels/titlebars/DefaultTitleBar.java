@@ -11,6 +11,7 @@ import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
 import edu.brown.cs32.browndemic.ui.Resources;
+import edu.brown.cs32.browndemic.ui.Utils;
 import edu.brown.cs32.browndemic.ui.UIConstants.Colors;
 import edu.brown.cs32.browndemic.ui.UIConstants.Fonts;
 import edu.brown.cs32.browndemic.ui.UIConstants.Images;
@@ -85,7 +86,7 @@ public class DefaultTitleBar extends TitleBar implements MouseListener {
 		if (e.getSource() == close) {
 			System.exit(0);
 		} else if (e.getSource() == minimize) {
-			getParentFrame().setState(JFrame.ICONIFIED);
+			Utils.getParentFrame(this).setState(JFrame.ICONIFIED);
 		}
 	}
 }
