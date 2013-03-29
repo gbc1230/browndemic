@@ -4,7 +4,6 @@ import java.util.HashMap;
 /**
  *
  * @author bkoatz
- * @contributor ckilfoyl
  */
 public abstract class Disease {
     
@@ -23,8 +22,26 @@ public abstract class Disease {
     //A double reflecting how visible this disease is
     protected double _visibility;
     
+    //A double reflecting how resistant to heat this disease is
+    protected double _heatResistance;
+    
+    //A double reflecting how resistant to cold this disease is
+    protected double _coldResistance;
+    
+    //A double reflecting how resistant to wetness this disease is
+    protected double _wetResistance;
+    
+    //A double reflecting how resistant to dryness this disease is
+    protected double _dryResistance;
+    
+    //A double reflecting how resistant to medicine this disease is
+    protected double _medResistance;
+    
     //A double reflecting how many points this disease has
-    protected Integer _points;
+    protected int _points;
+    
+    //An Array of Perks available to this disease
+    protected Perk[] _perks;
     
     /**
      * setID(int newID) sets the _id of this Disease to newID
@@ -36,41 +53,21 @@ public abstract class Disease {
     }
     
     /**
-     * setInfectivity(double newInf) sets the _infectivity of this
-     * Disease to newInf
-     */
-    public void setInfectivity(double newInf){
-      
-      this._infectivity = newInf;
-      
-    }
-    
-    /**
-     * setLethality(double newLeth) sets the _lethality of this
-     * Disease to newLeth
-     */
-    public void setLethality(double newLeth){
-      
-      this._lethality = newLeth;
-      
-    }
-    
-    /**
-     * setVisibility(double newVis) sets the _visibility of this
-     * Disease to newVis
-     */
-    public void setVisibility(double newVis){
-      
-      this._visibility = newVis;
-      
-    }
-    
-    /**
      * addPoint() gives this Disease another point
      */
     public void addPoint(){
      
       this._points++;
+      
+    }
+    
+    /**
+     * getID() returns the unique integer ID of this Disease
+     * @return _id
+     */ 
+    public int getID(){
+      
+      return this._id;
       
     }
     
@@ -105,24 +102,118 @@ public abstract class Disease {
     }
     
     /**
-     * getName() returns the unique String name for this disease
+     * getName() returns the String name for this disease
      * @return _name
      */
     public String getName(){
-        return _name;
+        
+        return this._name;
+        
+    }
+    
+    /**
+     * getHeatRes() returns the heat resistance of this disease
+     * @return _heatResistance
+     */
+    public double getHeatRes(){
+        
+        return this._heatResistance;
+        
+    }
+    
+    /**
+     * getColdRes() returns the cold resistance of this disease
+     * @return _coldResistance
+     */
+    public double getColdRes(){
+        
+        return this._coldResistance;
+        
+    }
+    
+    /**
+     * getWetRes() returns the wetness resistance of this disease
+     * @return _wetResistance
+     */
+    public double getWetRes(){
+        
+        return this._wetResistance;
+        
+    }
+    
+    /**
+     * getDryRes() returns the dryness resistance of this disease
+     * @return _dryResistance
+     */
+    public double getDryRes(){
+        
+        return this._dryResistance;
+        
+    }
+    
+    /**
+     * getMedRes() returns the resistance to medicine of this disease
+     * @return _medResistance
+     */
+    public double getMedRes(){
+        
+        return this._medResistance;
+        
+    }
+    
+    /**
+     * getPoints() returns the number of points this disease has accrued
+     * @return _points
+     */
+    public int getPoints(){
+        return _points;
+    }
+    
+    /**
+     * buyPerk(int perkID) buys a perk, sets the availability of appropriate
+     * perks to true, and appropriately changes the qualities of this disease
+     * to match
+     */
+    public void buyPerk(int perkID) throws IllegalAccessException{
+        
+        if(!this._perks[perkID].isAvail() 
+                || this._perks[perkID].getCost() > this._points){
+            
+            throw new IllegalAccessException();
+            
+        }
+        
+        this._perks[perkID].setBought(true);
+        Perk boughtPerk = this._perks[perkID];
+        
+        for(Perk p: boughtPerk.getNext()){
+            
+            this._perks[p.getID()].setAvailability(true);
+            
+        }
+        
+        this._infectivity += boughtPerk.getInf();
+        this._lethality += boughtPerk.getLeth();
+        this._visibility += boughtPerk.getVis();
+        this._heatResistance += boughtPerk.getHeatRes();
+        this._coldResistance += boughtPerk.getColdRes();
+        this._wetResistance += boughtPerk.getWetRes();
+        this._dryResistance += boughtPerk.getDryRes();
+        this._medResistance += boughtPerk.getMedRes();
+        this._points -= boughtPerk.getCost();
     }
 
     //IMPORTANT PLEASE READ
-    //The following code relies on the uniqueness of the String name
+    //The following code relies on the uniqueness of the String ID
 
     /**
-     * toString gets a String of the unique name, the infectivity, the mortality
-     * @return
+     * toString gets a String of the unique ID, the infectivity, the mortality
+     * @return the id, name, infectivity, lethality and visibility of this disease
      */
     @Override
     public String toString(){
-        return _name + ", infectivity: " + _infectivity + ", mortality: " +
-                _mortality;
+        return _id + ", name: " + _name + ", infectivity: " + _infectivity + ", lethality: " +
+                _lethality + ", visibility: " + _visibility;
     }
 
 }

@@ -1,6 +1,5 @@
 package edu.brown.cs32.browndemic.ui.panels.menus;
 
-import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -11,7 +10,6 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 
 import edu.brown.cs32.browndemic.ui.Resources;
 import edu.brown.cs32.browndemic.ui.UIConstants.Colors;
