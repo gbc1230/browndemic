@@ -1,29 +1,109 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-package edu.brown.cs32.browndemic.disease;
+package disease;
+import java.util.HashMap;
 
 /**
  *
- * @author ckilfoyl
+ * @author bkoatz
+ * @contributor ckilfoyl
  */
 public abstract class Disease {
     
-    // TODO ensure in multiplayer that no two Diseases can have the same name
-    //a unique String Identifier for this disease
-    //emphasis on the unique, code in here relies on the uniqueness of the name
-    private String _name;
+    //The user-input string name of the disease
+    protected String _name;
+    
+    //The unique integer identifier of the disease
+    protected int _id;
 
-    //A floating pt number reflecting how infectious this disease is
-    // TODO decide how to apply infectivity, what scale it should be etc.
-    private float _infectivity;
+    //A double reflecting how infectious this disease is
+    protected double _infectivity;
 
-    //A floating pt number reflecting how deadly this disease is
-    // TODO decide how to apply mortality, what scale it should be etc.
-    private float _mortality;
-
+    //A double reflecting how deadly this disease is
+    protected double _lethality;
+    
+    //A double reflecting how visible this disease is
+    protected double _visibility;
+    
+    //A double reflecting how many points this disease has
+    protected integer _points;
+    
+    /**
+     * setID(int newID) sets the _id of this Disease to newID
+     */
+    public void setID(int newID){
+     
+      this._id = newID;
+      
+    }
+    
+    /**
+     * setInfectivity(double newInf) sets the _infectivity of this
+     * Disease to newInf
+     */
+    public void setInfectivity(double newInf){
+      
+      this._infectivity = newInf;
+      
+    }
+    
+    /**
+     * setLethality(double newLeth) sets the _lethality of this
+     * Disease to newLeth
+     */
+    public void setLethality(double newLeth){
+      
+      this._lethality = newLeth;
+      
+    }
+    
+    /**
+     * setVisibility(double newVis) sets the _visibility of this
+     * Disease to newVis
+     */
+    public void setVisibility(double newVis){
+      
+      this._visibility = newVis;
+      
+    }
+    
+    /**
+     * addPoint() gives this Disease another point
+     */
+    public void addPoint(){
+     
+      this._points++;
+      
+    }
+    
+    /**
+     * getInfectivity() returns the double infectivity of this Disease
+     * @return _infectivity
+     */ 
+    public double getInfectivity(){
+      
+      return this._infectivity;
+      
+    }
+    
+    /**
+     * getLethality() returns the double lethality of this Disease
+     * @return _lethality
+     */ 
+    public double getLethality(){
+      
+      return this._lethality;
+      
+    }
+    
+    /**
+     * getVisibility() returns the double Visibility of this Disease
+     * @return _visibility
+     */ 
+    public double getVisibility(){
+      
+      return this._visibility;
+      
+    }
+    
     /**
      * getName() returns the unique String name for this disease
      * @return _name
@@ -32,12 +112,8 @@ public abstract class Disease {
         return _name;
     }
 
-
     //IMPORTANT PLEASE READ
     //The following code relies on the uniqueness of the String name
-    //TODO: BEN - the World object will refer to each disease by a unique
-    //ID, will be one of 0, 1, 2, etc. depending on how many players.
-    //Look at the method headers of World to see how this is used
 
     /**
      * toString gets a String of the unique name, the infectivity, the mortality
@@ -49,20 +125,4 @@ public abstract class Disease {
                 _mortality;
     }
 
-    /**
-     * equals(Object) compares this disease to an object for equality
-     * @param o the object to compare to
-     * @return true if o is a disease of the same subclass and has the same name
-     */
-    @Override
-    public abstract boolean equals(Object o);
-
-    /**
-     *
-     * @return _name.hashCode() **assumes _name is unique**
-     */
-    @Override
-    public int hashCode(){
-        return _name.hashCode();
-    }
 }
