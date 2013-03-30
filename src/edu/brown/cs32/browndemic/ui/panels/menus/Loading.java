@@ -32,10 +32,24 @@ public class Loading extends UIPanel implements PropertyChangeListener {
 	
 	private JProgressBar _progress;
 	private DoneLoadingListener _doneLoadingListener;
+	private boolean _useResources;
 	
 	public Loading(DoneLoadingListener d, String... resources) {
 		super();
 		_doneLoadingListener = d;
+		_useResources = false;
+		
+		makeUI();
+		
+		Task t = new Task(resources);
+		t.addPropertyChangeListener(this);
+		t.execute();
+	}
+	
+	public Loading(DoneLoadingListener d,  boolean useResources, String... resources) {
+		super();
+		_doneLoadingListener = d;
+		_useResources = useResources;
 		
 		makeUI();
 		
@@ -69,7 +83,11 @@ public class Loading extends UIPanel implements PropertyChangeListener {
 	
 	@Override
 	public void setupForDisplay() {
-		Utils.getParentFrame(this).setTitle(new ResourcelessTitleBar());
+		if (_useResources) {
+			Utils.getParentFrame(this).defaultTitle();
+		} else {
+			Utils.getParentFrame(this).setTitle(new ResourcelessTitleBar());
+		}
 	}
 
 	@Override

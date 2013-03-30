@@ -46,14 +46,12 @@ public class DefaultTitleBar extends TitleBar implements MouseListener {
 		
 		add(Box.createRigidArea(new Dimension(300,0)));
 		
-		minimize = new HoverLabel(Resources.getImage(Images.MINIMIZE_BUTTON), Resources.getImage(Images.MINIMIZE_BUTTON_HOVER), 
-				UI.TITLE_HEIGHT, UI.TITLE_HEIGHT);
+		minimize = new HoverLabel(Resources.getImage(Images.MINIMIZE_BUTTON), Resources.getImage(Images.MINIMIZE_BUTTON_HOVER));
 		minimize.addMouseListener(this);
 		minimize.setToolTipText(Strings.MINIMIZE);
 		add(minimize);
 		
-		close = new HoverLabel(Resources.getImage(Images.CLOSE_BUTTON), Resources.getImage(Images.CLOSE_BUTTON_HOVER),
-				UI.TITLE_HEIGHT, UI.TITLE_HEIGHT);
+		close = new HoverLabel(Resources.getImage(Images.CLOSE_BUTTON), Resources.getImage(Images.CLOSE_BUTTON_HOVER));
 		close.addMouseListener(this);
 		close.setToolTipText(Strings.EXIT);
 		add(close);

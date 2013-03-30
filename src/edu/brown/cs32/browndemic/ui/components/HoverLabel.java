@@ -15,14 +15,7 @@ public class HoverLabel extends JLabel implements MouseListener {
 	public HoverLabel(BufferedImage normal, BufferedImage hover) {
 		_normal = new ImageIcon(normal);
 		_hover = new ImageIcon(hover);
-		setIcon(_normal);
-		addMouseListener(this);
-	}
-	
-	public HoverLabel(BufferedImage normal, BufferedImage hover, int width, int height) {
-		_normal = new ImageIcon(normal);
-		_hover = new ImageIcon(hover);
-		setPreferredSize(new Dimension(width, height));
+		setPreferredSize(new Dimension(normal.getWidth(), normal.getHeight()));
 		setIcon(_normal);
 		addMouseListener(this);
 	}
