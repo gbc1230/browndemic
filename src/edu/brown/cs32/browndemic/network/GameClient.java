@@ -5,8 +5,6 @@
 
 package edu.brown.cs32.browndemic.network;
 import edu.brown.cs32.browndemic.world.*;
-import java.util.Queue;
-import java.util.concurrent.ArrayBlockingQueue;
 import java.io.*;
 import java.net.*;
 
@@ -20,20 +18,20 @@ public class GameClient implements Runnable{
     private Socket _socket;
     //the thread this client will run on
     private Thread _thread;
-    //the queue to get new worlds
-    private Queue<World> _input;
+    //the world this queue runs off of
+    private World _world;
     //writer for this file
     private ObjectOutputStream _output;
     //Thread for this file's communications
     private GameClientThread _client;
 
     //constructor
-    public GameClient(InetAddress serverName, int serverPort) throws Exception{
+    public GameClient(World world, InetAddress serverName, int serverPort) throws Exception{
         System.out.println("Connecting...");
         try{
             _socket = new Socket(serverName, serverPort);
             System.out.println("Connected: " + _socket);
-            _input = new ArrayBlockingQueue<World>(10);
+            _world = world;
             _output = new ObjectOutputStream(_socket.getOutputStream());
             _client = new GameClientThread(this, _socket);
             _thread = new Thread(this);
@@ -54,9 +52,7 @@ public class GameClient implements Runnable{
         System.out.println("running");
         while(_thread != null){
             try{
-                String out = _input.readLine();
-                //System.out.println("got " + out);
-                World temp = new Earth(out);
+                World temp = _world.getNextCommand();
                 _output.writeObject(temp);
                 _output.flush();
                 //System.out.println("sent " + out);
@@ -95,6 +91,6 @@ public class GameClient implements Runnable{
 
     public static void main(String [] args) throws Exception{
         InetAddress local = InetAddress.getByName(args[0]);
-        GameClient client = new GameClient(local, Integer.parseInt(args[1]));
+        GameClient client = new GameClient(new Earth(), local, Integer.parseInt(args[1]));
     }
 }

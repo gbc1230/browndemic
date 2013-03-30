@@ -59,8 +59,8 @@ public abstract class World implements Serializable{
     }
 
     /**
-     * 
-     * @return 
+     * Gets the next world to send out
+     * @return The next world to send out
      */
     public World getNextCommand(){
         return _commands.poll();

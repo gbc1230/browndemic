@@ -114,6 +114,8 @@ public class GameServer implements Runnable{
     }
 
     public static void main(String [] args) throws Exception{
+        String s = InetAddress.getLocalHost().getHostName();
+        System.out.println(s);
         GameServer server = new GameServer(Integer.parseInt(args[0]));
     }
 
