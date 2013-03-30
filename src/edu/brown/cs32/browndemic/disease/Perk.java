@@ -1,4 +1,4 @@
-package disease;
+package edu.brown.cs32.browndemic.disease;
 import java.util.ArrayList;
 
 /**
@@ -6,8 +6,12 @@ import java.util.ArrayList;
  */
 public class Perk{
  
-  //the integer cost of this perk
+  //the integer cost to buy this perk
   private int _cost;
+  
+  //the integer price connected to selling this perk. A cost to viruses, refund
+  //to others.
+  private int _sellPrice;
   
   //the unique integer ID of this perk
   private int _id;
@@ -39,19 +43,21 @@ public class Perk{
   //the boolean availability of this perk to be purchased
   private boolean _availability = false;
   
-  //the boolean saying whether or not this perk has been purchased
-  private boolean _bought = false;
+  //the boolean saying whether or not this perk is owned by the disease
+  private boolean _owned = false;
   
   //the ArrayList of perks that this perk's purchase makes available
   private ArrayList<Perk> _nextPerks;
   
   //constuctor: sets cost, change in infectivity/lethality/visibility and
   //the perks that, when this perk is bought, become available for purchase
-  public Perk(int tempcost, double tempinf, double templeth, double tempvis,
+  public Perk(int tempcost, int tempsell,
+              double tempinf, double templeth, double tempvis,
               double tempheat, double tempcold, double tempwet, double tempdry,
               double tempmed, ArrayList<Perk> tempnext){
     
     this._cost = tempcost;
+    this._sellPrice = tempsell;
     this._infectivityChange = tempinf;
     this._lethalityChange = templeth;
     this._visibilityChange = tempvis;
@@ -75,12 +81,12 @@ public class Perk{
   }
   
   /**
-   * sets whether this perk has been bought
-   * @param bought        whether this perk has been bought
+   * sets whether this perk is owned by its disease
+   * @param owned        whether this perk is owned by its disease
    */
-  public void setBought(boolean bought){
+  public void setOwned(boolean owned){
     
-    this._bought = bought;
+    this._owned = owned;
     
   }
   
@@ -96,11 +102,21 @@ public class Perk{
   
   /**
    * gets the integer cost of this perk
-   * @return _cost
+   * @return _cost 
    */
   public int getCost(){
    
     return this._cost;
+    
+  }
+  
+  /**
+   * gets the integer selling price (cost or refund) of this perk
+   * @return __sellPrice
+   */
+  public int getSellPrice(){
+   
+    return this._sellPrice;
     
   }
   
@@ -205,12 +221,12 @@ public class Perk{
   }
   
   /**
-   * gets the boolean saying if this perk has been bought
-   * @return _bought
+   * gets the boolean saying if this perk is owned by the disease it is a part of
+   * @return _owned
    */
-  public boolean isBought(){
+  public boolean isOwned(){
    
-    return this._bought;
+    return this._owned;
     
   }
   
