@@ -1,5 +1,4 @@
 package edu.brown.cs32.browndemic.disease;
-import java.util.HashMap;
 
 /**
  *
@@ -183,7 +182,7 @@ public abstract class Disease {
             
         }
         
-        this._perks[perkID].setBought(true);
+        this._perks[perkID].setOwned(true);
         Perk boughtPerk = this._perks[perkID];
         
         for(Perk p: boughtPerk.getNext()){
@@ -203,6 +202,8 @@ public abstract class Disease {
         this._points -= boughtPerk.getCost();
     }
 
+    public abstract void sellPerk(int perkID) throws IllegalAccessException;
+    
     //IMPORTANT PLEASE READ
     //The following code relies on the uniqueness of the String ID
 
