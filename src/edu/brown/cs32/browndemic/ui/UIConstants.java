@@ -89,6 +89,9 @@ public class UIConstants {
 		public static final String STARTGAME = IMAGE_PATH + "startgame.png";
 		public static final String STARTGAME_HOVER = IMAGE_PATH + "startgame_hover.png";
 		
+		public static final String MAP = IMAGE_PATH + "test_world_map.png";
+		public static final String REGIONS = IMAGE_PATH + "test_world_regions.png";
+		
 		/*
 		 * Images that should be loaded when the program starts.
 		 */
@@ -117,6 +120,8 @@ public class UIConstants {
 		};
 		
 		public static final String[] GAME_IMAGES = {
+			MAP,
+			REGIONS,
 		};
 		
 	}

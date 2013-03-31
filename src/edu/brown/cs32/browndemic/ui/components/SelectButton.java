@@ -9,14 +9,14 @@ import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
-import edu.brown.cs32.browndemic.ui.listeners.OnSelectListener;
+import edu.brown.cs32.browndemic.ui.actions.Action;
 
 public class SelectButton extends JLabel implements MouseListener {
 	private static final long serialVersionUID = -413064734900079598L;
 	private ImageIcon _normal, _selected;
 	private boolean _isSelected;
 	
-	private ArrayList<OnSelectListener> _selectListeners = new ArrayList<>();
+	private ArrayList<Action> _selectActions = new ArrayList<>();
 	
 	public SelectButton(BufferedImage normal, BufferedImage selected) {
 		super();
@@ -28,16 +28,16 @@ public class SelectButton extends JLabel implements MouseListener {
 		addMouseListener(this);
 	}
 	
-	public void addOnSelectListener(OnSelectListener l) {
-		_selectListeners.add(l);
+	public void addOnSelectAction(Action a) {
+		_selectActions.add(a);
 	}
 	
 	public void setSelected(boolean b) {
 		_isSelected = b;
 		if (_isSelected) {
 			setIcon(_selected);
-			for (OnSelectListener l : _selectListeners) {
-				l.doOnSelect();
+			for (Action a : _selectActions) {
+				a.doAction();
 			}
 		} else {
 			setIcon(_normal);

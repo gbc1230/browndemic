@@ -14,7 +14,7 @@ import javax.swing.JPanel;
 import edu.brown.cs32.browndemic.ui.UIConstants.Images;
 import edu.brown.cs32.browndemic.ui.UIConstants.Strings;
 import edu.brown.cs32.browndemic.ui.UIConstants.UI;
-import edu.brown.cs32.browndemic.ui.listeners.DoneLoadingListener;
+import edu.brown.cs32.browndemic.ui.actions.Action;
 import edu.brown.cs32.browndemic.ui.panels.UIPanel;
 import edu.brown.cs32.browndemic.ui.panels.menus.Loading;
 import edu.brown.cs32.browndemic.ui.panels.menus.MainMenu;
@@ -41,11 +41,11 @@ public class BrowndemicFrame extends JFrame {
 	 */
 	public BrowndemicFrame() {
 		init();
-		setPanel(new Loading(new InitialLoadingDone(), Images.MENU_IMAGES));
+		setPanel(new Loading(new Loading.LoadImageWorker(new InitialLoadingDone(), Images.MENU_IMAGES)));
 	}
 	
-	private class InitialLoadingDone implements DoneLoadingListener {
-		public void doneLoading() {
+	private class InitialLoadingDone implements Action {
+		public void doAction() {
 			defaultTitle();
 			setPanel(new MainMenu());
 		}
@@ -129,6 +129,16 @@ public class BrowndemicFrame extends JFrame {
 		repaint();
 		_content.add(p);
 		p.setupForDisplay();
+		setVisible(true);
+	}
+	
+	public void setPanel(UIPanel p, boolean doSetup) {
+		_content.removeAll();
+		revalidate();
+		repaint();
+		_content.add(p);
+		if (doSetup)
+			p.setupForDisplay();
 		setVisible(true);
 	}
 	

@@ -9,6 +9,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingWorker;
 
 import edu.brown.cs32.browndemic.ui.BrowndemicFrame;
 import edu.brown.cs32.browndemic.ui.Resources;
@@ -18,11 +19,12 @@ import edu.brown.cs32.browndemic.ui.UIConstants.Images;
 import edu.brown.cs32.browndemic.ui.UIConstants.Strings;
 import edu.brown.cs32.browndemic.ui.UIConstants.UI;
 import edu.brown.cs32.browndemic.ui.Utils;
+import edu.brown.cs32.browndemic.ui.actions.Action;
 import edu.brown.cs32.browndemic.ui.components.HoverLabel;
 import edu.brown.cs32.browndemic.ui.components.SelectButton;
-import edu.brown.cs32.browndemic.ui.listeners.OnSelectListener;
 import edu.brown.cs32.browndemic.ui.panels.UIPanel;
 import edu.brown.cs32.browndemic.ui.panels.titlebars.BackTitleBar;
+import edu.brown.cs32.browndemic.world.Earth;
 
 public class SinglePlayer extends UIPanel implements MouseListener {
 
@@ -83,9 +85,9 @@ public class SinglePlayer extends UIPanel implements MouseListener {
 		_disease1 = new SelectButton(Resources.getImage(Images.DISEASE1), Resources.getImage(Images.DISEASE1_SELECTED));
 		_disease2 = new SelectButton(Resources.getImage(Images.DISEASE2), Resources.getImage(Images.DISEASE2_SELECTED));
 		_disease3 = new SelectButton(Resources.getImage(Images.DISEASE3), Resources.getImage(Images.DISEASE3_SELECTED));
-		_disease2.addOnSelectListener(new SelectListener(_disease1, _disease3));
-		_disease1.addOnSelectListener(new SelectListener(_disease2, _disease3));
-		_disease3.addOnSelectListener(new SelectListener(_disease2, _disease1));
+		_disease2.addOnSelectAction(new SelectAction(_disease1, _disease3));
+		_disease1.addOnSelectAction(new SelectAction(_disease2, _disease3));
+		_disease3.addOnSelectAction(new SelectAction(_disease2, _disease1));
 
 		disease.add(Box.createGlue());
 		disease.add(_disease1);
@@ -107,16 +109,16 @@ public class SinglePlayer extends UIPanel implements MouseListener {
 		add(Box.createGlue());
 	}
 	
-	private class SelectListener implements OnSelectListener {
+	private class SelectAction implements Action {
 		
 		private SelectButton[] other;
 		
-		public SelectListener(SelectButton... other) {
+		public SelectAction(SelectButton... other) {
 			this.other = other;
 		}
 
 		@Override
-		public void doOnSelect() {
+		public void doAction() {
 			_start.setEnabled(true);
 			for (SelectButton b : other) {
 				b.deSelect();
@@ -146,7 +148,7 @@ public class SinglePlayer extends UIPanel implements MouseListener {
 		if (e.getButton() != MouseEvent.BUTTON1) return;
 		if (!contains(e.getPoint())) return;
 		
-		if (e.getSource() == _start) {
+		if (e.getSource() == _start && _start.isEnabled()) {
 			int disease;
 			if (_disease1.isSelected())
 				disease = 1;
@@ -160,6 +162,7 @@ public class SinglePlayer extends UIPanel implements MouseListener {
 			}
 			
 			System.out.println("Start game with:\n\tDisease: " + disease + "\n\tName: " + name);
+			Utils.getParentFrame(this).setPanel(new SinglePlayerGame(new Earth()));
 		}
 	}
 }

@@ -1,6 +1,7 @@
 package edu.brown.cs32.browndemic.ui.components;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
@@ -10,7 +11,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.JComponent;
+import javax.swing.SwingWorker;
 
+import edu.brown.cs32.browndemic.ui.actions.Action;
 import edu.brown.cs32.browndemic.world.World;
 
 public class WorldMap extends JComponent implements MouseListener {
@@ -23,17 +26,47 @@ public class WorldMap extends JComponent implements MouseListener {
 	private int _selected;
 	
 	public WorldMap(World world, BufferedImage map, BufferedImage regions) {
+		super();
 		_world = world;
 		_map = map;
 		_regions = regions;
 		_selected = 0;
 		addMouseListener(this);
+		setPreferredSize(new Dimension(map.getWidth(), map.getHeight()));
+	}
+	
+	public class Loader extends SwingWorker<Void, Void> {
+		
+		private Action _done;
+		public Loader(Action a) {
+			_done = a;
+		}
+
+		@Override
+		protected Void doInBackground() throws Exception {
+			for (int x = 0; x < _regions.getWidth(); x++) {
+				for (int y = 0; y < _regions.getHeight(); y++) {
+					int id = getID(x, y);
+					if (!isValid(id)) continue;
+					if (!_overlays.containsKey(id)) {
+						_overlays.put(id, createRegion(id));
+					}
+				}
+				setProgress(x * 100 / (_regions.getWidth()-1));
+			}
+			return null;
+		}
+		
+		@Override
+		protected void done() {
+			_done.doAction();
+		}
 	}
 	
 	public void load() {
 		for (int x = 0; x < _regions.getWidth(); x++) {
 			for (int y = 0; y < _regions.getHeight(); y++) {
-				int id = _regions.getRGB(x, y);
+				int id = getID(x, y);
 				if (!isValid(id)) continue;
 				if (!_overlays.containsKey(id)) {
 					_overlays.put(id, createRegion(id));
@@ -47,7 +80,7 @@ public class WorldMap extends JComponent implements MouseListener {
 
 		for (int x = 0; x < _regions.getWidth(); x++) {
 			for (int y = 0; y < _regions.getHeight(); y++) {
-				int pixel = _regions.getRGB(x, y);
+				int pixel = getID(x, y);
 				if (pixel == id) {
 					out.setRGB(x, y, new Color(255, 0, 0, 100).getRGB());
 				}
@@ -61,7 +94,7 @@ public class WorldMap extends JComponent implements MouseListener {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		g.setColor(Color.ORANGE);
-		g.drawRect(0, 0, getWidth(), getHeight());
+		//g.drawRect(0, 0, getWidth(), getHeight());
 		g.drawImage(_map, 0, 0, getWidth(), getHeight(), 0, 0, _map.getWidth(), _map.getHeight(), null);
 		
 		if (isValid(_selected)) {
@@ -90,8 +123,8 @@ public class WorldMap extends JComponent implements MouseListener {
 		Point p = e.getPoint();
 		if (!contains(p)) return;
 		if (e.getButton() != MouseEvent.BUTTON1) return;
-		
-		int id = _regions.getRGB(p.x, p.y);
+
+		int id = getID(p.x, p.y);
 		
 		if (isValid(id)) {
 			setSelection(id);
@@ -106,5 +139,10 @@ public class WorldMap extends JComponent implements MouseListener {
 	
 	private void setSelection(int id) {
 		_selected = id;
+		repaint();
+	}
+	
+	private int getID(int x, int y) {
+		return _regions.getRGB(x, y) & 0x000000FF;
 	}
 }

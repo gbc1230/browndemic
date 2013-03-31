@@ -16,7 +16,7 @@ import edu.brown.cs32.browndemic.ui.UIConstants.Fonts;
 import edu.brown.cs32.browndemic.ui.UIConstants.Strings;
 import edu.brown.cs32.browndemic.ui.UIConstants.UI;
 import edu.brown.cs32.browndemic.ui.Utils;
-import edu.brown.cs32.browndemic.ui.listeners.DoneLoadingListener;
+import edu.brown.cs32.browndemic.ui.actions.Action;
 import edu.brown.cs32.browndemic.ui.panels.UIPanel;
 import edu.brown.cs32.browndemic.ui.panels.titlebars.ResourcelessTitleBar;
 
@@ -31,29 +31,24 @@ public class Loading extends UIPanel implements PropertyChangeListener {
 	private static final long serialVersionUID = 5754745059440665566L;
 	
 	private JProgressBar _progress;
-	private DoneLoadingListener _doneLoadingListener;
 	private boolean _useResources;
 	
-	public Loading(DoneLoadingListener d, String... resources) {
+	public Loading(SwingWorker<Void, Void> t) {
 		super();
-		_doneLoadingListener = d;
 		_useResources = false;
 		
 		makeUI();
 		
-		Task t = new Task(resources);
 		t.addPropertyChangeListener(this);
 		t.execute();
 	}
 	
-	public Loading(DoneLoadingListener d,  boolean useResources, String... resources) {
+	public Loading(boolean useResources, SwingWorker<Void, Void> t) {
 		super();
-		_doneLoadingListener = d;
 		_useResources = useResources;
 		
 		makeUI();
 		
-		Task t = new Task(resources);
 		t.addPropertyChangeListener(this);
 		t.execute();
 	}
@@ -96,10 +91,13 @@ public class Loading extends UIPanel implements PropertyChangeListener {
 			_progress.setValue((int)evt.getNewValue());
 	}
 	
-	private class Task extends SwingWorker<Void, Void> {
-		String[] resources;
-		public Task(String... resources) {
+	public static class LoadImageWorker extends SwingWorker<Void, Void> {
+		private String[] resources;
+		private Action _done;
+		
+		public LoadImageWorker(Action done, String... resources) {
 			this.resources = resources;
+			_done = done;
 		}
 		
 		@Override
@@ -117,7 +115,7 @@ public class Loading extends UIPanel implements PropertyChangeListener {
 		
 		@Override
 		public void done() {
-			_doneLoadingListener.doneLoading();
+			_done.doAction();
 		}
 	}
 

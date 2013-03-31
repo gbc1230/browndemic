@@ -33,6 +33,7 @@ public class DefaultTitleBar extends TitleBar implements MouseListener {
 	protected void makeUI() {
 		setBackground(Colors.MENU_BACKGROUND);
 		setPreferredSize(new Dimension(UI.WIDTH, UI.TITLE_HEIGHT));
+		new DragWindow(this);
 		
 		add(Box.createHorizontalGlue());
 		
