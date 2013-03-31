@@ -1,5 +1,6 @@
 package edu.brown.cs32.browndemic.ui.panels.menus;
 
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
@@ -27,6 +28,8 @@ public class SinglePlayerGame extends UIPanel {
 		
 		
 		add(info);
+		
+		add(Box.createGlue());
 	}
 
 	@Override
