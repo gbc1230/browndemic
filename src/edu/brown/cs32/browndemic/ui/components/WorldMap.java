@@ -39,7 +39,7 @@ public class WorldMap extends JComponent implements MouseListener {
 		_selected = 0;
 		addMouseListener(this);
 		setPreferredSize(new Dimension(map.getWidth(), map.getHeight()));
-		new Timer(10, new RepaintListener()).start();
+		new Timer(30, new RepaintListener()).start();
 	}
 	
 	public class Loader extends SwingWorker<Void, Void> {
