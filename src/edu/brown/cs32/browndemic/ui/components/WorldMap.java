@@ -12,6 +12,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
+import java.awt.image.ConvolveOp;
+import java.awt.image.Kernel;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -62,7 +64,7 @@ public class WorldMap extends JComponent implements MouseListener {
 					if (!isValid(id)) continue;
 					if (!_diseaseOverlays.containsKey(id)) {
 						_diseaseOverlays.put(id, createRegion(id, Color.RED));
-						_highlightOverlays.put(id, createRegion(id, new Color(255, 255, 100)));
+						_highlightOverlays.put(id, createRegion(id, new Color(255, 255, 175)));
 					}
 				}
 				setProgress(x * 100 / (_regions.getWidth()-1));
@@ -88,7 +90,11 @@ public class WorldMap extends JComponent implements MouseListener {
 			}
 		}
 		
-		return out;
+		Kernel k = new Kernel(3, 3, new float[] { 	1f/14f, 2f/14f, 1f/14f,
+													2f/14f, 4f/14f, 2f/14f,
+													1f/14f, 2f/14f, 1f/14f });
+		ConvolveOp op = new ConvolveOp(k);
+		return op.filter(out, null);
 	}
 	
 	@Override
