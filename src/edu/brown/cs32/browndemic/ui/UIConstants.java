@@ -89,8 +89,8 @@ public class UIConstants {
 		public static final String STARTGAME = IMAGE_PATH + "startgame.png";
 		public static final String STARTGAME_HOVER = IMAGE_PATH + "startgame_hover.png";
 		
-		public static final String MAP = IMAGE_PATH + "test_world_map.png";
-		public static final String REGIONS = IMAGE_PATH + "test_world_regions.png";
+		public static final String MAP = IMAGE_PATH + "earth.png";
+		public static final String REGIONS = IMAGE_PATH + "earth_regions.png";
 		
 		/*
 		 * Images that should be loaded when the program starts.
@@ -150,10 +150,12 @@ public class UIConstants {
 	public static class Fonts {
 		public static Font TITLE_BAR;
 		public static Font BIG_TEXT;
+		public static Font NORMAL_TEXT;
 		
 		public static void init() throws FileNotFoundException, FontFormatException, IOException {
 			TITLE_BAR = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream(new File(RESOURCE_PATH + "fonts/GhostWriter.ttf"))).deriveFont(22f);
 			BIG_TEXT = TITLE_BAR.deriveFont(30f);
+			NORMAL_TEXT = TITLE_BAR.deriveFont(16f);
 		}
 	}
 }

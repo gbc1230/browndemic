@@ -61,7 +61,7 @@ public class SinglePlayerGame extends UIPanel {
 		
 		add(info);
 		
-		add(Box.createGlue());
+		//add(Box.createGlue());
 		
 		add(_map);
 		

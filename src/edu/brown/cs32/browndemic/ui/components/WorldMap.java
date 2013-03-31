@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -18,6 +19,8 @@ import javax.swing.JComponent;
 import javax.swing.SwingWorker;
 import javax.swing.Timer;
 
+import edu.brown.cs32.browndemic.ui.UIConstants.Colors;
+import edu.brown.cs32.browndemic.ui.UIConstants.Fonts;
 import edu.brown.cs32.browndemic.ui.actions.Action;
 import edu.brown.cs32.browndemic.world.World;
 
@@ -39,6 +42,8 @@ public class WorldMap extends JComponent implements MouseListener {
 		_selected = 0;
 		addMouseListener(this);
 		setPreferredSize(new Dimension(map.getWidth(), map.getHeight()));
+		setMaximumSize(new Dimension(map.getWidth(), map.getHeight()));
+		setMinimumSize(new Dimension(map.getWidth(), map.getHeight()));
 		new Timer(30, new RepaintListener()).start();
 	}
 	
@@ -57,7 +62,7 @@ public class WorldMap extends JComponent implements MouseListener {
 					if (!isValid(id)) continue;
 					if (!_diseaseOverlays.containsKey(id)) {
 						_diseaseOverlays.put(id, createRegion(id, Color.RED));
-						_highlightOverlays.put(id, createRegion(id, Color.YELLOW));
+						_highlightOverlays.put(id, createRegion(id, new Color(255, 255, 100)));
 					}
 				}
 				setProgress(x * 100 / (_regions.getWidth()-1));
@@ -70,17 +75,6 @@ public class WorldMap extends JComponent implements MouseListener {
 			_done.doAction();
 		}
 	}
-	
-//	public void load() {
-//		for (int x = 0; x < _regions.getWidth(); x++) {
-//			for (int y = 0; y < _regions.getHeight(); y++) {
-//				int id = getID(x, y);
-//				if (!isValid(id)) continue;
-//				if (!_diseaseOverlays.containsKey(id)) {
-//				}
-//			}
-//		}
-//	}
 	
 	private BufferedImage createRegion(int id, Color c) {
 		BufferedImage out = new BufferedImage(_regions.getWidth(), _regions.getHeight(), BufferedImage.TYPE_INT_ARGB);
@@ -106,9 +100,27 @@ public class WorldMap extends JComponent implements MouseListener {
 		
 		if (isValid(_selected)) {
 			Graphics2D g2 = (Graphics2D) g;
+			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, Math.abs((System.currentTimeMillis() % 3000) - 1500)/5000.0f + 0.2f));
 			g2.drawImage(_highlightOverlays.get(_selected), 0, 0, getWidth(), getHeight(), 0, 0, _regions.getWidth(), _regions.getHeight(), null);
+			
+			drawInfoPanel(g2);
 		}
+	}
+	
+	private void drawInfoPanel(Graphics2D g2) {
+		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .9f));
+		g2.setColor(Color.BLACK);
+		g2.fillRect(0, getHeight() - 100, 225, 100);
+
+		g2.setColor(Colors.RED_TEXT);
+		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+		g2.setFont(Fonts.NORMAL_TEXT);
+		g2.drawString("This is a long Country name", 5, getHeight() - 80);
+
+		g2.drawString("Infected: 100,000 (10%)", 15, getHeight() - 55);
+		g2.drawString("Dead: 20,000 (2%)", 15, getHeight() - 35);
+		g2.drawString("Total: 1,000,000", 15, getHeight() - 15);
 	}
 	
 	private class RepaintListener implements ActionListener {
@@ -141,7 +153,7 @@ public class WorldMap extends JComponent implements MouseListener {
 		if (e.getButton() != MouseEvent.BUTTON1) return;
 
 		int id = getID(p.x, p.y);
-		
+		System.out.println(p);
 		if (isValid(id)) {
 			setSelection(id);
 		} else {
@@ -155,6 +167,7 @@ public class WorldMap extends JComponent implements MouseListener {
 	
 	private void setSelection(int id) {
 		_selected = id;
+		System.out.println(id);
 		repaint();
 	}
 	
