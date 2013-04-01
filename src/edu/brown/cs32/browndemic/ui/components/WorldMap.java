@@ -100,15 +100,21 @@ public class WorldMap extends JComponent implements MouseListener {
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		g.setColor(Color.ORANGE);
-		//g.drawRect(0, 0, getWidth(), getHeight());
-		g.drawImage(_map, 0, 0, getWidth(), getHeight(), 0, 0, _map.getWidth(), _map.getHeight(), null);
+		Graphics2D g2 = (Graphics2D) g;
+		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		
+		g.drawImage(_map, 0, 0, null);
+		
+		for (Map.Entry<Integer, BufferedImage> e : _diseaseOverlays.entrySet()) {
+			float percentInfected = System.currentTimeMillis() % 5000 / 5000.0f; //TODO: _world.getPercentInfected(e.getKey());
+			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, percentInfected/2.0f));
+			g2.drawImage(e.getValue(), 0, 0, null);
+
+		}
 		
 		if (isValid(_selected)) {
-			Graphics2D g2 = (Graphics2D) g;
-			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, Math.abs((System.currentTimeMillis() % 3000) - 1500)/5000.0f + 0.2f));
-			g2.drawImage(_highlightOverlays.get(_selected), 0, 0, getWidth(), getHeight(), 0, 0, _regions.getWidth(), _regions.getHeight(), null);
+			g2.drawImage(_highlightOverlays.get(_selected), 0, 0, null);
 			
 			drawInfoPanel(g2);
 		}
@@ -159,7 +165,6 @@ public class WorldMap extends JComponent implements MouseListener {
 		if (e.getButton() != MouseEvent.BUTTON1) return;
 
 		int id = getID(p.x, p.y);
-		System.out.println(p);
 		if (isValid(id)) {
 			setSelection(id);
 		} else {
@@ -173,11 +178,10 @@ public class WorldMap extends JComponent implements MouseListener {
 	
 	private void setSelection(int id) {
 		_selected = id;
-		System.out.println(id);
 		repaint();
 	}
 	
 	private int getID(int x, int y) {
-		return _regions.getRGB(x, y) & 0x000000FF;
+		return ((_regions.getRGB(x, y) & 0xFF000000) >>> 24) == 255 ? _regions.getRGB(x, y) & 0x000000FF : 0;
 	}
 }
