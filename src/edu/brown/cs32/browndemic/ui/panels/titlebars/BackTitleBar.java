@@ -2,6 +2,7 @@ package edu.brown.cs32.browndemic.ui.panels.titlebars;
 
 import javax.swing.JLabel;
 
+import edu.brown.cs32.browndemic.ui.UIConstants.Strings;
 import edu.brown.cs32.browndemic.ui.components.BackButton;
 import edu.brown.cs32.browndemic.ui.panels.UIPanel;
 
@@ -21,7 +22,9 @@ public class BackTitleBar extends DefaultTitleBar {
 	}
 	
 	protected void makeUI(UIPanel back) {
-		add(new BackButton(back));
+		BackButton b = new BackButton(back);
+		b.setToolTipText(Strings.GO_BACK + back.toString());
+		add(b);
 		super.makeUI();
 	}
 }

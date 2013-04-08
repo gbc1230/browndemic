@@ -49,13 +49,24 @@ public class UIConstants {
 	 */
 	public class Strings {
 		public static final String TITLE = "Browndemic";
-		public static final String SINGLE_PLAYER = "Single Player";
-		public static final String MULTI_PLAYER = "Multiplayer";
+		public static final String SINGLE_PLAYER = "SINGLE PLAYER";
+		public static final String MULTI_PLAYER = "MULTIPLAYER";
 		public static final String EXIT = "Exit";
 		public static final String MINIMIZE = "Minimize";
 		public static final String ENTER_DISEASE_NAME = "Disease Name: ";
 		public static final String LOADING = "Loading";
 		public static final String SELECT_DISEASE = "Select a Disease: ";
+		public static final String GO_BACK = "Go back to: ";
+		public static final String MAIN_MENU = "Main Menu";
+		public static final String LOADING_MENU = "Loading Menu";
+		public static final String MULTIPLAYER_MENU = "Multiplayer Menu";
+		public static final String SINGLEPLAYER_MENU = "Singleplayer Menu";
+		public static final String SINGLEPLAYER_GAME = "Singleplayer Game";
+		public static final String MULTIPLAYER_JOIN_MENU = "Join a Multiplayer Game";
+		public static final String MULTIPLAYER_CREATE_MENU = "Create a Multiplayer Game";
+		public static final String JOIN_GAME = "JOIN GAME";
+		public static final String CREATE_GAME = "CREATE GAME";
+		public static final String START_GAME = "START GAME";
 	}
 	
 	/**
@@ -78,6 +89,8 @@ public class UIConstants {
 		public static final String MINIMIZE_BUTTON_HOVER = IMAGE_PATH + "minimizebutton_hover.png";
 		public static final String TITLE = IMAGE_PATH + "title.png";
 		public static final String BACK = IMAGE_PATH + "back.png";
+		public static final String BACK_DOUBLE = IMAGE_PATH + "back_double.png";
+		public static final String BACK_DOUBLE_HOVER = IMAGE_PATH + "back_double_hover.png";
 		public static final String BACK_HOVER = IMAGE_PATH + "back_hover.png";
 		public static final String BACKGROUND = IMAGE_PATH + "background.png";
 		public static final String DISEASE1 = IMAGE_PATH + "disease_placeholder.png";
@@ -97,10 +110,10 @@ public class UIConstants {
 		 */
 		public static final String[] MENU_IMAGES = {
 			DEFAULT,
-			SINGLE_PLAYER,
-			SINGLE_PLAYER_HOVER,
-			MULTI_PLAYER,
-			MULTI_PLAYER_HOVER,
+			//SINGLE_PLAYER,
+			//SINGLE_PLAYER_HOVER,
+			//MULTI_PLAYER,
+			//MULTI_PLAYER_HOVER,
 			CLOSE_BUTTON,
 			CLOSE_BUTTON_HOVER,
 			MINIMIZE_BUTTON,
@@ -115,8 +128,8 @@ public class UIConstants {
 			DISEASE2_SELECTED,
 			DISEASE3,
 			DISEASE3_SELECTED,
-			STARTGAME,
-			STARTGAME_HOVER,
+			//STARTGAME,
+			//STARTGAME_HOVER,
 		};
 		
 		public static final String[] GAME_IMAGES = {
@@ -134,6 +147,7 @@ public class UIConstants {
 	 */
 	public static class Colors {
 		public static final Color RED_TEXT = new Color(197, 14, 14);
+		public static final Color HOVER_TEXT = Color.RED;
 		public static final Color TRANSPARENT = new Color(0, 0, 0, 0);
 		public static final Color MENU_BACKGROUND = Color.BLACK;
 		public static final Color LIGHT_GRAY = Color.gray;
@@ -151,11 +165,13 @@ public class UIConstants {
 		public static Font TITLE_BAR;
 		public static Font BIG_TEXT;
 		public static Font NORMAL_TEXT;
+		public static Font BUTTON_TEXT;
 		
 		public static void init() throws FileNotFoundException, FontFormatException, IOException {
 			TITLE_BAR = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream(new File(RESOURCE_PATH + "fonts/GhostWriter.ttf"))).deriveFont(22f);
-			BIG_TEXT = TITLE_BAR.deriveFont(30f);
+			BIG_TEXT = TITLE_BAR.deriveFont(38f);
 			NORMAL_TEXT = TITLE_BAR.deriveFont(16f);
+			BUTTON_TEXT = TITLE_BAR.deriveFont(46f);
 		}
 	}
 }

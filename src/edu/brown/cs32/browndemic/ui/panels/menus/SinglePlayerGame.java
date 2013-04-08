@@ -8,6 +8,7 @@ import edu.brown.cs32.browndemic.ui.BrowndemicFrame;
 import edu.brown.cs32.browndemic.ui.Resources;
 import edu.brown.cs32.browndemic.ui.UIConstants.Colors;
 import edu.brown.cs32.browndemic.ui.UIConstants.Images;
+import edu.brown.cs32.browndemic.ui.UIConstants.Strings;
 import edu.brown.cs32.browndemic.ui.Utils;
 import edu.brown.cs32.browndemic.ui.actions.Action;
 import edu.brown.cs32.browndemic.ui.components.WorldMap;
@@ -72,6 +73,11 @@ public class SinglePlayerGame extends UIPanel {
 	public void setupForDisplay() {
 		//TODO: Set TitleBar
 		Utils.getParentFrame(this).setPanel(new Loading(true, new Loading.LoadImageWorker(new ImagesDoneLoadingAction(Utils.getParentFrame(this)), Images.GAME_IMAGES)));
+	}
+	
+	@Override
+	public String toString() {
+		return Strings.SINGLEPLAYER_GAME;
 	}
 	
 }

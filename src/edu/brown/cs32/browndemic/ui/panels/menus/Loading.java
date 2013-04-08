@@ -118,5 +118,10 @@ public class Loading extends UIPanel implements PropertyChangeListener {
 			_done.doAction();
 		}
 	}
+	
+	@Override
+	public String toString() {
+		return Strings.LOADING_MENU;
+	}
 
 }

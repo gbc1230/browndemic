@@ -2,14 +2,12 @@ package edu.brown.cs32.browndemic.ui.panels.menus;
 
 import java.awt.Dimension;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.SwingWorker;
 
 import edu.brown.cs32.browndemic.ui.BrowndemicFrame;
 import edu.brown.cs32.browndemic.ui.Resources;
@@ -24,9 +22,8 @@ import edu.brown.cs32.browndemic.ui.components.HoverLabel;
 import edu.brown.cs32.browndemic.ui.components.SelectButton;
 import edu.brown.cs32.browndemic.ui.panels.UIPanel;
 import edu.brown.cs32.browndemic.ui.panels.titlebars.BackTitleBar;
-import edu.brown.cs32.browndemic.world.Earth;
 
-public class SinglePlayer extends UIPanel implements MouseListener {
+public class SinglePlayer extends UIPanel {
 
 	private static final long serialVersionUID = -1231229219691042468L;
 	
@@ -100,7 +97,7 @@ public class SinglePlayer extends UIPanel implements MouseListener {
 		
 		add(Box.createGlue());
 		
-		_start = new HoverLabel(Resources.getImage(Images.STARTGAME), Resources.getImage(Images.STARTGAME_HOVER));
+		_start = new HoverLabel(Strings.START_GAME, Fonts.BUTTON_TEXT, Colors.RED_TEXT, Colors.HOVER_TEXT);
 		_start.addMouseListener(this);
 		_start.setEnabled(false);
 		_start.setAlignmentX(CENTER_ALIGNMENT);
@@ -126,28 +123,8 @@ public class SinglePlayer extends UIPanel implements MouseListener {
 		}
 		
 	}
-
 	@Override
-	public void mouseClicked(MouseEvent arg0) {
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent arg0) {
-	}
-
-	@Override
-	public void mouseExited(MouseEvent arg0) {
-	}
-
-	@Override
-	public void mousePressed(MouseEvent arg0) {
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent e) {
-		if (e.getButton() != MouseEvent.BUTTON1) return;
-		if (!contains(e.getPoint())) return;
-		
+	public void mouseReleasedInside(MouseEvent e) {		
 		if (e.getSource() == _start && _start.isEnabled()) {
 			int disease;
 			if (_disease1.isSelected())
@@ -162,7 +139,12 @@ public class SinglePlayer extends UIPanel implements MouseListener {
 			}
 			
 			System.out.println("Start game with:\n\tDisease: " + disease + "\n\tName: " + name);
-			Utils.getParentFrame(this).setPanel(new SinglePlayerGame(new Earth()));
+			Utils.getParentFrame(this).setPanel(new SinglePlayerGame(null));
 		}
+	}
+	
+	@Override
+	public String toString() {
+		return Strings.SINGLEPLAYER_MENU;
 	}
 }
