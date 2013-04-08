@@ -14,6 +14,7 @@ import javax.swing.JLabel;
 import edu.brown.cs32.browndemic.ui.Resources;
 import edu.brown.cs32.browndemic.ui.UIConstants.Colors;
 import edu.brown.cs32.browndemic.ui.UIConstants.Images;
+import edu.brown.cs32.browndemic.ui.UIConstants.UI;
 import edu.brown.cs32.browndemic.ui.Utils;
 import edu.brown.cs32.browndemic.ui.components.HoverLabel;
 import edu.brown.cs32.browndemic.ui.panels.UIPanel;
@@ -41,15 +42,17 @@ public class MainMenu extends UIPanel implements MouseListener {
 	public void makeUI() {
 		setBackground(Colors.MENU_BACKGROUND);
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		setPreferredSize(new Dimension(800, 600));
+		setPreferredSize(new Dimension(UI.WIDTH, UI.CONTENT_HEIGHT));
 		
-		add(Box.createRigidArea(new Dimension(0, 20)));
+		add(Box.createRigidArea(new Dimension(UI.WIDTH, 0)));
+		add(Box.createVerticalGlue());
 		
 		JLabel banner = new JLabel(new ImageIcon(Resources.getImage(Images.TITLE)));
 		banner.setPreferredSize(new Dimension(800, 200));
 		banner.setAlignmentX(Component.CENTER_ALIGNMENT);
 		add(banner);
 		
+		add(Box.createVerticalGlue());
 		add(Box.createVerticalGlue());
 
 		single_ = new HoverLabel(Resources.getImage(Images.SINGLE_PLAYER), Resources.getImage(Images.SINGLE_PLAYER_HOVER)); 
@@ -61,10 +64,15 @@ public class MainMenu extends UIPanel implements MouseListener {
 		
 		add(single_);
 		add(multi_);
-		
+
+		add(Box.createVerticalGlue());
+		add(Box.createVerticalGlue());
+		add(Box.createVerticalGlue());
+		add(Box.createVerticalGlue());
+		add(Box.createVerticalGlue());
 		add(Box.createVerticalGlue());
 		
-		add(Box.createRigidArea(new Dimension(0, 80)));
+		//add(Box.createRigidArea(new Dimension(0, 80)));
 	}
 
 	@Override

@@ -45,7 +45,7 @@ public class DefaultTitleBar extends TitleBar implements MouseListener {
 		new DragWindow(title);
 		add(title);
 		
-		add(Box.createRigidArea(new Dimension(300,0)));
+		add(Box.createRigidArea(new Dimension(UI.WIDTH/2 - UI.TITLE_HEIGHT * 2 - 40,0)));
 		
 		minimize = new HoverLabel(Resources.getImage(Images.MINIMIZE_BUTTON), Resources.getImage(Images.MINIMIZE_BUTTON_HOVER));
 		minimize.addMouseListener(this);

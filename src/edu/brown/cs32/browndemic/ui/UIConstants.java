@@ -35,8 +35,8 @@ public class UIConstants {
 	 *
 	 */
 	public class UI {
-		public static final int WIDTH = 800;
-		public static final int HEIGHT = 600;
+		public static final int WIDTH = 1000;
+		public static final int HEIGHT = 700;
 		public static final int TITLE_HEIGHT = 25;
 		public static final int CONTENT_HEIGHT = HEIGHT - TITLE_HEIGHT;
 	}
@@ -89,7 +89,7 @@ public class UIConstants {
 		public static final String STARTGAME = IMAGE_PATH + "startgame.png";
 		public static final String STARTGAME_HOVER = IMAGE_PATH + "startgame_hover.png";
 		
-		public static final String MAP = IMAGE_PATH + "earth.png";
+		public static final String MAP = IMAGE_PATH + "earth_large.png";
 		public static final String REGIONS = IMAGE_PATH + "earth_regions.png";
 		
 		/*
