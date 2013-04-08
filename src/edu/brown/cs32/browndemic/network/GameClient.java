@@ -53,8 +53,10 @@ public class GameClient implements Runnable{
         while(_thread != null){
             try{
                 World temp = _world.getNextCommand();
-                _output.writeObject(temp);
-                _output.flush();
+                if (temp != null){
+                    _output.writeObject(temp);
+                    _output.flush();
+                }
                 //System.out.println("sent " + out);
             }
             catch(IOException e){
@@ -69,7 +71,7 @@ public class GameClient implements Runnable{
      * @param msg The message
      */
     public void handle(World msg){
-        System.out.println(msg.toString());
+        //update _world to msg
     }
 
     /**
@@ -91,6 +93,6 @@ public class GameClient implements Runnable{
 
     public static void main(String [] args) throws Exception{
         InetAddress local = InetAddress.getByName(args[0]);
-        GameClient client = new GameClient(new Earth(), local, Integer.parseInt(args[1]));
+        GameClient client = new GameClient(new EarthSP(), local, Integer.parseInt(args[1]));
     }
 }

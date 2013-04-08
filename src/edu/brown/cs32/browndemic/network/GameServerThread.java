@@ -84,6 +84,7 @@ public class GameServerThread extends Thread{
      * Opens the streams
      * @throws java.io.IOException
      */
+    
     public void open() throws IOException{
         _input = new ObjectInputStream(new BufferedInputStream(_socket.getInputStream()));
         _output = new ObjectOutputStream(new BufferedOutputStream(_socket.getOutputStream()));
