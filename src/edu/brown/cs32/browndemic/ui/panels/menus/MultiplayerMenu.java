@@ -31,10 +31,9 @@ public class MultiplayerMenu extends UIPanel implements MouseListener {
 		makeUI();
 	}
 	
-	private void makeUI() {
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		setPreferredSize(new Dimension(UI.WIDTH, UI.CONTENT_HEIGHT));
-		setBackground(Colors.MENU_BACKGROUND);
+	@Override
+	protected void makeUI() {
+		super.makeUI();
 
 		JPanel host = new JPanel();
 		host.setLayout(new BoxLayout(host, BoxLayout.X_AXIS));
@@ -154,9 +153,11 @@ public class MultiplayerMenu extends UIPanel implements MouseListener {
 	public void mouseReleasedInside(MouseEvent e) {
 		if (e.getSource() == _join) {
 			System.out.printf("Connect to %s:%s\n", _host.getText(), _port.getText());
+			Utils.getParentFrame(this).setPanel(new MultiplayerLobby(false));
 			//Utils.getParentFrame(this).setPanel(new MultiplayerJoinServer());
 		} else if (e.getSource() == _create) {
 			System.out.printf("Host on port %s\n", _port.getText());
+			Utils.getParentFrame(this).setPanel(new MultiplayerLobby(true));
 			//Utils.getParentFrame(this).setPanel(new MultiplayerCreateServer());
 		}
 	}

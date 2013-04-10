@@ -6,7 +6,6 @@ import javax.swing.JPanel;
 
 import edu.brown.cs32.browndemic.ui.BrowndemicFrame;
 import edu.brown.cs32.browndemic.ui.Resources;
-import edu.brown.cs32.browndemic.ui.UIConstants.Colors;
 import edu.brown.cs32.browndemic.ui.UIConstants.Images;
 import edu.brown.cs32.browndemic.ui.UIConstants.Strings;
 import edu.brown.cs32.browndemic.ui.Utils;
@@ -51,9 +50,9 @@ public class SinglePlayerGame extends UIPanel {
 		}
 	}
 	
-	private void makeUI() {
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		setBackground(Colors.MENU_BACKGROUND);
+	@Override
+	protected void makeUI() {
+		super.makeUI();
 		
 		JPanel info = new JPanel();
 		info.setLayout(new BoxLayout(info, BoxLayout.X_AXIS));

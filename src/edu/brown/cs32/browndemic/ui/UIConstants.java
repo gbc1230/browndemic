@@ -75,6 +75,8 @@ public class UIConstants {
 		public static final String CREATE_PORT_TOOLTIP = "Enter port number to host on";
 		public static final String CONNECT_TO_SERVER = "Connect to a server: ";
 		public static final String HOST_SERVER = "Host a server: ";
+		public static final String KICK_PLAYER = "KICK";
+		public static final String CHAT_TOOLTIP = "Press enter to send chat message";
 	}
 	
 	/**

@@ -42,12 +42,10 @@ public class SinglePlayer extends UIPanel {
 		Utils.getParentFrame(this).setTitle(new BackTitleBar(new MainMenu()));
 	}
 	
-	private void makeUI() {
+	@Override
+	protected void makeUI() {
 		
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		setPreferredSize(new Dimension(UI.WIDTH, UI.CONTENT_HEIGHT));
-		setBackground(Colors.MENU_BACKGROUND);
-		
+		super.makeUI();
 		
 		add(Box.createRigidArea(new Dimension(1, 100)));
 		

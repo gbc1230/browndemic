@@ -5,7 +5,6 @@ import java.awt.Dimension;
 import java.awt.event.MouseEvent;
 
 import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
@@ -39,10 +38,9 @@ public class MainMenu extends UIPanel {
 		Utils.getParentFrame(this).defaultTitle();
 	}
 
-	public void makeUI() {
-		setBackground(Colors.MENU_BACKGROUND);
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		setPreferredSize(new Dimension(UI.WIDTH, UI.CONTENT_HEIGHT));
+	@Override
+	protected void makeUI() {
+		super.makeUI();
 		
 		add(Box.createRigidArea(new Dimension(UI.WIDTH, 0)));
 		add(Box.createVerticalGlue());
