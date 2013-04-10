@@ -12,7 +12,7 @@ public abstract class Earth extends World{
     
     public Earth(){
         super();
-        _population = 7000000;
+        _population = 7000000000L;
         //add regions
     }
     

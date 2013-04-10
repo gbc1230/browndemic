@@ -16,6 +16,7 @@ import java.util.ArrayList;
  */
 public class GameServer implements Runnable{
 
+    private final int PORT = 6000;
     //one thread per client
     private List<GameServerThread> _clients;
     //the socket this server runs on
@@ -26,18 +27,13 @@ public class GameServer implements Runnable{
     private boolean _threadOn;
 
     // constructor
-    public GameServer(int port){
-        try{
-            System.out.println("Binding to port" + port);
-            _server = new ServerSocket(port);
-            _thread = new Thread(this);
-            _clients = new ArrayList<GameServerThread>();
-            _threadOn = true;
-            _thread.start();
-        }
-        catch(IOException e){
-            System.out.println("Cannot bind to port " + port);
-        }
+    public GameServer() throws IOException{
+        System.out.println("Binding to port" + PORT);
+        _server = new ServerSocket(PORT);
+        _thread = new Thread(this);
+        _clients = new ArrayList<GameServerThread>();
+        _threadOn = true;
+        _thread.start();
     }
 
     //run method: catches new threads as they come in
@@ -116,7 +112,7 @@ public class GameServer implements Runnable{
     public static void main(String [] args) throws Exception{
         String s = InetAddress.getLocalHost().getHostName();
         System.out.println(s);
-        GameServer server = new GameServer(Integer.parseInt(args[0]));
+        GameServer server = new GameServer();
     }
 
 }

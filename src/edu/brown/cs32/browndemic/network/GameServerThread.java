@@ -42,8 +42,8 @@ public class GameServerThread extends Thread{
             //System.out.println("sent " + msg);
         }
         catch(IOException e){
-            System.out.println("ERROR: " + _ID + " couldn't send: " + e.getMessage());
             _server.remove(_ID);
+            throw new IOException();
         }
     }
 

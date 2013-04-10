@@ -14,6 +14,7 @@ import java.net.*;
  */
 public class GameClient implements Runnable{
 
+    private final int PORT = 6000;
     //the socket this client is at
     private Socket _socket;
     //the thread this client will run on
@@ -26,10 +27,10 @@ public class GameClient implements Runnable{
     private GameClientThread _client;
 
     //constructor
-    public GameClient(World world, InetAddress serverName, int serverPort) throws Exception{
+    public GameClient(World world, InetAddress serverName) throws Exception{
         System.out.println("Connecting...");
         try{
-            _socket = new Socket(serverName, serverPort);
+            _socket = new Socket(serverName, PORT);
             System.out.println("Connected: " + _socket);
             _world = world;
             _output = new ObjectOutputStream(_socket.getOutputStream());
@@ -93,6 +94,6 @@ public class GameClient implements Runnable{
 
     public static void main(String [] args) throws Exception{
         InetAddress local = InetAddress.getByName(args[0]);
-        GameClient client = new GameClient(new EarthSP(), local, Integer.parseInt(args[1]));
+        GameClient client = new GameClient(new EarthSP(), local);
     }
 }
