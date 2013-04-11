@@ -32,16 +32,20 @@ public abstract class World implements Serializable{
     protected List<Disease> _diseases;
     
     //An ArrayList keeping track of how many people each disease has killed / infected
-    protected List<Integer> _kills, _infects;
+    //winners takes care of the winners: if empty at the end of the game,
+    //it signifies that all diseases were cured
+    protected List<Integer> _kills, _infects, _winners;
 
     //Progress towards the cure
     protected List<Double> _cures;
     
     //which cures have been sent out already
+    //NOTE: a cure is the progress towards distributing the cure; a disease
+    //is CURED when it is completely erradicated in a region
     protected List<Boolean> _sent, _cured;
     
     //whether or not the game is still going on
-    protected boolean _running;
+    protected boolean _gameOver;
     
     //NOTE: each index of diseases, killed, cures refers to the same disease:
     //i.e. index 2 of each refers to the disease object, how many it has killed,
@@ -54,12 +58,14 @@ public abstract class World implements Serializable{
         _regIndex = new HashMap<>();
         _diseases = new ArrayList<>();
         _kills = new ArrayList<>();
+        _infects = new ArrayList<>();
+        _winners = new ArrayList<>();
         _cures = new ArrayList<>();
         _sent = new ArrayList<>();
         _cured = new ArrayList<>();
         _dead = 0;
         _infected = 0;
-        _running = false;
+        _gameOver = false;
     }
 
     /**
@@ -119,6 +125,22 @@ public abstract class World implements Serializable{
         return _dead;
     }
     
+    public List<Region> getRegions(){
+        return _regions;
+    }
+    
+    public List<Disease> getDiseases(){
+        return _diseases;
+    }
+    
+    public List<Integer> getWinners(){
+        return _winners;
+    }
+    
+    public boolean isGameOver(){
+        return _gameOver;
+    }
+    
     /**
      * Once the world has been initialized, starts the world
      */
@@ -128,7 +150,7 @@ public abstract class World implements Serializable{
             _sent.add(false);
             _cured.add(false);
         }
-        _running = true;
+        run();
     }
     
     /**
@@ -228,6 +250,10 @@ public abstract class World implements Serializable{
         }
     }
     
+    /**
+     * Lets me know if all diseases have been cured
+     * @return boolean
+     */
     public boolean allCured(){
         boolean cured = true;
         for (boolean c : _cured){
@@ -240,6 +266,35 @@ public abstract class World implements Serializable{
     }
     
     /**
+     * Lets me know if all the people in the world are dead
+     * @return boolean
+     */
+    public boolean allKilled(){
+        return _dead >= _population;
+    }
+    
+    /**
+     * Return a list of winners, just in case there's a tie
+     * @return 
+     */
+    public List<Integer> crownWinners(){
+        int cur = _kills.get(0);
+        List<Integer> ans = new ArrayList<>();
+        ans.add(0);
+        for (int i = 1; i < _kills.size(); i++){
+            int temp = _kills.get(i);
+            if (temp > cur){
+                ans.clear();
+                ans.add(i);
+                cur = temp;
+            }
+            if (temp == cur)
+                ans.add(i);
+        }
+        return ans;
+    }
+    
+    /**
      * Updates everything necessary from regions
      */
     public void update(){
@@ -248,7 +303,22 @@ public abstract class World implements Serializable{
         updateInfected();
         updateCures();
         checkCures();
-        
+        updateCured();
+    }
+    
+    public void run(){
+        while (!_gameOver){
+            update();
+            if (allCured()){
+                _gameOver = true;
+                break;
+            }
+            else if (allKilled()){
+                _winners = crownWinners();
+                _gameOver = true;
+                break;
+            }
+        }
     }
     
     @Override
