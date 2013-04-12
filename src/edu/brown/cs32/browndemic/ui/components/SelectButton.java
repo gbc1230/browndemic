@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.SwingUtilities;
 
 import edu.brown.cs32.browndemic.ui.actions.Action;
 
@@ -74,7 +75,7 @@ public class SelectButton extends JLabel implements MouseListener {
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		if (e.getButton() != MouseEvent.BUTTON1) return;
+		if (!SwingUtilities.isLeftMouseButton(e)) return;
 		if (!contains(e.getPoint())) return;
 		setSelected(true);
 	}

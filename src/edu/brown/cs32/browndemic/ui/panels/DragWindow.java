@@ -6,6 +6,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
 import javax.swing.JComponent;
+import javax.swing.SwingUtilities;
 
 import edu.brown.cs32.browndemic.ui.Utils;
 
@@ -41,6 +42,8 @@ public class DragWindow implements MouseListener, MouseMotionListener {
 	
 	@Override
 	public void mouseDragged(MouseEvent e) {
+		if (!SwingUtilities.isLeftMouseButton(e)) return;
+		
 		Point p = getScreenLocation(e);
 		Point offset = new Point((int) p.getX() - (int) _startDrag.getX(),
 		        (int) p.getY() - (int) _startDrag.getY());
@@ -67,6 +70,8 @@ public class DragWindow implements MouseListener, MouseMotionListener {
 	
 	@Override
 	public void mousePressed(MouseEvent e) {
+		if (!SwingUtilities.isLeftMouseButton(e)) return;
+		
 		_startDrag = getScreenLocation(e);
 		_startLoc = Utils.getParentFrame(_component).getLocation();
 	}

@@ -1,6 +1,7 @@
 package edu.brown.cs32.browndemic.ui.panels.menus;
 
-import javax.swing.Box;
+import java.awt.Color;
+
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
@@ -12,6 +13,9 @@ import edu.brown.cs32.browndemic.ui.Utils;
 import edu.brown.cs32.browndemic.ui.actions.Action;
 import edu.brown.cs32.browndemic.ui.components.WorldMap;
 import edu.brown.cs32.browndemic.ui.panels.UIPanel;
+import edu.brown.cs32.browndemic.ui.panels.subpanels.ChatPanel;
+import edu.brown.cs32.browndemic.ui.panels.subpanels.InformationBar;
+import edu.brown.cs32.browndemic.ui.panels.subpanels.UpgradePanel;
 import edu.brown.cs32.browndemic.world.World;
 
 public class SinglePlayerGame extends UIPanel {
@@ -54,8 +58,7 @@ public class SinglePlayerGame extends UIPanel {
 	protected void makeUI() {
 		super.makeUI();
 		
-		JPanel info = new JPanel();
-		info.setLayout(new BoxLayout(info, BoxLayout.X_AXIS));
+		JPanel info = new InformationBar();
 		
 		
 		
@@ -65,7 +68,14 @@ public class SinglePlayerGame extends UIPanel {
 		
 		add(_map);
 		
-		add(Box.createGlue());
+		JPanel bottom = new JPanel();
+		bottom.setBackground(Color.GREEN);
+		bottom.setLayout(new BoxLayout(bottom, BoxLayout.X_AXIS));
+		
+		bottom.add(new UpgradePanel(null));
+		bottom.add(new ChatPanel());
+		
+		add(bottom);
 	}
 
 	@Override

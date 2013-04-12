@@ -5,6 +5,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 public abstract class BrowndemicPanel extends JPanel implements MouseListener {
 	
@@ -32,7 +33,7 @@ public abstract class BrowndemicPanel extends JPanel implements MouseListener {
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		if (e.getButton() != MouseEvent.BUTTON1) return;
+		if (!SwingUtilities.isLeftMouseButton(e)) return;
 		if (!(e.getSource() instanceof Container)) return;
 		if (!((Container)e.getSource()).contains(e.getPoint())) return;
 		mouseReleasedInside(e);
