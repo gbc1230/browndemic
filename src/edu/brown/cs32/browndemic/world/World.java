@@ -306,6 +306,9 @@ public abstract class World implements Serializable{
         updateCured();
     }
     
+    /**
+     * Runs the game
+     */
     public void run(){
         while (!_gameOver){
             update();
