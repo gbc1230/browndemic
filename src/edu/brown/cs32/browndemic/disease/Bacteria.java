@@ -10,7 +10,7 @@ public class Bacteria extends Disease implements Perks{
     
         this._name = tempname;
         this._perks = new Perk[10];
-        this._perks[0] = VOMITING_BACTERIA;
+        this._perks[0] = new Perk(VOMITING_BACTERIA);
         this._perks[0].setID(0);
         
     }
@@ -26,9 +26,23 @@ public class Bacteria extends Disease implements Perks{
         
         this._perks[perkID].setOwned(false);
         Perk soldPerk = this._perks[perkID];
-        
+
+        double changeInf =  soldPerk.getInf();
+        double changeLeth = soldPerk.getLeth();
+        double changeVis = soldPerk.getVis();
+        double changeHeatRes = soldPerk.getHeatRest();
+        double changeColdRes = soldPerk.getColdRes();
+        double changeWetRes = soldPerk.getWetRes();
+        double changeDryRes = soldPerk.getDryRes();
+        double changeMedRes = soldPerk.getMedRes();
+        int changePoints = soldPerk.getSellPrice();
         for(Perk p: soldPerk.getNext()){
-            
+
+            if(p.isOwned()){
+
+
+
+            }
             this._perks[p.getID()].setAvailability(false);
             
         }

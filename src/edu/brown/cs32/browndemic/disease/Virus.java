@@ -9,7 +9,7 @@ public class Virus extends Disease implements Perks{
     
         this._name = tempname;
         this._perks = new Perk[10];
-        this._perks[0] = VOMITING_VIRUS;
+        this._perks[0] = new Perk(VOMITING_VIRUS);
         this._perks[0].setID(0);
         
     }

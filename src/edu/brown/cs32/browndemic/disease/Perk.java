@@ -69,6 +69,23 @@ public class Perk{
     this._nextPerks = tempnext;
     
   }
+
+  //alternate constructor, creates a new perk with all the aspects of an old perk
+  public Perk(Perk p){
+
+    this._cost = p.getCost();
+    this._sellPrice = p.getSellPrice();
+    this._infectivityChange = p.getInf();
+    this._lethalityChange = p.getLeth();
+    this._visibilityChange = p.getVis();
+    this._heatResChange = p.getHeatRes();
+    this._coldResChange = p.getColdRes();
+    this._wetResChange = p.getWetRes();
+    this._dryResChange = p.getDryRes();
+    this._medResChange = p.getMedRes();
+    this._nextPerks = p.getNext();
+
+  }
   
   /**
    * sets the availability of of this perk 
@@ -112,12 +129,19 @@ public class Perk{
   
   /**
    * gets the integer selling price (cost or refund) of this perk
+   * if perks that rely on this perk to be available, they will be sold if
+   * this perk is sold. Therefore, their selling prices are included in
+   * this integer
    * @return __sellPrice
    */
   public int getSellPrice(){
    
-    return this._sellPrice;
-    
+      int returnPrice = this._sellPrice;
+      for(Perk p : this._nextPerks){
+          if(p.isOwned())
+              returnPrice += this.getSellPrice();
+      }
+      return returnPrice;
   }
   
   /**
