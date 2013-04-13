@@ -31,9 +31,9 @@ public abstract class World implements Serializable{
     //An ArrayList of all diseases present in this world
     protected List<Disease> _diseases;
     
-    //An ArrayList keeping track of how many people each disease has killed / infected
+    //An ArrayList keeping track of how many people each disease has killed / has infected currently
     //winners takes care of the winners: if empty at the end of the game,
-    //it signifies that all diseases were cured
+    //it signifies that all diseases were erradicated
     protected List<Integer> _kills, _infects, _winners;
 
     //Progress towards the cure
@@ -43,6 +43,9 @@ public abstract class World implements Serializable{
     //NOTE: a cure is the progress towards distributing the cure; a disease
     //is CURED when it is completely erradicated in a region
     protected List<Boolean> _sent, _cured;
+    
+    //news
+    protected List<String> _news;
     
     //whether or not the game is still going on
     protected boolean _gameOver;
@@ -133,6 +136,17 @@ public abstract class World implements Serializable{
         return _diseases;
     }
     
+    public List<Boolean> getCured(){
+        return _cured;
+    }
+    
+    public List<String> getNews(){
+        List<String> temp = new ArrayList<>();
+        temp.addAll(_news);
+        _news.clear();
+        return temp;
+    }
+    
     public List<Integer> getWinners(){
         return _winners;
     }
@@ -205,6 +219,12 @@ public abstract class World implements Serializable{
         _cures = cures;
     }
     
+    public void updateNews(){
+        for (Region r : _regions){
+            _news.addAll(r.getNews());
+        }
+    }
+    
     /**
      * Tells each region to start curing a disease
      */
@@ -236,17 +256,8 @@ public abstract class World implements Serializable{
      */
     public void updateCured(){
         for (int i = 0; i < _diseases.size(); i++){
-            if (!_cured.get(i)){
-                boolean cured = true;
-                for (int j = 0; j < _regions.size(); j++){
-                    List<Boolean> curedList = _regions.get(j).getCured();
-                    if (!curedList.get(i)){
-                        cured = false;
-                        break;
-                    }
-                }
-                _cured.set(i, cured);
-            }
+            if (_infects.get(i) == 0 && !_cured.get(i))
+                _cured.set(i, true);
         }
     }
     
@@ -255,14 +266,7 @@ public abstract class World implements Serializable{
      * @return boolean
      */
     public boolean allCured(){
-        boolean cured = true;
-        for (boolean c : _cured){
-            if (!c){
-                cured = false;
-                break;
-            }
-        }
-        return cured;
+        return _infected == 0;
     }
     
     /**
