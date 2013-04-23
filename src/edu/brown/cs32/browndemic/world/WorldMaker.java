@@ -5,13 +5,13 @@
 package edu.brown.cs32.browndemic.world;
 
 /**
- *
+ * For generating various types of Worlds
  * @author Graham
  */
-public class EarthSetter{
+public class WorldMaker{
     
     public static void setupEarth(MainWorld w){
-        //TODO: set population
+        w.setPopulation(7000000000L);
         //add regions
     }
     

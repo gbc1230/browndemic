@@ -17,7 +17,7 @@ import edu.brown.cs32.browndemic.region.Region;
  *
  * @author gcarling
  */
-public abstract class MainWorld implements Serializable, World{
+public class MainWorld implements Serializable, World{
 
     //ArrayList of Regions
     protected List<Region> _regions;
@@ -117,6 +117,13 @@ public abstract class MainWorld implements Serializable, World{
     @Override
     public long getPopulation(){
         return _population;
+    }
+    
+        
+    //set a population: should only be used once
+    public void setPopulation(long p){
+        if (_population == 0)
+            _population = p;
     }
     
     /**
