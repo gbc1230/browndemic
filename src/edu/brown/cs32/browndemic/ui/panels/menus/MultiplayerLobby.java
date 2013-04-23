@@ -1,6 +1,5 @@
 package edu.brown.cs32.browndemic.ui.panels.menus;
 
-import java.awt.Color;
 import java.awt.Dimension;
 
 import javax.swing.BorderFactory;
@@ -9,6 +8,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 
 import edu.brown.cs32.browndemic.ui.DumbChatServer;
 import edu.brown.cs32.browndemic.ui.Resources;
@@ -31,6 +31,7 @@ public class MultiplayerLobby extends UIPanel {
 	private boolean _isHost;
 	JPanel _players;
 	SelectButton _disease1, _disease2, _disease3;
+	JTextField _diseaseName;
 	
 	public MultiplayerLobby(boolean isHost) {
 		super();
@@ -86,6 +87,22 @@ public class MultiplayerLobby extends UIPanel {
 		right.setBackground(Colors.MENU_BACKGROUND);
 		right.setMinimumSize(new Dimension(UI.WIDTH/2, 0));
 		right.setMaximumSize(new Dimension(UI.WIDTH/2, UI.CONTENT_HEIGHT));
+		
+		JPanel diseaseName = new JPanel();
+		diseaseName.setLayout(new BoxLayout(diseaseName, BoxLayout.X_AXIS));
+		diseaseName.setMaximumSize(new Dimension(UI.WIDTH-150, 200));
+		diseaseName.setBackground(Colors.MENU_BACKGROUND);
+		
+		JLabel diseaseNameLabel = new JLabel(Strings.ENTER_DISEASE_NAME);
+		diseaseNameLabel.setFont(Fonts.BIG_TEXT);
+		diseaseNameLabel.setForeground(Colors.RED_TEXT);
+		_diseaseName = new JTextField();
+		_diseaseName.setFont(Fonts.BIG_TEXT);
+		_diseaseName.setForeground(Colors.RED_TEXT);
+		_diseaseName.setBackground(Colors.MENU_BACKGROUND);
+		diseaseName.add(diseaseNameLabel);
+		diseaseName.add(_diseaseName);
+		right.add(diseaseName);
 		
 		JLabel selectDisease = new JLabel(Strings.SELECT_DISEASE);
 		selectDisease.setFont(Fonts.BIG_TEXT);

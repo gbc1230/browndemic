@@ -17,7 +17,8 @@ import edu.brown.cs32.browndemic.ui.panels.UIPanel;
 import edu.brown.cs32.browndemic.ui.panels.subpanels.ChatPanel;
 import edu.brown.cs32.browndemic.ui.panels.subpanels.InformationBar;
 import edu.brown.cs32.browndemic.ui.panels.subpanels.UpgradePanel;
-import edu.brown.cs32.browndemic.world.MainWorld;
+import edu.brown.cs32.browndemic.ui.panels.titlebars.SinglePlayerTitleBar;
+import edu.brown.cs32.browndemic.world.World;
 
 public class SinglePlayerGame extends UIPanel {
 	
@@ -25,6 +26,7 @@ public class SinglePlayerGame extends UIPanel {
 	
 	private MainWorld _world;
 	private WorldMap _map;
+	private boolean loaded = false;
 	
 	public SinglePlayerGame(MainWorld w) {
 		super();
@@ -51,7 +53,8 @@ public class SinglePlayerGame extends UIPanel {
 		@Override
 		public void doAction() {
 			makeUI();
-			_parent.setPanel(SinglePlayerGame.this, false);
+			loaded = true;
+			_parent.setPanel(SinglePlayerGame.this);
 		}
 	}
 	
@@ -60,7 +63,6 @@ public class SinglePlayerGame extends UIPanel {
 		super.makeUI();
 		
 		JPanel info = new InformationBar();
-		
 		
 		
 		add(info);
@@ -81,8 +83,11 @@ public class SinglePlayerGame extends UIPanel {
 
 	@Override
 	public void setupForDisplay() {
-		//TODO: Set TitleBar
-		Utils.getParentFrame(this).setPanel(new Loading(true, new Loading.LoadImageWorker(new ImagesDoneLoadingAction(Utils.getParentFrame(this)), Images.GAME_IMAGES)));
+		if (loaded) {
+			Utils.getParentFrame(this).setTitle(new SinglePlayerTitleBar());
+		} else {
+			Utils.getParentFrame(this).setPanel(new Loading(true, new Loading.LoadImageWorker(new ImagesDoneLoadingAction(Utils.getParentFrame(this)), Images.GAME_IMAGES)));
+		}
 	}
 	
 	@Override
