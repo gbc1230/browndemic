@@ -50,12 +50,11 @@ public class GameClient implements Runnable{
     public void run(){
         while(_thread != null){
             try{
-                //GameData temp = _gui.getNextCommand();
+                GameData temp = _world.getNextData();
                 if (temp != null){
                     _output.writeObject(temp);
                     _output.flush();
                 }
-                //System.out.println("sent " + out);
             }
             catch(IOException e){
                 System.out.println("ERROR");
@@ -76,7 +75,7 @@ public class GameClient implements Runnable{
         }
         else if (id.equals("M")){
             ChatMessage m = (ChatMessage)msg;
-            //world deal with this shizit
+            _world.acceptMessage(m.getMessage());
         }
     }
 

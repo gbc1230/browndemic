@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 package edu.brown.cs32.browndemic.network;
-import edu.brown.cs32.browndemic.world.MainWorld;
+import edu.brown.cs32.browndemic.world.ServerWorld;
 
 /**
  *
@@ -12,13 +12,13 @@ import edu.brown.cs32.browndemic.world.MainWorld;
 public class WorldOutput implements GameData{
     
     //the world that this class stores
-    private MainWorld _world;
+    private ServerWorld _world;
     
-    public WorldOutput(MainWorld w){
+    public WorldOutput(ServerWorld w){
         _world = w;
     }
     
-    public MainWorld getWorld(){
+    public ServerWorld getWorld(){
         return _world;
     }
     

@@ -14,14 +14,4 @@ public class WorldSP extends MainWorld{
         super();
     }
     
-    @Override
-    public void removeDisease(int id){
-        throw new Error("ERROR: Single player maps can't remove diseases.");
-    }
-    
-    @Override
-    public MainWorld getNextCommand(){
-        throw new Error("ERROR: Single player maps don't send commands.");
-    }
-    
 }

@@ -15,14 +15,6 @@ import java.util.List;
  */
 public interface World {
     
-    public abstract MainWorld getNextCommand();
-    
-    /**
-     * Stop a disease that has left the game : used only for MP maps
-     * @param id The id of the disease to remove
-     */
-    public abstract void removeDisease(int id);
-    
     /**
      * gives a certain disease a perk
      * @param dis The disease
@@ -30,18 +22,6 @@ public interface World {
      * @param buy Whether we're buying or selling
      */
     public void addPerk(int dis, int perk, boolean buy);
-    
-    /**
-     * addRegion() puts the Region into _regions and adds it to _regIndex
-     * @param r the Region to add
-     */
-    public void addRegion(Region r);
-
-    /**
-     * addDisease() adds the given Disease to _diseases
-     * @param d the Disease to add
-     */
-    public void addDisease(Disease d);
 
     /**
      * Get the population
@@ -67,58 +47,24 @@ public interface World {
      */
     public long getDead();
     
+    //get all regions
     public List<Region> getRegions();
     
+    //get all diseases
     public List<Disease> getDiseases();
     
+    //tells me which diseases are cured
     public List<Boolean> getCured();
     
+    //gets the news
     public List<String> getNews();
     
+    //get the winner(s)
     public List<Integer> getWinners();
     
+    //tells if the game is over
     public boolean isGameOver();
-    
-    /**
-     * Once the world has been initialized, starts the world
-     */
-    public void start();
-    
-    /**
-     * Updates the number of people killed by all diseases
-     */
-    public void updateKilled();
-    
-    
-    /**
-     * Updates the number of infected people
-     */
-    public void updateInfected();
-    
-    /**
-     * Update the cure progress for every disease
-     */
-    public void updateCures();
-    
-    public void updateNews();
-    
-    /**
-     * Tells each region to start curing a disease
-     */
-    public void sendCures(int d);
-    
-    public void checkCures();
-    
-    /**
-     * Updates all the regions
-     */
-    public void updateRegions();
 
-    /**
-     * Updates which diseases have been cured
-     */
-    public void updateCured();
-    
     /**
      * Lets me know if all diseases have been cured
      * @return boolean
@@ -130,21 +76,6 @@ public interface World {
      * @return boolean
      */
     public boolean allKilled();
-    
-    /**
-     * Return a list of winners, just in case there's a tie
-     * @return 
-     */
-    public List<Integer> crownWinners();
-    
-    /**
-     * Updates everything necessary from regions
-     */
-    public void update();
-    
-    /**
-     * Runs the game
-     */
-    public void run();
+
     
 }

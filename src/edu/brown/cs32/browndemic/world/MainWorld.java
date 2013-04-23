@@ -70,19 +70,6 @@ public abstract class MainWorld implements Serializable, World{
         _infected = 0;
         _gameOver = false;
     }
-
-    /**
-     * Gets the next world to send out: used only for MP maps
-     * @return The next world to send out
-     */
-    public abstract MainWorld getNextCommand();
-    
-        
-    /**
-     * Stop a disease that has left the game : used only for MP maps
-     * @param id The id of the disease to remove
-     */
-    public abstract void removeDisease(int id);
     
     /**
      * gives a certain disease a perk
@@ -90,6 +77,7 @@ public abstract class MainWorld implements Serializable, World{
      * @param perk The perk
      * @param buy Whether we're buying or selling
      */
+    @Override
     public void addPerk(int dis, int perk, boolean buy){
         Disease d = _diseases.get(dis);
         try{
@@ -126,6 +114,7 @@ public abstract class MainWorld implements Serializable, World{
      * Get the population
      * @return integer population value
      */
+    @Override
     public long getPopulation(){
         return _population;
     }
@@ -134,6 +123,7 @@ public abstract class MainWorld implements Serializable, World{
      * getHealthy() gets the number of healthy people in this world
      * @return integer healthy people value
      */
+    @Override
     public long getHealthy(){
         return _population - _infected;
     }
@@ -142,6 +132,7 @@ public abstract class MainWorld implements Serializable, World{
      * getInfected() gets the number of infected people in this world (not dead people)
      * @return integer infected value
      */
+    @Override
     public long getInfected(){
         return _infected - _dead;
     }
@@ -150,22 +141,27 @@ public abstract class MainWorld implements Serializable, World{
      * getDead() gets the number of dead people in this world
      * @return integer dead value
      */
+    @Override
     public long getDead(){
         return _dead;
     }
     
+    @Override
     public List<Region> getRegions(){
         return _regions;
     }
     
+    @Override
     public List<Disease> getDiseases(){
         return _diseases;
     }
     
+    @Override
     public List<Boolean> getCured(){
         return _cured;
     }
     
+    @Override
     public List<String> getNews(){
         List<String> temp = new ArrayList<>();
         temp.addAll(_news);
@@ -173,10 +169,12 @@ public abstract class MainWorld implements Serializable, World{
         return temp;
     }
     
+    @Override
     public List<Integer> getWinners(){
         return _winners;
     }
     
+    @Override
     public boolean isGameOver(){
         return _gameOver;
     }
@@ -260,6 +258,9 @@ public abstract class MainWorld implements Serializable, World{
         }
     }
     
+    /**
+     * Lets me know which cures have been ssent
+     */
     public void checkCures(){
         for (int i = 0; i < _cures.size(); i++){
             if (_cures.get(i) >= 100.0 && _sent.get(i)){
@@ -291,6 +292,7 @@ public abstract class MainWorld implements Serializable, World{
      * Lets me know if all diseases have been cured
      * @return boolean
      */
+    @Override
     public boolean allCured(){
         return _infected == 0;
     }
@@ -299,15 +301,15 @@ public abstract class MainWorld implements Serializable, World{
      * Lets me know if all the people in the world are dead
      * @return boolean
      */
+    @Override
     public boolean allKilled(){
         return _dead >= _population;
     }
     
     /**
      * Return a list of winners, just in case there's a tie
-     * @return 
      */
-    public List<Integer> crownWinners(){
+    public void crownWinners(){
         int cur = _kills.get(0);
         List<Integer> ans = new ArrayList<>();
         ans.add(0);
@@ -321,7 +323,7 @@ public abstract class MainWorld implements Serializable, World{
             if (temp == cur)
                 ans.add(i);
         }
-        return ans;
+        _winners = ans;
     }
     
     /**
@@ -347,7 +349,7 @@ public abstract class MainWorld implements Serializable, World{
                 break;
             }
             else if (allKilled()){
-                _winners = crownWinners();
+                crownWinners();
                 _gameOver = true;
                 break;
             }
