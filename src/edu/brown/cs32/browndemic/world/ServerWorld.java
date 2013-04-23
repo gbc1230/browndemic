@@ -8,12 +8,15 @@ package edu.brown.cs32.browndemic.world;
  *
  * @author Graham
  */
-public abstract class Earth extends World{
+public class ServerWorld extends MainWorld{
     
-    public Earth(){
+    public ServerWorld(){
         super();
-        _population = 7000000000L;
-        //add regions
+    }
+    
+    @Override
+    public void removeDisease(int id){
+        
     }
     
 }

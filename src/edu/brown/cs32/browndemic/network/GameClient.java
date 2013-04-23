@@ -23,17 +23,16 @@ public class GameClient implements Runnable{
     private ObjectOutputStream _output;
     //Thread for this file's communications
     private GameClientThread _client;
-    //for getting input from the gui
-    //private SOMETHING?
+    //the world that this client references
+    private ClientWorld _world;
 
     //constructor
-    public GameClient(String host) throws Exception{
-        System.out.println("Connecting...");
+    public GameClient(String host, ClientWorld w) throws Exception{
         try{
             _socket = new Socket(host, PORT);
-            System.out.println("Connected: " + _socket);
             _output = new ObjectOutputStream(_socket.getOutputStream());
             _client = new GameClientThread(this, _socket);
+            _world = w;
             _thread = new Thread(this);
             _thread.start();
         }
@@ -49,10 +48,9 @@ public class GameClient implements Runnable{
     //it out
     @Override
     public void run(){
-        System.out.println("running");
         while(_thread != null){
             try{
-                GameData temp = _gui.getNextCommand();
+                //GameData temp = _gui.getNextCommand();
                 if (temp != null){
                     _output.writeObject(temp);
                     _output.flush();
@@ -73,10 +71,12 @@ public class GameClient implements Runnable{
     public void handle(GameData msg){
         String id = msg.getID();
         if (id.equals("W")){
-            //deal with world
+            WorldOutput wo = (WorldOutput)msg;
+            _world.setWorld(wo.getWorld());
         }
         else if (id.equals("M")){
-            //deal with message
+            ChatMessage m = (ChatMessage)msg;
+            //world deal with this shizit
         }
     }
 

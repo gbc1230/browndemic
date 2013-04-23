@@ -16,16 +16,16 @@ import edu.brown.cs32.browndemic.ui.panels.UIPanel;
 import edu.brown.cs32.browndemic.ui.panels.subpanels.ChatPanel;
 import edu.brown.cs32.browndemic.ui.panels.subpanels.InformationBar;
 import edu.brown.cs32.browndemic.ui.panels.subpanels.UpgradePanel;
-import edu.brown.cs32.browndemic.world.World;
+import edu.brown.cs32.browndemic.world.MainWorld;
 
 public class SinglePlayerGame extends UIPanel {
 	
 	private static final long serialVersionUID = 3275157554958820602L;
 	
-	private World _world;
+	private MainWorld _world;
 	private WorldMap _map;
 	
-	public SinglePlayerGame(World w) {
+	public SinglePlayerGame(MainWorld w) {
 		super();
 		_world = w;
 	}

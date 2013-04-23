@@ -6,24 +6,28 @@ package edu.brown.cs32.browndemic.world;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 import edu.brown.cs32.browndemic.network.WorldOutput;
+//import edu.brown.cs32.browndemic.ui
 
 /**
  *
  * @author Graham
  */
-public class EarthMP extends Earth{
+public class ClientWorld implements World{
     
-    //queue for sending commands
-    protected Queue<EarthMP> _commands;
+    //the world that this world references
+    private MainWorld _world;
     
-    public EarthMP(){
+    public ClientWorld(){
         super();
-        _commands = new ArrayBlockingQueue<>(10);
+    }
+    
+    public void setWorld(MainWorld w){
+        _world = w;
     }
     
     @Override
-    public World getNextCommand(){
-        return _commands.poll();
+    public MainWorld getNextCommand(){
+       // return _commands.poll();
     }
     
     @Override
