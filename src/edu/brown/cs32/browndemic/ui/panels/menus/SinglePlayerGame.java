@@ -24,11 +24,11 @@ public class SinglePlayerGame extends UIPanel {
 	
 	private static final long serialVersionUID = 3275157554958820602L;
 	
-	private World _world;
+	private MainWorld _world;
 	private WorldMap _map;
 	private boolean loaded = false;
 	
-	public SinglePlayerGame(World w) {
+	public SinglePlayerGame(MainWorld w) {
 		super();
 		_world = w;
 	}

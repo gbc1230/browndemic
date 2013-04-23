@@ -4,7 +4,7 @@
  */
 
 package edu.brown.cs32.browndemic.network;
-import edu.brown.cs32.browndemic.world.World;
+import edu.brown.cs32.browndemic.world.MainWorld;
 import java.io.*;
 import java.net.*;
 import java.util.List;
@@ -26,10 +26,10 @@ public class GameServer implements Runnable{
     //whether or not this thread is accepting new clients
     private boolean _accepting;
     //the world i'm operating on
-    private World _world;
+    private MainWorld _world;
 
     // constructor
-    public GameServer(World w) throws IOException{
+    public GameServer(MainWorld w) throws IOException{
         System.out.println("Binding to port" + PORT);
         _server = new ServerSocket(PORT);
         _thread = new Thread(this);
@@ -55,7 +55,7 @@ public class GameServer implements Runnable{
             }
         }
         while (true){
-            World w = _world.getNextCommand();
+            MainWorld w = _world.getNextCommand();
             if (w == null)
                 continue;
             WorldOutput wo = new WorldOutput(w);
