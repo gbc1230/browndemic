@@ -20,4 +20,10 @@ public class EarthSP extends Earth{
                 + " sending commands.");
     }
     
+    @Override
+    public void removeDisease(int id){
+        throw new Error("ERROR: Single Player maps should not "
+                + "be removing any diseases.");
+    }
+    
 }

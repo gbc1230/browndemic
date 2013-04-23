@@ -5,6 +5,7 @@
 package edu.brown.cs32.browndemic.world;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
+import edu.brown.cs32.browndemic.network.WorldOutput;
 
 /**
  *
@@ -23,6 +24,11 @@ public class EarthMP extends Earth{
     @Override
     public World getNextCommand(){
         return _commands.poll();
+    }
+    
+    @Override
+    public void removeDisease(int id){
+        //_diseases.get(id).die();
     }
     
 }

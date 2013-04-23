@@ -19,20 +19,19 @@ public class GameClient implements Runnable{
     private Socket _socket;
     //the thread this client will run on
     private Thread _thread;
-    //the world this queue runs off of
-    private World _world;
     //writer for this file
     private ObjectOutputStream _output;
     //Thread for this file's communications
     private GameClientThread _client;
+    //for getting input from the gui
+    //private SOMETHING?
 
     //constructor
-    public GameClient(World world, InetAddress serverName) throws Exception{
+    public GameClient(String host) throws Exception{
         System.out.println("Connecting...");
         try{
-            _socket = new Socket(serverName, PORT);
+            _socket = new Socket(host, PORT);
             System.out.println("Connected: " + _socket);
-            _world = world;
             _output = new ObjectOutputStream(_socket.getOutputStream());
             _client = new GameClientThread(this, _socket);
             _thread = new Thread(this);
@@ -53,7 +52,7 @@ public class GameClient implements Runnable{
         System.out.println("running");
         while(_thread != null){
             try{
-                World temp = _world.getNextCommand();
+                GameData temp = _gui.getNextCommand();
                 if (temp != null){
                     _output.writeObject(temp);
                     _output.flush();
@@ -71,8 +70,14 @@ public class GameClient implements Runnable{
      * Handle and print an incoming message
      * @param msg The message
      */
-    public void handle(World msg){
-        //update _world to msg
+    public void handle(GameData msg){
+        String id = msg.getID();
+        if (id.equals("W")){
+            //deal with world
+        }
+        else if (id.equals("M")){
+            //deal with message
+        }
     }
 
     /**
@@ -84,16 +89,15 @@ public class GameClient implements Runnable{
             _socket.close();
             _thread = null;
             _client.close();
-            //_client.stop();
         }
         catch(Exception e){
-            System.out.println("Error closing...");
+            //System.out.println("Error closing...");
         }
     }
 
 
-    public static void main(String [] args) throws Exception{
+    /*public static void main(String [] args) throws Exception{
         InetAddress local = InetAddress.getByName(args[0]);
         GameClient client = new GameClient(new EarthSP(), local);
-    }
+    }*/
 }

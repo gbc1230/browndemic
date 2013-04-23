@@ -23,34 +23,51 @@ public class GameServer implements Runnable{
     private ServerSocket _server;
     //the thread this server runs on
     private Thread _thread;
-    //whether or not this thread is running
-    private boolean _threadOn;
+    //whether or not this thread is accepting new clients
+    private boolean _accepting;
+    //the world i'm operating on
+    private World _world;
 
     // constructor
-    public GameServer() throws IOException{
+    public GameServer(World w) throws IOException{
         System.out.println("Binding to port" + PORT);
         _server = new ServerSocket(PORT);
         _thread = new Thread(this);
         _clients = new ArrayList<GameServerThread>();
-        _threadOn = true;
+        _accepting = true;
+        _world = w;
         _thread.start();
     }
 
     //run method: catches new threads as they come in
     @Override
     public void run(){
-        while (_threadOn){
+        while (_accepting){
             try{
                 addThread(_server.accept());
             }
             catch(IOException e){
                 System.out.println("Server accept error");
                 if (_thread != null){
-                    _threadOn = false;
+                    _accepting = false;
                     _thread = null;
                 }
             }
         }
+        while (true){
+            World w = _world.getNextCommand();
+            if (w == null)
+                continue;
+            WorldOutput wo = new WorldOutput(w);
+            for (GameServerThread thread : _clients){
+                thread.sendMessage(wo);
+            }
+        }
+    }
+    
+    //for once the game starts
+    public void stopAccepting(){
+        _accepting = false;
     }
 
     /**
@@ -72,12 +89,14 @@ public class GameServer implements Runnable{
      * @param o The object being sent
      * @throws java.io.IOException
      */
-    public synchronized void handle(int ID, Object o) throws IOException, ClassNotFoundException{
-        World test = (World)o;
-        //System.out.println("got here");
-        for (int i = 0; i < _clients.size(); i++){
-            if (_clients.get(i).getID() != ID)
-                _clients.get(i).sendMessage(test);
+    public synchronized void handle(int ID, GameData gd) throws IOException, ClassNotFoundException{
+        String id = gd.getID();
+        if (id.equals("P")){
+            PerkInput pi = (PerkInput)gd;
+            _world.addPerk(pi.getDiseaseID(), pi.getPerkID(), pi.isBuying());
+        }
+        else if(id.equals("M")){
+            
         }
     }
 
@@ -86,13 +105,13 @@ public class GameServer implements Runnable{
      * @param ID The ID of the client to remove
      * @throws java.io.IOException
      */
-    public synchronized void remove(int ID) throws IOException{
+    public synchronized void remove(int ID){
         int pos = findClient(ID);
         if (pos != -1){
             GameServerThread toKill = _clients.get(pos);
             _clients.remove(toKill);
+            _world.removeDisease(pos);
             toKill.close();
-            //toKill.stop();
         }
     }
 
@@ -109,10 +128,10 @@ public class GameServer implements Runnable{
         _clients.add(temp);
     }
 
-    public static void main(String [] args) throws Exception{
+    /*public static void main(String [] args) throws Exception{
         String s = InetAddress.getLocalHost().getHostName();
         System.out.println(s);
         GameServer server = new GameServer();
-    }
+    }*/
 
 }

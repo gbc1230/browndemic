@@ -32,18 +32,14 @@ public class GameServerThread extends Thread{
     /**
      * Send a message to the the client
      * @param msg The message to send
-     * @throws java.io.IOException
      */
-    public void sendMessage(World msg) throws IOException{
+    public void sendMessage(GameData msg){
         try{
-            //System.out.println("SUP!");
             _output.writeObject(msg);
             _output.flush();
-            //System.out.println("sent " + msg);
         }
         catch(IOException e){
             _server.remove(_ID);
-            throw new IOException();
         }
     }
 
@@ -56,26 +52,16 @@ public class GameServerThread extends Thread{
     public void run(){
         while (true){
             try{
-                _server.handle(_ID, _input.readObject());
+                _server.handle(_ID, (GameData)_input.readObject());
             }
             catch(IOException e){
                 System.out.println("ERROR: " + _ID + " can't read.");
-                try{
-                    _server.remove(_ID);
-                    break;
-                }
-                catch(IOException e2){
-                    System.out.println("Oh come on.");
-                }
+                _server.remove(_ID);
+                break;
             }
             catch(ClassNotFoundException e){
-                try{
-                    _server.remove(_ID);
-                    break;
-                }
-                catch(IOException e2){
-                    System.out.println("Oh come on.");
-                }
+                _server.remove(_ID);
+                break;
             }
         }
     }
@@ -94,10 +80,15 @@ public class GameServerThread extends Thread{
      * Closes the streams
      * @throws java.io.IOException
      */
-    public void close() throws IOException{
-        _socket.close();
-        _input.close();
-        _output.close();
+    public void close(){
+        try{
+            _socket.close();
+            _input.close();
+            _output.close();
+        }
+        catch(IOException e){
+            
+        }
     }
 
 }

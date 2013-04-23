@@ -77,6 +77,32 @@ public abstract class World implements Serializable{
      */
     public abstract World getNextCommand();
     
+        
+    /**
+     * Stop a disease that has left the game : used only for MP maps
+     * @param id The id of the disease to remove
+     */
+    public abstract void removeDisease(int id);
+    
+    /**
+     * gives a certain disease a perk
+     * @param dis The disease
+     * @param perk The perk
+     * @param buy Whether we're buying or selling
+     */
+    public void addPerk(int dis, int perk, boolean buy){
+        Disease d = _diseases.get(dis);
+        try{
+            if (buy)
+                d.buyPerk(perk);
+            else
+                d.sellPerk(perk);
+        }
+        catch(IllegalAccessException e){
+            
+        }
+    }
+    
     /**
      * addRegion() puts the Region into _regions and adds it to _regIndex
      * @param r the Region to add

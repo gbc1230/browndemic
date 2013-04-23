@@ -46,8 +46,7 @@ public class GameClientThread extends Thread{
             _input = new ObjectInputStream(_socket.getInputStream());
             while (true){
                 try{
-                    //System.out.println("aww shit");
-                    World input = (World)_input.readObject();
+                    GameData input = (GameData)_input.readObject();
                     //System.out.println("got " + input);
                     _client.handle(input);
                     //System.out.println("sent " + input);
