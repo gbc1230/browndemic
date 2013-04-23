@@ -43,7 +43,7 @@ public class MultiplayerLobbyPanel extends BrowndemicPanel {
 		name.setForeground(Colors.RED_TEXT);
 		name.setFont(Fonts.BIG_TEXT);
 		
-		setMaximumSize(new Dimension(UI.WIDTH, name.getHeight()));
+		//setMaximumSize(new Dimension(UI.WIDTH, name.getHeight()));
 		
 		add(name);
 		add(Box.createGlue());

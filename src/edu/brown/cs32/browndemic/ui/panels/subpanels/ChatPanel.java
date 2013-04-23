@@ -13,17 +13,22 @@ import javax.swing.JTextField;
 import edu.brown.cs32.browndemic.ui.UIConstants.Colors;
 import edu.brown.cs32.browndemic.ui.UIConstants.Fonts;
 import edu.brown.cs32.browndemic.ui.UIConstants.UI;
+import edu.brown.cs32.browndemic.ui.interfaces.ChatHandler;
+import edu.brown.cs32.browndemic.ui.interfaces.ChatServer;
 import edu.brown.cs32.browndemic.ui.panels.BrowndemicPanel;
 
-public class ChatPanel extends BrowndemicPanel implements KeyListener {
+public class ChatPanel extends BrowndemicPanel implements KeyListener, ChatHandler {
 
 	private static final long serialVersionUID = 587517148784490168L;
 	
-	JTextField _input;
-	JTextArea _chat;
+	private JTextField _input;
+	private JTextArea _chat;
+	private ChatServer _chatServer;
 	
-	public ChatPanel() {
+	public ChatPanel(ChatServer chatServer) {
 		super();
+		_chatServer = chatServer;
+		_chatServer.addChatHandler(this);
 		makeUI();
 	}
 	
@@ -59,13 +64,18 @@ public class ChatPanel extends BrowndemicPanel implements KeyListener {
 	@Override
 	public void keyReleased(KeyEvent e) {
 		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-			_chat.setText((_chat.getText() + "\nTest: " + _input.getText()).trim());
+			_chatServer.sendMessage(_input.getText());
 			_input.setText("");
 		}
 	}
 
 	@Override
 	public void keyTyped(KeyEvent arg0) {
+	}
+
+	@Override
+	public void addMessage(String message) {
+		_chat.setText((_chat.getText() + "\n" + message).trim());
 	}
 
 }
