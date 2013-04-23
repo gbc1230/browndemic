@@ -4,7 +4,7 @@ package edu.brown.cs32.browndemic.disease;
  *
  * @author bkoatz
  */
-public abstract class Disease {
+public abstract class Disease implements Serializable{
     
     //The user-input string name of the disease
     protected String _name;
@@ -49,6 +49,23 @@ public abstract class Disease {
      
       this._id = newID;
       
+    }
+    /**
+     * lets a user set everything in this disease to 0
+     * (return it to factory settings) incase a user
+     * quits
+     */
+    public void die(){
+    	
+    	this._infectivity = 0;
+    	this._lethality = 0;
+    	this._visibility = 0;
+    	this._heatResistance = 0;
+    	this._coldResistance = 0;
+    	this._wetResistance = 0;
+    	this._dryResistance = 0;
+    	this._medResistance = 0;
+    	
     }
     
     /**
