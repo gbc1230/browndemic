@@ -6,12 +6,20 @@ import java.awt.Dimension;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import edu.brown.cs32.browndemic.ui.DumbChatServer;
+import edu.brown.cs32.browndemic.ui.Resources;
 import edu.brown.cs32.browndemic.ui.UIConstants.Colors;
+import edu.brown.cs32.browndemic.ui.UIConstants.Fonts;
+import edu.brown.cs32.browndemic.ui.UIConstants.Images;
+import edu.brown.cs32.browndemic.ui.UIConstants.Strings;
 import edu.brown.cs32.browndemic.ui.UIConstants.UI;
 import edu.brown.cs32.browndemic.ui.Utils;
+import edu.brown.cs32.browndemic.ui.actions.Action;
+import edu.brown.cs32.browndemic.ui.components.SelectButton;
 import edu.brown.cs32.browndemic.ui.panels.UIPanel;
 import edu.brown.cs32.browndemic.ui.panels.subpanels.ChatPanel;
 import edu.brown.cs32.browndemic.ui.panels.subpanels.MultiplayerLobbyPanel;
@@ -22,6 +30,7 @@ public class MultiplayerLobby extends UIPanel {
 	
 	private boolean _isHost;
 	JPanel _players;
+	SelectButton _disease1, _disease2, _disease3;
 	
 	public MultiplayerLobby(boolean isHost) {
 		super();
@@ -37,8 +46,16 @@ public class MultiplayerLobby extends UIPanel {
 		_players = new JPanel();
 		_players.setLayout(new BoxLayout(_players, BoxLayout.Y_AXIS));
 		_players.setBackground(Colors.MENU_BACKGROUND);
+		_players.setMinimumSize(new Dimension(UI.WIDTH/2, 0));
+		_players.setMaximumSize(new Dimension(UI.WIDTH/2, UI.CONTENT_HEIGHT/2));
 		
 		
+		_players.add(new MultiplayerLobbyPanel("Test", "127.0.0.1", _isHost, null));
+		_players.add(new MultiplayerLobbyPanel("Test", "127.0.0.1", _isHost, null));
+		_players.add(new MultiplayerLobbyPanel("Test", "127.0.0.1", _isHost, null));
+		_players.add(new MultiplayerLobbyPanel("Test", "127.0.0.1", _isHost, null));
+		_players.add(new MultiplayerLobbyPanel("Test", "127.0.0.1", _isHost, null));
+		_players.add(new MultiplayerLobbyPanel("Test", "127.0.0.1", _isHost, null));
 		_players.add(new MultiplayerLobbyPanel("Test", "127.0.0.1", _isHost, null));
 		_players.add(new MultiplayerLobbyPanel("Test", "127.0.0.1", _isHost, null));
 		_players.add(new MultiplayerLobbyPanel("Test", "127.0.0.1", _isHost, null));
@@ -53,6 +70,7 @@ public class MultiplayerLobby extends UIPanel {
 		scrollPane.getVerticalScrollBar().setUnitIncrement(16);
 		scrollPane.setBorder(BorderFactory.createEmptyBorder());
 		scrollPane.setMaximumSize(new Dimension(UI.WIDTH/2, UI.CONTENT_HEIGHT/2));
+		scrollPane.setPreferredSize(new Dimension(UI.WIDTH/2, UI.CONTENT_HEIGHT/2));
 		
 		JPanel left = new JPanel();
 		left.setBackground(Colors.MENU_BACKGROUND);
@@ -60,20 +78,55 @@ public class MultiplayerLobby extends UIPanel {
 		left.setMaximumSize(new Dimension(UI.WIDTH/2, UI.CONTENT_HEIGHT));
 		left.setMinimumSize(new Dimension(UI.WIDTH/2, UI.CONTENT_HEIGHT));
 		
-		JPanel chat = new JPanel();
-		chat.setBackground(Color.BLUE);
-		chat.setMaximumSize(new Dimension(UI.WIDTH/2, UI.CONTENT_HEIGHT/2));
-		
 		left.add(scrollPane);
-		left.add(new ChatPanel());
+		left.add(new ChatPanel(new DumbChatServer()));
 		
 		JPanel right = new JPanel();
 		right.setLayout(new BoxLayout(right, BoxLayout.Y_AXIS));
-		right.setBackground(Color.GREEN);
+		right.setBackground(Colors.MENU_BACKGROUND);
 		right.setMinimumSize(new Dimension(UI.WIDTH/2, 0));
+		right.setMaximumSize(new Dimension(UI.WIDTH/2, UI.CONTENT_HEIGHT));
+		
+		JLabel selectDisease = new JLabel(Strings.SELECT_DISEASE);
+		selectDisease.setFont(Fonts.BIG_TEXT);
+		selectDisease.setForeground(Colors.RED_TEXT);
+		selectDisease.setAlignmentX(CENTER_ALIGNMENT);
+		right.add(selectDisease);
+
+		_disease1 = new SelectButton(Resources.getImage(Images.DISEASE1), Resources.getImage(Images.DISEASE1_SELECTED));
+		_disease2 = new SelectButton(Resources.getImage(Images.DISEASE2), Resources.getImage(Images.DISEASE2_SELECTED));
+		_disease3 = new SelectButton(Resources.getImage(Images.DISEASE3), Resources.getImage(Images.DISEASE3_SELECTED));
+		_disease2.addOnSelectAction(new SelectAction(_disease1, _disease3));
+		_disease1.addOnSelectAction(new SelectAction(_disease2, _disease3));
+		_disease3.addOnSelectAction(new SelectAction(_disease2, _disease1));
+
+		right.add(Box.createGlue());
+		right.add(_disease1);
+		right.add(Box.createGlue());
+		right.add(_disease2);
+		right.add(Box.createGlue());
+		right.add(_disease3);
+		right.add(Box.createGlue());
 		
 		add(left);
 		add(right);
+	}
+	
+	private class SelectAction implements Action {
+		
+		private SelectButton[] other;
+		
+		public SelectAction(SelectButton... other) {
+			this.other = other;
+		}
+
+		@Override
+		public void doAction() {
+			for (SelectButton b : other) {
+				b.deSelect();
+			}
+		}
+		
 	}
 
 	@Override

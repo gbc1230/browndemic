@@ -6,6 +6,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
 import edu.brown.cs32.browndemic.ui.BrowndemicFrame;
+import edu.brown.cs32.browndemic.ui.DumbChatServer;
 import edu.brown.cs32.browndemic.ui.Resources;
 import edu.brown.cs32.browndemic.ui.UIConstants.Images;
 import edu.brown.cs32.browndemic.ui.UIConstants.Strings;
@@ -73,7 +74,7 @@ public class SinglePlayerGame extends UIPanel {
 		bottom.setLayout(new BoxLayout(bottom, BoxLayout.X_AXIS));
 		
 		bottom.add(new UpgradePanel(null));
-		bottom.add(new ChatPanel());
+		bottom.add(new ChatPanel(new DumbChatServer()));
 		
 		add(bottom);
 	}
