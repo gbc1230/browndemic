@@ -24,7 +24,6 @@ public class GameServerThread extends Thread{
     public GameServerThread(GameServer server, Socket socket){
         super();
         _server = server;
-        System.out.println(socket);
         _socket = socket;
         _ID = _socket.getPort();
     }

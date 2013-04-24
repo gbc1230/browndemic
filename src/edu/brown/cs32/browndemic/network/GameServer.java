@@ -30,7 +30,6 @@ public class GameServer implements Runnable{
 
     // constructor
     public GameServer(ServerWorld w) throws IOException{
-        System.out.println("Binding to port" + PORT);
         _server = new ServerSocket(PORT);
         _thread = new Thread(this);
         _clients = new ArrayList<GameServerThread>();
@@ -45,6 +44,7 @@ public class GameServer implements Runnable{
         while (_accepting){
             try{
                 addThread(_server.accept());
+                System.out.println("Got new client.");
             }
             catch(IOException e){
                 if (_thread != null){
@@ -95,7 +95,9 @@ public class GameServer implements Runnable{
             _world.addPerk(pi.getDiseaseID(), pi.getPerkID(), pi.isBuying());
         }
         else if(id.equals("M")){
-            
+            for (GameServerThread client : _clients){
+                client.sendMessage(gd);
+            }
         }
     }
 
@@ -123,7 +125,6 @@ public class GameServer implements Runnable{
         GameServerThread temp = new GameServerThread(this, socket);
         temp.open();
         temp.start();
-        System.out.println(temp);
         _clients.add(temp);
     }
 

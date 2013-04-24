@@ -79,6 +79,7 @@ public class MainWorld implements Serializable, World{
      */
     @Override
     public void addPerk(int dis, int perk, boolean buy){
+        System.out.println("Got perk: " + dis + ", " + perk + ", " + buy);
         Disease d = _diseases.get(dis);
         try{
             if (buy)
@@ -238,7 +239,7 @@ public class MainWorld implements Serializable, World{
     /**
      * Update the cure progress for every disease
      */
-    public void updateCures(){
+    /*public void updateCures(){
         List<Double> cures = new ArrayList<>();
         for (Region r : _regions){
             List<Double> rCures = r.getCures();
@@ -254,7 +255,7 @@ public class MainWorld implements Serializable, World{
         for (Region r : _regions){
             _news.addAll(r.getNews());
         }
-    }
+    }*/
     
     /**
      * Tells each region to start curing a disease
@@ -340,7 +341,7 @@ public class MainWorld implements Serializable, World{
         updateRegions();
         updateKilled();
         updateInfected();
-        updateCures();
+        //updateCures();
         checkCures();
         updateCured();
     }

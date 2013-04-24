@@ -14,5 +14,5 @@ public class WorldMaker{
         w.setPopulation(7000000000L);
         //add regions
     }
-    
+   
 }

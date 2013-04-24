@@ -24,7 +24,6 @@ public class GameClientThread extends Thread{
     //constructor, sets up basic stuff
     public GameClientThread(GameClient client, Socket socket){
         _client = client;
-        System.out.println(socket);
         _socket = socket;
         start();
     }

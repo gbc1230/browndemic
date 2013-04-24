@@ -44,11 +44,13 @@ public class ClientWorld implements ChatServer, World{
     
     @Override
     public void sendMessage(String msg){
+        System.out.println("Sending: " + msg);
         ChatMessage cm = new ChatMessage(msg);
         _data.add(cm);
     }
     
     public void acceptMessage(String msg){
+        System.out.println("Got message: " + msg);
         _handler.addMessage(msg);
     }
     
@@ -114,6 +116,7 @@ public class ClientWorld implements ChatServer, World{
     
     @Override
     public void addPerk(int dis, int perk, boolean buy){
+        System.out.println("Adding perk: " + dis + ", " + perk + ", " + buy);
         PerkInput pi = new PerkInput(dis, perk, buy);
         _data.add(pi);
     }

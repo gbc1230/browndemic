@@ -27,7 +27,7 @@ public class GameClient implements Runnable{
     private ClientWorld _world;
 
     //constructor
-    public GameClient(String host, ClientWorld w) throws Exception{
+    public GameClient(String host, ClientWorld w) throws IOException{
         try{
             _socket = new Socket(host, PORT);
             _output = new ObjectOutputStream(_socket.getOutputStream());
@@ -38,9 +38,6 @@ public class GameClient implements Runnable{
         }
         catch(UnknownHostException e){
             System.out.println("Host Unknown: " + e.getMessage());
-        }
-        catch(IOException e){
-            System.out.println("Error: " + e.getMessage());
         }
     }
 
