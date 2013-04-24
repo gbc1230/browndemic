@@ -1,7 +1,14 @@
 package edu.brown.cs32.browndemic.disease;
 
+import java.io.Serializable;
+
 /**
+ * This is the abstract disease class which contains all the necessary
+ * attributes for a disease to have, all the Accessor/Mutators needed
+ * and methods relating to the perks the disease has
  *
+ * It leaves implementation of selling perks to subclasses
+ * 
  * @author bkoatz
  */
 public abstract class Disease implements Serializable{
@@ -36,6 +43,14 @@ public abstract class Disease implements Serializable{
     //A double reflecting how resistant to medicine this disease is
     protected double _medResistance;
     
+    //A double reflecting the ability of this disease to be
+    //transmitted via water
+    protected double _waterTrans;
+    
+    //A double reflecting the ability of this disease to be
+    //transmitted via air
+    protected double _airTrans;
+    
     //A double reflecting how many points this disease has
     protected int _points;
     
@@ -49,23 +64,6 @@ public abstract class Disease implements Serializable{
      
       this._id = newID;
       
-    }
-    /**
-     * lets a user set everything in this disease to 0
-     * (return it to factory settings) incase a user
-     * quits
-     */
-    public void die(){
-    	
-    	this._infectivity = 0;
-    	this._lethality = 0;
-    	this._visibility = 0;
-    	this._heatResistance = 0;
-    	this._coldResistance = 0;
-    	this._wetResistance = 0;
-    	this._dryResistance = 0;
-    	this._medResistance = 0;
-    	
     }
     
     /**
@@ -178,6 +176,26 @@ public abstract class Disease implements Serializable{
     }
     
     /**
+     * getWaterTrans() returns the transmissibility of this disease via water
+     * @return _waterTrans
+     */
+    public double getWaterTrans(){
+        
+        return this._waterTrans;
+        
+    }
+    
+    /**
+     * getAirTrans() returns the transmissibility of this disease via air
+     * @return _airTrans
+     */
+    public double getAirTrans(){
+        
+        return this._airTrans;
+        
+    }
+    
+    /**
      * getPoints() returns the number of points this disease has accrued
      * @return _points
      */
@@ -219,6 +237,39 @@ public abstract class Disease implements Serializable{
         this._points -= boughtPerk.getCost();
     }
 
+    /**
+     * lets a user set everything in this disease to 0
+     * (return it to factory settings) incase a user
+     * quits
+     */
+    public void die(){
+    	
+    	this._infectivity = 0;
+    	this._lethality = 0;
+    	this._visibility = 0;
+    	this._heatResistance = 0;
+    	this._coldResistance = 0;
+    	this._wetResistance = 0;
+    	this._dryResistance = 0;
+    	this._medResistance = 0;
+    	
+    }
+
+    /**
+     * The cumulative method that sells every perk that is exlusively relies on
+     * perkID to be owned at the time of selling.
+     * @param perkID                           the ID of the root perk being sold
+     * @throws java.lang.IllegalAccessException if you are selling an unowned perk
+     */
+    public abstract void sellCumPerk(int perkID) throws IllegalAccessException;
+
+    /**
+     * Sells only this individual perk
+     * @param perkID                           the ID of the perk being sold
+     * @throws java.lang.IllegalAccessException if you are selling an unowned perk,
+     *                                          or a perk whos 'next' perks are
+     *                                          owned
+     */
     public abstract void sellPerk(int perkID) throws IllegalAccessException;
     
     //IMPORTANT PLEASE READ
@@ -230,8 +281,8 @@ public abstract class Disease implements Serializable{
      */
     @Override
     public String toString(){
-        return _id + ", name: " + _name + ", infectivity: " + _infectivity + ", lethality: " +
-                _lethality + ", visibility: " + _visibility;
+        return this._id + ", name: " + this._name + ", infectivity: " + this._infectivity + ", lethality: " +
+                this._lethality + ", visibility: " + this._visibility;
     }
 
 }
