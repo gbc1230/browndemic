@@ -1,10 +1,15 @@
 package edu.brown.cs32.browndemic.disease;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
+ * This is the class for a perk. Has all the necessary attributes of a perk,
+ * with Accesor/Mutators for its own variables, and the ability to
+ * return cumulative sums of variables in all directly connected perks (in the
+ * case of a user selling a perk which has perks after it already bought)
  *@author bkoatz 
  */
-public class Perk{
+public class Perk implements Serializable{
  
   //the integer cost to buy this perk
   private int _cost;
@@ -39,6 +44,14 @@ public class Perk{
   
   //the double change that this perk will provide to resistance to medicine
   private double _medResChange;
+
+  //the double change that this perk will provide to transmission
+  //through water
+  private double _waterTransChange;
+
+  //the double change that this perk will provide to transmission
+  //through air
+  private double _airTransChange;
   
   //the boolean availability of this perk to be purchased
   private boolean _availability = false;
@@ -48,13 +61,16 @@ public class Perk{
   
   //the ArrayList of perks that this perk's purchase makes available
   private ArrayList<Perk> _nextPerks;
+
+  //the ArrayList of perks whose purchase makes this perk available
+  private ArrayList<Perk> _prevPerks;
   
   //constuctor: sets cost, change in infectivity/lethality/visibility and
   //the perks that, when this perk is bought, become available for purchase
-  public Perk(int tempcost, int tempsell,
-              double tempinf, double templeth, double tempvis,
-              double tempheat, double tempcold, double tempwet, double tempdry,
-              double tempmed, ArrayList<Perk> tempnext){
+  public Perk(int tempcost, int tempsell, double tempinf, double templeth,
+              double tempvis, double tempheat, double tempcold, double tempwet,
+              double tempdry, double tempmed, double tempwater, double tempair,
+              ArrayList<Perk> tempnext, ArrayList<Perk> tempprev){
     
     this._cost = tempcost;
     this._sellPrice = tempsell;
@@ -66,25 +82,11 @@ public class Perk{
     this._wetResChange = tempwet;
     this._dryResChange = tempdry;
     this._medResChange = tempmed;
+    this._waterTransChange = tempwater;
+    this._airTransChange = tempair;
     this._nextPerks = tempnext;
+    this._prevPerks = tempprev;
     
-  }
-
-  //alternate constructor, creates a new perk with all the aspects of an old perk
-  public Perk(Perk p){
-
-    this._cost = p.getCost();
-    this._sellPrice = p.getSellPrice();
-    this._infectivityChange = p.getInf();
-    this._lethalityChange = p.getLeth();
-    this._visibilityChange = p.getVis();
-    this._heatResChange = p.getHeatRes();
-    this._coldResChange = p.getColdRes();
-    this._wetResChange = p.getWetRes();
-    this._dryResChange = p.getDryRes();
-    this._medResChange = p.getMedRes();
-    this._nextPerks = p.getNext();
-
   }
   
   /**
@@ -131,17 +133,27 @@ public class Perk{
    * gets the integer selling price (cost or refund) of this perk
    * if perks that rely on this perk to be available, they will be sold if
    * this perk is sold. Therefore, their selling prices are included in
-   * this integer
-   * @return __sellPrice
+   * this integer. This is the selling price shown to the user
+   * @return the combined _sellprice's of all owned perks after this perk
    */
-  public int getSellPrice(){
+  public int getCumSellPrice(){
    
       int returnPrice = this._sellPrice;
       for(Perk p : this._nextPerks){
-          if(p.isOwned())
-              returnPrice += this.getSellPrice();
+          if(p.isOwned() && p.isOnlyOwnedPrev(this))
+              returnPrice += p.getCumSellPrice();
       }
       return returnPrice;
+  }
+
+  /**
+   * gets the sell price of this individual perk
+   * @return _sellPrice
+   */
+  public int getSellPrice(){
+
+      return this._sellPrice;
+
   }
   
   /**
@@ -155,6 +167,21 @@ public class Perk{
   }
   
   /**
+   * Like getCumSellPrice, gets the cumulative infectivity for every
+   * perk directly reliant on this perk
+   * @return the combined _infectivityChange's of all owned perks after this perk
+   */
+  public double getCumInf(){
+   
+      double returnInf = this._infectivityChange;
+      for(Perk p : this._nextPerks){
+          if(p.isOwned() && p.isOnlyOwnedPrev(this))
+              returnInf += p.getCumInf();
+      }
+      return returnInf;
+  }
+
+  /**
    * gets the change in infectivity this perk gives to a disease
    * @return _infectivityChange
    */
@@ -163,7 +190,22 @@ public class Perk{
     return this._infectivityChange;
     
   }
-  
+
+  /**
+   * Like getCumSellPrice, gets the cumulative lethality for every
+   * perk directly reliant on this perk
+   * @return the combined _lethalityChange's of all owned perks after this perk
+   */
+  public double getCumLeth(){
+
+      double returnLeth = this._lethalityChange;
+      for(Perk p : this._nextPerks){
+          if(p.isOwned() && p.isOnlyOwnedPrev(this))
+              returnLeth += p.getCumLeth();
+      }
+      return returnLeth;
+  }
+
   /**
    * gets the change in lethality this perk gives to a disease
    * @return _lethalityChange
@@ -173,7 +215,22 @@ public class Perk{
     return this._lethalityChange;
     
   }
-  
+
+  /**
+   * Like getCumSellPrice, gets the cumulative visibility for every
+   * perk directly reliant on this perk
+   * @return the combined _visibilityChange's of all owned perks after this perk
+   */
+  public double getCumVis(){
+
+      double returnVis = this._visibilityChange;
+      for(Perk p : this._nextPerks){
+          if(p.isOwned() && p.isOnlyOwnedPrev(this))
+              returnVis += p.getCumVis();
+      }
+      return returnVis;
+  }
+
   /**
    * gets the change in visibility this perk gives to a disease
    * @return _visibilityChange
@@ -183,7 +240,22 @@ public class Perk{
     return this._visibilityChange;
     
   }
-  
+
+  /**
+   * Like getCumSellPrice, gets the cumulative heat resistance for every
+   * perk directly reliant on this perk
+   * @return the combined _heatResChange's of all owned perks after this perk
+   */
+  public double getCumHeatRes(){
+
+      double returnHeatRes = this._heatResChange;
+      for(Perk p : this._nextPerks){
+          if(p.isOwned() && p.isOnlyOwnedPrev(this))
+              returnHeatRes += p.getCumHeatRes();
+      }
+      return returnHeatRes;
+  }
+
   /**
    * gets the change in heat resistance this perk gives to a disease
    * @return _heatResChange
@@ -193,7 +265,22 @@ public class Perk{
     return this._heatResChange;
     
   }
-  
+
+  /**
+   * Like getCumSellPrice, gets the cumulative cold resistivity for every
+   * perk directly reliant on this perk
+   * @return the combined _coldResChange's of all owned perks after this perk
+   */
+  public double getCumColdRes(){
+
+      double returnColdRes = this._coldResChange;
+      for(Perk p : this._nextPerks){
+          if(p.isOwned() && p.isOnlyOwnedPrev(this))
+              returnColdRes += p.getCumColdRes();
+      }
+      return returnColdRes;
+  }
+
   /**
    * gets the change in cold resistance this perk gives to a disease
    * @return _coldResChange
@@ -203,7 +290,22 @@ public class Perk{
     return this._coldResChange;
     
   }
-  
+
+  /**
+   * Like getCumSellPrice, gets the cumulative wet resistivity for every
+   * perk directly reliant on this perk
+   * @return the combined _wetResChange's of all owned perks after this perk
+   */
+  public double getCumWetRes(){
+
+      double returnWetRes = this._wetResChange;
+      for(Perk p : this._nextPerks){
+          if(p.isOwned() && p.isOnlyOwnedPrev(this))
+              returnWetRes += p.getCumWetRes();
+      }
+      return returnWetRes;
+  }
+
   /**
    * gets the change in wetness resistance this perk gives to a disease
    * @return _wetResChange
@@ -213,7 +315,22 @@ public class Perk{
     return this._wetResChange;
     
   }
-  
+
+  /**
+   * Like getCumSellPrice, gets the cumulative dry resistivity for every
+   * perk directly reliant on this perk
+   * @return the combined _dryResChange's of all owned perks after this perk
+   */
+  public double getCumDryRes(){
+
+      double returnDryRes = this._dryResChange;
+      for(Perk p : this._nextPerks){
+          if(p.isOwned() && p.isOnlyOwnedPrev(this))
+              returnDryRes += p.getCumDryRes();
+      }
+      return returnDryRes;
+  }
+
   /**
    * gets the change in dryness resistance this perk gives to a disease
    * @return _dryResChange
@@ -223,7 +340,22 @@ public class Perk{
     return this._dryResChange;
     
   }
-  
+
+  /**
+   * Like getCumSellPrice, gets the cumulative medical resistivity for every
+   * perk directly reliant on this perk
+   * @return the combined _medResChange's of all owned perks after this perk
+   */
+  public double getCumMedRes(){
+
+      double returnMedRes = this._medResChange;
+      for(Perk p : this._nextPerks){
+          if(p.isOwned() && p.isOnlyOwnedPrev(this))
+              returnMedRes += p.getCumMedRes();
+      }
+      return returnMedRes;
+  }
+
   /**
    * gets the change in resistance to medicine this perk gives to a disease
    * @return _medResChange
@@ -232,6 +364,56 @@ public class Perk{
    
     return this._medResChange;
     
+  }
+
+  /**
+   * Like getCumSellPrice, gets the cumulative water transmissibilityfor every
+   * perk directly reliant on this perk
+   * @return the combined _waterTransChange's of all owned perks after this perk
+   */
+  public double getCumWaterTrans(){
+
+      double returnWaterTrans = this._waterTransChange;
+      for(Perk p : this._nextPerks){
+          if(p.isOwned() && p.isOnlyOwnedPrev(this))
+              returnWaterTrans += p.getCumWaterTrans();
+      }
+      return returnWaterTrans;
+  }
+
+  /**
+   * gets the change in water transmissibility this perk gives to a disease
+   * @return   _waterTransChange
+   */
+  public double getWaterTrans(){
+
+      return this._waterTransChange;
+
+  }
+
+  /**
+   * Like getCumSellPrice, gets the cumulative air transmissibility for every
+   * perk directly reliant on this perk
+   * @return the combined _airTransChange's of all owned perks after this perk
+   */
+  public double getCumAirTrans(){
+
+      double returnAirTrans = this._airTransChange;
+      for(Perk p : this._nextPerks){
+          if(p.isOwned() && p.isOnlyOwnedPrev(this))
+              returnAirTrans += p.getCumAirTrans();
+      }
+      return returnAirTrans;
+  }
+
+  /**
+   * gets the change in air transmissibility this perk gives to a disease
+   * @return   _airTransChange
+   */
+  public double getAirTrans(){
+
+      return this._airTransChange;
+
   }
  
   /**
@@ -263,5 +445,35 @@ public class Perk{
       return this._nextPerks;
       
   }
-  
+
+  /**
+   * gets the ArrayList of Perks that make this perk available
+   * @return _prevPerks
+   */
+  public ArrayList<Perk> getPrev(){
+
+      return this._prevPerks;
+
+  }
+
+  /**
+   * returns true if the perk's only owned predecessor is parent
+   * return false if either the parent is not owned yet or some other perk
+   * besides the parent is owned.
+   * @param parent                        a perk
+   * @returns                             true if the perk is the only owned
+   *                                      perk previous to this perk
+   */
+  public boolean isOnlyOwnedPrev(Perk parent){
+
+      if(!parent.isOwned()) return false;
+      else
+          for(Perk p : this._prevPerks){
+
+              if(p.getID() != parent.getID() && p.isOwned()) return false;
+
+          }
+     return true;
+
+  }
 }

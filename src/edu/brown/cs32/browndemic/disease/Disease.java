@@ -1,7 +1,14 @@
 package edu.brown.cs32.browndemic.disease;
 
+import java.io.Serializable;
+
 /**
+ * This is the abstract disease class which contains all the necessary
+ * attributes for a disease to have, all the Accessor/Mutators needed
+ * and methods relating to the perks the disease has
  *
+ * It leaves implementation of selling perks to subclasses
+ * 
  * @author bkoatz
  */
 public abstract class Disease implements Serializable{
@@ -247,7 +254,22 @@ public abstract class Disease implements Serializable{
     	this._medResistance = 0;
     	
     }
-    
+
+    /**
+     * The cumulative method that sells every perk that is exlusively relies on
+     * perkID to be owned at the time of selling.
+     * @param perkID                           the ID of the root perk being sold
+     * @throws java.lang.IllegalAccessException if you are selling an unowned perk
+     */
+    public abstract void sellCumPerk(int perkID) throws IllegalAccessException;
+
+    /**
+     * Sells only this individual perk
+     * @param perkID                           the ID of the perk being sold
+     * @throws java.lang.IllegalAccessException if you are selling an unowned perk,
+     *                                          or a perk whos 'next' perks are
+     *                                          owned
+     */
     public abstract void sellPerk(int perkID) throws IllegalAccessException;
     
     //IMPORTANT PLEASE READ
