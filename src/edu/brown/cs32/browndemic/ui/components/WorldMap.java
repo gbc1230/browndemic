@@ -90,11 +90,11 @@ public class WorldMap extends JComponent implements MouseListener {
 			}
 		}
 		
-		Kernel k = new Kernel(3, 3, new float[] { 	1f/16f, 2f/16f, 1f/16f,
-													2f/16f, 4f/16f, 2f/16f,
-													1f/16f, 2f/16f, 1f/16f });
-		ConvolveOp op = new ConvolveOp(k);
-		return op.filter(out, null);
+		//Kernel k = new Kernel(3, 3, new float[] { 	1f/16f, 2f/16f, 1f/16f,
+		//											2f/16f, 4f/16f, 2f/16f,
+		//											1f/16f, 2f/16f, 1f/16f });
+		//ConvolveOp op = new ConvolveOp(k);
+		return out;//op.filter(out, null);
 	}
 	
 	@Override
