@@ -12,8 +12,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
-import java.awt.image.ConvolveOp;
-import java.awt.image.Kernel;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,21 +22,21 @@ import javax.swing.Timer;
 import edu.brown.cs32.browndemic.ui.UIConstants.Colors;
 import edu.brown.cs32.browndemic.ui.UIConstants.Fonts;
 import edu.brown.cs32.browndemic.ui.actions.Action;
-import edu.brown.cs32.browndemic.world.MainWorld;
+import edu.brown.cs32.browndemic.world.World;
 
 public class WorldMap extends JComponent implements MouseListener {
 
 	private static final long serialVersionUID = -4481136165457141240L;
 	
-	private MainWorld _world;
+	private World _world;
 	private BufferedImage _map, _regions;
 	private Map<Integer, BufferedImage> _diseaseOverlays = new HashMap<>();
 	private Map<Integer, BufferedImage> _highlightOverlays = new HashMap<>();
 	private int _selected;
 	
-	public WorldMap(MainWorld world, BufferedImage map, BufferedImage regions) {
+	public WorldMap(World _world2, BufferedImage map, BufferedImage regions) {
 		super();
-		_world = world;
+		_world = _world2;
 		_map = map;
 		_regions = regions;
 		_selected = 0;
@@ -90,11 +88,11 @@ public class WorldMap extends JComponent implements MouseListener {
 			}
 		}
 		
-		Kernel k = new Kernel(3, 3, new float[] { 	1f/16f, 2f/16f, 1f/16f,
-													2f/16f, 4f/16f, 2f/16f,
-													1f/16f, 2f/16f, 1f/16f });
-		ConvolveOp op = new ConvolveOp(k);
-		return op.filter(out, null);
+//		Kernel k = new Kernel(3, 3, new float[] { 	1f/16f, 2f/16f, 1f/16f,
+//													2f/16f, 4f/16f, 2f/16f,
+//													1f/16f, 2f/16f, 1f/16f });
+//		ConvolveOp op = new ConvolveOp(k);
+		return out;//op.filter(out, null);
 	}
 	
 	@Override

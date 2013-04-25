@@ -24,11 +24,11 @@ public class SinglePlayerGame extends UIPanel {
 	
 	private static final long serialVersionUID = 3275157554958820602L;
 	
-	private MainWorld _world;
+	private World _world;
 	private WorldMap _map;
 	private boolean loaded = false;
 	
-	public SinglePlayerGame(MainWorld w) {
+	public SinglePlayerGame(World w) {
 		super();
 		_world = w;
 	}
@@ -84,7 +84,7 @@ public class SinglePlayerGame extends UIPanel {
 	@Override
 	public void setupForDisplay() {
 		if (loaded) {
-			Utils.getParentFrame(this).setTitle(new SinglePlayerTitleBar());
+			Utils.getParentFrame(this).setTitle(new SinglePlayerTitleBar(_world));
 		} else {
 			Utils.getParentFrame(this).setPanel(new Loading(true, new Loading.LoadImageWorker(new ImagesDoneLoadingAction(Utils.getParentFrame(this)), Images.GAME_IMAGES)));
 		}

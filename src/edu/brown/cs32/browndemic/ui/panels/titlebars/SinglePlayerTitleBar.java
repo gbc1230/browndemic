@@ -3,14 +3,17 @@ package edu.brown.cs32.browndemic.ui.panels.titlebars;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.MouseEvent;
+import java.io.File;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 
 import edu.brown.cs32.browndemic.ui.Resources;
@@ -23,6 +26,7 @@ import edu.brown.cs32.browndemic.ui.Utils;
 import edu.brown.cs32.browndemic.ui.components.HoverLabel;
 import edu.brown.cs32.browndemic.ui.panels.DragWindow;
 import edu.brown.cs32.browndemic.ui.panels.menus.MainMenu;
+import edu.brown.cs32.browndemic.world.World;
 
 public class SinglePlayerTitleBar extends TitleBar {
 
@@ -30,8 +34,9 @@ public class SinglePlayerTitleBar extends TitleBar {
 	
 	JLabel minimize;
 	JMenuItem quit, save, exit;
+	World _world;
 	
-	public SinglePlayerTitleBar() {
+	public SinglePlayerTitleBar(World world) {
 		super();
 		makeUI();
 	}
@@ -45,6 +50,7 @@ public class SinglePlayerTitleBar extends TitleBar {
 		menuBar.setMinimumSize(new Dimension(0, UI.TITLE_HEIGHT));
 		menuBar.setBorder(BorderFactory.createEmptyBorder());
 		menuBar.setAlignmentY(CENTER_ALIGNMENT);
+		
 
 		JMenu menu = new JMenu("Menu");
 		menu.setFont(Fonts.TITLE_BAR);
@@ -71,6 +77,8 @@ public class SinglePlayerTitleBar extends TitleBar {
 		exit.setBackground(Colors.MENU_BACKGROUND);
 		exit.setForeground(Colors.RED_TEXT);
 		menu.add(exit);
+		
+		Utils.setDefaultLook(menuBar, quit, save, exit);
 		
 		menuBar.add(menu);
 		add(menuBar);
@@ -101,11 +109,29 @@ public class SinglePlayerTitleBar extends TitleBar {
 		if (e.getSource() == minimize) {
 			Utils.getParentFrame(this).setState(JFrame.ICONIFIED);
 		} else if (e.getSource() == quit) {
-			Utils.getParentFrame(this).setPanel(new MainMenu());
+			int choice = JOptionPane.showOptionDialog(Utils.getParentFrame(this), 
+										"Are you sure you want to quit?  Any unsaved progress will be lost", 
+										"Confirm quit", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, 
+										null, null, null);
+			if (choice == 0)
+				Utils.getParentFrame(this).setPanel(new MainMenu());
 		} else if (e.getSource() == save) {
+			File saves = new File("saves");
+			saves.mkdir();
+			JFileChooser fc = new JFileChooser();
+			fc.setCurrentDirectory(saves);
 			
+			if (fc.showSaveDialog(Utils.getParentFrame(this)) == JFileChooser.APPROVE_OPTION) {
+				System.out.println("SAVE TO: " + fc.getSelectedFile());
+				// TODO: Save file
+			}
 		} else if (e.getSource() == exit) {
-			System.exit(0);
+			int choice = JOptionPane.showOptionDialog(Utils.getParentFrame(this), 
+					"Are you sure you want to exit?  Any unsaved progress will be lost", 
+					"Confirm exit", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, 
+					null, null, null);
+			if (choice == 0)
+				System.exit(0);
 		}
 	}
 
