@@ -80,6 +80,7 @@ public class MainWorld implements Serializable, World{
     @Override
     public void addPerk(int dis, int perk, boolean buy){
         System.out.println("Got perk: " + dis + ", " + perk + ", " + buy);
+        /*
         Disease d = _diseases.get(dis);
         try{
             if (buy)
@@ -89,7 +90,7 @@ public class MainWorld implements Serializable, World{
         }
         catch(IllegalAccessException e){
             
-        }
+        }*/
     }
     
     /**

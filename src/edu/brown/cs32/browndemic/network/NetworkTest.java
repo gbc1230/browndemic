@@ -40,6 +40,7 @@ public class NetworkTest implements Runnable{
         while (true){
             try{
                 String line = _input.readLine();
+                System.out.println("read in: " + line);
                 if (line.equals("M"))
                     _clientWorld1.sendMessage("TEST MESSAGE");
                 else if (line.equals("P"))
