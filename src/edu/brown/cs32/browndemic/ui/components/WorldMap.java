@@ -12,8 +12,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
-import java.awt.image.ConvolveOp;
-import java.awt.image.Kernel;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -94,7 +92,7 @@ public class WorldMap extends JComponent implements MouseListener {
 //													2f/16f, 4f/16f, 2f/16f,
 //													1f/16f, 2f/16f, 1f/16f });
 //		ConvolveOp op = new ConvolveOp(k);
-		return op.filter(out, null);
+		return out;//op.filter(out, null);
 	}
 	
 	@Override
