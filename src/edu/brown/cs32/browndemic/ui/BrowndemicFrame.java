@@ -10,6 +10,8 @@ import java.io.IOException;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 import edu.brown.cs32.browndemic.ui.UIConstants.Images;
 import edu.brown.cs32.browndemic.ui.UIConstants.Strings;
@@ -76,6 +78,12 @@ public class BrowndemicFrame extends JFrame {
 			System.out.println("Could not read file: ");
 			e.printStackTrace();
 			System.exit(3);
+		}
+		
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (ClassNotFoundException | InstantiationException
+				| IllegalAccessException | UnsupportedLookAndFeelException e) {
 		}
 		
 		setTitle(Strings.TITLE);

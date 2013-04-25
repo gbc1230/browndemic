@@ -67,6 +67,7 @@ public class UIConstants {
 		public static final String JOIN_GAME = "JOIN GAME";
 		public static final String CREATE_GAME = "CREATE GAME";
 		public static final String START_GAME = "START GAME";
+		public static final String LOAD_GAME = "LOAD GAME";
 		public static final String ENTER_HOST = "Host: ";
 		public static final String ENTER_HOST_TOOLTIP = "Enter host IP address or URL";
 		public static final String ENTER_PORT = "Port: ";

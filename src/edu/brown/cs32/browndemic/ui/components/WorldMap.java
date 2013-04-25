@@ -24,21 +24,21 @@ import javax.swing.Timer;
 import edu.brown.cs32.browndemic.ui.UIConstants.Colors;
 import edu.brown.cs32.browndemic.ui.UIConstants.Fonts;
 import edu.brown.cs32.browndemic.ui.actions.Action;
-import edu.brown.cs32.browndemic.world.MainWorld;
+import edu.brown.cs32.browndemic.world.World;
 
 public class WorldMap extends JComponent implements MouseListener {
 
 	private static final long serialVersionUID = -4481136165457141240L;
 	
-	private MainWorld _world;
+	private World _world;
 	private BufferedImage _map, _regions;
 	private Map<Integer, BufferedImage> _diseaseOverlays = new HashMap<>();
 	private Map<Integer, BufferedImage> _highlightOverlays = new HashMap<>();
 	private int _selected;
 	
-	public WorldMap(MainWorld world, BufferedImage map, BufferedImage regions) {
+	public WorldMap(World _world2, BufferedImage map, BufferedImage regions) {
 		super();
-		_world = world;
+		_world = _world2;
 		_map = map;
 		_regions = regions;
 		_selected = 0;

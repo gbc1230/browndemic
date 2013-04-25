@@ -2,9 +2,11 @@ package edu.brown.cs32.browndemic.ui.panels.menus;
 
 import java.awt.Dimension;
 import java.awt.event.MouseEvent;
+import java.io.File;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -30,7 +32,7 @@ public class SinglePlayer extends UIPanel {
 	BrowndemicFrame _parent;
 	JTextField _diseaseName;
 	SelectButton _disease1, _disease2, _disease3;
-	HoverLabel _start;
+	JLabel _start, _load;
 	
 	public SinglePlayer() {
 		super();
@@ -46,8 +48,14 @@ public class SinglePlayer extends UIPanel {
 	protected void makeUI() {
 		
 		super.makeUI();
-		
-		add(Box.createRigidArea(new Dimension(1, 100)));
+
+		add(Box.createGlue());
+		_load = new HoverLabel(Strings.LOAD_GAME, Fonts.BUTTON_TEXT, Colors.RED_TEXT, Colors.HOVER_TEXT);
+		_load.setAlignmentX(CENTER_ALIGNMENT);
+		_load.addMouseListener(this);
+		add(_load);
+		add(Box.createGlue());
+		add(Box.createGlue());
 		
 		JPanel diseaseName = new JPanel();
 		diseaseName.setLayout(new BoxLayout(diseaseName, BoxLayout.X_AXIS));
@@ -138,6 +146,17 @@ public class SinglePlayer extends UIPanel {
 			
 			System.out.println("Start game with:\n\tDisease: " + disease + "\n\tName: " + name);
 			Utils.getParentFrame(this).setPanel(new SinglePlayerGame(null));
+		} else if (e.getSource() == _load) {
+			File saves = new File("saves");
+			saves.mkdir();
+			JFileChooser fc = new JFileChooser();
+			fc.setCurrentDirectory(saves);
+			
+			if (fc.showOpenDialog(Utils.getParentFrame(this)) == JFileChooser.APPROVE_OPTION) {
+				System.out.println("LOAD FROM: " + fc.getSelectedFile());
+				// TODO: Load file
+				Utils.getParentFrame(this).setPanel(new SinglePlayerGame(null));
+			}
 		}
 	}
 	

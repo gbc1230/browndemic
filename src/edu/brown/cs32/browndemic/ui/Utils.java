@@ -1,6 +1,11 @@
 package edu.brown.cs32.browndemic.ui;
 
+import java.awt.Component;
 import java.awt.Container;
+
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  * Contains various static utilities for the UI.
@@ -24,5 +29,16 @@ public class Utils {
 			return getParentFrame(c.getParent());
 		}
 		return (BrowndemicFrame) c;
+	}
+	
+	public static void setDefaultLook(Component... components) {
+		try {
+			UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+			for (Component c : components)
+				SwingUtilities.updateComponentTreeUI(c);
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (ClassNotFoundException | InstantiationException
+				| IllegalAccessException | UnsupportedLookAndFeelException e1) {
+		}
 	}
 }
