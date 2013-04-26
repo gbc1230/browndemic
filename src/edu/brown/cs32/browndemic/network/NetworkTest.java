@@ -28,6 +28,11 @@ public class NetworkTest implements Runnable{
             _server = new GameServer(_serverWorld);
             _client1 = new GameClient("localhost", _clientWorld1);
             _client2 = new GameClient("localhost", _clientWorld2);
+            for (long i = 0; i < 100000000L; i++){
+                
+            }
+            System.out.println("done");
+            _server.stopAccepting();
             _input = new BufferedReader(new InputStreamReader(System.in));
         }
         catch(IOException e){
@@ -41,10 +46,20 @@ public class NetworkTest implements Runnable{
             try{
                 String line = _input.readLine();
                 System.out.println("read in: " + line);
-                if (line.equals("M"))
-                    _clientWorld1.sendMessage("TEST MESSAGE");
-                else if (line.equals("P"))
-                    _clientWorld2.addPerk(0, 0, true);
+                if (line.startsWith("M")){
+                    String[] s = line.split(":");
+                    _clientWorld1.sendMessage(s[1]);
+                }
+                else if (line.startsWith("P")){
+                    String[] s = line.split(" ");
+                    int a = Integer.parseInt(s[1]);
+                    int b = Integer.parseInt(s[2]);
+                    boolean c = s[3].equals("t");
+                    _clientWorld2.addPerk(a, b, c);
+                }
+                else if (line.startsWith("W")){
+                    _serverWorld.addCommand();
+                }
             }
             catch(IOException e){
                 System.out.println("Couldn't read line.");
@@ -57,6 +72,7 @@ public class NetworkTest implements Runnable{
     
     public static void main (String[] args){
         NetworkTest n = new NetworkTest();
+        n.run();
     }
 
 }

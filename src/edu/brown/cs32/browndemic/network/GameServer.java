@@ -31,6 +31,7 @@ public class GameServer implements Runnable{
     // constructor
     public GameServer(ServerWorld w) throws IOException{
         _server = new ServerSocket(PORT);
+        _server.setSoTimeout(5000);
         _thread = new Thread(this);
         _clients = new ArrayList<GameServerThread>();
         _accepting = true;
@@ -43,8 +44,12 @@ public class GameServer implements Runnable{
     public void run(){
         while (_accepting){
             try{
-                addThread(_server.accept());
-                System.out.println("Got new client.");
+                System.out.println("looking...");
+                Socket temp = _server.accept();
+                if (temp != null){
+                    addThread(temp);
+                    System.out.println("Got new client.");
+                }
             }
             catch(IOException e){
                 if (_thread != null){
@@ -53,12 +58,14 @@ public class GameServer implements Runnable{
                 }
             }
         }
+        System.out.println("Sending worlds....");
         while (true){
             ServerWorld w = _world.getNextCommand();
             if (w == null)
                 continue;
             WorldOutput wo = new WorldOutput(w);
             for (GameServerThread thread : _clients){
+                System.out.println("Sending a world...");
                 thread.sendMessage(wo);
             }
         }
@@ -66,7 +73,9 @@ public class GameServer implements Runnable{
     
     //for once the game starts
     public void stopAccepting(){
+        System.out.println("done accepting");
         _accepting = false;
+        _thread.interrupt();
     }
 
     /**

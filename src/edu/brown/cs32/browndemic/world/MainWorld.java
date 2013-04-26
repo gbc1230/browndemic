@@ -379,7 +379,6 @@ public class MainWorld implements Serializable, World{
         for (Region r : _regions){
             ans.append(r.getName()).append(", ");
         }
-        ans.append("\n");
         return ans.toString();
     }
     

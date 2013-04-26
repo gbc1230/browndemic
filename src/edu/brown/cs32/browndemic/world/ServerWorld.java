@@ -29,6 +29,15 @@ public class ServerWorld extends MainWorld{
         return _output.poll();
     }
     
+    /**
+     * For adding onto my command queue
+     */
+    public void addCommand(){
+        System.out.println("Adding...");
+        _output.add(this);
+        System.out.println("Added.");
+    }
+    
         
     /**
      * Stop a disease that has left the game : used only for MP maps

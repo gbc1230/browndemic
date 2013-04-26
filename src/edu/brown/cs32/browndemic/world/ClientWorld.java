@@ -34,7 +34,9 @@ public class ClientWorld implements ChatServer, World{
     }
     
     public void setWorld(ServerWorld w){
+        System.out.println("Setting world to:\n" + w.toString());
         _world = w;
+        System.out.println("Set world.");
     }
     
     @Override
@@ -50,8 +52,9 @@ public class ClientWorld implements ChatServer, World{
     }
     
     public void acceptMessage(String msg){
-        System.out.println("Got message: " + msg);
-        _handler.addMessage(msg);
+        //System.out.println("About to handle the message...");
+        //_handler.addMessage(msg);
+        System.out.println("Handled the message: " + msg);
     }
     
     @Override
