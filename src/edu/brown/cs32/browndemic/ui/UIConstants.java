@@ -78,6 +78,8 @@ public class UIConstants {
 		public static final String HOST_SERVER = "Host a server: ";
 		public static final String KICK_PLAYER = "KICK";
 		public static final String CHAT_TOOLTIP = "Press enter to send chat message";
+		public static final String SETTINGS = "Settings";
+		public static final String SETTINGS_CACHING = "Caching Enabled";
 	}
 	
 	/**

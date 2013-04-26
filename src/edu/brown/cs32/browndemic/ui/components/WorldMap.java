@@ -12,13 +12,18 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
+import java.awt.image.ConvolveOp;
+import java.awt.image.Kernel;
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.imageio.ImageIO;
 import javax.swing.JComponent;
 import javax.swing.SwingWorker;
 import javax.swing.Timer;
 
+import edu.brown.cs32.browndemic.ui.Settings;
 import edu.brown.cs32.browndemic.ui.UIConstants.Colors;
 import edu.brown.cs32.browndemic.ui.UIConstants.Fonts;
 import edu.brown.cs32.browndemic.ui.actions.Action;
@@ -44,7 +49,7 @@ public class WorldMap extends JComponent implements MouseListener {
 		setPreferredSize(new Dimension(map.getWidth(), map.getHeight()));
 		setMaximumSize(new Dimension(map.getWidth(), map.getHeight()));
 		setMinimumSize(new Dimension(map.getWidth(), map.getHeight()));
-		new Timer(30, new RepaintListener()).start();
+		new Timer(1000/30, new RepaintListener()).start();
 	}
 	
 	public class Loader extends SwingWorker<Void, Void> {
@@ -56,13 +61,28 @@ public class WorldMap extends JComponent implements MouseListener {
 
 		@Override
 		protected Void doInBackground() throws Exception {
+			if (Settings.getBoolean(Settings.CACHING)) {
+				File cache = new File("cache");
+				cache.mkdir();
+			}
+			
 			for (int x = 0; x < _regions.getWidth(); x++) {
 				for (int y = 0; y < _regions.getHeight(); y++) {
 					int id = getID(x, y);
 					if (!isValid(id)) continue;
 					if (!_diseaseOverlays.containsKey(id)) {
-						_diseaseOverlays.put(id, createRegion(id, Color.RED));
-						_highlightOverlays.put(id, createRegion(id, new Color(255, 255, 175)));
+						File disease = new File("cache/disease" + id + ".png");
+						File highlight = new File("cache/highlight" + id + ".png");
+						if (Settings.getBoolean(Settings.CACHING) && disease.exists() && highlight.exists()) {
+							_diseaseOverlays.put(id, ImageIO.read(disease));
+							_highlightOverlays.put(id, ImageIO.read(highlight));
+						} else {
+							BufferedImage[] overlays = createRegion(id, Color.red, new Color(255, 255, 175));
+							_diseaseOverlays.put(id, overlays[0]);
+							_highlightOverlays.put(id, overlays[1]);
+							ImageIO.write(overlays[0], "png", disease);
+							ImageIO.write(overlays[1], "png", highlight);
+						}
 					}
 				}
 				setProgress(x * 100 / (_regions.getWidth()-1));
@@ -76,23 +96,32 @@ public class WorldMap extends JComponent implements MouseListener {
 		}
 	}
 	
-	private BufferedImage createRegion(int id, Color c) {
-		BufferedImage out = new BufferedImage(_regions.getWidth(), _regions.getHeight(), BufferedImage.TYPE_INT_ARGB);
+	private BufferedImage[] createRegion(int id, Color... c) {
+		BufferedImage[] out = new BufferedImage[c.length];
+		for (int i = 0; i < c.length; i++) {
+			out[i] = new BufferedImage(_regions.getWidth(), _regions.getHeight(), BufferedImage.TYPE_INT_ARGB);
+		}
 
 		for (int x = 0; x < _regions.getWidth(); x++) {
 			for (int y = 0; y < _regions.getHeight(); y++) {
 				int pixel = getID(x, y);
-				if (pixel == id) {
-					out.setRGB(x, y, c.getRGB());
+				for (int i = 0; i < c.length; i++) {
+					if (pixel == id)
+						out[i].setRGB(x, y, c[i].getRGB());
+					else
+						out[i].setRGB(x, y, c[i].getRGB() & 0x00FFFFFF);
 				}
 			}
 		}
-		
-//		Kernel k = new Kernel(3, 3, new float[] { 	1f/16f, 2f/16f, 1f/16f,
-//													2f/16f, 4f/16f, 2f/16f,
-//													1f/16f, 2f/16f, 1f/16f });
-//		ConvolveOp op = new ConvolveOp(k);
-		return out;//op.filter(out, null);
+
+		Kernel k = new Kernel(3, 3, new float[] { 	1f/9f, 1f/9f, 1f/9f,
+													1f/9f, 1f/9f, 1f/9f,
+													1f/9f, 1f/9f, 1f/9f });
+		ConvolveOp op = new ConvolveOp(k);
+		for (int i = 0; i < c.length; i++) {
+			out[i] = op.filter(out[i], null);
+		}
+		return out;
 	}
 	
 	@Override
@@ -104,7 +133,7 @@ public class WorldMap extends JComponent implements MouseListener {
 		g.drawImage(_map, 0, 0, null);
 		
 		for (Map.Entry<Integer, BufferedImage> e : _diseaseOverlays.entrySet()) {
-			float percentInfected = System.currentTimeMillis() % 5000 / 5000.0f; //TODO: _world.getPercentInfected(e.getKey());
+			float percentInfected = (System.currentTimeMillis() + e.getKey() * 1000) % 5000 / 5000.0f; //TODO: _world.getPercentInfected(e.getKey());
 			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, percentInfected/2.0f));
 			g2.drawImage(e.getValue(), 0, 0, null);
 
@@ -121,12 +150,12 @@ public class WorldMap extends JComponent implements MouseListener {
 	private void drawInfoPanel(Graphics2D g2) {
 		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .9f));
 		g2.setColor(Color.BLACK);
-		g2.fillRect(0, getHeight() - 100, 225, 100);
+		g2.fillRect(0, getHeight() - 100, 275, 100);
 
 		g2.setColor(Colors.RED_TEXT);
 		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
 		g2.setFont(Fonts.NORMAL_TEXT);
-		g2.drawString("This is a long Country name", 5, getHeight() - 80);
+		g2.drawString("This is a long Country name (" + _selected + ")", 5, getHeight() - 80);
 
 		g2.drawString("Infected: 100,000 (10%)", 15, getHeight() - 55);
 		g2.drawString("Dead: 20,000 (2%)", 15, getHeight() - 35);
@@ -180,6 +209,7 @@ public class WorldMap extends JComponent implements MouseListener {
 	}
 	
 	private int getID(int x, int y) {
-		return ((_regions.getRGB(x, y) & 0xFF000000) >>> 24) == 255 ? _regions.getRGB(x, y) & 0x000000FF : 0;
+		int color = _regions.getRGB(x, y);
+		return (color & 0xFF000000) == 0xFF000000 ? color & 0x000000FF : 0;
 	}
 }

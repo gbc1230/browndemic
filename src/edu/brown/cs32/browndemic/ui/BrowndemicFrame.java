@@ -66,6 +66,7 @@ public class BrowndemicFrame extends JFrame {
 	private void init() {
 		try {
 			UIConstants.init();
+			Settings.init();
 		} catch (FileNotFoundException e) {
 			System.out.println("Could not load file: ");
 			e.printStackTrace();
