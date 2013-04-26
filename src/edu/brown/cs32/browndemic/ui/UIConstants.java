@@ -114,6 +114,14 @@ public class UIConstants {
 		public static final String DISEASE3_SELECTED = DISEASE1_SELECTED;
 		public static final String STARTGAME = IMAGE_PATH + "startgame.png";
 		public static final String STARTGAME_HOVER = IMAGE_PATH + "startgame_hover.png";
+		public static final String PLAY1 = IMAGE_PATH + "play.png";
+		public static final String PLAY1_HOVER = IMAGE_PATH + "play_hover.png";
+		public static final String PLAY2 = IMAGE_PATH + "play2.png";
+		public static final String PLAY2_HOVER = IMAGE_PATH + "play2_hover.png";
+		public static final String PLAY3 = IMAGE_PATH + "play3.png";
+		public static final String PLAY3_HOVER = IMAGE_PATH + "play3_hover.png";
+		public static final String PAUSE = IMAGE_PATH + "pause.png";
+		public static final String PAUSE_HOVER = IMAGE_PATH + "pause_hover.png";
 		
 		public static final String MAP = IMAGE_PATH + "earth_large.png";
 		public static final String REGIONS = IMAGE_PATH + "earth_large_regions.png";
@@ -123,10 +131,6 @@ public class UIConstants {
 		 */
 		public static final String[] MENU_IMAGES = {
 			DEFAULT,
-			//SINGLE_PLAYER,
-			//SINGLE_PLAYER_HOVER,
-			//MULTI_PLAYER,
-			//MULTI_PLAYER_HOVER,
 			CLOSE_BUTTON,
 			CLOSE_BUTTON_HOVER,
 			MINIMIZE_BUTTON,
@@ -141,8 +145,14 @@ public class UIConstants {
 			DISEASE2_SELECTED,
 			DISEASE3,
 			DISEASE3_SELECTED,
-			//STARTGAME,
-			//STARTGAME_HOVER,
+			PLAY1,
+			PLAY1_HOVER,
+			PLAY2,
+			PLAY2_HOVER,
+			PLAY3,
+			PLAY3_HOVER,
+			PAUSE,
+			PAUSE_HOVER,
 		};
 		
 		public static final String[] GAME_IMAGES = {

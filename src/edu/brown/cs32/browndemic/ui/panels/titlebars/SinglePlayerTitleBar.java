@@ -1,6 +1,5 @@
 package edu.brown.cs32.browndemic.ui.panels.titlebars;
 
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -23,7 +22,9 @@ import edu.brown.cs32.browndemic.ui.UIConstants.Images;
 import edu.brown.cs32.browndemic.ui.UIConstants.Strings;
 import edu.brown.cs32.browndemic.ui.UIConstants.UI;
 import edu.brown.cs32.browndemic.ui.Utils;
+import edu.brown.cs32.browndemic.ui.actions.Action;
 import edu.brown.cs32.browndemic.ui.components.HoverLabel;
+import edu.brown.cs32.browndemic.ui.components.SelectButton;
 import edu.brown.cs32.browndemic.ui.panels.DragWindow;
 import edu.brown.cs32.browndemic.ui.panels.menus.MainMenu;
 import edu.brown.cs32.browndemic.world.World;
@@ -32,7 +33,8 @@ public class SinglePlayerTitleBar extends TitleBar {
 
 	private static final long serialVersionUID = -8926559135273305855L;
 	
-	JLabel minimize;
+	JLabel minimize; 
+	SelectButton pause, play1, play2, play3;
 	JMenuItem quit, save, exit;
 	World _world;
 	
@@ -82,6 +84,25 @@ public class SinglePlayerTitleBar extends TitleBar {
 		
 		menuBar.add(menu);
 		add(menuBar);
+		
+		add(Box.createRigidArea(new Dimension(UI.TITLE_HEIGHT, UI.TITLE_HEIGHT)));
+
+		pause = new SelectButton(Resources.getImage(Images.PAUSE), Resources.getImage(Images.PAUSE_HOVER));
+		play1 = new SelectButton(Resources.getImage(Images.PLAY1), Resources.getImage(Images.PLAY1_HOVER));
+		play2 = new SelectButton(Resources.getImage(Images.PLAY2), Resources.getImage(Images.PLAY2_HOVER));
+		play3 = new SelectButton(Resources.getImage(Images.PLAY3), Resources.getImage(Images.PLAY3_HOVER));
+		pause.addOnSelectAction(new SelectAction(0, play1, play2, play3));
+		play1.addOnSelectAction(new SelectAction(1, pause, play2, play3));
+		play2.addOnSelectAction(new SelectAction(2, pause, play1, play3));
+		play3.addOnSelectAction(new SelectAction(3, pause, play1, play2));
+		
+		add(pause);
+		add(Box.createRigidArea(new Dimension(5,0)));
+		add(play1);
+		add(Box.createRigidArea(new Dimension(5,0)));
+		add(play2);
+		add(Box.createRigidArea(new Dimension(5,0)));
+		add(play3);
 
 		add(Box.createHorizontalGlue());
 		
@@ -101,11 +122,27 @@ public class SinglePlayerTitleBar extends TitleBar {
 		add(minimize);
 	}
 	
+	private class SelectAction implements Action {
+		
+		private SelectButton[] other;
+		private int speed;
+		
+		public SelectAction(int speed, SelectButton... other) {
+			this.other = other;
+			this.speed = speed;
+		}
+
+		@Override
+		public void doAction() {
+			for (SelectButton b : other) {
+				b.deSelect();
+			}
+		}
+		
+	}
+	
 	@Override
-	public void mouseReleased(MouseEvent e) {
-		if (e.getButton() != MouseEvent.BUTTON1) return;
-		if (!(e.getSource() instanceof Container)) return;
-		if (!((Container)e.getSource()).contains(e.getPoint())) return;
+	public void mouseReleasedInside(MouseEvent e) {
 		if (e.getSource() == minimize) {
 			Utils.getParentFrame(this).setState(JFrame.ICONIFIED);
 		} else if (e.getSource() == quit) {

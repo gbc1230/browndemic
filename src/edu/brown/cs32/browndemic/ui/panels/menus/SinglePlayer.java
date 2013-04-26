@@ -129,6 +129,7 @@ public class SinglePlayer extends UIPanel {
 		}
 		
 	}
+	
 	@Override
 	public void mouseReleasedInside(MouseEvent e) {		
 		if (e.getSource() == _start && _start.isEnabled()) {

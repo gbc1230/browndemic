@@ -1,6 +1,5 @@
 package edu.brown.cs32.browndemic.ui.panels.titlebars;
 
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -11,12 +10,12 @@ import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
 import edu.brown.cs32.browndemic.ui.Resources;
-import edu.brown.cs32.browndemic.ui.Utils;
 import edu.brown.cs32.browndemic.ui.UIConstants.Colors;
 import edu.brown.cs32.browndemic.ui.UIConstants.Fonts;
 import edu.brown.cs32.browndemic.ui.UIConstants.Images;
 import edu.brown.cs32.browndemic.ui.UIConstants.Strings;
 import edu.brown.cs32.browndemic.ui.UIConstants.UI;
+import edu.brown.cs32.browndemic.ui.Utils;
 import edu.brown.cs32.browndemic.ui.components.HoverLabel;
 import edu.brown.cs32.browndemic.ui.panels.DragWindow;
 
@@ -59,10 +58,7 @@ public class DefaultTitleBar extends TitleBar implements MouseListener {
 	}
 
 	@Override
-	public void mouseReleased(MouseEvent e) {
-		if (e.getButton() != MouseEvent.BUTTON1) return;
-		if (!(e.getSource() instanceof Container)) return;
-		if (!((Container)e.getSource()).contains(e.getPoint())) return;
+	public void mouseReleasedInside(MouseEvent e) {
 		if (e.getSource() == close) {
 			System.exit(0);
 		} else if (e.getSource() == minimize) {
