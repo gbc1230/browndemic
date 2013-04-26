@@ -352,6 +352,7 @@ public class MainWorld implements Serializable, World{
      */
     public void run(){
         while (!_gameOver){
+            long start = System.currentTimeMillis();
             update();
             if (allCured()){
                 _gameOver = true;
@@ -361,6 +362,14 @@ public class MainWorld implements Serializable, World{
                 crownWinners();
                 _gameOver = true;
                 break;
+            }
+            long end = System.currentTimeMillis();
+            long wait = end - start;
+            try{
+                Thread.sleep(333L - wait);
+            }
+            catch(InterruptedException e){
+                System.out.println("Couldn't sleep...");
             }
         }
     }
