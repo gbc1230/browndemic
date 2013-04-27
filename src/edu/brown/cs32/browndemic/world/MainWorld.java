@@ -12,6 +12,7 @@ import java.io.Serializable;
 
 import edu.brown.cs32.browndemic.disease.Disease;
 import edu.brown.cs32.browndemic.region.Region;
+import edu.brown.cs32.browndemic.region.RegionTransmission;
 
 /**
  *
@@ -50,6 +51,9 @@ public class MainWorld implements Serializable, World{
     //whether or not the game is still going on
     protected boolean _gameOver;
     
+    //for keeping track of transmissions
+    protected List<RegionTransmission> _transmissions;
+    
     //NOTE: each index of diseases, killed, cures refers to the same disease:
     //i.e. index 2 of each refers to the disease object, how many it has killed,
     //and how far its cure is, respectively
@@ -66,6 +70,7 @@ public class MainWorld implements Serializable, World{
         _cures = new ArrayList<>();
         _sent = new ArrayList<>();
         _cured = new ArrayList<>();
+        _transmissions = new ArrayList<>();
         _dead = 0;
         _infected = 0;
         _gameOver = false;
@@ -172,9 +177,14 @@ public class MainWorld implements Serializable, World{
     
     @Override
     public List<String> getNews(){
-        List<String> temp = new ArrayList<>();
-        temp.addAll(_news);
-        _news.clear();
+        return _news;
+    }
+    
+    @Override
+    public List<RegionTransmission> getTransmissions(){
+        List<RegionTransmission> temp = new ArrayList<>();
+        temp.addAll(_transmissions);
+        _transmissions.clear();
         return temp;
     }
     
@@ -263,12 +273,12 @@ public class MainWorld implements Serializable, World{
      */
     public void sendCures(int d){
         for (Region r : _regions){
-            r.cure(d);
+            r.cure(_diseases.get(d));
         }
     }
     
     /**
-     * Lets me know which cures have been ssent
+     * Lets me know which cures have been sent
      */
     public void checkCures(){
         for (int i = 0; i < _cures.size(); i++){

@@ -6,7 +6,7 @@ package edu.brown.cs32.browndemic.world;
 
 import edu.brown.cs32.browndemic.disease.Disease;
 import edu.brown.cs32.browndemic.region.Region;
-import java.util.ArrayList;
+import edu.brown.cs32.browndemic.region.RegionTransmission;
 import java.util.List;
 
 /**
@@ -58,6 +58,9 @@ public interface World {
     
     //gets the news
     public List<String> getNews();
+    
+    //get moving transmissions
+    public List<RegionTransmission> getTransmissions();
     
     //get the winner(s)
     public List<Integer> getWinners();

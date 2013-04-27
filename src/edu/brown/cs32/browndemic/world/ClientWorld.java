@@ -10,6 +10,7 @@ import edu.brown.cs32.browndemic.disease.Disease;
 import edu.brown.cs32.browndemic.region.Region;
 import edu.brown.cs32.browndemic.network.*;
 import edu.brown.cs32.browndemic.ui.interfaces.*;
+import edu.brown.cs32.browndemic.region.RegionTransmission;
 
 /**
  *
@@ -80,6 +81,11 @@ public class ClientWorld implements ChatServer, World{
     @Override
     public List<String> getNews(){
         return _world.getNews();
+    }
+    
+    @Override
+    public List<RegionTransmission> getTransmissions(){
+        return _world.getTransmissions();
     }
     
     @Override
