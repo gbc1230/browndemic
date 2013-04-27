@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package edu.brown.cs32.browndemic.region;
 
 import java.util.ArrayList;
@@ -11,19 +10,19 @@ import java.util.HashMap;
 
 import edu.brown.cs32.browndemic.disease.Disease;
 
-
 /**
  *
  * @author ckilfoyl
  */
 public class Region {
     //ArrayList of all land neighboring Regions by String name
-    private ArrayList<String> _landNeighbors;
+    private ArrayList<Integer> _landNeighbors;
 
     //ArrayList of all sea neighboring Regions by String name
-    private ArrayList<String> _waterNeighbors;
+    private ArrayList<Integer> _waterNeighbors;
 
-    private HashMap<String, Region> _regions;
+    //Hashmap of all Regions by ID
+    private HashMap<Integer, Region> _regions;
 
     //ArrayList of diseases in this Region
     private ArrayList<Disease> _diseases;
@@ -39,27 +38,33 @@ public class Region {
 
     //ArrayList of dead, order corresponds to the diseases in _disease
     private ArrayList<Integer> _dead;
-    
+
     //ArrrayList of cured, order corresponds to diseases in _disease
     private ArrayList<Integer> _cured;
-    
+
     //ArrayList of boolean isCure, order corresponds to diseases in _disease
     private ArrayList<Boolean> _hasCure;
+
+    //ArrayList of double awaresness for each disease
+    private ArrayList<Double> _awareness;
+
+    //ArrayList of double cure progress for each disease
+    private ArrayList<Double> _cureProgress;
 
     //Unique Region name
     //emphasis on the unique, some code in here runs on that assumption (hash, equals, etc.)
     private String _name;
 
+    //Unique Int ID of this region
+    private int _ID;
+
     //number of seaports and airports open in this Region
     private int _sea;
     private int _air;
-    
     //wealth of this Region (reflects infrastructure, productivity, actual wealth, etc.)
-    private double _wealth;
-
+    private double _wealth,_wet,_dry,_heat,_cold;
     private ArrayList<RegionTransmission> _transmissions;
     private ArrayList<String> _news;
-    
 
     /**
      * constructs a new Region with the given info
@@ -69,24 +74,32 @@ public class Region {
      * @param sea if this Region has open seaports
      * @param air if this Region has open airports
      */
-    public Region(String name, int population, Collection<String> landNeighbors,
-            Collection<String> waterNeighbors, HashMap<String, Region> hash,
-            int sea, int air, double wealth){
+    public Region(int ID, String name, int population, Collection<Integer> landNeighbors,
+            Collection<Integer> waterNeighbors, HashMap<Integer, Region> hash,
+            int sea, int air, double wealth, double wet, double dry,
+            double heat, double cold) {
         _name = name;
+        _ID = ID;
         _population = population;
         _healthy = population;
         _infected = new ArrayList<Integer>();
         _dead = new ArrayList<Integer>();
         _cured = new ArrayList<Integer>();
         _hasCure = new ArrayList<Boolean>();
-        _landNeighbors = new ArrayList<String>(landNeighbors.size());
+        _awareness = new ArrayList<Double>();
+        _cureProgress = new ArrayList<Double>();
+        _landNeighbors = new ArrayList<Integer>(landNeighbors.size());
         _landNeighbors.addAll(landNeighbors);
-        _waterNeighbors = new ArrayList<String>(waterNeighbors.size());
+        _waterNeighbors = new ArrayList<Integer>(waterNeighbors.size());
         _waterNeighbors.addAll(waterNeighbors);
         _regions = hash;
         _sea = sea;
         _air = air;
         _wealth = wealth;
+        _wet = wet;
+        _dry = dry;
+        _heat = heat;
+        _cold = cold;
         _transmissions = new ArrayList<RegionTransmission>();
         _news = new ArrayList<String>();
     }
@@ -94,17 +107,19 @@ public class Region {
     /**
      * The update method for this region
      */
-    public void update(){
-      for(Disease d : _diseases){
-        if(null != d){
-          cure(d);
-          kill(d);
-          infect(d);
-          transmitSeaAndAir(d);
-          transmitToLandNeighbors(d);
-          transmitToWaterNeighbors(d);
+    public void update() {
+        for (Disease d : _diseases) {
+            if (null != d) {
+                updateAwareness(d);
+                updateWealth(d);
+                cure(d);
+                kill(d);
+                infect(d);
+                transmitSeaAndAir(d);
+                transmitToLandNeighbors(d);
+                transmitToWaterNeighbors(d);
+            }
         }
-      }
     }
 
     /**
@@ -113,7 +128,7 @@ public class Region {
      * @param pop the population to infect
      * @return how many to infect
      */
-    public int getInfected(int d, int pop){
+    public int getInfected(int d, int pop) {
         int number = 0;
         //TODO calculate number of pop infected.
         return number;
@@ -123,9 +138,9 @@ public class Region {
      * Infects a portion of the healthy population
      * @param d the index of the disease
      */
-    public void infectHealthy(int d){
+    public void infectHealthy(int d) {
         int infect = getInfected(d, _healthy);
-        if(infect > _healthy){
+        if (infect > _healthy) {
             _infected.set(d, _infected.get(d) + _healthy);
             _healthy = 0;
         } else {
@@ -138,23 +153,16 @@ public class Region {
      * infects a portion of the population infected by other diseases
      * @param d
      */
-    public void infectInfected(int d){
+    public void infectInfected(int d) {
         //TODO DECIDE HOW TO KEEP TRACK OF POP W/ MULTIPLE INFECTIONS
     }
 
     /**
-     * infect(Disease) updates the infected for the given disease, or adds the disease if it's new
+     * infect(Disease) updates the infected for the given disease
      * @param disease the disease to update for
      **/
     public void infect(Disease disease) {
         int index = disease.getID();
-        if(_diseases.size() < index || null == _diseases.get(index)){
-            _infected.add(index, 1);
-            _dead.add(index,0);
-            _cured.add(index,0);
-            if(_hasCure.size() < index || _hasCure.get(index) == null)
-                _hasCure.add(index, false);
-        }
         infectHealthy(index);
         infectInfected(index);
     }
@@ -165,15 +173,13 @@ public class Region {
      **/
     public void kill(Disease disease) {
         int index = disease.getID();
-        if (_diseases.size() > index && null != _diseases.get(index)) {
-            int number = (int) (disease.getLethality() * _infected.get(index));
-            if (_infected.get(index) < number) {
-                _dead.set(index, _dead.get(index) + _healthy);
-                _infected.set(index, 0);
-            } else {
-                _dead.set(index, _dead.get(index) + number);
-                _infected.set(index, _infected.get(index) - number);
-            }
+        int number = (int) (disease.getLethality() * _infected.get(index));
+        if (_infected.get(index) < number) {
+            _dead.set(index, _dead.get(index) + _healthy);
+            _infected.set(index, 0);
+        } else {
+            _dead.set(index, _dead.get(index) + number);
+            _infected.set(index, _infected.get(index) - number);
         }
     }
 
@@ -183,9 +189,9 @@ public class Region {
      * @param pop
      * @return
      */
-    public int getCured(int d, int pop){
-        int number = 0;
-        //TODO calculate cured given the population
+    public int getCured(int d, int pop) {
+        //TODO right now cured just cures 5% of total pop per tick
+        int number = (int) (0.05*_population);
         return number;
     }
 
@@ -193,30 +199,57 @@ public class Region {
      * cure(Disease) updates the number of cured for this disease
      * @param d the disease to update cured for
      */
-    public void cure(Disease d){
-      int index = d.getID();
-      if(_diseases.size() > index && null != _diseases.get(index) && _hasCure.get(index) == true){
-        int number = getCured(index, _infected.get(index));
-        if(_infected.get(index) < number){
-          _cured.set(index, _cured.get(index) + _infected.get(index));
-          _infected.set(index, 0);
-        }else{
-          _cured.set(index, _cured.get(index) + number);
-          _infected.set(index, _infected.get(index) - number);
+    public void cure(Disease d) {
+        int index = d.getID();
+        if (_hasCure.get(index) == true) {
+            int number = getCured(index, _infected.get(index));
+            if (_infected.get(index) < number) {
+                _cured.set(index, _cured.get(index) + _infected.get(index));
+                _infected.set(index, 0);
+            } else {
+                _cured.set(index, _cured.get(index) + number);
+                _infected.set(index, _infected.get(index) - number);
+            }
         }
-      }
     }
-    
+
+    public void updateAwareness(Disease d){
+        int index = d.getID();
+        //awareness += vis*(infected + dead)
+        //TODO update this if infected can overlap
+        _awareness.set(index, _awareness.get(index) + d.getVisibility()
+                * (_infected.get(index) + _dead.get(index)));
+    }
+
+    public void updateWealth(Disease d){
+        int index = d.getID();
+        //TODO update wealth calculation here
+    }
+
     /**
      * setCure(int) sets the boolean cured for the disease at int to true
      * int d the index of the disease to cure
      */
-    public void setCure(int d){
-      if(_diseases.size() > d && null != _diseases.get(d)){
-        _hasCure.set(d, true);
-      } else {
-          _hasCure.add(d, true);
-      }
+    public void setCure(int d) {
+        if (_diseases.size() > d && null != _diseases.get(d)) {
+            _hasCure.set(d, true);
+        } else {
+            _hasCure.add(d, true);
+        }
+    }
+
+    /**
+     * introduces a disease to this region, initializes necessary lists
+     * @param d hte disease to introduce
+     */
+    public void introduceDisease(Disease d) {
+        int index = d.getID();
+        _infected.add(index, 1);
+        _dead.add(index, 0);
+        _cured.add(index, 0);
+        _hasCure.add(index, false);
+        _awareness.add(index, 0.0);
+        _cureProgress.add(index, 0.0);
     }
 
     /**
@@ -224,29 +257,30 @@ public class Region {
      * conditions are met (probability)
      * @param d the disease to transmit
      */
-    public void transmitSeaAndAir(Disease d){
-        for(Region region : _regions.values()){
-            if(region.hasDisease(d))
+    public void transmitSeaAndAir(Disease d) {
+        for (Region region : _regions.values()) {
+            if (region.hasDisease(d)) {
                 continue;
+            }
             int air = region.getAir();
             int sea = region.getAir();
-            if(air > 0 && _air > 0){
+            if (air > 0 && _air > 0) {
                 boolean transmit = false;
                 //TODO fill in conditions for airplane transmission
-                if(transmit){
+                if (transmit) {
                     RegionTransmission rt = new RegionTransmission(_name, region.getName(), d.getID(), true);
                     _transmissions.add(rt);
-                    region.infect(d);
+                    region.introduceDisease(d);
                     continue;
                 }
             }
-            if(sea > 0 && _sea > 0){
+            if (sea > 0 && _sea > 0) {
                 boolean transmit = false;
                 //TODO fill in conditions for ship transmission
-                if(transmit){
+                if (transmit) {
                     RegionTransmission rt = new RegionTransmission(_name, region.getName(), d.getID(), true);
                     _transmissions.add(rt);
-                    region.infect(d);
+                    region.introduceDisease(d);
                 }
             }
         }
@@ -257,15 +291,16 @@ public class Region {
      * @param d the disease to transmit
      */
     public void transmitToLandNeighbors(Disease d) {
-        for (String name : _landNeighbors) {
-            Region region = _regions.get(name);
+        for (Integer id : _landNeighbors) {
+            Region region = _regions.get(id);
             if (region.hasDisease(d)) {
                 continue;
             }
             boolean transmit = false;
             //TODO fill in conditions for land transmission
-            if (transmit)
-                region.infect(d);
+            if (transmit) {
+                region.introduceDisease(d);
+            }
         }
     }
 
@@ -273,16 +308,17 @@ public class Region {
      * transmits the disease to all Water Neighbors if the conditions are met
      * @param d the disease to transmit
      */
-    public void transmitToWaterNeighbors(Disease d){
-        for(String name : _landNeighbors){
-            Region region = _regions.get(name);
+    public void transmitToWaterNeighbors(Disease d) {
+        for (Integer id : _landNeighbors) {
+            Region region = _regions.get(id);
             if (region.hasDisease(d)) {
                 continue;
             }
             boolean transmit = false;
             //TODO fill in conditions for water transmission
-            if (transmit)
-                region.infect(d);
+            if (transmit) {
+                region.introduceDisease(d);
+            }
         }
     }
 
@@ -290,9 +326,9 @@ public class Region {
      * prompts a natural disaster with the given intensity in this region
      * @param intensity on a scale of 1-10
      */
-    public void naturalDisaster(int intensity){
+    public void naturalDisaster(int intensity) {
         String news = "";
-        //TODO generate disaster and impact wealthy, maybe population?
+        //TODO generate disaster and impact wealth, maybe population?
         _news.add(news);
     }
 
@@ -300,14 +336,14 @@ public class Region {
      * gets the ArrayList of all air/sea transmissions
      * @return _transmissions
      */
-    public ArrayList<RegionTransmission> getTransmissions(){
+    public ArrayList<RegionTransmission> getTransmissions() {
         return _transmissions;
     }
 
     /**
      * clears the transmissions list
      */
-    public void clearTransmissions(){
+    public void clearTransmissions() {
         _transmissions.clear();
     }
 
@@ -315,14 +351,14 @@ public class Region {
      * gets the news
      * @return
      */
-    public ArrayList<String> getNews(){
+    public ArrayList<String> getNews() {
         return _news;
     }
 
     /**
      * clears the news
      */
-    public void clearNews(){
+    public void clearNews() {
         _news.clear();
     }
 
@@ -331,7 +367,7 @@ public class Region {
      * @param d
      * @return
      */
-    public boolean hasDisease(Disease d){
+    public boolean hasDisease(Disease d) {
         return (_diseases.size() < d.getID() || _diseases.get(d.getID()) == null);
     }
 
@@ -339,7 +375,7 @@ public class Region {
      * getAir() gets a the number of open airports in this Region
      * @return _air;
      */
-    public int getAir(){
+    public int getAir() {
         return _air;
     }
 
@@ -347,32 +383,31 @@ public class Region {
      * getSea() gets the number of open seaports in this Region
      * @return _sea
      */
-    public int getSea(){
-        return _sea ;
+    public int getSea() {
+        return _sea;
     }
-    
+
     /**
      * getWealth() returns the wealth of this region
      * @return _wealth
      */
-    public double getWealth(){
-      return _wealth;
+    public double getWealth() {
+        return _wealth;
     }
 
     /**
-     * getNeighbors() gets the names of all bordering Regions
+     * getNeighbors() gets the ids of all bordering Regions
      * @return _neighbors
      */
-    public ArrayList<String> getLandNeighbors(){
+    public ArrayList<Integer> getLandNeighbors() {
         return _landNeighbors;
     }
 
-
     /**
-     * getNeighbors() gets the names of all bordering Regions (by Water)
+     * getNeighbors() gets the ids of all bordering Regions (by Water)
      * @return _neighbors
      */
-    public ArrayList<String> getWaterNeighbors(){
+    public ArrayList<Integer> getWaterNeighbors() {
         return _waterNeighbors;
     }
 
@@ -380,7 +415,7 @@ public class Region {
      * getInfected() gets the ArrayList of infected people in this Region
      * @return _infected
      */
-    public ArrayList<Integer> getInfected(){
+    public ArrayList<Integer> getInfected() {
         return _infected;
     }
 
@@ -388,23 +423,23 @@ public class Region {
      * getKilled() gets the ArrayList of dead people in this Region
      * @return _dead;
      */
-    public ArrayList<Integer> getKilled(){
+    public ArrayList<Integer> getKilled() {
         return _dead;
     }
-    
+
     /**
      * getCured() gets the ArrayList of cured people in this Region
      * @return _cured;
      **/
-    public ArrayList<Integer> getCured(){
-      return _cured;
+    public ArrayList<Integer> getCured() {
+        return _cured;
     }
 
     /**
      * getAlive() gets the number of healthy people in this Region
      * @return _healthy
      */
-    public int getHealthy(){
+    public int getHealthy() {
         return _healthy;
     }
 
@@ -412,21 +447,24 @@ public class Region {
      * getName() gets the unique String name for this Region
      * @return _name
      */
-    public String getName(){
+    public String getName() {
         return _name;
     }
 
-
-    //IMPORTANT PLEASE READ
-    //The following methods assume that no two Regions will share the same String name
-
+    /**
+     * getID() gets the unique int ID for this region
+     * @return _ID
+     */
+    public int getID(){
+        return _ID;
+    }
 
     /**
      * toString() returns a String with the name and population counts for this Region
      * @return
      */
     @Override
-    public String toString(){
+    public String toString() {
         return _name + ", healthy: " + _healthy + ", infected: " + _infected +
                 ", dead: " + _dead;
     }
@@ -438,12 +476,12 @@ public class Region {
      * @return
      */
     @Override
-    public boolean equals(Object o){
-        if(this.getClass() != o.getClass())
+    public boolean equals(Object o) {
+        if (this.getClass() != o.getClass()) {
             return false;
-        else{
+        } else {
             Region r = (Region) o;
-            return _name.equals(r.getName());
+            return _ID == r.getID();
         }
     }
 
@@ -452,7 +490,7 @@ public class Region {
      * @return _name.hashCode()
      */
     @Override
-    public int hashCode(){
-        return _name.hashCode();
+    public int hashCode() {
+        return new Integer(_ID).hashCode();
     }
 }
