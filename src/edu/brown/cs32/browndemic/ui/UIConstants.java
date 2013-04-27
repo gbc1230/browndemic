@@ -80,6 +80,9 @@ public class UIConstants {
 		public static final String CHAT_TOOLTIP = "Press enter to send chat message";
 		public static final String SETTINGS = "Settings";
 		public static final String SETTINGS_CACHING = "Caching Enabled";
+		public static final String INFO_INFECTED = "Infected: ";
+		public static final String INFO_DEAD = "Dead: ";
+		public static final String INFO_POPULATION = "Population: ";
 	}
 	
 	/**

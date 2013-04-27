@@ -46,7 +46,7 @@ public class MultiplayerLobby extends UIPanel {
 		
 		_players = new JPanel();
 		_players.setLayout(new BoxLayout(_players, BoxLayout.Y_AXIS));
-		_players.setBackground(Colors.MENU_BACKGROUND);
+		_players.setBackground(Colors.TRANSPARENT);
 		_players.setMinimumSize(new Dimension(UI.WIDTH/2, 0));
 		_players.setMaximumSize(new Dimension(UI.WIDTH/2, UI.CONTENT_HEIGHT/2));
 		
@@ -74,7 +74,7 @@ public class MultiplayerLobby extends UIPanel {
 		scrollPane.setPreferredSize(new Dimension(UI.WIDTH/2, UI.CONTENT_HEIGHT/2));
 		
 		JPanel left = new JPanel();
-		left.setBackground(Colors.MENU_BACKGROUND);
+		left.setBackground(Colors.TRANSPARENT);
 		left.setLayout(new BoxLayout(left, BoxLayout.Y_AXIS));
 		left.setMaximumSize(new Dimension(UI.WIDTH/2, UI.CONTENT_HEIGHT));
 		left.setMinimumSize(new Dimension(UI.WIDTH/2, UI.CONTENT_HEIGHT));
@@ -84,14 +84,14 @@ public class MultiplayerLobby extends UIPanel {
 		
 		JPanel right = new JPanel();
 		right.setLayout(new BoxLayout(right, BoxLayout.Y_AXIS));
-		right.setBackground(Colors.MENU_BACKGROUND);
+		right.setBackground(Colors.TRANSPARENT);
 		right.setMinimumSize(new Dimension(UI.WIDTH/2, 0));
 		right.setMaximumSize(new Dimension(UI.WIDTH/2, UI.CONTENT_HEIGHT));
 		
 		JPanel diseaseName = new JPanel();
 		diseaseName.setLayout(new BoxLayout(diseaseName, BoxLayout.X_AXIS));
 		diseaseName.setMaximumSize(new Dimension(UI.WIDTH-150, 200));
-		diseaseName.setBackground(Colors.MENU_BACKGROUND);
+		diseaseName.setBackground(Colors.TRANSPARENT);
 		
 		JLabel diseaseNameLabel = new JLabel(Strings.ENTER_DISEASE_NAME);
 		diseaseNameLabel.setFont(Fonts.BIG_TEXT);

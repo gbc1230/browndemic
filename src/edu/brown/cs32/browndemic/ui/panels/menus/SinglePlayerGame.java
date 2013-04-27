@@ -62,7 +62,7 @@ public class SinglePlayerGame extends UIPanel {
 	protected void makeUI() {
 		super.makeUI();
 		
-		JPanel info = new InformationBar();
+		JPanel info = new InformationBar(_world);
 		
 		
 		add(info);

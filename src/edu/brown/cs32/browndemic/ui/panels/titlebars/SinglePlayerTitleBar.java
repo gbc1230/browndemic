@@ -91,6 +91,7 @@ public class SinglePlayerTitleBar extends TitleBar {
 		play1 = new SelectButton(Resources.getImage(Images.PLAY1), Resources.getImage(Images.PLAY1_HOVER));
 		play2 = new SelectButton(Resources.getImage(Images.PLAY2), Resources.getImage(Images.PLAY2_HOVER));
 		play3 = new SelectButton(Resources.getImage(Images.PLAY3), Resources.getImage(Images.PLAY3_HOVER));
+		play1.setSelected(true);
 		pause.addOnSelectAction(new SelectAction(0, play1, play2, play3));
 		play1.addOnSelectAction(new SelectAction(1, pause, play2, play3));
 		play2.addOnSelectAction(new SelectAction(2, pause, play1, play3));

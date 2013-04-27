@@ -37,7 +37,7 @@ public class MultiplayerMenu extends UIPanel implements MouseListener {
 
 		JPanel host = new JPanel();
 		host.setLayout(new BoxLayout(host, BoxLayout.X_AXIS));
-		host.setBackground(Colors.MENU_BACKGROUND);
+		host.setBackground(Colors.TRANSPARENT);
 		host.setMaximumSize(new Dimension(UI.WIDTH/2, 200));
 		
 		JLabel hostLabel = new JLabel(Strings.ENTER_HOST);
@@ -58,7 +58,7 @@ public class MultiplayerMenu extends UIPanel implements MouseListener {
 
 		JPanel port = new JPanel();
 		port.setLayout(new BoxLayout(port, BoxLayout.X_AXIS));
-		port.setBackground(Colors.MENU_BACKGROUND);
+		port.setBackground(Colors.TRANSPARENT);
 		port.setMaximumSize(new Dimension(UI.WIDTH/2, 200));
 		
 		JLabel portLabel = new JLabel(Strings.ENTER_PORT);
@@ -81,7 +81,7 @@ public class MultiplayerMenu extends UIPanel implements MouseListener {
 		
 		JPanel port2 = new JPanel();
 		port2.setLayout(new BoxLayout(port2, BoxLayout.X_AXIS));
-		port2.setBackground(Colors.MENU_BACKGROUND);
+		port2.setBackground(Colors.TRANSPARENT);
 		port2.setMaximumSize(new Dimension(UI.WIDTH/2, 200));
 		
 		JLabel port2Label = new JLabel(Strings.ENTER_PORT);

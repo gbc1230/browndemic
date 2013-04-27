@@ -24,6 +24,8 @@ import edu.brown.cs32.browndemic.ui.components.HoverLabel;
 import edu.brown.cs32.browndemic.ui.components.SelectButton;
 import edu.brown.cs32.browndemic.ui.panels.UIPanel;
 import edu.brown.cs32.browndemic.ui.panels.titlebars.BackTitleBar;
+import edu.brown.cs32.browndemic.world.MainWorld;
+import edu.brown.cs32.browndemic.world.WorldMaker;
 
 public class SinglePlayer extends UIPanel {
 
@@ -60,7 +62,7 @@ public class SinglePlayer extends UIPanel {
 		JPanel diseaseName = new JPanel();
 		diseaseName.setLayout(new BoxLayout(diseaseName, BoxLayout.X_AXIS));
 		diseaseName.setMaximumSize(new Dimension(UI.WIDTH-150, 200));
-		diseaseName.setBackground(Colors.MENU_BACKGROUND);
+		diseaseName.setBackground(Colors.TRANSPARENT);
 		
 		JLabel diseaseNameLabel = new JLabel(Strings.ENTER_DISEASE_NAME);
 		diseaseNameLabel.setFont(Fonts.BIG_TEXT);
@@ -83,7 +85,7 @@ public class SinglePlayer extends UIPanel {
 		
 		JPanel disease = new JPanel();
 		disease.setLayout(new BoxLayout(disease, BoxLayout.X_AXIS));
-		disease.setBackground(Colors.MENU_BACKGROUND);
+		disease.setBackground(Colors.TRANSPARENT);
 
 		_disease1 = new SelectButton(Resources.getImage(Images.DISEASE1), Resources.getImage(Images.DISEASE1_SELECTED));
 		_disease2 = new SelectButton(Resources.getImage(Images.DISEASE2), Resources.getImage(Images.DISEASE2_SELECTED));
@@ -146,7 +148,10 @@ public class SinglePlayer extends UIPanel {
 			}
 			
 			System.out.println("Start game with:\n\tDisease: " + disease + "\n\tName: " + name);
-			Utils.getParentFrame(this).setPanel(new SinglePlayerGame(null));
+			
+			MainWorld mw = new MainWorld();
+			WorldMaker.setupEarth(mw);
+			Utils.getParentFrame(this).setPanel(new SinglePlayerGame(mw));
 		} else if (e.getSource() == _load) {
 			File saves = new File("saves");
 			saves.mkdir();

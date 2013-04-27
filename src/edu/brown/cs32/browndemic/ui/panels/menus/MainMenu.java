@@ -2,6 +2,7 @@ package edu.brown.cs32.browndemic.ui.panels.menus;
 
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 
 import javax.swing.Box;
@@ -75,6 +76,12 @@ public class MainMenu extends UIPanel {
 		add(Box.createVerticalGlue());
 		add(Box.createVerticalGlue());
 		add(Box.createVerticalGlue());
+	}
+	
+	@Override
+	public void paintComponent(Graphics g) {
+		g.drawImage(Resources.getImage(Images.BACKGROUND), 0, 0, null);
+		super.paintComponent(g);
 	}
 
 	@Override
