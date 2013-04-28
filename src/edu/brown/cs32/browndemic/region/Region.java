@@ -5,7 +5,7 @@
 package edu.brown.cs32.browndemic.region;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 import java.util.HashMap;
 
 import edu.brown.cs32.browndemic.disease.Disease;
@@ -71,12 +71,12 @@ public class Region {
      * @param name The unique String name
      * @param population the initial population count
      * @param neighbors the names of all bordering Regions
-     * @param sea if this Region has open seaports
-     * @param air if this Region has open airports
+     * @param seaports if this Region has open seaports
+     * @param airports if this Region has open airports
      */
-    public Region(int ID, String name, int population, Collection<Integer> landNeighbors,
-            Collection<Integer> waterNeighbors, HashMap<Integer, Region> hash,
-            int sea, int air, double wealth, double wet, double dry,
+    public Region(int ID, String name, long population, List<Integer> landNeighbors,
+            List<Integer> waterNeighbors, HashMap<Integer, Region> hash,
+            int seaports, int airports, double wealth, double wet, double dry,
             double heat, double cold) {
         _name = name;
         _ID = ID;
@@ -93,8 +93,8 @@ public class Region {
         _waterNeighbors = new ArrayList<Integer>(waterNeighbors.size());
         _waterNeighbors.addAll(waterNeighbors);
         _regions = hash;
-        _sea = sea;
-        _air = air;
+        _sea = seaports;
+        _air = airports;
         _wealth = wealth;
         _wet = wet;
         _dry = dry;
