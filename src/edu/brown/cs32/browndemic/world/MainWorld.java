@@ -32,10 +32,12 @@ public class MainWorld implements Serializable, World{
     //An ArrayList of all diseases present in this world
     protected List<Disease> _diseases;
     
-    //An ArrayList keeping track of how many people each disease has killed / has infected currently
-    //winners takes care of the winners: if empty at the end of the game,
+    //ArrayLists keeping track of how many people each disease has killed / has infected currently
+    protected List<Long> _kills, _infects;
+    
+        //winners takes care of the winners: if empty at the end of the game,
     //it signifies that all diseases were erradicated
-    protected List<Integer> _kills, _infects, _winners;
+    protected List<Integer> _winners;
 
     //Progress towards the cure
     protected List<Double> _cures;
@@ -125,14 +127,7 @@ public class MainWorld implements Serializable, World{
     public long getPopulation(){
         return _population;
     }
-    
-        
-    //set a population: should only be used once
-    public void setPopulation(long p){
-        if (_population == 0)
-            _population = p;
-    }
-    
+
     /**
      * getHealthy() gets the number of healthy people in this world
      * @return integer healthy people value
@@ -207,6 +202,9 @@ public class MainWorld implements Serializable, World{
             _sent.add(false);
             _cured.add(false);
         }
+        for (Region r : _regions){
+            _population += r.getPopulation();
+        }
         run();
     }
     
@@ -214,12 +212,12 @@ public class MainWorld implements Serializable, World{
      * Updates the number of people killed by all diseases
      */
     public void updateKilled(){
-        int dead = 0;
-        List<Integer> deaths = new ArrayList<>();
+        long dead = 0;
+        List<Long> deaths = new ArrayList<>();
         for (Region r : _regions){
-            List<Integer> rKills = r.getKilled();
+            List<Long> rKills = r.getKilled();
             for (int i = 0; i < rKills.size(); i++){
-                int d = deaths.get(i);
+                long d = deaths.get(i);
                 deaths.set(i, rKills.get(i) + d);
                 dead += rKills.get(i);
             }
@@ -233,12 +231,12 @@ public class MainWorld implements Serializable, World{
      * Updates the number of infected people
      */
     public void updateInfected(){
-        int infected = 0;
-        List<Integer> infects = new ArrayList<>();
+        long infected = 0L;
+        List<Long> infects = new ArrayList<>();
         for (Region r : _regions){
-            List<Integer> rInfected = r.getInfected();
+            List<Long> rInfected = r.getInfected();
             for (int i = 0; i < rInfected.size(); i++){
-                int d = infects.get(i);
+                long d = infects.get(i);
                 infects.set(i, infects.get(i) + d);
                 infected += rInfected.get(i);
             }
@@ -329,11 +327,11 @@ public class MainWorld implements Serializable, World{
      * Return a list of winners, just in case there's a tie
      */
     public void crownWinners(){
-        int cur = _kills.get(0);
+        long cur = _kills.get(0);
         List<Integer> ans = new ArrayList<>();
         ans.add(0);
         for (int i = 1; i < _kills.size(); i++){
-            int temp = _kills.get(i);
+            long temp = _kills.get(i);
             if (temp > cur){
                 ans.clear();
                 ans.add(i);

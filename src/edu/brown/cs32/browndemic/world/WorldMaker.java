@@ -10,17 +10,19 @@ package edu.brown.cs32.browndemic.world;
  */
 public class WorldMaker{
     
+    private static void addEarthRegions(MainWorld w){
+        //add regions
+    }
+    
     public static MainWorld makeNewEarthSP(){
         MainWorld w = new MainWorld();
-        w.setPopulation(7000000000L);
-        //add regions
+        addEarthRegions(w);
         return w;
     }
     
     public static ServerWorld makeNewEarthServer(){
         ServerWorld w = new ServerWorld();
-        w.setPopulation(7000000000L);
-        //add regions
+        addEarthRegions(w);
         return w;
     }
    
