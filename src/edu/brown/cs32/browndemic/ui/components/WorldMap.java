@@ -11,21 +11,30 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.awt.image.ConvolveOp;
 import java.awt.image.Kernel;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 
 import javax.imageio.ImageIO;
 import javax.swing.JComponent;
 import javax.swing.SwingWorker;
 import javax.swing.Timer;
 
+import edu.brown.cs32.browndemic.ui.Resources;
 import edu.brown.cs32.browndemic.ui.Settings;
 import edu.brown.cs32.browndemic.ui.UIConstants.Colors;
 import edu.brown.cs32.browndemic.ui.UIConstants.Fonts;
+import edu.brown.cs32.browndemic.ui.UIConstants.Images;
 import edu.brown.cs32.browndemic.ui.actions.Action;
 import edu.brown.cs32.browndemic.world.World;
 
@@ -39,7 +48,11 @@ public class WorldMap extends JComponent implements MouseListener {
 	private Map<Integer, BufferedImage> _highlightOverlays = new HashMap<>();
 	private Map<Integer, Float> _infected = new HashMap<>();
 	private Map<Integer, AlphaComposite> _composites = new HashMap<>();
+	private ArrayList<Location> _airports = new ArrayList<>();
+	private List<MovingObject> _objects = new ArrayList<>();
 	private int _selected;
+	
+	private static final double AIRPLANE_SPEED = 6.0;
 	
 	public WorldMap(World _world2, BufferedImage map, BufferedImage regions) {
 		super();
@@ -51,7 +64,7 @@ public class WorldMap extends JComponent implements MouseListener {
 		setPreferredSize(new Dimension(map.getWidth(), map.getHeight()));
 		setMaximumSize(new Dimension(map.getWidth(), map.getHeight()));
 		setMinimumSize(new Dimension(map.getWidth(), map.getHeight()));
-		new Timer(1000/30, new RepaintListener()).start();
+		new Timer(1000/60, new RepaintListener()).start();
 	}
 	
 	public class Loader extends SwingWorker<Void, Void> {
@@ -109,6 +122,68 @@ public class WorldMap extends JComponent implements MouseListener {
 		}
 	}
 	
+	private class MovingObject {
+		double x, y, speed, xoffset, yoffset;
+		boolean done = false;
+		Queue<Location> waypoints = new LinkedList<>();
+		Location currentWaypoint;
+		BufferedImage original, transform;
+		public MovingObject(Location l, double speed, BufferedImage img) { 
+			this.x = l.x; this.y = l.y; this.speed = speed; this.original = img;
+			transform = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_ARGB);
+			xoffset = img.getWidth()/2;
+			yoffset = img.getHeight()/2;
+		}
+		
+		public MovingObject update() {
+			if (currentWaypoint == null) {
+				currentWaypoint = waypoints.poll();
+				updateImage();
+			}
+			if (currentWaypoint == null)
+				done = true;
+			if (done) return this;
+			
+			double dx = currentWaypoint.x - x;
+			double dy = currentWaypoint.y - y;
+			double scale = speed / Math.sqrt(dx * dx + dy * dy);
+			dx *= scale; dy *= scale;
+			
+			double newx = x + dx, newy = y + dy;
+			
+			if (Math.signum(currentWaypoint.x - newx) != Math.signum(dx) 
+					|| Math.signum(currentWaypoint.y - newy) != Math.signum(dy)) {
+				newx = currentWaypoint.x; newy = currentWaypoint.y;
+				currentWaypoint = waypoints.poll();
+				updateImage();
+			}
+			x = newx; y = newy;
+			return this;
+		}
+		
+		public void draw(Graphics g) {
+			g.drawImage(transform, (int)Math.floor(x - xoffset), (int)Math.floor(y - yoffset), null);
+		}
+		
+		private void updateImage() {
+			if (currentWaypoint == null) return;
+			double dx = currentWaypoint.x - x;
+			double dy = currentWaypoint.y - y;
+			double angle = Math.atan2(dy, dx);
+			AffineTransformOp op = new AffineTransformOp(AffineTransform.getRotateInstance(angle, original.getWidth()/2, original.getHeight()/2), AffineTransformOp.TYPE_BICUBIC);
+			transform.getGraphics().drawImage(op.filter(original, null), 0, 0, null);
+		}
+		
+		public void addWaypoint(Location l) {
+			waypoints.add(l);
+		}
+	}
+	
+	private class Location {
+		final double x,y;
+		public Location(double x, double y) { this.x = x; this.y = y; }
+	}
+	
 	private BufferedImage[] createRegion(int id, Color... c) {
 		BufferedImage[] out = new BufferedImage[c.length];
 		for (int i = 0; i < c.length; i++) {
@@ -137,6 +212,14 @@ public class WorldMap extends JComponent implements MouseListener {
 		return out;
 	}
 	
+	private void update() {
+		for (Iterator<MovingObject> it = _objects.iterator(); it.hasNext();) {
+			if (it.next().update().done) {
+				it.remove();
+			}
+		}
+	}
+	
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -160,6 +243,22 @@ public class WorldMap extends JComponent implements MouseListener {
 			g2.drawImage(_highlightOverlays.get(_selected), 0, 0, null);
 			drawInfoPanel(g2);
 		}
+		
+		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
+		
+		for (MovingObject m : _objects) {
+			m.draw(g);
+		}
+	}
+	
+	public void addRandomPlane() {
+		double x1 = Math.random() * _map.getWidth();
+		double y1 = Math.random() * _map.getHeight();
+		double x2 = Math.random() * _map.getWidth();
+		double y2 = Math.random() * _map.getHeight();
+		MovingObject airplane = new MovingObject(new Location(x1, y1), AIRPLANE_SPEED, Resources.getImage(Images.AIRPLANE));
+		airplane.addWaypoint(new Location(x2, y2));
+		_objects.add(airplane);
 	}
 	
 	private void drawInfoPanel(Graphics2D g2) {
@@ -180,6 +279,7 @@ public class WorldMap extends JComponent implements MouseListener {
 	private class RepaintListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
+			update();
 			repaint();
 		}
 	}

@@ -1,6 +1,5 @@
 package edu.brown.cs32.browndemic.ui.panels.subpanels;
 
-import java.awt.Dimension;
 import java.awt.event.MouseEvent;
 
 import javax.swing.BorderFactory;
@@ -11,7 +10,6 @@ import javax.swing.JLabel;
 import edu.brown.cs32.browndemic.ui.UIConstants.Colors;
 import edu.brown.cs32.browndemic.ui.UIConstants.Fonts;
 import edu.brown.cs32.browndemic.ui.UIConstants.Strings;
-import edu.brown.cs32.browndemic.ui.UIConstants.UI;
 import edu.brown.cs32.browndemic.ui.actions.Action;
 import edu.brown.cs32.browndemic.ui.components.HoverLabel;
 import edu.brown.cs32.browndemic.ui.panels.BrowndemicPanel;

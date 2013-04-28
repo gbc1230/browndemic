@@ -1,9 +1,12 @@
 package edu.brown.cs32.browndemic.ui.panels.menus;
 
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
+import javax.swing.Timer;
 
 import edu.brown.cs32.browndemic.ui.BrowndemicFrame;
 import edu.brown.cs32.browndemic.ui.DumbChatServer;
@@ -85,6 +88,12 @@ public class SinglePlayerGame extends UIPanel {
 	public void setupForDisplay() {
 		if (loaded) {
 			Utils.getParentFrame(this).setTitle(new SinglePlayerTitleBar(_world));
+			new Timer(3000, new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					_map.addRandomPlane();
+				}
+			}).start();
 		} else {
 			Utils.getParentFrame(this).setPanel(new Loading(true, new Loading.LoadImageWorker(new ImagesDoneLoadingAction(Utils.getParentFrame(this)), Images.GAME_IMAGES)));
 		}

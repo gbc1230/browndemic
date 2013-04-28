@@ -130,6 +130,7 @@ public class UIConstants {
 		
 		public static final String MAP = IMAGE_PATH + "earth_large.png";
 		public static final String REGIONS = IMAGE_PATH + "earth_large_regions.png";
+		public static final String AIRPLANE = IMAGE_PATH + "airplane.png";
 		
 		/*
 		 * Images that should be loaded when the program starts.
@@ -163,6 +164,7 @@ public class UIConstants {
 		public static final String[] GAME_IMAGES = {
 			MAP,
 			REGIONS,
+			AIRPLANE,
 		};
 		
 	}
