@@ -21,18 +21,18 @@ public class WorldMaker{
         f.readLine();
         while (f.ready()){
             String line = f.readLine();
-            String[] data = line.split("\t");
+            String[] data = line.split(",");
             int id = Integer.parseInt(data[0]);
             String name = data[1];
             long population = Long.parseLong(data[2]);
             int airports = Integer.parseInt(data[3]);
             int seaports = Integer.parseInt(data[4]);
             List<Integer> landNeighbors = new ArrayList<>();
-            String[] landNeigh = data[5].split(",");
+            String[] landNeigh = data[5].split(" ");
             for (String s : landNeigh)
                 landNeighbors.add(Integer.parseInt(s));
             List<Integer> seaNeighbors = new ArrayList<>();
-            String[] seaNeigh = data[6].split(",");
+            String[] seaNeigh = data[6].split(" ");
             for (String s: seaNeigh)
                 seaNeighbors.add(Integer.parseInt(s));
             int wealth = Integer.parseInt(data[7]);
