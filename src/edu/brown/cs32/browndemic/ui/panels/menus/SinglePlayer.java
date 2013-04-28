@@ -24,7 +24,6 @@ import edu.brown.cs32.browndemic.ui.components.HoverLabel;
 import edu.brown.cs32.browndemic.ui.components.SelectButton;
 import edu.brown.cs32.browndemic.ui.panels.UIPanel;
 import edu.brown.cs32.browndemic.ui.panels.titlebars.BackTitleBar;
-import edu.brown.cs32.browndemic.world.MainWorld;
 import edu.brown.cs32.browndemic.world.WorldMaker;
 
 public class SinglePlayer extends UIPanel {
@@ -149,9 +148,7 @@ public class SinglePlayer extends UIPanel {
 			
 			System.out.println("Start game with:\n\tDisease: " + disease + "\n\tName: " + name);
 			
-			MainWorld mw = new MainWorld();
-			WorldMaker.setupEarth(mw);
-			Utils.getParentFrame(this).setPanel(new SinglePlayerGame(mw));
+			Utils.getParentFrame(this).setPanel(new SinglePlayerGame(WorldMaker.makeNewEarthSP()));
 		} else if (e.getSource() == _load) {
 			File saves = new File("saves");
 			saves.mkdir();

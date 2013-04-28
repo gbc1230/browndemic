@@ -20,10 +20,10 @@ public class MultiplayerLobbyPanel extends BrowndemicPanel {
 
 	private static final long serialVersionUID = -2843292745534214130L;
 	
-	private boolean _isHost;
+	private boolean _isHost, _ready = false;
 	private String _name;
 	private String _ip;
-	private JLabel _kick;
+	private JLabel _kick, _nameLabel, _ipLabel;
 	private Action _kickPlayerAction;
 
 	public MultiplayerLobbyPanel(String name, String ip, boolean isHost, Action kickPlayerAction) {
@@ -39,13 +39,18 @@ public class MultiplayerLobbyPanel extends BrowndemicPanel {
 		setBackground(Colors.MENU_BACKGROUND);
 		setBorder(BorderFactory.createLineBorder(Colors.RED_TEXT, 2));
 		
-		JLabel name = new JLabel(_name + " (" + _ip + ")");
-		name.setForeground(Colors.RED_TEXT);
-		name.setFont(Fonts.BIG_TEXT);
+		_nameLabel = new JLabel(_name);
+		_nameLabel.setForeground(Colors.LIGHT_GRAY);
+		_nameLabel.setFont(Fonts.BIG_TEXT);
+		
+		_ipLabel = new JLabel("  " + _ip);
+		_ipLabel.setForeground(Colors.LIGHT_GRAY);
+		_ipLabel.setFont(Fonts.NORMAL_TEXT);
 		
 		//setMaximumSize(new Dimension(UI.WIDTH, name.getHeight()));
 		
-		add(name);
+		add(_nameLabel);
+		add(_ipLabel);
 		add(Box.createGlue());
 		
 		if (_isHost) {
@@ -53,6 +58,22 @@ public class MultiplayerLobbyPanel extends BrowndemicPanel {
 			_kick.addMouseListener(this);
 			add(_kick);
 		}
+	}
+	
+	public void setReady(boolean ready) {
+		if (ready) {
+			_ready = true;
+			_nameLabel.setForeground(Colors.RED_TEXT);
+			_ipLabel.setForeground(Colors.RED_TEXT);
+		} else {
+			_ready = false;
+			_nameLabel.setForeground(Colors.LIGHT_GRAY);
+			_ipLabel.setForeground(Colors.LIGHT_GRAY);
+		}
+	}
+	
+	public boolean isReady() {
+		return _ready;
 	}
 	
 	@Override

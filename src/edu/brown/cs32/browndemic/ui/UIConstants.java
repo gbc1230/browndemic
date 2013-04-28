@@ -83,6 +83,8 @@ public class UIConstants {
 		public static final String INFO_INFECTED = "Infected: ";
 		public static final String INFO_DEAD = "Dead: ";
 		public static final String INFO_POPULATION = "Population: ";
+		public static final String MULTIPLAYER_LOBBY = "Multiplayer Lobby";
+		public static final String SETTINGS_MULTIPLAYER_NAME = "Multiplayer Name: ";
 	}
 	
 	/**
