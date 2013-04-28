@@ -11,6 +11,9 @@ import java.util.ArrayList;
  */
 public class Perk implements Serializable{
  
+  //the name of this perk
+  private String _name;
+  
   //the integer cost to buy this perk
   private int _cost;
   
@@ -60,18 +63,18 @@ public class Perk implements Serializable{
   private boolean _owned = false;
   
   //the ArrayList of perks that this perk's purchase makes available
-  private ArrayList<Perk> _nextPerks;
+  private ArrayList<Perk> _nextPerks = new ArrayList<Perk>();
 
   //the ArrayList of perks whose purchase makes this perk available
-  private ArrayList<Perk> _prevPerks;
+  private ArrayList<Perk> _prevPerks = new ArrayList<Perk>();
   
   //constuctor: sets cost, change in infectivity/lethality/visibility and
   //the perks that, when this perk is bought, become available for purchase
-  public Perk(int tempcost, int tempsell, double tempinf, double templeth,
+  public Perk(String tempname, int tempcost, int tempsell, double tempinf, double templeth,
               double tempvis, double tempheat, double tempcold, double tempwet,
-              double tempdry, double tempmed, double tempwater, double tempair,
-              ArrayList<Perk> tempnext, ArrayList<Perk> tempprev){
+              double tempdry, double tempmed, double tempwater, double tempair){
     
+	this._name = name;
     this._cost = tempcost;
     this._sellPrice = tempsell;
     this._infectivityChange = tempinf;
@@ -84,8 +87,6 @@ public class Perk implements Serializable{
     this._medResChange = tempmed;
     this._waterTransChange = tempwater;
     this._airTransChange = tempair;
-    this._nextPerks = tempnext;
-    this._prevPerks = tempprev;
     
   }
   
@@ -108,7 +109,7 @@ public class Perk implements Serializable{
     this._owned = owned;
     
   }
-  
+
   /**
    * sets the ID of this perk
    * @param tempid          the new id of this perk
@@ -117,6 +118,36 @@ public class Perk implements Serializable{
     
     this._id = tempid;
     
+  }
+  
+  /**
+   * adds perk to this perk's 'next' ArrayList
+   * @param perk             the perk to insert into the 'next' ArrayList
+   */
+  public void addToNext(Perk perk){
+	  
+	  this._nextPerks.add(perk);
+	  
+  }
+  
+  /**
+   * adds perk to this perk's 'prev' ArrayList
+   * @param perk             the perk to insert into the 'prev' ArrayList
+   */
+  public void addToPrev(Perk perk){
+	  
+	  this._prevPerks.add(perk);
+	  
+  }
+  
+  /**
+   * gets the String name of this perk
+   * @return _name
+   */
+  public String getName(){
+	  
+	  return this._name;
+	  
   }
   
   /**

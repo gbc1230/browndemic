@@ -20,7 +20,7 @@ public abstract class Disease implements Serializable{
     protected int _id;
 
     //A double reflecting how infectious this disease is
-    protected double _infectivity;
+    protected double _infectivity = 1;
 
     //A double reflecting how deadly this disease is
     protected double _lethality;
@@ -29,19 +29,19 @@ public abstract class Disease implements Serializable{
     protected double _visibility;
     
     //A double reflecting how resistant to heat this disease is
-    protected double _heatResistance;
+    protected double _heatResistance = 1;
     
     //A double reflecting how resistant to cold this disease is
-    protected double _coldResistance;
+    protected double _coldResistance = 1;
     
     //A double reflecting how resistant to wetness this disease is
-    protected double _wetResistance;
+    protected double _wetResistance = 1;
     
     //A double reflecting how resistant to dryness this disease is
-    protected double _dryResistance;
+    protected double _dryResistance = 1;
     
     //A double reflecting how resistant to medicine this disease is
-    protected double _medResistance;
+    protected double _medResistance = 1;
     
     //A double reflecting the ability of this disease to be
     //transmitted via water
