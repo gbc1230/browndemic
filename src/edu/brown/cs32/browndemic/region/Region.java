@@ -61,7 +61,7 @@ public class Region {
     private int _sea;
     private int _air;
     //wealth of this Region (reflects infrastructure, productivity, actual wealth, etc.)
-    private double _wealth,  _wet,  _dry,  _heat,  _cold;
+    private double _wealth,  _wet,  _dry,  _heat,  _cold, _med;
     private ArrayList<RegionTransmission> _transmissions;
     private ArrayList<String> _news;
 
@@ -76,7 +76,7 @@ public class Region {
     public Region(int ID, String name, long population, List<Integer> landNeighbors,
             List<Integer> waterNeighbors, HashMap<Integer, Region> hash,
             int seaports, int airports, double wealth, double wet, double dry,
-            double heat, double cold) {
+            double heat, double cold, double med) {
         _name = name;
         _ID = ID;
         _population = population;
@@ -90,6 +90,7 @@ public class Region {
         _dry = dry;
         _heat = heat;
         _cold = cold;
+        _med = med;
         _transmissions = new ArrayList<RegionTransmission>();
         _news = new ArrayList<String>();
     }
