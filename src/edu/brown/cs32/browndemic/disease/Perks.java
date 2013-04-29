@@ -91,16 +91,16 @@ public class Perks{
 	  return new Perk("Pulmonary Edema", ped, 28, 35, 10, 25, 35, 0, 0, 0, 0, 0, 0, 0);
   }
   public static Perk newHYPOXIA_VIRUS(){
-	  String hd = "Hypoxia, the death of organs, is extremely deadly and will lead to much notice."
+	  String hd = "Hypoxia, the death of organs, is extremely deadly and will lead to much notice.";
 	  return new Perk("Hypoxia", hd, 35, 37, 0, 50, 70, 0, 0, 0, 0, 0, 0, 0);
   }
   public static Perk newHEAT_RESISTANCE_I(){
 	  String hrId = "Resistance to low heat.";
-	  return new Perk("Heat Resistance I", hrdId, 10, 10, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0);
+	  return new Perk("Heat Resistance I", hrId, 10, 10, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0);
   }
   public static Perk newHEAT_RESISTANCE_II(){
 	  String hrIId = "Resistance to medium heat.";
-	  return new Perk("Heat Resistance II", hrdIId, 15, 15, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0);
+	  return new Perk("Heat Resistance II", hrIId, 15, 15, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0);
   }
   public static Perk newHEAT_RESISTANCE_III(){
 	  String hrIIId = "Resistance to high heat.";
@@ -352,53 +352,53 @@ public class Perks{
 	  insectTransII.addToNext(insectTransIII);
 	  insectTransIII.addToPrev(insectTransII);
 	  toReturn[20] = heatResI;
-	  heatResI.add(20);
+	  heatResI.setID(20);
 	  toReturn[21] = heatResII;
-	  heatResII.add(21);
+	  heatResII.setID(21);
 	  toReturn[22] = heatResIII;
-	  heatResIII.add(22);
+	  heatResIII.setID(22);
 	  toReturn[23] = coldResI;
-	  coldResI.add(23);
+	  coldResI.setID(23);
 	  toReturn[24] = coldResII;
-	  coldResII.add(24);
+	  coldResII.setID(24);
 	  toReturn[25] = coldResIII;
-	  coldResIII.add(25);
+	  coldResIII.setID(25);
 	  toReturn[26] = wetResI;
-	  wetResI.add(26);
+	  wetResI.setID(26);
 	  toReturn[27] = wetResII;
-	  wetResII.add(27);
+	  wetResII.setID(27);
 	  toReturn[28] = wetResIII;
-	  wetResIII.add(28);
+	  wetResIII.setID(28);
 	  toReturn[29] = dryResI;
-	  dryResI.add(29);
+	  dryResI.setID(29);
 	  toReturn[30] = dryResII;
-	  dryResII.add(30);
+	  dryResII.setID(30);
 	  toReturn[31] = dryResIII;
-	  dryResIII.add(31);
+	  dryResIII.setID(31);
 	  toReturn[32] = wetTransI;
-	  wetTransI.add(32);
+	  wetTransI.setID(32);
 	  toReturn[33] = wetTransII;
-	  wetTransII.add(33);
+	  wetTransII.setID(33);
 	  toReturn[34] = wetTransIII;
-	  wetTransIII.add(34);
+	  wetTransIII.setID(34);
 	  toReturn[35] = airTransI;
-	  airTransI.add(35);
+	  airTransI.setID(35);
 	  toReturn[36] = airTransII;
-	  airTransII.add(36);
+	  airTransII.setID(36);
 	  toReturn[37] = airTransIII;
-	  airTransIII.add(37);
+	  airTransIII.setID(37);
 	  toReturn[38] = birdTransI;
-	  birdTransI.add(38);
+	  birdTransI.setID(38);
 	  toReturn[39] = birdTransII;
-	  birdTransII.add(39);
+	  birdTransII.setID(39);
 	  toReturn[40] = birdTransIII;
-	  birdTransIII.add(40);
+	  birdTransIII.setID(40);
 	  toReturn[41] = insectTransI;
-	  insectTransI.add(41);
+	  insectTransI.setID(41);
 	  toReturn[42] = insectTransII;
-	  insectTransII.add(42);
+	  insectTransII.setID(42);
 	  toReturn[43] = insectTransIII;
-	  insectTransIII.add(43);
+	  insectTransIII.setID(43);
 	  
 	  return toReturn;
 	  

@@ -78,7 +78,7 @@ public class Perk implements Serializable{
 		      double tempcold, double tempwet, double tempdry, double tempmed, 
 		      double tempwater, double tempair){
     
-	this._name = name;
+	this._name = tempname;
 	this._description = tempdesc;
     this._cost = tempcost;
     this._sellPrice = tempsell;
