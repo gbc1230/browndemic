@@ -122,6 +122,10 @@ public class GameServer implements Runnable{
             _clients.remove(toKill);
             _world.removeDisease(pos);
             toKill.close();
+            DCMessage msg = new DCMessage("Player " + pos + " has disconnected.");
+            for (GameServerThread gst : _clients){
+                gst.sendMessage(msg);
+            }
         }
     }
 

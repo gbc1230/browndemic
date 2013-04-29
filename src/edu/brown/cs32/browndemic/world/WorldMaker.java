@@ -40,13 +40,14 @@ public class WorldMaker{
                     seaNeighbors.add(Integer.parseInt(s));
             }
             int wealth = Integer.parseInt(data[7]);
-            int wet, dry, heat, cold;
+            int wet, dry, heat, cold, medicine;
             wet = Integer.parseInt(data[8]);
             dry = Integer.parseInt(data[9]);
             heat = Integer.parseInt(data[10]);
             cold = Integer.parseInt(data[11]);
+            medicine = Integer.parseInt(data[12]);
             Region r = new Region(id, name, population, landNeighbors, seaNeighbors, 
-                    regionHash, airports, seaports, wealth, wet, dry, heat, cold);
+                    regionHash, airports, seaports, wealth, wet, dry, heat, cold, medicine);
             regionHash.put(id, r);
             w.addRegion(r);
         }
@@ -63,5 +64,10 @@ public class WorldMaker{
         addRegions(w, "EarthRegions.csv");
         return w;
     }
+    
+    /*public static void main (String [] args) throws IOException{
+        //making sure we don't have any errors by just parsing the file
+        makeNewEarthSP();
+    }*/
    
 }

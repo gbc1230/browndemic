@@ -20,7 +20,6 @@ public class ServerWorld extends MainWorld{
         _output = new ArrayBlockingQueue<>(10);
     }
     
-    
     /**
      * Gets the next world to send out: used only for MP maps
      * @return The next world to send out
@@ -44,7 +43,8 @@ public class ServerWorld extends MainWorld{
      * @param id The id of the disease to remove
      */
     public void removeDisease(int id){
-        _diseases.get(id).die();
+        if (_started && !_gameOver)
+            _diseases.get(id).die();
     }
     
 }
