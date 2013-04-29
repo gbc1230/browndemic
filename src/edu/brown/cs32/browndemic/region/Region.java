@@ -297,12 +297,15 @@ public class Region {
                 ID += "0";
             }
         }
+        System.out.println("0/1 ID for Disease " + index + " : " + ID);
         _hash.put(new InfWrapper(ID, 1L));
         _dead[index] = 0L;
         _hasCure[index] = false;
         _awareness[index] = 0.0;
         _cureProgress[index] = 0L;
         _news.add(d.getName() + " has infected " + _name + ".");
+        for(long num : getInfected())
+            System.out.println("getInfected() : " + num);
         System.out.println(_name + " , " + getInfected().get(d.getID()));
     }
 
@@ -484,11 +487,11 @@ public class Region {
         ArrayList<Long> infected = new ArrayList<Long>();
         for (int i = 0; i < _numDiseases; i++) {
             long num = 0L;
-            if (_diseases[i] != null) {
-                for (InfWrapper inf : _hash.getAllOfType(i,1))
+            if (_diseases[i] != null)
+                for(InfWrapper inf : _hash.getAllOfType(i,1))
                     num += inf.getInf();
-            }
             infected.add(num);
+            System.out.println("Disease " + i + " : " + num);
         }
         return infected;
     }

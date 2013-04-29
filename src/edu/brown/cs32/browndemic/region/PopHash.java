@@ -49,12 +49,15 @@ public class PopHash {
      * @return ArrayList of requested InfWrappers
      */
     public ArrayList<InfWrapper> getAllOfType(int ind, int type) {
+        System.out.println("getAllOfType: " + ind + " , " + type);
         ArrayList<InfWrapper> list = new ArrayList<InfWrapper>();
         ArrayList<String> strs = buildIDStrings("", _len - 1);
         for (String str : strs) {
             String zeroOne = str.substring(0, ind) + Integer.toString(type) + str.substring(ind);
             list.add(_hash.get(zeroOne));
         }
+        for(InfWrapper inf : list)
+            System.out.println("getAll List: " + inf.getID() + " , " + inf.getInf());
         return list;
     }
 
@@ -64,6 +67,7 @@ public class PopHash {
 
     public void put(InfWrapper inf) {
         _hash.put(inf.getID(), inf);
+        System.out.println("Hash put: " + inf.getID() + " , " + inf.getInf());
     }
 
     public InfWrapper getZero() {
