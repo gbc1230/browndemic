@@ -48,6 +48,8 @@ public class Region {
     //ArrayList of double awaresness for each disease
     private ArrayList<Double> _awareness;
 
+    private double _CLOSEPORTS;
+    
     //ArrayList of double cure progress for each disease
     private ArrayList<Double> _cureProgress;
 
@@ -63,6 +65,7 @@ public class Region {
     private int _air;
     //wealth of this Region (reflects infrastructure, productivity, actual wealth, etc.)
     private double _wealth,_wet,_dry,_heat,_cold;
+    
     private ArrayList<RegionTransmission> _transmissions;
     private ArrayList<String> _news;
 
@@ -86,6 +89,7 @@ public class Region {
         _dead = new ArrayList<Long>();
         _cured = new ArrayList<Long>();
         _hasCure = new ArrayList<Boolean>();
+        _diseases = new ArrayList<Disease>();
         _awareness = new ArrayList<Double>();
         _cureProgress = new ArrayList<Double>();
         _landNeighbors = new ArrayList<Integer>(landNeighbors.size());
@@ -110,6 +114,7 @@ public class Region {
     public void update() {
         for (Disease d : _diseases) {
             if (null != d) {
+                awarenessCheck();
                 updateAwareness(d);
                 updateWealth(d);
                 cure(d);
@@ -189,8 +194,7 @@ public class Region {
      * @param pop
      * @return
      */
-    //TODO: don't have 2 methods with the same name hurr durr
-    public int getCured(int d, long pop) {
+    public int getNumCured(int d, long pop) {
         //TODO right now cured just cures 5% of total pop per tick
         int number = (int) (0.05*_population);
         return number;
@@ -203,7 +207,7 @@ public class Region {
     public void cure(Disease d) {
         int index = d.getID();
         if (_hasCure.get(index) == true) {
-            long number = getCured(index, _infected.get(index));
+            long number = getNumCured(index, _infected.get(index));
             if (_infected.get(index) < number) {
                 _cured.set(index, _cured.get(index) + _infected.get(index));
                 _infected.set(index, 0L);
@@ -214,6 +218,19 @@ public class Region {
         }
     }
 
+    /**
+     * checks if ports should be closed
+     */
+    public void awarenessCheck(){
+        for(double aware : _awareness){
+            if(aware > _CLOSEPORTS && !(_air == 0 && _sea == 0)){
+                _air = 0;
+                _sea = 0;
+                _news.add(_name + " has closed it's air and seaports.");
+            }
+        }
+    }
+    
     public void updateAwareness(Disease d){
         int index = d.getID();
         //awareness += vis*(infected + dead)
@@ -267,7 +284,7 @@ public class Region {
             int sea = region.getAir();
             if (air > 0 && _air > 0) {
                 boolean transmit = false;
-                //TODO fill in conditions for airplane transmission
+                //TODO conditions for plane/sea transmit
                 if (transmit) {
                     RegionTransmission rt = new RegionTransmission(_name, region.getName(), d.getID(), true);
                     _transmissions.add(rt);
