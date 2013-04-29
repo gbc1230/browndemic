@@ -1,10 +1,10 @@
 id,name,population,airports,seaports,land neighbors,water neighbors,wealth,wet,dry,heat,cold
-1,United States of America,315749000,2,1,2/4/2013,6,50000,1,1,1,1
+1,United States of America,315749000,2,1,2 4,6,50000,1,1,1,1
 2,Canada,33476688,2,1,1,3,42734,1,1,1,3
 3,Greenland,56370,1,1,,13,37400,1,1,0,3
-4,Mexico,112336538,1,1,1/5/2013,6,15312,1,2,2,0
+4,Mexico,112336538,1,1,1 5,6,15312,1,2,2,0
 5,Central America,41739000,0,1,4 54,6,5339,2,1,2,0
-6,Caribbean,39170000,0,2,,1/5/2004,15799,2,1,3,0
+6,Caribbean,39170000,0,2,,1 5 4,15799,2,1,3,0
 7,Australia,22620600,1,1,,10 11 12 8 9,42354,1,2,2,1
 8,New Zealand,4405200,1,1,,7 9 10 11 12,27668,1,1,2,2
 9,New Guinea,7014000,0,1,,7 8 10 11 12,2700,2,1,2,1

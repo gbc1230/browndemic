@@ -21,6 +21,7 @@ public class WorldMaker{
         f.readLine();
         while (f.ready()){
             String line = f.readLine();
+            System.out.println(line);
             String[] data = line.split(",");
             int id = Integer.parseInt(data[0]);
             String name = data[1];
@@ -28,13 +29,17 @@ public class WorldMaker{
             int airports = Integer.parseInt(data[3]);
             int seaports = Integer.parseInt(data[4]);
             List<Integer> landNeighbors = new ArrayList<>();
-            String[] landNeigh = data[5].split(" ");
-            for (String s : landNeigh)
-                landNeighbors.add(Integer.parseInt(s));
+            if (!data[5].equals("")){
+                String[] landNeigh = data[5].split(" ");
+                for (String s : landNeigh)
+                    landNeighbors.add(Integer.parseInt(s));
+            }
             List<Integer> seaNeighbors = new ArrayList<>();
-            String[] seaNeigh = data[6].split(" ");
-            for (String s: seaNeigh)
-                seaNeighbors.add(Integer.parseInt(s));
+            if (!data[6].equals("")){
+                String[] seaNeigh = data[6].split(" ");
+                for (String s: seaNeigh)
+                    seaNeighbors.add(Integer.parseInt(s));
+            }
             int wealth = Integer.parseInt(data[7]);
             int wet, dry, heat, cold;
             wet = Integer.parseInt(data[8]);
@@ -58,6 +63,11 @@ public class WorldMaker{
         ServerWorld w = new ServerWorld();
         addRegions(w, "EarthRegions.csv");
         return w;
+    }
+    
+    public static void main(String [] args) throws IOException{
+        makeNewEarthSP();
+        System.out.println("done");
     }
    
 }
