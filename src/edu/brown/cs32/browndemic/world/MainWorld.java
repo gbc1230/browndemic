@@ -24,8 +24,9 @@ public class MainWorld extends Thread implements Serializable, World{
     protected List<Region> _regions;
     
     //various population stats - and time for waiting on the loop
-    protected long _population, _infected, _dead, _waitTime;
-
+    //cureTotal: what I have to reach to get a cure
+    protected long _population, _infected, _dead, _waitTime, _cureTotal;
+    
     //Hashtable pairing Region names to their index in _regions
     protected HashMap<String, Region> _regIndex;
 
@@ -33,14 +34,12 @@ public class MainWorld extends Thread implements Serializable, World{
     protected List<Disease> _diseases;
     
     //ArrayLists keeping track of how many people each disease has killed / has infected currently
-    protected List<Long> _kills, _infects;
+    //also the progress towards the cure
+    protected List<Long> _kills, _infects, _cures;
     
         //winners takes care of the winners: if empty at the end of the game,
     //it signifies that all diseases were erradicated
     protected List<Integer> _winners;
-
-    //Progress towards the cure
-    protected List<Double> _cures;
     
     //which cures have been sent out already
     //NOTE: a cure is the progress towards distributing the cure; a disease
@@ -55,6 +54,9 @@ public class MainWorld extends Thread implements Serializable, World{
     
     //for keeping track of transmissions
     protected List<RegionTransmission> _transmissions;
+    
+    //minimum ticks to a cure
+    protected final int _MINCURETICKS = 540;
     
     //NOTE: each index of diseases, killed, cures refers to the same disease:
     //i.e. index 2 of each refers to the disease object, how many it has killed,
@@ -79,6 +81,7 @@ public class MainWorld extends Thread implements Serializable, World{
         _waitTime = 333L;
         _paused = true;
         _started = false;
+        _cureTotal = 0L;
     }
     
     /**
@@ -269,20 +272,20 @@ public class MainWorld extends Thread implements Serializable, World{
     /**
      * Update the cure progress for every disease
      */
-    /*public void updateCures(){
-        List<Double> cures = new ArrayList<>();
+    public void updateCures(){
+        List<Long> cures = new ArrayList<>();
         for (int i = 0; i < _diseases.size(); i++){
-            cures.add(0.0);
+            cures.add(0L);
         }
         for (Region r : _regions){
-            List<Double> rCures = r.getCures();
+            List<Long> rCures = r.getCures();
             for (int i = 0; i < rCures.size(); i++){
-                double c = cures.get(i);
+                long c = cures.get(i);
                 cures.set(i, c + rCures.get(i));
             }
         }
         _cures = cures;
-    }*/
+    }
     
     public void updateNews(){
         for (Region r : _regions){
@@ -304,7 +307,7 @@ public class MainWorld extends Thread implements Serializable, World{
      */
     public void checkCures(){
         for (int i = 0; i < _cures.size(); i++){
-            if (_cures.get(i) >= 100.0 && _sent.get(i)){
+            if (_cures.get(i) >= _cureTotal && _sent.get(i)){
                 sendCures(i);
                 _sent.set(i, true);
             }
@@ -317,6 +320,15 @@ public class MainWorld extends Thread implements Serializable, World{
     public void updateRegions(){
         for (Region r : _regions)
             r.update();
+    }
+    
+    /**
+     * Gives each virus a chance to randomly mutate
+     */
+    public void mutateDiseases(){
+        for (Disease d : _diseases){
+            d.buyRandomPerk();
+        }
     }
 
     /**
@@ -372,6 +384,7 @@ public class MainWorld extends Thread implements Serializable, World{
      */
     public void update(){
         updateRegions();
+        mutateDiseases();
         updateKilled();
         updateInfected();
         //updateCures();
@@ -385,7 +398,7 @@ public class MainWorld extends Thread implements Serializable, World{
     @Override
     public void run(){
         for (int i = 0; i < _diseases.size(); i++){
-            _cures.add(0.0);
+            _cures.add(0L);
             _kills.add(0L);
             _infects.add(0L);
             _sent.add(false);
@@ -394,6 +407,7 @@ public class MainWorld extends Thread implements Serializable, World{
         for (Region r : _regions){
             _population += r.getPopulation();
             r.setNumDiseases(_diseases.size());
+            _cureTotal += r.getWealth() * r.getPopulation() * _MINCURETICKS;
         }
         _paused = false;
         _started = true;
