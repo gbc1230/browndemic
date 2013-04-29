@@ -1,4 +1,8 @@
 package edu.brown.cs32.browndemic.disease;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Extends the disease class, and has all the perks a virus can get
  * and the ability to sell its perks cumulatively or individually, and
@@ -8,10 +12,15 @@ package edu.brown.cs32.browndemic.disease;
  */
 public class Virus extends Disease{
 
+    final private double MAX_INFECTIVITY = 62;
+    final private double MAX_LETHALITY = 217;
+
     public Virus(String tempname){
     
         this._name = tempname;
         this._perks = Perks.getVirusPerks();
+        this._infectivity = 5;
+        this._visibility = 3;
         
     }
 
@@ -81,5 +90,35 @@ public class Virus extends Disease{
         this._medResistance -= soldPerk.getMedRes();
         this._points -= soldPerk.getSellPrice();
     
+    }
+
+    @Override
+    public List<Perk> getSellablePerks(){
+
+        List<Perk> ans = new ArrayList<Perk>();
+        for (Perk p : _perks){
+            if (p.isOwned() && p.getSellPrice() <= this._points)
+                ans.add(p);
+        }
+        return ans;
+
+    }
+
+    @Override
+    public void buyRandomPerk(){
+        if((int)Math.random()*540 == 432)
+            try {
+            this.buyPerkWithoutPay(this.getAvailablePerks().get(0).getID());
+        } catch (IllegalAccessException ex) {}
+    }
+
+    @Override
+    public double getMaxInfectivity() {
+        return this.MAX_INFECTIVITY;
+    }
+
+    @Override
+    public double getMaxLethality() {
+        return this.MAX_LETHALITY;
     }
 }

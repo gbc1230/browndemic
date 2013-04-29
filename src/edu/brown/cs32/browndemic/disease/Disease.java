@@ -22,7 +22,7 @@ public abstract class Disease implements Serializable{
     protected int _id;
 
     //A double reflecting how infectious this disease is
-    protected double _infectivity = 1;
+    protected double _infectivity;
 
     //A double reflecting how deadly this disease is
     protected double _lethality;
@@ -207,14 +207,51 @@ public abstract class Disease implements Serializable{
     
     /**
      * Get all available perks for this disease
+     * @return a list of the perks available to this disease
      */
     public List<Perk> getAvailablePerks(){
-        List<Perk> ans = new ArrayList<>();
+        List<Perk> ans = new ArrayList<Perk>();
         for (Perk p : _perks){
             if (p.isAvail())
                 ans.add(p);
         }
         return ans;
+    }
+
+    /**
+     * Get all owned perks for this disease
+     * @return a list of the perks owned by this disease
+     */
+    public List<Perk> getOwnedPerks(){
+        List<Perk> ans = new ArrayList<Perk>();
+        for (Perk p : _perks){
+            if (p.isOwned())
+                ans.add(p);
+        }
+        return ans;
+    }
+
+    /**
+     * Get all purchasable perks for this disease
+     * @return a list of the perks that can be purchased by this disease
+     */
+    public List<Perk> getPurchasablePerks(){
+        List<Perk> ans = new ArrayList<Perk>();
+        for (Perk p : _perks){
+            if (p.isAvail() && !p.isOwned() && p.getCost() <= this._points)
+                ans.add(p);
+        }
+        return ans;
+    }
+
+    /**
+     * gets the array of all perks this disease can have
+     * @return the array of perks this disease can own at some point
+     */
+    public Perk[] getPerks(){
+
+        return this._perks;
+
     }
     
     /**
@@ -252,7 +289,42 @@ public abstract class Disease implements Serializable{
     }
 
     /**
-     * lets a user set everything in this disease to 0
+     * buyPerkWithoutPay(int perkID) buys a perk without paying for it, sets the
+     * availability of appropriate perks to true, and appropriately changes the
+     * qualities of this disease to match
+     */
+    public void buyPerkWithoutPay(int perkID) throws IllegalAccessException{
+
+        if(!this._perks[perkID].isAvail()
+                || this._perks[perkID].getCost() > this._points){
+
+            throw new IllegalAccessException();
+
+        }
+
+        this._perks[perkID].setOwned(true);
+        Perk boughtPerk = this._perks[perkID];
+
+        for(Perk p: boughtPerk.getNext()){
+
+            this._perks[p.getID()].setAvailability(true);
+
+        }
+
+        this._infectivity += boughtPerk.getInf();
+        this._lethality += boughtPerk.getLeth();
+        this._visibility += boughtPerk.getVis();
+        this._heatResistance += boughtPerk.getHeatRes();
+        this._coldResistance += boughtPerk.getColdRes();
+        this._wetResistance += boughtPerk.getWetRes();
+        this._dryResistance += boughtPerk.getDryRes();
+        this._medResistance += boughtPerk.getMedRes();
+        this._waterTrans += boughtPerk.getWaterTrans();
+        this._airTrans += boughtPerk.getAirTrans();
+    }
+
+    /**
+     * lets a caller set everything in this disease to 0
      * (return it to factory settings) incase a user
      * quits
      */
@@ -268,6 +340,21 @@ public abstract class Disease implements Serializable{
     	this._medResistance = 0;
     	
     }
+
+
+    /**
+     * gets the maximum infectivity a disease can have if it buys all
+     * infectivity-positive perks
+     * @return MAX_INFECTIVITY
+     */
+    public abstract double getMaxInfectivity();
+
+    /**
+     * gets the maximum letahlity a disease can have if it buys all
+     * lethality-positive perks
+     * @return MAX_LETHALITY
+     */
+    public abstract double getMaxLethality();
 
     /**
      * The cumulative method that sells every perk that is exlusively relies on
@@ -285,6 +372,20 @@ public abstract class Disease implements Serializable{
      *                                          owned
      */
     public abstract void sellPerk(int perkID) throws IllegalAccessException;
+
+    /**
+     * Returns the sellable perks this disease has. It will be a list of the owned
+     * perks for non-viral diseases, because it doesn't cost those diseases money
+     * to sell perks
+     * @return the perks sellable by this disease
+     */
+    public abstract List<Perk> getSellablePerks();
+
+    /**
+     * A method that has a random chance of buying a new perk for a disease.
+     * Does nothing for every disease except virus.
+     */
+    public abstract void buyRandomPerk();
     
     //IMPORTANT PLEASE READ
     //The following code relies on the uniqueness of the String ID

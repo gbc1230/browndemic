@@ -1,5 +1,8 @@
 package edu.brown.cs32.browndemic.disease;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Extends Disease and has all the perks a Bacteria can get and the
  * ability to sell its perks cumulatively or individual and GAIN money
@@ -7,13 +10,15 @@ package edu.brown.cs32.browndemic.disease;
  * @author bkoatz
  */
 public class Bacteria extends Disease{
-    
+
+    final private double MAX_INFECTIVITY = 59;
+    final private double MAX_LETHALITY = 217;
     public Bacteria(String tempname){
     
         this._name = tempname;
-        this._perks = new Perk[10];
-        //this._perks[0] = Perks.newVOMITING_BACTERIA();
-        //this._perks[0].setID(0);
+        this._perks = Perks.getBacteriaPerks();
+        this._infectivity = 2;
+        this._visibility = 1;
         
     }
 
@@ -83,6 +88,30 @@ public class Bacteria extends Disease{
         this._medResistance -= soldPerk.getMedRes();
         this._points += soldPerk.getSellPrice();
     
+    }
+
+    @Override
+    public List<Perk> getSellablePerks() {
+
+        List<Perk> ans = new ArrayList<Perk>();
+        for(Perk p : this.getPerks()){
+            if(p.isOwned()) ans.add(p);
+        }
+        return ans;
+
+    }
+
+    @Override
+    public void buyRandomPerk() {}
+
+    @Override
+    public double getMaxInfectivity() {
+        return this.MAX_INFECTIVITY;
+    }
+
+    @Override
+    public double getMaxLethality() {
+        return this.MAX_LETHALITY;
     }
     
 }
