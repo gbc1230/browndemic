@@ -1,29 +1,30 @@
-package edu.brown.cs32.browndemic.disease;
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 
+package edu.brown.cs32.browndemic.disease;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Extends Disease and has all the perks a Bacteria can get and the
- * ability to sell its perks cumulatively or individual and GAIN money
- * from those sales
+ *
  * @author bkoatz
  */
-public class Bacteria extends Disease{
+public class Parasite extends Disease{
 
     final private double MAX_INFECTIVITY = 59;
     final private double MAX_LETHALITY = 217;
     final private double MAX_VISIBILITY = 279;
 
-    public Bacteria(String tempname){
-    
+    public Parasite(String tempname){
+
         this._name = tempname;
         this._perks = Perks.getBacteriaPerks();
-        this._infectivity = 2;
+        this._infectivity = 1;
         this._visibility = 1;
-        
-    }
 
+    }
     @Override
     public void sellPerk(int perkID) throws IllegalAccessException{
 
@@ -79,7 +80,7 @@ public class Bacteria extends Disease{
             }
 
         }
-        
+
         this._infectivity -= soldPerk.getInf();
         this._lethality -= soldPerk.getLeth();
         this._visibility -= soldPerk.getVis();
@@ -89,7 +90,7 @@ public class Bacteria extends Disease{
         this._dryResistance -= soldPerk.getDryRes();
         this._medResistance -= soldPerk.getMedRes();
         this._points += soldPerk.getSellPrice();
-    
+
     }
 
     @Override
@@ -120,5 +121,5 @@ public class Bacteria extends Disease{
     public double getMaVisibility() {
         return this.MAX_VISIBILITY;
     }
-    
+
 }

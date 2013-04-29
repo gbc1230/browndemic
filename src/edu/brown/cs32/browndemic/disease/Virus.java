@@ -14,6 +14,7 @@ public class Virus extends Disease{
 
     final private double MAX_INFECTIVITY = 62;
     final private double MAX_LETHALITY = 217;
+    final private double MAX_VISIBILITY = 281;
 
     public Virus(String tempname){
     
@@ -120,5 +121,10 @@ public class Virus extends Disease{
     @Override
     public double getMaxLethality() {
         return this.MAX_LETHALITY;
+    }
+
+    @Override
+    public double getMaVisibility() {
+        return this.MAX_VISIBILITY;
     }
 }
