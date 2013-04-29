@@ -24,6 +24,9 @@ public class Perk implements Serializable{
   //the unique integer ID of this perk
   private int _id;
   
+  //the String description of this perk
+  private String _description;
+  
   //the double change that this perk will provide to infectivity
   private double _infectivityChange;
   
@@ -70,11 +73,13 @@ public class Perk implements Serializable{
   
   //constuctor: sets cost, change in infectivity/lethality/visibility and
   //the perks that, when this perk is bought, become available for purchase
-  public Perk(String tempname, int tempcost, int tempsell, double tempinf, double templeth,
-              double tempvis, double tempheat, double tempcold, double tempwet,
-              double tempdry, double tempmed, double tempwater, double tempair){
+  public Perk(String tempname, String tempdesc, int tempcost, int tempsell, 
+		      double tempinf, double templeth, double tempvis, double tempheat, 
+		      double tempcold, double tempwet, double tempdry, double tempmed, 
+		      double tempwater, double tempair){
     
 	this._name = name;
+	this._description = tempdesc;
     this._cost = tempcost;
     this._sellPrice = tempsell;
     this._infectivityChange = tempinf;
@@ -195,6 +200,16 @@ public class Perk implements Serializable{
    
     return this._id;
     
+  }
+  
+  /**
+   * gets the String description of this perk
+   * @return _description
+   */
+  public String getDescription(){
+	  
+	  return this._description;
+	  
   }
   
   /**

@@ -6,14 +6,12 @@ package edu.brown.cs32.browndemic.disease;
  * 
  * @author bkoatz
  */
-public class Virus extends Disease implements Perks{
+public class Virus extends Disease{
 
     public Virus(String tempname){
     
         this._name = tempname;
-        this._perks = new Perk[10];
-        this._perks[0] = Perks.newVOMITING_VIRUS();
-        this._perks[0].setID(0);
+        this._perks = Perks.getVirusPerks();
         
     }
 
