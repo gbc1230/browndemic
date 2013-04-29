@@ -303,6 +303,7 @@ public class Region {
         _awareness[index] = 0.0;
         _cureProgress[index] = 0L;
         _news.add(d.getName() + " has infected " + _name + ".");
+        System.out.println(_name + " , " + getInfected().get(d.getID()));
     }
 
     /**
