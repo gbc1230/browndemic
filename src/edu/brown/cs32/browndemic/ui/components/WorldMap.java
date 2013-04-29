@@ -357,8 +357,8 @@ public class WorldMap extends JComponent implements MouseListener {
 		int id = getID(p.x, p.y);
 		if (isValid(id)) {
 			if (_chooseMode) {
-				_world.getRegion(id).introduceDisease(_world.getDiseases().get(_disease));
 				_world.start();
+				_world.getRegion(id).introduceDisease(_world.getDiseases().get(_disease));
 				_chooseMode = false;
 			}
 			setSelection(id);

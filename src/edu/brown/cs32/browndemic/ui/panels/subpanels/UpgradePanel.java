@@ -61,7 +61,7 @@ public class UpgradePanel extends BrowndemicPanel implements ListSelectionListen
 		_perkList.setForeground(Colors.RED_TEXT);
 		_perkList.setFont(Fonts.NORMAL_TEXT);
 		
-		for (Perk p : Perks.getVirusPerks()) {
+		for (Perk p : _disease.getPurchasablePerks()) {
 			_perks.addElement(p);
 		}
 		
