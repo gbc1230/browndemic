@@ -48,7 +48,6 @@ public class Region {
 
     //ArrayList of double awaresness for each disease
     private Double[] _awareness;
-    private double _CLOSEPORTS = 10;
 
     //ArrayList of double cure progress for each disease
     private Long[] _cureProgress;
@@ -102,11 +101,11 @@ public class Region {
      * The update method for this region
      */
     public void update() {
+        updateCures();
         for (Disease d : _diseases) {
             if (null != d) {
                 awarenessCheck();
                 updateAwareness(d);
-                updateWealth(d);
                 cure(d);
                 kill(d);
                 infect(d);
@@ -140,8 +139,9 @@ public class Region {
             coldResFactor = _diseases[d].getColdRes()/_cold;
         if(_diseases[d].getMedRes() < _med)
             medResFactor = _diseases[d].getMedRes()/_med;
-        number = (_INFSCALE/5.0 * pop *( wetResFactor + dryResFactor + heatResFactor +
-                coldResFactor + medResFactor));
+        double max = _diseases[d].getMaxInfectivity();
+        number = _INFSCALE/5.0 * pop * (_diseases[d].getInfectivity() / max) *
+                ( wetResFactor + dryResFactor + heatResFactor + coldResFactor + medResFactor);
         if(Math.random()*_INFDOUBLETIME == 0)
             number = Math.ceil(number);
         else
@@ -244,8 +244,11 @@ public class Region {
      */
     public ArrayList<Long> getCures(){
         ArrayList<Long> cures = new ArrayList<Long>();
-        for(Long cure : _cureProgress)
-            cures.add(cure);
+        for(int i = 0; i < _numDiseases; i++){
+            if(_diseases[i] != null)
+                cures.add(_cureProgress[i]);
+            else cures.add(0L);
+        }
         return cures;
     }
 
@@ -253,8 +256,11 @@ public class Region {
      * checks if ports should be closed
      */
     public void awarenessCheck() {
-        for (double aware : _awareness) {
-            if (aware > _CLOSEPORTS && !(_air == 0 && _sea == 0)) {
+        //TODO flesh this out, the values used here are complete guesses
+        for(int i = 0; i < _numDiseases; i++){
+            double awareMax = _diseases[i].getMaxVisibility()*_population*_INFDOUBLETIME;
+            boolean closePorts = (_awareness[i] > awareMax / 2);
+            if (closePorts  && !(_air == 0 && _sea == 0)) {
                 _air = 0;
                 _sea = 0;
                 _news.add(_name + " has closed it's air and seaports.");
@@ -265,12 +271,7 @@ public class Region {
     public void updateAwareness(Disease d) {
         int index = d.getID();
         //TODO awareness += vis*(infected + dead)
-        _awareness[index] = _awareness[index] + d.getVisibility() * (getInfected().get(index) + _dead[index]);
-    }
-
-    public void updateWealth(Disease d) {
-        int index = d.getID();
-    //TODO update wealth calculation here
+        _awareness[index] = _awareness[index] + d.getVisibility() * (getInfected().get(index) + 2*_dead[index]);
     }
 
     /**
@@ -300,6 +301,7 @@ public class Region {
         _hasCure[index] = false;
         _awareness[index] = 0.0;
         _cureProgress[index] = 0L;
+        _news.add(d.getName() + " has infected " + _name + ".");
     }
 
     /**
@@ -512,8 +514,11 @@ public class Region {
      */
     public ArrayList<Long> getKilled() {
         ArrayList<Long> dead = new ArrayList<Long>();
-        for(Long d : _dead)
-            dead.add(d);
+        for(int i = 0; i < _numDiseases; i++){
+            if(_diseases[i] != null)
+                dead.add(_dead[i]);
+            else dead.add(0L);
+        }
         return dead;
     }
 
