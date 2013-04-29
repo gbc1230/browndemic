@@ -1,6 +1,5 @@
 package edu.brown.cs32.browndemic.ui.panels.menus;
 
-import java.awt.Color;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,7 +9,6 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.Timer;
 import javax.swing.UIManager;
-import javax.swing.plaf.ColorUIResource;
 
 import edu.brown.cs32.browndemic.ui.BrowndemicFrame;
 import edu.brown.cs32.browndemic.ui.DumbChatServer;
@@ -26,6 +24,7 @@ import edu.brown.cs32.browndemic.ui.panels.UIPanel;
 import edu.brown.cs32.browndemic.ui.panels.subpanels.ChatPanel;
 import edu.brown.cs32.browndemic.ui.panels.subpanels.InformationBar;
 import edu.brown.cs32.browndemic.ui.panels.subpanels.NewsPanel;
+import edu.brown.cs32.browndemic.ui.panels.subpanels.StatPanel;
 import edu.brown.cs32.browndemic.ui.panels.subpanels.UpgradePanel;
 import edu.brown.cs32.browndemic.ui.panels.titlebars.InGameTitleBar;
 import edu.brown.cs32.browndemic.world.MainWorld;
@@ -109,6 +108,7 @@ public class GameMenu extends UIPanel {
 		botRight.setFont(Fonts.TITLE_BAR);
 		botRight.addTab("Chat", new ChatPanel(new DumbChatServer()));
 		botRight.addTab("News", new NewsPanel(_world));
+		botRight.addTab("Stats", new StatPanel(_world.getDiseases().get(_disease)));
 		for (int i = 0; i < botRight.getTabCount(); i++) {
 			botRight.setBackgroundAt(i, Colors.MENU_BACKGROUND);
 		}

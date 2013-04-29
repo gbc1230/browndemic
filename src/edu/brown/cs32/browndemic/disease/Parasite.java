@@ -118,7 +118,7 @@ public class Parasite extends Disease{
     }
 
     @Override
-    public double getMaVisibility() {
+    public double getMaxVisibility() {
         return this.MAX_VISIBILITY;
     }
 

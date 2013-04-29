@@ -361,7 +361,7 @@ public abstract class Disease implements Serializable{
      * visbility-positive perks
      * @return MAX_LETHALITY
      */
-    public abstract double getMaVisibility();
+    public abstract double getMaxVisibility();
 
     /**
      * The cumulative method that sells every perk that is exlusively relies on

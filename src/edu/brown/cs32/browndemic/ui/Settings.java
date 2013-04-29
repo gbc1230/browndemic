@@ -16,7 +16,7 @@ public class Settings {
 	public static final String NAME = "name";
 	public static final String PORT = "port";
 	
-	private static final int DEFAULT_PORT = 22222;
+	private static final int DEFAULT_PORT = 6000;
 
 	private static Map<String, String> _settings = new HashMap<>();
 	private static Map<String, Boolean> _booleans = new HashMap<>();
