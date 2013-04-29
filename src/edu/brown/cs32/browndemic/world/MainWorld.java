@@ -189,11 +189,11 @@ public class MainWorld extends Thread implements Serializable, World{
     
     public void setSpeed(int time){
         if (time == 1)
-            _waitTime = 500L;
-        else if (time == 2)
             _waitTime = 333L;
+        else if (time == 2)
+            _waitTime = 200L;
         else if (time == 3)
-            _waitTime = 175L;
+            _waitTime = 100L;
     }
     
     public void pause(){
