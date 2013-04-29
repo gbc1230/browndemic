@@ -385,24 +385,26 @@ public class MainWorld implements Serializable, World{
      */
     public void run(){
         while (!_gameOver){
-            long start = System.currentTimeMillis();
-            update();
-            if (allCured()){
-                _gameOver = true;
-                break;
-            }
-            else if (allKilled()){
-                crownWinners();
-                _gameOver = true;
-                break;
-            }
-            long end = System.currentTimeMillis();
-            long offset = end - start;
-            try{
-                Thread.sleep(_waitTime - offset);
-            }
-            catch(InterruptedException e){
-                System.out.println("Couldn't sleep...");
+            if (!_paused){
+                long start = System.currentTimeMillis();
+                update();
+                if (allCured()){
+                    _gameOver = true;
+                    break;
+                }
+                else if (allKilled()){
+                    crownWinners();
+                    _gameOver = true;
+                    break;
+                }
+                long end = System.currentTimeMillis();
+                long offset = end - start;
+                try{
+                    Thread.sleep(_waitTime - offset);
+                }
+                catch(InterruptedException e){
+                    System.out.println("Couldn't sleep...");
+                }
             }
         }
     }
