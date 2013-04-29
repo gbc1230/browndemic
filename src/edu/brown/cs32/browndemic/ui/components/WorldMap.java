@@ -235,21 +235,27 @@ public class WorldMap extends JComponent implements MouseListener {
 		
 		g.drawImage(_map, 0, 0, null);
 		
-		for (Map.Entry<Integer, BufferedImage> e : _diseaseOverlays.entrySet()) {
-			Region r = _world.getRegions().get(e.getKey());
-			float percentInfected = 0f;
-			if (r != null) {
-				percentInfected = (float)r.getInfected().get(_disease) / (float)r.getPopulation();
+		if (!_chooseMode) {
+			for (Map.Entry<Integer, BufferedImage> e : _diseaseOverlays.entrySet()) {
+				Region r = _world.getRegion(e.getKey());
+				float percentInfected = 0f;
+				if (r != null) {
+					try {
+						percentInfected = (float)r.getInfected().get(_disease) / (float)r.getPopulation();
+					} catch (IndexOutOfBoundsException e1) {
+						percentInfected = 0f;
+					}
+				}
+				if (percentInfected != _infected.get(e.getKey())) {
+					_composites.put(e.getKey(), AlphaComposite.getInstance(AlphaComposite.SRC_OVER, percentInfected/2.0f));
+					_infected.put(e.getKey(), percentInfected);
+				}
+				g2.setComposite(_composites.get(e.getKey()));
+				g2.drawImage(e.getValue(), 0, 0, null);
+	
 			}
-			if (percentInfected != _infected.get(e.getKey())) {
-				_composites.put(e.getKey(), AlphaComposite.getInstance(AlphaComposite.SRC_OVER, percentInfected/2.0f));
-				_infected.put(e.getKey(), percentInfected);
-			}
-			g2.setComposite(_composites.get(e.getKey()));
-			g2.drawImage(e.getValue(), 0, 0, null);
-
 		}
-		
+			
 		if (_chooseMode) {
 			drawChoosePanel(g2);
 		}
@@ -280,12 +286,12 @@ public class WorldMap extends JComponent implements MouseListener {
 	private void drawChoosePanel(Graphics2D g2) {
 		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .9f));
 		g2.setColor(Color.BLACK);
-		g2.fillRect(0, getHeight() - 100, getWidth(), 100);
+		g2.fillRect(0, getHeight() - 40, getWidth(), 40);
 
 		g2.setColor(Colors.RED_TEXT);
 		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
 		g2.setFont(Fonts.BIG_TEXT);
-		g2.drawString("Choose a Starting Location", 10, getHeight() - 90);
+		g2.drawString("Choose a Starting Location", 250, getHeight() - 10);
 	}
 	
 	private void drawInfoPanel(Graphics2D g2) {
@@ -296,7 +302,7 @@ public class WorldMap extends JComponent implements MouseListener {
 		g2.setColor(Colors.RED_TEXT);
 		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
 		g2.setFont(Fonts.NORMAL_TEXT);
-		Region r = _world.getRegions().get(_selected);
+		Region r = _world.getRegion(_selected);
 		String name = "";
 		long infected = 0, dead = 0, total = 1;
 		
@@ -310,8 +316,8 @@ public class WorldMap extends JComponent implements MouseListener {
 		}
 		g2.drawString(name, 5, getHeight() - 80);
 
-		g2.drawString(String.format("Infected: %d + (%f%%)", infected, (double)infected/(double)total), 15, getHeight() - 55);
-		g2.drawString(String.format("Dead: %d + (%f%%)", dead, (double)dead/(double)total), 15, getHeight() - 35);
+		g2.drawString(String.format("Infected: %d (%.2f%%)", infected, (double)infected/(double)total), 15, getHeight() - 55);
+		g2.drawString(String.format("Dead: %d (%.2f%%)", dead, (double)dead/(double)total), 15, getHeight() - 35);
 		g2.drawString(String.format("Total: %d", total), 15, getHeight() - 15);
 	}
 	
@@ -348,7 +354,7 @@ public class WorldMap extends JComponent implements MouseListener {
 		int id = getID(p.x, p.y);
 		if (isValid(id)) {
 			if (_chooseMode) {
-				_world.getRegions().get(id).introduceDisease(_world.getDiseases().get(_disease));
+				_world.getRegion(id).introduceDisease(_world.getDiseases().get(_disease));
 				_chooseMode = false;
 			}
 			setSelection(id);

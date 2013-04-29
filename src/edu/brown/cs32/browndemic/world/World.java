@@ -53,6 +53,9 @@ public interface World {
     //get a region by name
     public Region getRegion(String name);
     
+    // get a region by id
+    public Region getRegion(int id);
+    
     //get all diseases
     public List<Disease> getDiseases();
     

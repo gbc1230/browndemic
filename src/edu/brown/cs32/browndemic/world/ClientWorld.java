@@ -6,11 +6,15 @@ package edu.brown.cs32.browndemic.world;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
+
 import edu.brown.cs32.browndemic.disease.Disease;
+import edu.brown.cs32.browndemic.network.ChatMessage;
+import edu.brown.cs32.browndemic.network.GameData;
+import edu.brown.cs32.browndemic.network.PerkInput;
 import edu.brown.cs32.browndemic.region.Region;
-import edu.brown.cs32.browndemic.network.*;
-import edu.brown.cs32.browndemic.ui.interfaces.*;
 import edu.brown.cs32.browndemic.region.RegionTransmission;
+import edu.brown.cs32.browndemic.ui.interfaces.ChatHandler;
+import edu.brown.cs32.browndemic.ui.interfaces.ChatServer;
 
 /**
  *
@@ -101,6 +105,11 @@ public class ClientWorld implements ChatServer, World{
     @Override
     public List<Region> getRegions(){
         return _world.getRegions();
+    }
+    
+    @Override
+    public Region getRegion(int id) {
+    	return _world.getRegion(id);
     }
     
     @Override

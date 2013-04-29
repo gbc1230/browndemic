@@ -41,6 +41,7 @@ public class InGameTitleBar extends TitleBar {
 	
 	public InGameTitleBar(MainWorld world, boolean singlePlayer) {
 		super();
+		_world = world;
 		_single = singlePlayer;
 		makeUI();
 	}
