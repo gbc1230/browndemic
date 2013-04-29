@@ -5,7 +5,7 @@
 package edu.brown.cs32.browndemic.region;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 import java.util.HashMap;
 
 import edu.brown.cs32.browndemic.disease.Disease;
@@ -28,19 +28,19 @@ public class Region {
     private ArrayList<Disease> _diseases;
 
     //Total Region Population
-    private int _population;
+    private long _population;
 
     //Healthy population count
-    private int _healthy;
+    private long _healthy;
 
     //ArrayList of infected, order corresponds to the diseases in _disease
-    private ArrayList<Integer> _infected;
+    private ArrayList<Long> _infected;
 
     //ArrayList of dead, order corresponds to the diseases in _disease
-    private ArrayList<Integer> _dead;
+    private ArrayList<Long> _dead;
 
     //ArrrayList of cured, order corresponds to diseases in _disease
-    private ArrayList<Integer> _cured;
+    private ArrayList<Long> _cured;
 
     //ArrayList of boolean isCure, order corresponds to diseases in _disease
     private ArrayList<Boolean> _hasCure;
@@ -71,20 +71,20 @@ public class Region {
      * @param name The unique String name
      * @param population the initial population count
      * @param neighbors the names of all bordering Regions
-     * @param sea if this Region has open seaports
-     * @param air if this Region has open airports
+     * @param seaports if this Region has open seaports
+     * @param airports if this Region has open airports
      */
-    public Region(int ID, String name, int population, Collection<Integer> landNeighbors,
-            Collection<Integer> waterNeighbors, HashMap<Integer, Region> hash,
-            int sea, int air, double wealth, double wet, double dry,
+    public Region(int ID, String name, long population, List<Integer> landNeighbors,
+            List<Integer> waterNeighbors, HashMap<Integer, Region> hash,
+            int seaports, int airports, double wealth, double wet, double dry,
             double heat, double cold) {
         _name = name;
         _ID = ID;
         _population = population;
         _healthy = population;
-        _infected = new ArrayList<Integer>();
-        _dead = new ArrayList<Integer>();
-        _cured = new ArrayList<Integer>();
+        _infected = new ArrayList<Long>();
+        _dead = new ArrayList<Long>();
+        _cured = new ArrayList<Long>();
         _hasCure = new ArrayList<Boolean>();
         _awareness = new ArrayList<Double>();
         _cureProgress = new ArrayList<Double>();
@@ -93,8 +93,8 @@ public class Region {
         _waterNeighbors = new ArrayList<Integer>(waterNeighbors.size());
         _waterNeighbors.addAll(waterNeighbors);
         _regions = hash;
-        _sea = sea;
-        _air = air;
+        _sea = seaports;
+        _air = airports;
         _wealth = wealth;
         _wet = wet;
         _dry = dry;
@@ -128,7 +128,7 @@ public class Region {
      * @param pop the population to infect
      * @return how many to infect
      */
-    public int getInfected(int d, int pop) {
+    public int getInfected(int d, long pop) {
         int number = 0;
         //TODO calculate number of pop infected.
         return number;
@@ -139,7 +139,7 @@ public class Region {
      * @param d the index of the disease
      */
     public void infectHealthy(int d) {
-        int infect = getInfected(d, _healthy);
+        long infect = getInfected(d, _healthy);
         if (infect > _healthy) {
             _infected.set(d, _infected.get(d) + _healthy);
             _healthy = 0;
@@ -176,7 +176,7 @@ public class Region {
         int number = (int) (disease.getLethality() * _infected.get(index));
         if (_infected.get(index) < number) {
             _dead.set(index, _dead.get(index) + _healthy);
-            _infected.set(index, 0);
+            _infected.set(index, 0L);
         } else {
             _dead.set(index, _dead.get(index) + number);
             _infected.set(index, _infected.get(index) - number);
@@ -189,7 +189,8 @@ public class Region {
      * @param pop
      * @return
      */
-    public int getCured(int d, int pop) {
+    //TODO: don't have 2 methods with the same name hurr durr
+    public int getCured(int d, long pop) {
         //TODO right now cured just cures 5% of total pop per tick
         int number = (int) (0.05*_population);
         return number;
@@ -202,10 +203,10 @@ public class Region {
     public void cure(Disease d) {
         int index = d.getID();
         if (_hasCure.get(index) == true) {
-            int number = getCured(index, _infected.get(index));
+            long number = getCured(index, _infected.get(index));
             if (_infected.get(index) < number) {
                 _cured.set(index, _cured.get(index) + _infected.get(index));
-                _infected.set(index, 0);
+                _infected.set(index, 0L);
             } else {
                 _cured.set(index, _cured.get(index) + number);
                 _infected.set(index, _infected.get(index) - number);
@@ -244,9 +245,9 @@ public class Region {
      */
     public void introduceDisease(Disease d) {
         int index = d.getID();
-        _infected.add(index, 1);
-        _dead.add(index, 0);
-        _cured.add(index, 0);
+        _infected.add(index, 1L);
+        _dead.add(index, 0L);
+        _cured.add(index, 0L);
         _hasCure.add(index, false);
         _awareness.add(index, 0.0);
         _cureProgress.add(index, 0.0);
@@ -415,7 +416,7 @@ public class Region {
      * getInfected() gets the ArrayList of infected people in this Region
      * @return _infected
      */
-    public ArrayList<Integer> getInfected() {
+    public ArrayList<Long> getInfected() {
         return _infected;
     }
 
@@ -423,7 +424,7 @@ public class Region {
      * getKilled() gets the ArrayList of dead people in this Region
      * @return _dead;
      */
-    public ArrayList<Integer> getKilled() {
+    public ArrayList<Long> getKilled() {
         return _dead;
     }
 
@@ -431,7 +432,7 @@ public class Region {
      * getCured() gets the ArrayList of cured people in this Region
      * @return _cured;
      **/
-    public ArrayList<Integer> getCured() {
+    public ArrayList<Long> getCured() {
         return _cured;
     }
 
@@ -439,7 +440,7 @@ public class Region {
      * getAlive() gets the number of healthy people in this Region
      * @return _healthy
      */
-    public int getHealthy() {
+    public long getHealthy() {
         return _healthy;
     }
 
@@ -457,6 +458,11 @@ public class Region {
      */
     public int getID(){
         return _ID;
+    }
+    
+    //accessor for getting population
+    public long getPopulation(){
+        return _population;
     }
 
     /**
