@@ -28,6 +28,9 @@ public class Region {
     //ArrayList of diseases in this Region
     private Disease[] _diseases;
 
+    private int _INFDOUBLETIME = 60;
+    private double _INFSCALE = Math.pow(2.0,1.0/(double)_INFDOUBLETIME);
+
     //number of diseases in game
     private int _numDiseases;
 
@@ -48,7 +51,7 @@ public class Region {
     private double _CLOSEPORTS = 10;
 
     //ArrayList of double cure progress for each disease
-    private Double[] _cureProgress;
+    private Long[] _cureProgress;
 
     //Unique Region name
     //emphasis on the unique, some code in here runs on that assumption (hash, equals, etc.)
@@ -121,9 +124,29 @@ public class Region {
      * @return how many to infect
      */
     public long getNumInfected(int d, long pop) {
-        int number = 0;
-        //TODO calculate number of pop infected.
-        return number;
+        double number = 0;
+        double wetResFactor = 1;
+        double dryResFactor = 1;
+        double heatResFactor = 1;
+        double coldResFactor = 1;
+        double medResFactor = 1;
+        if(_diseases[d].getWetRes() < _wet)
+            wetResFactor = _diseases[d].getWetRes()/_wet;
+        if(_diseases[d].getDryRes() < _dry)
+            dryResFactor = _diseases[d].getDryRes()/_dry;
+        if(_diseases[d].getHeatRes() < _heat)
+            heatResFactor = _diseases[d].getHeatRes()/_heat;
+        if(_diseases[d].getColdRes() < _cold)
+            coldResFactor = _diseases[d].getColdRes()/_cold;
+        if(_diseases[d].getMedRes() < _med)
+            medResFactor = _diseases[d].getMedRes()/_med;
+        number = (_INFSCALE/5.0 * pop *( wetResFactor + dryResFactor + heatResFactor +
+                coldResFactor + medResFactor));
+        if(Math.random()*_INFDOUBLETIME == 0)
+            number = Math.ceil(number);
+        else
+            number = Math.floor(number);
+        return (long) number;
     }
 
     /**
@@ -198,6 +221,35 @@ public class Region {
     }
 
     /**
+     * updates cureProgress for each disease
+     */
+    public void updateCures(){
+        double weightedPop = _hash.getZero().getInf();
+        ArrayList<Long> inf = getInfected();
+        for(int i = 0; i < _numDiseases; i++){
+            if(_diseases[i] != null){
+                double max = _diseases[i].getMaxLethality();
+                weightedPop += inf.get(i) * max/(max + _diseases[i].getLethality());
+            }
+        }
+        for(int j = 0; j < _numDiseases; j++){
+            if(_hasCure[j])
+                _cureProgress[j] = _cureProgress[j] + (long) (_wealth*weightedPop);
+        }
+    }
+
+    /**
+     * returns an ArrayList of cureProgress so far
+     * @return
+     */
+    public ArrayList<Long> getCures(){
+        ArrayList<Long> cures = new ArrayList<Long>();
+        for(Long cure : _cureProgress)
+            cures.add(cure);
+        return cures;
+    }
+
+    /**
      * checks if ports should be closed
      */
     public void awarenessCheck() {
@@ -247,7 +299,7 @@ public class Region {
         _dead[index] = 0L;
         _hasCure[index] = false;
         _awareness[index] = 0.0;
-        _cureProgress[index] = 0.0;
+        _cureProgress[index] = 0L;
     }
 
     /**
@@ -375,7 +427,7 @@ public class Region {
         _dead = new Long[num];
         _hasCure = new Boolean[num];
         _awareness = new Double[num];
-        _cureProgress = new Double[num];
+        _cureProgress = new Long[num];
         _hash = new PopHash(num);
         _hash.addZero(_population);
     }
