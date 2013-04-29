@@ -299,6 +299,7 @@ public class Region {
         }
         System.out.println("0/1 ID for Disease " + index + " : " + ID);
         _hash.put(new InfWrapper(ID, 1L));
+        _diseases[index] = d;
         _dead[index] = 0L;
         _hasCure[index] = false;
         _awareness[index] = 0.0;

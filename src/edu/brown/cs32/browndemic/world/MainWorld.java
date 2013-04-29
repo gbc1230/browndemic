@@ -18,7 +18,7 @@ import edu.brown.cs32.browndemic.region.RegionTransmission;
  *
  * @author gcarling
  */
-public class MainWorld extends Thread implements Serializable, World{
+public class MainWorld implements Serializable, World, Runnable{
 
     //ArrayList of Regions
     protected List<Region> _regions;
@@ -74,6 +74,7 @@ public class MainWorld extends Thread implements Serializable, World{
         _cures = new ArrayList<>();
         _sent = new ArrayList<>();
         _cured = new ArrayList<>();
+        _news = new ArrayList<>();
         _transmissions = new ArrayList<>();
         _dead = 0;
         _infected = 0;
@@ -92,8 +93,6 @@ public class MainWorld extends Thread implements Serializable, World{
      */
     @Override
     public void addPerk(int dis, int perk, boolean buy){
-        System.out.println("Got perk: " + dis + ", " + perk + ", " + buy);
-        /*
         Disease d = _diseases.get(dis);
         try{
             if (buy)
@@ -103,7 +102,7 @@ public class MainWorld extends Thread implements Serializable, World{
         }
         catch(IllegalAccessException e){
             
-        }*/
+        }
     }
     
     /**
@@ -401,12 +400,8 @@ public class MainWorld extends Thread implements Serializable, World{
         checkCures();
         updateCured();
     }
-    
-    /**
-     * Runs the game
-     */
-    @Override
-    public void run(){
+
+    public void start(){
         for (int i = 0; i < _diseases.size(); i++){
             _cures.add(0L);
             _kills.add(0L);
@@ -421,6 +416,14 @@ public class MainWorld extends Thread implements Serializable, World{
         }
         _paused = false;
         _started = true;
+        new Thread(this).start();
+    }
+    
+    /**
+     * Runs the game
+     */
+    @Override
+    public void run(){
         while (!_gameOver){
             if (!_paused){
                 long start = System.currentTimeMillis();
