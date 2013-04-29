@@ -75,6 +75,9 @@ public class GameClient implements Runnable{
             ChatMessage m = (ChatMessage)msg;
             _world.acceptMessage(m.getMessage());
         }
+        else if (id.equals("D")){
+            System.out.println("got the d");
+        }
     }
 
     /**

@@ -51,7 +51,7 @@ public class MainWorld extends Thread implements Serializable, World{
     protected List<String> _news;
     
     //whether or not the game is still going on
-    protected boolean _gameOver, _paused;
+    protected boolean _started, _gameOver, _paused;
     
     //for keeping track of transmissions
     protected List<RegionTransmission> _transmissions;
@@ -78,6 +78,7 @@ public class MainWorld extends Thread implements Serializable, World{
         _gameOver = false;
         _waitTime = 333L;
         _paused = true;
+        _started = false;
     }
     
     /**
@@ -270,6 +271,9 @@ public class MainWorld extends Thread implements Serializable, World{
      */
     /*public void updateCures(){
         List<Double> cures = new ArrayList<>();
+        for (int i = 0; i < _diseases.size(); i++){
+            cures.add(0.0);
+        }
         for (Region r : _regions){
             List<Double> rCures = r.getCures();
             for (int i = 0; i < rCures.size(); i++){
@@ -278,13 +282,13 @@ public class MainWorld extends Thread implements Serializable, World{
             }
         }
         _cures = cures;
-    }
+    }*/
     
     public void updateNews(){
         for (Region r : _regions){
             _news.addAll(r.getNews());
         }
-    }*/
+    }
     
     /**
      * Tells each region to start curing a disease
@@ -392,6 +396,7 @@ public class MainWorld extends Thread implements Serializable, World{
             r.setNumDiseases(_diseases.size());
         }
         _paused = false;
+        _started = true;
         while (!_gameOver){
             if (!_paused){
                 long start = System.currentTimeMillis();
