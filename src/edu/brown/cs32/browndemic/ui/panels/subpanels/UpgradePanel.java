@@ -26,5 +26,6 @@ public class UpgradePanel extends BrowndemicPanel {
 		setBackground(Color.GREEN);
 		setPreferredSize(new Dimension((int)(UI.WIDTH/1.5), 0));
 		setMinimumSize(new Dimension((int)(UI.WIDTH/1.5), 0));
+		
 	}
 }

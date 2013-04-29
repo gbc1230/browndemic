@@ -111,8 +111,10 @@ public class WorldMap extends JComponent implements MouseListener {
 							BufferedImage[] overlays = createRegion(id, Color.red, new Color(255, 255, 175));
 							_diseaseOverlays.put(id, overlays[0]);
 							_highlightOverlays.put(id, overlays[1]);
-							ImageIO.write(overlays[0], "png", disease);
-							ImageIO.write(overlays[1], "png", highlight);
+							if (Settings.getBoolean(Settings.CACHING)) {
+								ImageIO.write(overlays[0], "png", disease);
+								ImageIO.write(overlays[1], "png", highlight);
+							}
 						}
 						_infected.put(id, 0f);
 						_composites.put(id, AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.0f));
