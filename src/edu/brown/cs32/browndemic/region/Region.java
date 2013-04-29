@@ -41,16 +41,16 @@ public class Region {
     private long _population;
 
     //ArrayList of dead, order corresponds to the diseases in _disease
-    private Long[] _dead;
+    private long[] _dead;
 
     //ArrayList of boolean isCure, order corresponds to diseases in _disease
-    private Boolean[] _hasCure;
+    private boolean[] _hasCure;
 
     //ArrayList of double awaresness for each disease
-    private Double[] _awareness;
+    private double[] _awareness;
 
     //ArrayList of double cure progress for each disease
-    private Long[] _cureProgress;
+    private long[] _cureProgress;
 
     //Unique Region name
     //emphasis on the unique, some code in here runs on that assumption (hash, equals, etc.)
@@ -427,10 +427,10 @@ public class Region {
     public void setNumDiseases(int num) {
         _numDiseases = num;
         _diseases = new Disease[num];
-        _dead = new Long[num];
-        _hasCure = new Boolean[num];
-        _awareness = new Double[num];
-        _cureProgress = new Long[num];
+        _dead = new long[num];
+        _hasCure = new boolean[num];
+        _awareness = new double[num];
+        _cureProgress = new long[num];
         _hash = new PopHash(num);
         _hash.addZero(_population);
     }
