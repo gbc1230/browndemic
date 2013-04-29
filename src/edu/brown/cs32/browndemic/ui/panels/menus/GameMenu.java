@@ -1,16 +1,22 @@
 package edu.brown.cs32.browndemic.ui.panels.menus;
 
 import java.awt.Color;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
 import javax.swing.Timer;
+import javax.swing.UIManager;
+import javax.swing.plaf.ColorUIResource;
 
 import edu.brown.cs32.browndemic.ui.BrowndemicFrame;
 import edu.brown.cs32.browndemic.ui.DumbChatServer;
 import edu.brown.cs32.browndemic.ui.Resources;
+import edu.brown.cs32.browndemic.ui.UIConstants.Colors;
+import edu.brown.cs32.browndemic.ui.UIConstants.Fonts;
 import edu.brown.cs32.browndemic.ui.UIConstants.Images;
 import edu.brown.cs32.browndemic.ui.UIConstants.Strings;
 import edu.brown.cs32.browndemic.ui.Utils;
@@ -19,23 +25,25 @@ import edu.brown.cs32.browndemic.ui.components.WorldMap;
 import edu.brown.cs32.browndemic.ui.panels.UIPanel;
 import edu.brown.cs32.browndemic.ui.panels.subpanels.ChatPanel;
 import edu.brown.cs32.browndemic.ui.panels.subpanels.InformationBar;
+import edu.brown.cs32.browndemic.ui.panels.subpanels.NewsPanel;
 import edu.brown.cs32.browndemic.ui.panels.subpanels.UpgradePanel;
 import edu.brown.cs32.browndemic.ui.panels.titlebars.InGameTitleBar;
 import edu.brown.cs32.browndemic.world.MainWorld;
 
-public class SinglePlayerGame extends UIPanel {
+public class GameMenu extends UIPanel {
 	
 	private static final long serialVersionUID = 3275157554958820602L;
 	
 	private MainWorld _world;
 	private WorldMap _map;
-	private boolean loaded = false;
+	private boolean _loaded = false, _multiplayer;
 	private int _disease;
 	
-	public SinglePlayerGame(MainWorld w, int disease) {
+	public GameMenu(MainWorld w, int disease, boolean multiplayer) {
 		super();
 		_world = w;
 		_disease = disease;
+		_multiplayer = multiplayer;
 	}
 	
 	private class ImagesDoneLoadingAction implements Action {
@@ -58,8 +66,8 @@ public class SinglePlayerGame extends UIPanel {
 		@Override
 		public void doAction() {
 			makeUI();
-			loaded = true;
-			_parent.setPanel(SinglePlayerGame.this);
+			_loaded = true;
+			_parent.setPanel(GameMenu.this);
 		}
 	}
 	
@@ -75,18 +83,44 @@ public class SinglePlayerGame extends UIPanel {
 		add(_map);
 		
 		JPanel bottom = new JPanel();
-		bottom.setBackground(Color.GREEN);
+		bottom.setBackground(Colors.TRANSPARENT);
+		bottom.setOpaque(false);
 		bottom.setLayout(new BoxLayout(bottom, BoxLayout.X_AXIS));
 		
 		bottom.add(new UpgradePanel(_world.getDiseases().get(_disease)));
-		bottom.add(new ChatPanel(new DumbChatServer()));
+
+		UIManager.put("TabbedPane.selected", Colors.MENU_BACKGROUND);
+		UIManager.put("TabbedPane.focus", Colors.MENU_BACKGROUND);
+		UIManager.put("TabbedPane.selectHighlight", Colors.MENU_BACKGROUND);
+		UIManager.put("TabbedPane.shadow", Colors.MENU_BACKGROUND);
+		UIManager.put("TabbedPane.darkShadow", Colors.MENU_BACKGROUND);
+		UIManager.put("TabbedPane.selected", Colors.MENU_BACKGROUND);
+		UIManager.put("TabbedPane.borderHighlightColor", Colors.MENU_BACKGROUND);
+		UIManager.put("TabbedPane.background", Colors.MENU_BACKGROUND);
+		UIManager.put("TabbedPane.unselectedBackground", Colors.MENU_BACKGROUND);
+		UIManager.put("TabbedPane.light", Colors.RED_TEXT);
+		UIManager.put("TabbedPane.contentBorderInsets", new Insets(0, 0, 0, 0));
+		
+		
+		JTabbedPane botRight = new JTabbedPane();
+		Utils.setDefaultLook(botRight);
+		
+		botRight.setForeground(Colors.RED_TEXT);
+		botRight.setFont(Fonts.TITLE_BAR);
+		botRight.addTab("Chat", new ChatPanel(new DumbChatServer()));
+		botRight.addTab("News", new NewsPanel(_world));
+		for (int i = 0; i < botRight.getTabCount(); i++) {
+			botRight.setBackgroundAt(i, Colors.MENU_BACKGROUND);
+		}
+		//bottom.add(new ChatPanel(new DumbChatServer()));
+		bottom.add(botRight);
 		
 		add(bottom);
 	}
 
 	@Override
 	public void setupForDisplay() {
-		if (loaded) {
+		if (_loaded) {
 			Utils.getParentFrame(this).setTitle(new InGameTitleBar(_world, true));
 			new Timer(3000, new ActionListener() {
 				@Override

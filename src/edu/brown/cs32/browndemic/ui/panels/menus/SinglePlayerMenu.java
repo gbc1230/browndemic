@@ -30,7 +30,7 @@ import edu.brown.cs32.browndemic.ui.panels.titlebars.BackTitleBar;
 import edu.brown.cs32.browndemic.world.MainWorld;
 import edu.brown.cs32.browndemic.world.WorldMaker;
 
-public class SinglePlayer extends UIPanel {
+public class SinglePlayerMenu extends UIPanel {
 
 	private static final long serialVersionUID = -1231229219691042468L;
 	
@@ -39,7 +39,7 @@ public class SinglePlayer extends UIPanel {
 	SelectButton _disease1, _disease2, _disease3;
 	JLabel _start, _load;
 	
-	public SinglePlayer() {
+	public SinglePlayerMenu() {
 		super();
 		makeUI();
 	}
@@ -166,7 +166,7 @@ public class SinglePlayer extends UIPanel {
 			if (disease == 2)
 				w.addDisease(new Virus(name));
 			
-			Utils.getParentFrame(this).setPanel(new SinglePlayerGame(w, 0));
+			Utils.getParentFrame(this).setPanel(new GameMenu(w, 0, false));
 		} else if (e.getSource() == _load) {
 			File saves = new File("saves");
 			saves.mkdir();
@@ -176,7 +176,7 @@ public class SinglePlayer extends UIPanel {
 			if (fc.showOpenDialog(Utils.getParentFrame(this)) == JFileChooser.APPROVE_OPTION) {
 				System.out.println("LOAD FROM: " + fc.getSelectedFile());
 				// TODO: Load file
-				Utils.getParentFrame(this).setPanel(new SinglePlayerGame(null, 0));
+				Utils.getParentFrame(this).setPanel(new GameMenu(null, 0, false));
 			}
 		}
 	}

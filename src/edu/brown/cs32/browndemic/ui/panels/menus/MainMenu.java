@@ -87,7 +87,7 @@ public class MainMenu extends UIPanel {
 	@Override
 	public void mouseReleasedInside(MouseEvent e) {
 		if (e.getSource() == single_) {
-			Utils.getParentFrame(this).setPanel(new SinglePlayer());
+			Utils.getParentFrame(this).setPanel(new SinglePlayerMenu());
 		} else if (e.getSource() == multi_) {
 			Utils.getParentFrame(this).setPanel(new MultiplayerMenu());
 		} else if (e.getSource() == settings_) {
