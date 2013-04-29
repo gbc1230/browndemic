@@ -21,7 +21,6 @@ public class WorldMaker{
         f.readLine();
         while (f.ready()){
             String line = f.readLine();
-            System.out.println(line);
             String[] data = line.split(",");
             int id = Integer.parseInt(data[0]);
             String name = data[1];
@@ -63,11 +62,6 @@ public class WorldMaker{
         ServerWorld w = new ServerWorld();
         addRegions(w, "EarthRegions.csv");
         return w;
-    }
-    
-    public static void main(String [] args) throws IOException{
-        makeNewEarthSP();
-        System.out.println("done");
     }
    
 }
