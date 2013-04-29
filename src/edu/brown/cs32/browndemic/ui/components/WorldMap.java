@@ -264,7 +264,7 @@ public class WorldMap extends JComponent implements MouseListener {
 		}
 		
 		if (isValid(_selected)) {
-			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, Math.abs((System.currentTimeMillis() % 3000) - 1500)/5000.0f + 0.2f));
+			//g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, Math.abs((System.currentTimeMillis() % 3000) - 1500)/5000.0f + 0.2f));
 			g2.drawImage(_highlightOverlays.get(_selected), 0, 0, null);
 			drawInfoPanel(g2);
 		}

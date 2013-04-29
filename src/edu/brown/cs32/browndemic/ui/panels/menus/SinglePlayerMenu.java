@@ -152,8 +152,6 @@ public class SinglePlayerMenu extends UIPanel {
 				//TODO: Error, invalid disease name
 			}
 			
-			System.out.println("Start game with:\n\tDisease: " + disease + "\n\tName: " + name);
-			
 			MainWorld w;
 			try {
 				w = WorldMaker.makeNewEarthSP();
