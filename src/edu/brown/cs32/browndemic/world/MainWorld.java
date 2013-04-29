@@ -244,6 +244,9 @@ public class MainWorld implements Serializable, World{
     public void updateKilled(){
         long dead = 0;
         List<Long> deaths = new ArrayList<>();
+        for (int i = 0; i < _diseases.size(); i++){
+            deaths.add(0L);
+        }
         for (Region r : _regions){
             List<Long> rKills = r.getKilled();
             for (int i = 0; i < rKills.size(); i++){
@@ -263,6 +266,9 @@ public class MainWorld implements Serializable, World{
     public void updateInfected(){
         long infected = 0L;
         List<Long> infects = new ArrayList<>();
+        for (int i = 0; i < _diseases.size(); i++){
+            infects.add(0L);
+        }
         for (Region r : _regions){
             List<Long> rInfected = r.getInfected();
             for (int i = 0; i < rInfected.size(); i++){
