@@ -287,18 +287,18 @@ public class WorldMap extends JComponent implements MouseListener {
 	}
 	
 	private void drawChoosePanel(Graphics2D g2) {
-		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .9f));
+		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .8f));
 		g2.setColor(Color.BLACK);
-		g2.fillRect(0, getHeight() - 40, getWidth(), 40);
+		g2.fillRect(400, getHeight() - 40, getWidth() - 510, 40);
 
 		g2.setColor(Colors.RED_TEXT);
 		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
 		g2.setFont(Fonts.BIG_TEXT);
-		g2.drawString("Choose a Starting Location", 250, getHeight() - 10);
+		g2.drawString("Choose a Starting Location", 410, getHeight() - 10);
 	}
 	
 	private void drawInfoPanel(Graphics2D g2) {
-		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .9f));
+		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .8f));
 		g2.setColor(Color.BLACK);
 		g2.fillRect(0, getHeight() - 100, 275, 100);
 

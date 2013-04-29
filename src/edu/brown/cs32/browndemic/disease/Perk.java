@@ -522,4 +522,9 @@ public class Perk implements Serializable{
      return true;
 
   }
+  
+  @Override
+  public String toString() {
+	  return _name;
+  }
 }

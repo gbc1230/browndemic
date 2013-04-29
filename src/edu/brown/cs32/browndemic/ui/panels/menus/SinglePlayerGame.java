@@ -72,15 +72,13 @@ public class SinglePlayerGame extends UIPanel {
 		
 		add(info);
 		
-		//add(Box.createGlue());
-		
 		add(_map);
 		
 		JPanel bottom = new JPanel();
 		bottom.setBackground(Color.GREEN);
 		bottom.setLayout(new BoxLayout(bottom, BoxLayout.X_AXIS));
 		
-		bottom.add(new UpgradePanel(null));
+		bottom.add(new UpgradePanel(_world.getDiseases().get(_disease)));
 		bottom.add(new ChatPanel(new DumbChatServer()));
 		
 		add(bottom);
