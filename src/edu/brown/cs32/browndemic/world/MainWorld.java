@@ -18,7 +18,7 @@ import edu.brown.cs32.browndemic.region.RegionTransmission;
  *
  * @author gcarling
  */
-public class MainWorld implements Serializable, World{
+public class MainWorld extends Thread implements Serializable, World{
 
     //ArrayList of Regions
     protected List<Region> _regions;
@@ -223,22 +223,6 @@ public class MainWorld implements Serializable, World{
     }
     
     /**
-     * Once the world has been initialized, starts the world
-     */
-    public void start(){
-        for (int i = 0; i < _diseases.size(); i++){
-            _cures.add(0.0);
-            _sent.add(false);
-            _cured.add(false);
-        }
-        for (Region r : _regions){
-            _population += r.getPopulation();
-        }
-        _paused = false;
-        run();
-    }
-    
-    /**
      * Updates the number of people killed by all diseases
      */
     public void updateKilled(){
@@ -394,7 +378,19 @@ public class MainWorld implements Serializable, World{
     /**
      * Runs the game
      */
+    @Override
     public void run(){
+        for (int i = 0; i < _diseases.size(); i++){
+            _cures.add(0.0);
+            _kills.add(0L);
+            _infects.add(0L);
+            _sent.add(false);
+            _cured.add(false);
+        }
+        for (Region r : _regions){
+            _population += r.getPopulation();
+        }
+        _paused = false;
         while (!_gameOver){
             if (!_paused){
                 long start = System.currentTimeMillis();
