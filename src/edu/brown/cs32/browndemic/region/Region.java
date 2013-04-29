@@ -485,11 +485,10 @@ public class Region {
         for (int i = 0; i < _numDiseases; i++) {
             long num = 0L;
             if (_diseases[i] != null) {
-                for (InfWrapper inf : _hash.getAllOfType(i,1)) {
+                for (InfWrapper inf : _hash.getAllOfType(i,1))
                     num += inf.getInf();
-                }
             }
-            infected.add(i, num);
+            infected.add(num);
         }
         return infected;
     }
