@@ -389,6 +389,7 @@ public class MainWorld extends Thread implements Serializable, World{
         }
         for (Region r : _regions){
             _population += r.getPopulation();
+            r.setNumDiseases(_diseases.size());
         }
         _paused = false;
         while (!_gameOver){
