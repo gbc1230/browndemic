@@ -290,6 +290,14 @@ public class MainWorld extends Thread implements Serializable, World{
     public void updateNews(){
         for (Region r : _regions){
             _news.addAll(r.getNews());
+            r.clearNews();
+        }
+    }
+    
+    public void updateTransmissions(){
+        for (Region r : _regions){
+            _transmissions.addAll(r.getTransmissions());
+            r.clearTransmissions();
         }
     }
     
@@ -387,7 +395,9 @@ public class MainWorld extends Thread implements Serializable, World{
         mutateDiseases();
         updateKilled();
         updateInfected();
-        //updateCures();
+        updateCures();
+        updateNews();
+        updateTransmissions();
         checkCures();
         updateCured();
     }

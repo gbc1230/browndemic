@@ -5,6 +5,8 @@
 
 package edu.brown.cs32.browndemic;
 
+import edu.brown.cs32.browndemic.ui.BrowndemicFrame;
+
 /**
  *
  * @author gcarling
@@ -14,8 +16,8 @@ public class Main {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
-        System.out.println("test");
+    public static void main(String[] args){
+        new BrowndemicFrame();
     }
 
 }
