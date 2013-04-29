@@ -258,7 +258,8 @@ public class Region {
     public void awarenessCheck() {
         //TODO flesh this out, the values used here are complete guesses
         for(int i = 0; i < _numDiseases; i++){
-            double awareMax = _diseases[i].getMaxVisibility()*_population*_INFDOUBLETIME;
+//            double awareMax = _diseases[i].getMaxVisibility()*_population*_INFDOUBLETIME;
+            double awareMax = 280*_population*_INFDOUBLETIME;
             boolean closePorts = (_awareness[i] > awareMax / 2);
             if (closePorts  && !(_air == 0 && _sea == 0)) {
                 _air = 0;
