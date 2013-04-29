@@ -1,6 +1,8 @@
 package edu.brown.cs32.browndemic.disease;
 
 import java.io.Serializable;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * This is the abstract disease class which contains all the necessary
@@ -201,6 +203,18 @@ public abstract class Disease implements Serializable{
      */
     public int getPoints(){
         return _points;
+    }
+    
+    /**
+     * Get all available perks for this disease
+     */
+    public List<Perk> getAvailablePerks(){
+        List<Perk> ans = new ArrayList<>();
+        for (Perk p : _perks){
+            if (p.isAvail())
+                ans.add(p);
+        }
+        return ans;
     }
     
     /**
