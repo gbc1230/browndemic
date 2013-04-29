@@ -357,6 +357,13 @@ public abstract class Disease implements Serializable{
     public abstract double getMaxLethality();
 
     /**
+     * gets the maximum visibility a disease can have if it buys all
+     * visbility-positive perks
+     * @return MAX_LETHALITY
+     */
+    public abstract double getMaxVisibility();
+
+    /**
      * The cumulative method that sells every perk that is exlusively relies on
      * perkID to be owned at the time of selling.
      * @param perkID                           the ID of the root perk being sold

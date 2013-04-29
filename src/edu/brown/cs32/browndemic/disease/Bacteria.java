@@ -13,6 +13,8 @@ public class Bacteria extends Disease{
 
     final private double MAX_INFECTIVITY = 59;
     final private double MAX_LETHALITY = 217;
+    final private double MAX_VISIBILITY = 279;
+
     public Bacteria(String tempname){
     
         this._name = tempname;
@@ -112,6 +114,11 @@ public class Bacteria extends Disease{
     @Override
     public double getMaxLethality() {
         return this.MAX_LETHALITY;
+    }
+
+    @Override
+    public double getMaxVisibility() {
+        return this.MAX_VISIBILITY;
     }
     
 }

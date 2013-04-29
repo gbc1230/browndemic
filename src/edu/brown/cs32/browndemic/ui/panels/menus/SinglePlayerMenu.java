@@ -71,6 +71,7 @@ public class SinglePlayerMenu extends UIPanel {
 		diseaseNameLabel.setFont(Fonts.BIG_TEXT);
 		diseaseNameLabel.setForeground(Colors.RED_TEXT);
 		_diseaseName = new JTextField();
+		Utils.setDefaultLook(_diseaseName);
 		_diseaseName.setFont(Fonts.BIG_TEXT);
 		_diseaseName.setForeground(Colors.RED_TEXT);
 		_diseaseName.setBackground(Colors.MENU_BACKGROUND);
