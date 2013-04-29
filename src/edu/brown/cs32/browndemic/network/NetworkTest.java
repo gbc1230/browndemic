@@ -60,6 +60,9 @@ public class NetworkTest implements Runnable{
                 else if (line.startsWith("W")){
                     _serverWorld.addCommand();
                 }
+                else if (line.startsWith(("D"))){
+                    _client1.stop();
+                }
             }
             catch(IOException e){
                 System.out.println("Couldn't read line.");
