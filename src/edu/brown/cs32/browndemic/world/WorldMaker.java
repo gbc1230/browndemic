@@ -50,13 +50,13 @@ public class WorldMaker{
     
     public static MainWorld makeNewEarthSP() throws IOException{
         MainWorld w = new MainWorld();
-        addRegions(w, "EarthRegions.tsv");
+        addRegions(w, "EarthRegions.csv");
         return w;
     }
     
     public static ServerWorld makeNewEarthServer() throws IOException{
         ServerWorld w = new ServerWorld();
-        addRegions(w, "EarthRegions.tsv");
+        addRegions(w, "EarthRegions.csv");
         return w;
     }
    

@@ -104,6 +104,11 @@ public class ClientWorld implements ChatServer, World{
     }
     
     @Override
+    public Region getRegion(String name){
+        return _world.getRegion(name);
+    }
+    
+    @Override
     public long getDead(){
         return _world.getDead();
     }

@@ -50,6 +50,9 @@ public interface World {
     //get all regions
     public List<Region> getRegions();
     
+    //get a region by name
+    public Region getRegion(String name);
+    
     //get all diseases
     public List<Disease> getDiseases();
     

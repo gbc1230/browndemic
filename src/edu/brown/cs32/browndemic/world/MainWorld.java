@@ -23,11 +23,11 @@ public class MainWorld implements Serializable, World{
     //ArrayList of Regions
     protected List<Region> _regions;
     
-    //various population stats
-    protected long _population, _infected, _dead;
+    //various population stats - and time for waiting on the loop
+    protected long _population, _infected, _dead, _waitTime;
 
     //Hashtable pairing Region names to their index in _regions
-    protected HashMap<String, Integer> _regIndex;
+    protected HashMap<String, Region> _regIndex;
 
     //An ArrayList of all diseases present in this world
     protected List<Disease> _diseases;
@@ -51,7 +51,7 @@ public class MainWorld implements Serializable, World{
     protected List<String> _news;
     
     //whether or not the game is still going on
-    protected boolean _gameOver;
+    protected boolean _gameOver, _paused;
     
     //for keeping track of transmissions
     protected List<RegionTransmission> _transmissions;
@@ -76,6 +76,8 @@ public class MainWorld implements Serializable, World{
         _dead = 0;
         _infected = 0;
         _gameOver = false;
+        _waitTime = 333L;
+        _paused = true;
     }
     
     /**
@@ -106,7 +108,7 @@ public class MainWorld implements Serializable, World{
      */
     public void addRegion(Region r){
         _regions.add(r);
-        _regIndex.put(r.getName(), _regions.size());
+        _regIndex.put(r.getName(), r);
     }
 
     /**
@@ -161,6 +163,11 @@ public class MainWorld implements Serializable, World{
     }
     
     @Override
+    public Region getRegion(String name){
+        return _regIndex.get(name);
+    }
+    
+    @Override
     public List<Disease> getDiseases(){
         return _diseases;
     }
@@ -173,6 +180,23 @@ public class MainWorld implements Serializable, World{
     @Override
     public List<String> getNews(){
         return _news;
+    }
+    
+    public void setSpeed(int time){
+        if (time == 1)
+            _waitTime = 500L;
+        else if (time == 2)
+            _waitTime = 333L;
+        else if (time == 3)
+            _waitTime = 175L;
+    }
+    
+    public void pause(){
+        _paused = true;
+    }
+    
+    public void unpause(){
+        _paused = false;
     }
     
     @Override
@@ -205,6 +229,7 @@ public class MainWorld implements Serializable, World{
         for (Region r : _regions){
             _population += r.getPopulation();
         }
+        _paused = false;
         run();
     }
     
@@ -372,9 +397,9 @@ public class MainWorld implements Serializable, World{
                 break;
             }
             long end = System.currentTimeMillis();
-            long wait = end - start;
+            long offset = end - start;
             try{
-                Thread.sleep(333L - wait);
+                Thread.sleep(_waitTime - offset);
             }
             catch(InterruptedException e){
                 System.out.println("Couldn't sleep...");
