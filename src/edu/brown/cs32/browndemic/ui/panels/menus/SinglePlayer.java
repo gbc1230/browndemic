@@ -3,6 +3,7 @@ package edu.brown.cs32.browndemic.ui.panels.menus;
 import java.awt.Dimension;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.io.IOException;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -11,6 +12,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import edu.brown.cs32.browndemic.disease.Bacteria;
+import edu.brown.cs32.browndemic.disease.Virus;
 import edu.brown.cs32.browndemic.ui.BrowndemicFrame;
 import edu.brown.cs32.browndemic.ui.Resources;
 import edu.brown.cs32.browndemic.ui.UIConstants.Colors;
@@ -24,6 +27,7 @@ import edu.brown.cs32.browndemic.ui.components.HoverLabel;
 import edu.brown.cs32.browndemic.ui.components.SelectButton;
 import edu.brown.cs32.browndemic.ui.panels.UIPanel;
 import edu.brown.cs32.browndemic.ui.panels.titlebars.BackTitleBar;
+import edu.brown.cs32.browndemic.world.MainWorld;
 import edu.brown.cs32.browndemic.world.WorldMaker;
 
 public class SinglePlayer extends UIPanel {
@@ -85,6 +89,7 @@ public class SinglePlayer extends UIPanel {
 		JPanel disease = new JPanel();
 		disease.setLayout(new BoxLayout(disease, BoxLayout.X_AXIS));
 		disease.setBackground(Colors.TRANSPARENT);
+		disease.setOpaque(false);
 
 		_disease1 = new SelectButton(Resources.getImage(Images.DISEASE1), Resources.getImage(Images.DISEASE1_SELECTED));
 		_disease2 = new SelectButton(Resources.getImage(Images.DISEASE2), Resources.getImage(Images.DISEASE2_SELECTED));
@@ -148,7 +153,20 @@ public class SinglePlayer extends UIPanel {
 			
 			System.out.println("Start game with:\n\tDisease: " + disease + "\n\tName: " + name);
 			
-			Utils.getParentFrame(this).setPanel(new SinglePlayerGame(WorldMaker.makeNewEarthSP()));
+			MainWorld w;
+			try {
+				w = WorldMaker.makeNewEarthSP();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+				return;
+			}
+			if (disease == 1)
+				w.addDisease(new Bacteria(name));
+			if (disease == 2)
+				w.addDisease(new Virus(name));
+			
+			Utils.getParentFrame(this).setPanel(new SinglePlayerGame(w, 0));
 		} else if (e.getSource() == _load) {
 			File saves = new File("saves");
 			saves.mkdir();
@@ -158,7 +176,7 @@ public class SinglePlayer extends UIPanel {
 			if (fc.showOpenDialog(Utils.getParentFrame(this)) == JFileChooser.APPROVE_OPTION) {
 				System.out.println("LOAD FROM: " + fc.getSelectedFile());
 				// TODO: Load file
-				Utils.getParentFrame(this).setPanel(new SinglePlayerGame(null));
+				Utils.getParentFrame(this).setPanel(new SinglePlayerGame(null, 0));
 			}
 		}
 	}
