@@ -26,15 +26,18 @@ public class Region {
 
     //ArrayList of diseases in this Region
     private ArrayList<Disease> _diseases;
+    
+    //number of diseases in game
+    private int _numDiseases;
+    
+    //Custom HashMap to keep track of overlapping infected populations
+    private ZeroOneHash _hash;
 
     //Total Region Population
     private long _population;
 
     //Healthy population count
     private long _healthy;
-
-    //ArrayList of infected, order corresponds to the diseases in _disease
-    private ArrayList<Long> _infected;
 
     //ArrayList of dead, order corresponds to the diseases in _disease
     private ArrayList<Long> _dead;
@@ -85,7 +88,6 @@ public class Region {
         _ID = ID;
         _population = population;
         _healthy = population;
-        _infected = new ArrayList<Long>();
         _dead = new ArrayList<Long>();
         _cured = new ArrayList<Long>();
         _hasCure = new ArrayList<Boolean>();
@@ -133,7 +135,7 @@ public class Region {
      * @param pop the population to infect
      * @return how many to infect
      */
-    public int getInfected(int d, long pop) {
+    public int getNumInfected(int d, long pop) {
         int number = 0;
         //TODO calculate number of pop infected.
         return number;
@@ -144,13 +146,19 @@ public class Region {
      * @param d the index of the disease
      */
     public void infectHealthy(int d) {
-        long infect = getInfected(d, _healthy);
-        if (infect > _healthy) {
-            _infected.set(d, _infected.get(d) + _healthy);
+        long number = getNumInfected(d, _healthy);
+        String id = "";
+        for(int i = 0; i < _numDiseases; i++){
+            if(i == d)
+                id += "1";
+            else id += "0";
+        }
+        if (number > _healthy) {
+            _hash.put(new InfWrapper(id, _hash.get(id).getInf() + _healthy));
             _healthy = 0;
         } else {
-            _infected.set(d, _infected.get(d) + infect);
-            _healthy -= infect;
+            _hash.put(new InfWrapper(id, _hash.get(id).getInf() + number));
+            _healthy -= number;
         }
     }
 
@@ -178,13 +186,16 @@ public class Region {
      **/
     public void kill(Disease disease) {
         int index = disease.getID();
-        int number = (int) (disease.getLethality() * _infected.get(index));
-        if (_infected.get(index) < number) {
-            _dead.set(index, _dead.get(index) + _healthy);
-            _infected.set(index, 0L);
+        ArrayList<InfWrapper> updated = new ArrayList<InfWrapper>();
+        for(InfWrapper inf : _hash.getAllIndex(index)){
+        long number = (long) (disease.getLethality() * inf.getInf());
+        if (inf.getInf() < number) {
+            _dead.set(index, _dead.get(index) + inf.getInf());
+            updated.add(new InfWrapper(inf.getID(), 0L));
         } else {
             _dead.set(index, _dead.get(index) + number);
-            _infected.set(index, _infected.get(index) - number);
+            updated.add(new InfWrapper(inf.getID(), inf.getInf() - number));
+        }
         }
     }
 
@@ -207,13 +218,21 @@ public class Region {
     public void cure(Disease d) {
         int index = d.getID();
         if (_hasCure.get(index) == true) {
-            long number = getNumCured(index, _infected.get(index));
-            if (_infected.get(index) < number) {
-                _cured.set(index, _cured.get(index) + _infected.get(index));
-                _infected.set(index, 0L);
-            } else {
-                _cured.set(index, _cured.get(index) + number);
-                _infected.set(index, _infected.get(index) - number);
+            ArrayList<InfWrapper> infected = _hash.getAllIndex(index);
+            ArrayList<InfWrapper> updated = new ArrayList<InfWrapper>();
+            for(InfWrapper inf : infected){
+                long number = getNumCured(index, inf.getInf());
+                if (inf.getInf() < number) {
+                    _cured.set(index, _cured.get(index) + inf.getInf());
+                    String id = inf.getID().substring(0,index) + "0" + inf.getID().substring(index + 1);
+                    updated.add(new InfWrapper(inf.getID(), 0L));
+                    updated.add(new InfWrapper(id, _hash.get(id).getInf() + inf.getInf()));
+             } else {
+                 _cured.set(index, _cured.get(index) + number);
+                 String id = inf.getID().substring(0,index) + "0" + inf.getID().substring(index + 1);
+                    updated.add(new InfWrapper(inf.getID(), inf.getInf() - number));
+                    updated.add(new InfWrapper(id, _hash.get(id).getInf() + number));
+                }
             }
         }
     }
@@ -233,10 +252,9 @@ public class Region {
     
     public void updateAwareness(Disease d){
         int index = d.getID();
-        //awareness += vis*(infected + dead)
-        //TODO update this if infected can overlap
+        //TODO awareness += vis*(infected + dead)
         _awareness.set(index, _awareness.get(index) + d.getVisibility()
-                * (_infected.get(index) + _dead.get(index)));
+                * (getInfected().get(index) + _dead.get(index)));
     }
 
     public void updateWealth(Disease d){
@@ -262,7 +280,15 @@ public class Region {
      */
     public void introduceDisease(Disease d) {
         int index = d.getID();
-        _infected.add(index, 1L);
+        String ID = "";
+        for(int i = 0; i < _numDiseases; i++){
+            if(i == index)
+                ID += "1";
+            else ID += "0";
+        }
+        ArrayList<InfWrapper> list = new ArrayList<InfWrapper>();
+        list.add(new InfWrapper(ID,1L));
+        _hash.putAllInf(list);
         _dead.add(index, 0L);
         _cured.add(index, 0L);
         _hasCure.add(index, false);
@@ -388,6 +414,10 @@ public class Region {
     public boolean hasDisease(Disease d) {
         return (_diseases.size() < d.getID() || _diseases.get(d.getID()) == null);
     }
+    
+    public void setNumDiseases(int num){
+        _numDiseases = num;
+    }
 
     /**
      * getAir() gets a the number of open airports in this Region
@@ -434,7 +464,27 @@ public class Region {
      * @return _infected
      */
     public ArrayList<Long> getInfected() {
-        return _infected;
+        ArrayList<Long> infected = new ArrayList<Long>();
+        for(int i = 0; i < _numDiseases; i++){
+            long num = 0;
+            for(InfWrapper inf : _hash.getAllIndex(i))
+                num += inf.getInf();
+            infected.add(i,num);
+        }
+        return infected;
+    }
+    
+    /**
+     * getTotalInfected() gets the total number of infected people in this Region
+     * @return
+     */
+    public Long getTotalInfected() {
+        long num = 0;
+        for(int i = 0; i < _numDiseases; i++){
+            for(InfWrapper inf : _hash.getAllIndex(i))
+                num += inf.getInf();
+        }
+        return num;
     }
 
     /**
@@ -488,7 +538,7 @@ public class Region {
      */
     @Override
     public String toString() {
-        return _name + ", healthy: " + _healthy + ", infected: " + _infected +
+        return _name + ", healthy: " + _healthy + ", infected: " + getTotalInfected() +
                 ", dead: " + _dead;
     }
 
