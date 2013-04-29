@@ -5,10 +5,10 @@
 
 package edu.brown.cs32.browndemic.world;
 
-import java.util.List;
-import java.util.HashMap;
-import java.util.ArrayList;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import edu.brown.cs32.browndemic.disease.Disease;
 import edu.brown.cs32.browndemic.region.Region;
@@ -165,6 +165,11 @@ public class MainWorld implements Serializable, World{
     @Override
     public Region getRegion(String name){
         return _regIndex.get(name);
+    }
+    
+    @Override
+    public Region getRegion(int id) {
+    	return _regions.get(id-1);
     }
     
     @Override

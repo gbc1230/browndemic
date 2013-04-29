@@ -30,19 +30,20 @@ import javax.swing.JComponent;
 import javax.swing.SwingWorker;
 import javax.swing.Timer;
 
+import edu.brown.cs32.browndemic.region.Region;
 import edu.brown.cs32.browndemic.ui.Resources;
 import edu.brown.cs32.browndemic.ui.Settings;
 import edu.brown.cs32.browndemic.ui.UIConstants.Colors;
 import edu.brown.cs32.browndemic.ui.UIConstants.Fonts;
 import edu.brown.cs32.browndemic.ui.UIConstants.Images;
 import edu.brown.cs32.browndemic.ui.actions.Action;
-import edu.brown.cs32.browndemic.world.World;
+import edu.brown.cs32.browndemic.world.MainWorld;
 
 public class WorldMap extends JComponent implements MouseListener {
 
 	private static final long serialVersionUID = -4481136165457141240L;
 	
-	private World _world;
+	private MainWorld _world;
 	private BufferedImage _map, _regions;
 	private Map<Integer, BufferedImage> _diseaseOverlays = new HashMap<>();
 	private Map<Integer, BufferedImage> _highlightOverlays = new HashMap<>();
@@ -50,21 +51,27 @@ public class WorldMap extends JComponent implements MouseListener {
 	private Map<Integer, AlphaComposite> _composites = new HashMap<>();
 	private ArrayList<Location> _airports = new ArrayList<>();
 	private List<MovingObject> _objects = new ArrayList<>();
-	private int _selected;
+	private int _selected, _disease;
+	private boolean _chooseMode;
 	
 	private static final double AIRPLANE_SPEED = 6.0;
 	
-	public WorldMap(World _world2, BufferedImage map, BufferedImage regions) {
+	public WorldMap(MainWorld _world2, BufferedImage map, BufferedImage regions, int disease) {
 		super();
 		_world = _world2;
 		_map = map;
 		_regions = regions;
 		_selected = 0;
+		_disease = disease;
 		addMouseListener(this);
 		setPreferredSize(new Dimension(map.getWidth(), map.getHeight()));
 		setMaximumSize(new Dimension(map.getWidth(), map.getHeight()));
 		setMinimumSize(new Dimension(map.getWidth(), map.getHeight()));
 		new Timer(1000/60, new RepaintListener()).start();
+	}
+	
+	public void setChooseMode(boolean chooseMode) {
+		_chooseMode = chooseMode;
 	}
 	
 	public class Loader extends SwingWorker<Void, Void> {
@@ -228,14 +235,30 @@ public class WorldMap extends JComponent implements MouseListener {
 		
 		g.drawImage(_map, 0, 0, null);
 		
-		for (Map.Entry<Integer, BufferedImage> e : _diseaseOverlays.entrySet()) {
-			float percentInfected = (e.getKey() % 20)/20.0f;//(System.currentTimeMillis() + e.getKey() * 1000) % 5000 / 5000.0f; //TODO: _world.getPercentInfected(e.getKey());
-			if (percentInfected != _infected.get(e.getKey())) {
-				_composites.put(e.getKey(), AlphaComposite.getInstance(AlphaComposite.SRC_OVER, percentInfected/2.0f));
+		if (!_chooseMode) {
+			for (Map.Entry<Integer, BufferedImage> e : _diseaseOverlays.entrySet()) {
+				Region r = _world.getRegion(e.getKey());
+				float percentInfected = 0f;
+				if (r != null) {
+					try {
+						percentInfected = (float)r.getInfected().get(_disease) / (float)r.getPopulation();
+					} catch (IndexOutOfBoundsException e1) {
+						percentInfected = 0f;
+					}
+					if (percentInfected > 0f && percentInfected < .2f) percentInfected = .2f;
+				}
+				if (percentInfected != _infected.get(e.getKey())) {
+					_composites.put(e.getKey(), AlphaComposite.getInstance(AlphaComposite.SRC_OVER, percentInfected/2.0f));
+					_infected.put(e.getKey(), percentInfected);
+				}
+				g2.setComposite(_composites.get(e.getKey()));
+				g2.drawImage(e.getValue(), 0, 0, null);
+	
 			}
-			g2.setComposite(_composites.get(e.getKey()));
-			g2.drawImage(e.getValue(), 0, 0, null);
-
+		}
+			
+		if (_chooseMode) {
+			drawChoosePanel(g2);
 		}
 		
 		if (isValid(_selected)) {
@@ -261,6 +284,17 @@ public class WorldMap extends JComponent implements MouseListener {
 		_objects.add(airplane);
 	}
 	
+	private void drawChoosePanel(Graphics2D g2) {
+		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .9f));
+		g2.setColor(Color.BLACK);
+		g2.fillRect(0, getHeight() - 40, getWidth(), 40);
+
+		g2.setColor(Colors.RED_TEXT);
+		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+		g2.setFont(Fonts.BIG_TEXT);
+		g2.drawString("Choose a Starting Location", 250, getHeight() - 10);
+	}
+	
 	private void drawInfoPanel(Graphics2D g2) {
 		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .9f));
 		g2.setColor(Color.BLACK);
@@ -269,11 +303,23 @@ public class WorldMap extends JComponent implements MouseListener {
 		g2.setColor(Colors.RED_TEXT);
 		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
 		g2.setFont(Fonts.NORMAL_TEXT);
-		g2.drawString("This is a long Country name (" + _selected + ")", 5, getHeight() - 80);
+		Region r = _world.getRegion(_selected);
+		String name = "";
+		long infected = 0, dead = 0, total = 1;
+		
+		if (r != null) {
+			name = r.getName();
+			for (long l : r.getInfected())
+				infected += l;
+			for (long l : r.getKilled())
+				dead += l;
+			total = r.getPopulation();
+		}
+		g2.drawString(name, 5, getHeight() - 80);
 
-		g2.drawString("Infected: 100,000 (10%)", 15, getHeight() - 55);
-		g2.drawString("Dead: 20,000 (2%)", 15, getHeight() - 35);
-		g2.drawString("Total: 1,000,000", 15, getHeight() - 15);
+		g2.drawString(String.format("Infected: %d (%.2f%%)", infected, (double)infected/(double)total), 15, getHeight() - 55);
+		g2.drawString(String.format("Dead: %d (%.2f%%)", dead, (double)dead/(double)total), 15, getHeight() - 35);
+		g2.drawString(String.format("Total: %d", total), 15, getHeight() - 15);
 	}
 	
 	private class RepaintListener implements ActionListener {
@@ -308,6 +354,11 @@ public class WorldMap extends JComponent implements MouseListener {
 
 		int id = getID(p.x, p.y);
 		if (isValid(id)) {
+			if (_chooseMode) {
+				_world.getRegion(id).introduceDisease(_world.getDiseases().get(_disease));
+				_world.start();
+				_chooseMode = false;
+			}
 			setSelection(id);
 		} else {
 			setSelection(0);

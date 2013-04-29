@@ -27,19 +27,22 @@ import edu.brown.cs32.browndemic.ui.components.HoverLabel;
 import edu.brown.cs32.browndemic.ui.components.SelectButton;
 import edu.brown.cs32.browndemic.ui.panels.DragWindow;
 import edu.brown.cs32.browndemic.ui.panels.menus.MainMenu;
-import edu.brown.cs32.browndemic.world.World;
+import edu.brown.cs32.browndemic.world.MainWorld;
 
-public class SinglePlayerTitleBar extends TitleBar {
+public class InGameTitleBar extends TitleBar {
 
 	private static final long serialVersionUID = -8926559135273305855L;
 	
-	JLabel minimize; 
-	SelectButton pause, play1, play2, play3;
-	JMenuItem quit, save, exit;
-	World _world;
+	private JLabel minimize; 
+	private SelectButton pause, play1, play2, play3;
+	private JMenuItem quit, save, exit;
+	private MainWorld _world;
+	private boolean _single;
 	
-	public SinglePlayerTitleBar(World world) {
+	public InGameTitleBar(MainWorld world, boolean singlePlayer) {
 		super();
+		_world = world;
+		_single = singlePlayer;
 		makeUI();
 	}
 	
@@ -66,13 +69,15 @@ public class SinglePlayerTitleBar extends TitleBar {
 		quit.setForeground(Colors.RED_TEXT);
 		menu.add(quit);
 
-		save = new JMenuItem("Save");
-		save.addMouseListener(this);
-		save.setFont(Fonts.TITLE_BAR);
-		save.setBackground(Colors.MENU_BACKGROUND);
-		save.setForeground(Colors.RED_TEXT);
-		menu.add(save);
-		
+		if (_single) {
+			save = new JMenuItem("Save");
+			save.addMouseListener(this);
+			save.setFont(Fonts.TITLE_BAR);
+			save.setBackground(Colors.MENU_BACKGROUND);
+			save.setForeground(Colors.RED_TEXT);
+			menu.add(save);
+		}
+			
 		exit = new JMenuItem("Exit");
 		exit.addMouseListener(this);
 		exit.setFont(Fonts.TITLE_BAR);
@@ -87,24 +92,25 @@ public class SinglePlayerTitleBar extends TitleBar {
 		
 		add(Box.createRigidArea(new Dimension(UI.TITLE_HEIGHT, UI.TITLE_HEIGHT)));
 
-		pause = new SelectButton(Resources.getImage(Images.PAUSE), Resources.getImage(Images.PAUSE_HOVER));
-		play1 = new SelectButton(Resources.getImage(Images.PLAY1), Resources.getImage(Images.PLAY1_HOVER));
-		play2 = new SelectButton(Resources.getImage(Images.PLAY2), Resources.getImage(Images.PLAY2_HOVER));
-		play3 = new SelectButton(Resources.getImage(Images.PLAY3), Resources.getImage(Images.PLAY3_HOVER));
-		play1.setSelected(true);
-		pause.addOnSelectAction(new SelectAction(0, play1, play2, play3));
-		play1.addOnSelectAction(new SelectAction(1, pause, play2, play3));
-		play2.addOnSelectAction(new SelectAction(2, pause, play1, play3));
-		play3.addOnSelectAction(new SelectAction(3, pause, play1, play2));
-		
-		add(pause);
-		add(Box.createRigidArea(new Dimension(5,0)));
-		add(play1);
-		add(Box.createRigidArea(new Dimension(5,0)));
-		add(play2);
-		add(Box.createRigidArea(new Dimension(5,0)));
-		add(play3);
-
+		if (_single) {
+			pause = new SelectButton(Resources.getImage(Images.PAUSE), Resources.getImage(Images.PAUSE_HOVER));
+			play1 = new SelectButton(Resources.getImage(Images.PLAY1), Resources.getImage(Images.PLAY1_HOVER));
+			play2 = new SelectButton(Resources.getImage(Images.PLAY2), Resources.getImage(Images.PLAY2_HOVER));
+			play3 = new SelectButton(Resources.getImage(Images.PLAY3), Resources.getImage(Images.PLAY3_HOVER));
+			play1.setSelected(true);
+			pause.addOnSelectAction(new SelectAction(0, play1, play2, play3));
+			play1.addOnSelectAction(new SelectAction(1, pause, play2, play3));
+			play2.addOnSelectAction(new SelectAction(2, pause, play1, play3));
+			play3.addOnSelectAction(new SelectAction(3, pause, play1, play2));
+			add(pause);
+			add(Box.createRigidArea(new Dimension(5,0)));
+			add(play1);
+			add(Box.createRigidArea(new Dimension(5,0)));
+			add(play2);
+			add(Box.createRigidArea(new Dimension(5,0)));
+			add(play3);
+		}
+			
 		add(Box.createHorizontalGlue());
 		
 		JLabel title = new JLabel(Strings.TITLE);
@@ -137,6 +143,12 @@ public class SinglePlayerTitleBar extends TitleBar {
 		public void doAction() {
 			for (SelectButton b : other) {
 				b.deSelect();
+			}
+			if (speed == 0)
+				_world.pause();
+			else {
+				_world.unpause();
+				_world.setSpeed(speed);
 			}
 		}
 		

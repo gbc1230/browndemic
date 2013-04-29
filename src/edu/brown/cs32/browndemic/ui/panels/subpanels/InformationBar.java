@@ -21,13 +21,15 @@ public class InformationBar extends BrowndemicPanel {
 	
 	private static final long serialVersionUID = 5751262776229759464L;
 	private World _world;
+	private int _disease;
 	
 	private JLabel infected, dead, total; 
 
-	public InformationBar(World w) {
+	public InformationBar(World w, int disease) {
 		super();
 		_world = w;
 		makeUI();
+		_disease = disease;
 		new Timer(1000/3, new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
