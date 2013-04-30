@@ -7,6 +7,7 @@ package edu.brown.cs32.browndemic.region;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.HashMap;
+import java.util.Random;
 
 import edu.brown.cs32.browndemic.disease.Disease;
 
@@ -28,11 +29,14 @@ public class Region {
     //ArrayList of diseases in this Region
     private Disease[] _diseases;
 
-    private int _INFDOUBLETIME = 60;
-    private double _INFSCALE = Math.pow(2.0,1.0/(double)_INFDOUBLETIME);
+    private final int _INFDOUBLETIME = 60;
+    private final double _INFSCALE = Math.pow(2.0,1.0/(double)_INFDOUBLETIME) - 1.0;
 
     //number of diseases in game
     private int _numDiseases;
+    
+    //Random number generator for this region
+    private Random _rand;
 
     //Custom HashMap to keep track of overlapping infected populations
     private PopHash _hash;
@@ -95,6 +99,7 @@ public class Region {
         _med = med;
         _transmissions = new ArrayList<RegionTransmission>();
         _news = new ArrayList<String>();
+        _rand = new Random();
     }
 
     /**
@@ -124,11 +129,11 @@ public class Region {
      */
     public long getNumInfected(int d, long pop) {
         double number = 0;
-        double wetResFactor = 1;
-        double dryResFactor = 1;
-        double heatResFactor = 1;
-        double coldResFactor = 1;
-        double medResFactor = 1;
+        double wetResFactor = 1.0;
+        double dryResFactor = 1.0;
+        double heatResFactor = 1.0;
+        double coldResFactor = 1.0;
+        double medResFactor = 1.0;
         if(_diseases[d].getWetRes() < _wet)
             wetResFactor = _diseases[d].getWetRes()/_wet;
         if(_diseases[d].getDryRes() < _dry)
@@ -140,9 +145,10 @@ public class Region {
         if(_diseases[d].getMedRes() < _med)
             medResFactor = _diseases[d].getMedRes()/_med;
         double max = _diseases[d].getMaxInfectivity();
-        number = _INFSCALE/5.0 * pop * (_diseases[d].getInfectivity() / max) *
+        double inf = getInfected().get(d);
+        number = .2 * pop * (inf/_population) * (_diseases[d].getInfectivity() / max) *
                 ( wetResFactor + dryResFactor + heatResFactor + coldResFactor + medResFactor);
-        if(Math.random()*_INFDOUBLETIME == 0)
+        if(_rand.nextInt(_INFDOUBLETIME) == 0)
             number = Math.ceil(number);
         else
             number = Math.floor(number);
@@ -288,6 +294,10 @@ public class Region {
      * @param d hte disease to introduce
      */
     public void introduceDisease(Disease d) {
+        if(_diseases[d.getID()] != null){
+            System.out.println("Introduced disease that existed already");
+            return;
+        }
         int index = d.getID();
         String ID = "";
         for (int i = 0; i < _numDiseases; i++) {
@@ -297,7 +307,8 @@ public class Region {
                 ID += "0";
             }
         }
-        _hash.put(new InfWrapper(ID, 1L));
+        _hash.put(new InfWrapper(ID, 10L));
+        _hash.addZero(_hash.getZero().getInf() - 10);
         _diseases[index] = d;
         _dead[index] = 0L;
         _hasCure[index] = false;
@@ -312,6 +323,7 @@ public class Region {
      * @param d the disease to transmit
      */
     public void transmitSeaAndAir(Disease d) {
+        //TODO revise this calc
         for (Region region : _regions.values()) {
             if (region.hasDisease(d)) {
                 continue;
@@ -320,21 +332,35 @@ public class Region {
             int sea = region.getAir();
             if (air > 0 && _air > 0) {
                 boolean transmit = false;
-                //TODO conditions for plane/sea transmit
+                for(int i = 0; i < _air; i++)
+                    if(_rand.nextInt(_INFDOUBLETIME*5) == 0)
+                        transmit = true;
+                double inf = getInfected().get(d.getID());
+                double trans = inf/_population;
+                if(transmit)
+                    transmit = trans > _rand.nextDouble();
                 if (transmit) {
                     RegionTransmission rt = new RegionTransmission(_name, region.getName(), d.getID(), true);
                     _transmissions.add(rt);
                     region.introduceDisease(d);
+                    System.out.println("Plane Trans");
                     continue;
                 }
             }
             if (sea > 0 && _sea > 0) {
                 boolean transmit = false;
-                //TODO fill in conditions for ship transmission
+                for(int i = 0; i < _sea; i++)
+                    if(_rand.nextInt(_INFDOUBLETIME*5) == 0)
+                        transmit = true;
+                double inf = getInfected().get(d.getID());
+                double trans = inf/_population;
+                if(transmit)
+                    transmit = trans > _rand.nextDouble();
                 if (transmit) {
                     RegionTransmission rt = new RegionTransmission(_name, region.getName(), d.getID(), true);
                     _transmissions.add(rt);
                     region.introduceDisease(d);
+                    System.out.println("Ship Trans");
                 }
             }
         }
@@ -351,8 +377,11 @@ public class Region {
                 continue;
             }
             boolean transmit = false;
-            //TODO fill in conditions for land transmission
+            double inf = getInfected().get(d.getID());
+            double trans = inf /_population *(d.getAirTrans() + d.getInfectivity())/311.0;
+            transmit = _rand.nextDouble() < trans;
             if (transmit) {
+                System.out.println("Land Trans");
                 region.introduceDisease(d);
             }
         }
@@ -369,8 +398,11 @@ public class Region {
                 continue;
             }
             boolean transmit = false;
-            //TODO fill in conditions for water transmission
+            double inf = getInfected().get(d.getID());
+            double trans = inf/_population * (d.getAirTrans() + d.getWaterTrans())/82;
+            transmit = _rand.nextDouble() < trans;
             if (transmit) {
+                System.out.println("Water Trans");
                 region.introduceDisease(d);
             }
         }
@@ -422,7 +454,7 @@ public class Region {
      * @return
      */
     public boolean hasDisease(Disease d) {
-        return _diseases[d.getID()] == null;
+        return _diseases[d.getID()] != null;
     }
 
     public void setNumDiseases(int num) {

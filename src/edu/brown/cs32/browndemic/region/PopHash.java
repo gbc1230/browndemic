@@ -68,7 +68,7 @@ public class PopHash {
 
     public InfWrapper getZero() {
         String id = "";
-        for (int i = 0; i < _len - 1; i++) {
+        for (int i = 0; i < _len; i++) {
             id += "0";
         }
         return _hash.get(id);
@@ -76,7 +76,7 @@ public class PopHash {
 
     public void addZero(long num) {
         String id = "";
-        for (int i = 0; i < _len - 1; i++) {
+        for (int i = 0; i < _len; i++) {
             id += "0";
         }
         _hash.put(id, new InfWrapper(id, num));
