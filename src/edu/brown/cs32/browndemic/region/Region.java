@@ -307,8 +307,8 @@ public class Region {
                 ID += "0";
             }
         }
-        _hash.put(new InfWrapper(ID, 10L));
-        _hash.addZero(_hash.getZero().getInf() - 10);
+        _hash.put(new InfWrapper(ID, 1L));
+        _hash.addZero(_hash.getZero().getInf() - 1);
         _diseases[index] = d;
         _dead[index] = 0L;
         _hasCure[index] = false;
