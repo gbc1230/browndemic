@@ -131,6 +131,14 @@ public class UIConstants {
 		public static final String MAP = IMAGE_PATH + "earth_large.png";
 		public static final String REGIONS = IMAGE_PATH + "earth_large_regions.png";
 		public static final String AIRPLANE = IMAGE_PATH + "airplane.png";
+		public static final String AIRPORT_OPEN = IMAGE_PATH + "airport_open.png";
+		public static final String AIRPORT_CLOSED = IMAGE_PATH + "airport_closed.png";
+		public static final String AIRPORT_OPEN_BIG = IMAGE_PATH + "airport_open_big.png";
+		public static final String AIRPORT_CLOSED_BIG = IMAGE_PATH + "airport_closed_big.png";
+		public static final String SEAPORT_OPEN = IMAGE_PATH + "seaport_open.png";
+		public static final String SEAPORT_CLOSED = IMAGE_PATH + "seaport_closed.png";
+		public static final String SEAPORT_OPEN_BIG = IMAGE_PATH + "seaport_open_big.png";
+		public static final String SEAPORT_CLOSED_BIG = IMAGE_PATH + "seaport_closed_big.png";
 		
 		/*
 		 * Images that should be loaded when the program starts.
@@ -165,6 +173,14 @@ public class UIConstants {
 			MAP,
 			REGIONS,
 			AIRPLANE,
+			AIRPORT_OPEN,
+			AIRPORT_CLOSED,
+			AIRPORT_OPEN_BIG,
+			AIRPORT_CLOSED_BIG,
+			SEAPORT_OPEN,
+			SEAPORT_CLOSED,
+			SEAPORT_OPEN_BIG,
+			SEAPORT_CLOSED_BIG,
 		};
 		
 	}

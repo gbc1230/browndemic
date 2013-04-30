@@ -308,6 +308,7 @@ public class WorldMap extends JComponent implements MouseListener {
 		Region r = _world.getRegion(_selected);
 		String name = "";
 		long infected = 0, dead = 0, total = 1;
+		long airports = 0, seaports = 0;
 		
 		if (r != null) {
 			name = r.getName();
@@ -316,12 +317,25 @@ public class WorldMap extends JComponent implements MouseListener {
 			for (long l : r.getKilled())
 				dead += l;
 			total = r.getPopulation();
+			airports = r.getAir();
+			seaports = r.getSea();
 		}
 		g2.drawString(name, 5, getHeight() - 80);
 
 		g2.drawString(String.format("Infected: %d (%.2f%%)", infected, (double)infected/(double)total), 15, getHeight() - 55);
 		g2.drawString(String.format("Dead: %d (%.2f%%)", dead, (double)dead/(double)total), 15, getHeight() - 35);
 		g2.drawString(String.format("Total: %d", total), 15, getHeight() - 15);
+		
+		if (airports > 0) {
+			g2.drawImage(Resources.getImage(Images.AIRPORT_OPEN_BIG), 220, getHeight() - 85, null);
+		} else {
+			g2.drawImage(Resources.getImage(Images.AIRPORT_CLOSED_BIG), 220, getHeight() - 85, null);
+		}
+		if (seaports > 0) {
+			g2.drawImage(Resources.getImage(Images.SEAPORT_OPEN_BIG), 220, getHeight() - 45, null);
+		} else {
+			g2.drawImage(Resources.getImage(Images.SEAPORT_CLOSED_BIG), 220, getHeight() - 45, null);
+		}
 	}
 	
 	private class RepaintListener implements ActionListener {

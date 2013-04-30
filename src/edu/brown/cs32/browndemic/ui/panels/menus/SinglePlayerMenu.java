@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import edu.brown.cs32.browndemic.disease.Bacteria;
+import edu.brown.cs32.browndemic.disease.Parasite;
 import edu.brown.cs32.browndemic.disease.Virus;
 import edu.brown.cs32.browndemic.ui.BrowndemicFrame;
 import edu.brown.cs32.browndemic.ui.Resources;
@@ -164,6 +165,8 @@ public class SinglePlayerMenu extends UIPanel {
 				w.addDisease(new Bacteria(name));
 			if (disease == 2)
 				w.addDisease(new Virus(name));
+			if (disease == 3)
+				w.addDisease(new Parasite(name));
 			
 			Utils.getParentFrame(this).setPanel(new GameMenu(w, 0, false));
 		} else if (e.getSource() == _load) {
