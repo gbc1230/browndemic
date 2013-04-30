@@ -33,6 +33,8 @@ public class StatPanel extends BrowndemicPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				_infectivity.setValue((int)_disease.getInfectivity());
+				_lethality.setValue((int)_disease.getLethality());
+				_visibility.setValue((int)_disease.getVisibility());
 			}
 		}).start();
 	}

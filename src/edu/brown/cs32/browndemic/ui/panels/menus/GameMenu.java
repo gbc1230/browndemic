@@ -106,7 +106,9 @@ public class GameMenu extends UIPanel {
 		
 		botRight.setForeground(Colors.RED_TEXT);
 		botRight.setFont(Fonts.TITLE_BAR);
-		botRight.addTab("Chat", new ChatPanel(new DumbChatServer()));
+		if (_multiplayer) {
+			botRight.addTab("Chat", new ChatPanel(new DumbChatServer()));
+		}
 		botRight.addTab("News", new NewsPanel(_world));
 		botRight.addTab("Stats", new StatPanel(_world.getDiseases().get(_disease)));
 		for (int i = 0; i < botRight.getTabCount(); i++) {
