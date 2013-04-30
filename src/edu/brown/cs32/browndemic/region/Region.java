@@ -181,13 +181,14 @@ public class Region {
     public void kill(Disease disease) {
         int index = disease.getID();
         for (InfWrapper inf : _hash.getAllOfType(index,1)) {
-            long number = (long) (disease.getLethality() * inf.getInf());
+            double number = (disease.getLethality()/disease.getMaxLethality()/_INFDOUBLETIME/3 * inf.getInf());
+            number = Math.floor(number);
             if (inf.getInf() < number) {
                 _dead[index] = _dead[index] + inf.getInf();
                 _hash.put(new InfWrapper(inf.getID(), 0L));
             } else {
-                _dead[index] =  _dead[index] + number;
-                _hash.put(new InfWrapper(inf.getID(), inf.getInf() - number));
+                _dead[index] =  _dead[index] + (long)number;
+                _hash.put(new InfWrapper(inf.getID(), inf.getInf() - (long)number));
             }
         }
     }
