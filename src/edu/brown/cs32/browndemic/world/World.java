@@ -62,6 +62,9 @@ public interface World {
     //tells me which diseases are cured
     public List<Boolean> getCured();
     
+    //percentage to the cure
+    public double getCurePercentage(int d);
+    
     //gets the news
     public List<String> getNews();
     

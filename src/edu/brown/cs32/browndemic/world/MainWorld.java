@@ -186,6 +186,11 @@ public class MainWorld implements Serializable, World, Runnable{
     }
     
     @Override
+    public double getCurePercentage(int d){
+    	return (_cures.get(d) / _cureTotal) * 100.0;
+    }
+    
+    @Override
     public List<String> getNews(){
         return _news;
     }
