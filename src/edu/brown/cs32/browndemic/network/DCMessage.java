@@ -18,7 +18,7 @@ public class DCMessage implements GameData{
     
     @Override
     public String getID(){
-        return "D";
+        return "DC";
     }
     
     public String getMessage(){

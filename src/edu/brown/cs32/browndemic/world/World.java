@@ -76,6 +76,11 @@ public interface World {
     
     //tells if the game is over
     public boolean isGameOver();
+    
+    //introduce a disease to a region
+    public void introduceDisease(int r, int d);
+    
+    public void addDisease(Disease d);
 
     /**
      * Lets me know if all diseases have been cured

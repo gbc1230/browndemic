@@ -8,9 +8,7 @@ import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 
 import edu.brown.cs32.browndemic.disease.Disease;
-import edu.brown.cs32.browndemic.network.ChatMessage;
-import edu.brown.cs32.browndemic.network.GameData;
-import edu.brown.cs32.browndemic.network.PerkInput;
+import edu.brown.cs32.browndemic.network.*;
 import edu.brown.cs32.browndemic.region.Region;
 import edu.brown.cs32.browndemic.region.RegionTransmission;
 import edu.brown.cs32.browndemic.ui.interfaces.ChatHandler;
@@ -27,15 +25,15 @@ public class ClientWorld implements ChatServer, World{
     //the chat handler I'm using
     private ChatHandler _handler;
     //for sending off data
-    private Queue<GameData> _data;
+    private Queue<GameData> _output;
     
     public ClientWorld(){
         super();
-        _data = new ArrayBlockingQueue<>(10);
+        _output = new ArrayBlockingQueue<>(10);
     }
     
     public GameData getNextData(){
-        return _data.poll();
+        return _output.poll();
     }
     
     public void setWorld(ServerWorld w){
@@ -53,13 +51,11 @@ public class ClientWorld implements ChatServer, World{
     public void sendMessage(String msg){
         System.out.println("Sending: " + msg);
         ChatMessage cm = new ChatMessage(msg);
-        _data.add(cm);
+        _output.add(cm);
     }
     
     public void acceptMessage(String msg){
-        //System.out.println("About to handle the message...");
-        //_handler.addMessage(msg);
-        System.out.println("Handled the message: " + msg);
+        _handler.addMessage(msg);
     }
     
     @Override
@@ -143,9 +139,21 @@ public class ClientWorld implements ChatServer, World{
     }
     
     @Override
+    public void introduceDisease(int r, int d){
+        DiseaseIntroducer di = new DiseaseIntroducer(r, d);
+        _output.add(di);
+    }
+    
+    @Override
+    public void addDisease(Disease d){
+        DiseaseAdder da = new DiseaseAdder(d);
+        _output.add(da);
+    }
+    
+    @Override
     public void addPerk(int dis, int perk, boolean buy){
         System.out.println("Adding perk: " + dis + ", " + perk + ", " + buy);
         PerkInput pi = new PerkInput(dis, perk, buy);
-        _data.add(pi);
+        _output.add(pi);
     }
 }

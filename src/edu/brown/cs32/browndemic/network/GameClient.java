@@ -67,7 +67,6 @@ public class GameClient implements Runnable{
     public void handle(GameData msg){
         String id = msg.getID();
         if (id.equals("W")){
-            System.out.println("Received a new world");
             WorldOutput wo = (WorldOutput)msg;
             _world.setWorld(wo.getWorld());
         }
@@ -75,7 +74,7 @@ public class GameClient implements Runnable{
             ChatMessage m = (ChatMessage)msg;
             _world.acceptMessage(m.getMessage());
         }
-        else if (id.equals("D")){
+        else if (id.equals("DC")){
             System.out.println("got the d");
         }
     }

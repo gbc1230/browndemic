@@ -49,8 +49,9 @@ public class MainWorld implements Serializable, World, Runnable{
     //news
     protected List<String> _news;
     
-    //whether or not the game is still going on
-    protected boolean _started, _gameOver, _paused;
+    //whether or not the game is still going on, whether the starting reigon
+    //has been picked for all diseases, whether the game is paused
+    protected boolean _started, _gameOver, _startPicked, _paused;
     
     //for keeping track of transmissions
     protected List<RegionTransmission> _transmissions;
@@ -118,6 +119,7 @@ public class MainWorld implements Serializable, World, Runnable{
      * addDisease() adds the given Disease to _diseases
      * @param d the Disease to add
      */
+    @Override
     public void addDisease(Disease d){
         int id = _diseases.size();
         _diseases.add(d);
@@ -202,6 +204,11 @@ public class MainWorld implements Serializable, World, Runnable{
             _waitTime = 200L;
         else if (time == 3)
             _waitTime = 100L;
+    }
+    
+    @Override
+    public void introduceDisease(int d, int r){
+        _regions.get(r).introduceDisease(_diseases.get(d));
     }
     
     public void pause(){
