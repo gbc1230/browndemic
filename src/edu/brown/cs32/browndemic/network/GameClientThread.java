@@ -56,8 +56,8 @@ public class GameClientThread extends Thread{
                 }
             }
         }
-        catch(Exception e){
-            System.out.println("Couldn't get it done man.");
+        catch(IOException e){
+            System.out.println("Error in GameClientThread when reading.");
         }
     }
 

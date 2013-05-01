@@ -18,7 +18,7 @@ import edu.brown.cs32.browndemic.region.RegionTransmission;
  *
  * @author gcarling
  */
-public class MainWorld implements Serializable, World, Runnable{
+public abstract class MainWorld implements Serializable, World, Runnable{
 
     //ArrayList of Regions
     protected List<Region> _regions;
@@ -37,7 +37,7 @@ public class MainWorld implements Serializable, World, Runnable{
     //also the progress towards the cure
     protected List<Long> _kills, _infects, _cures;
     
-        //winners takes care of the winners: if empty at the end of the game,
+    //winners takes care of the winners: if empty at the end of the game,
     //it signifies that all diseases were erradicated
     protected List<Integer> _winners;
     
@@ -49,15 +49,17 @@ public class MainWorld implements Serializable, World, Runnable{
     //news
     protected List<String> _news;
     
-    //whether or not the game is still going on, whether the starting reigon
-    //has been picked for all diseases, whether the game is paused
-    protected boolean _started, _gameOver, _startPicked, _paused;
+    //whether or not the game is still going on, whether the game is paused
+    protected boolean _started, _gameOver, _paused, _allDiseasesPicked;
     
     //for keeping track of transmissions
     protected List<RegionTransmission> _transmissions;
     
     //minimum ticks to a cure
     protected final int _MINCURETICKS = 540;
+    
+    //how many disease / starting regions have been picked
+    protected int _numDiseasesPicked, _numRegionsPicked;
     
     //NOTE: each index of diseases, killed, cures refers to the same disease:
     //i.e. index 2 of each refers to the disease object, how many it has killed,
@@ -94,7 +96,8 @@ public class MainWorld implements Serializable, World, Runnable{
      */
     @Override
     public void addPerk(int dis, int perk, boolean buy){
-        Disease d = _diseases.get(dis);
+        System.out.println("Adding perk: " + dis + " , " + perk +  ", " + buy);
+        /*Disease d = _diseases.get(dis);
         try{
             if (buy)
                 d.buyPerk(perk);
@@ -103,7 +106,7 @@ public class MainWorld implements Serializable, World, Runnable{
         }
         catch(IllegalAccessException e){
             
-        }
+        }*/
     }
     
     /**
@@ -121,6 +124,7 @@ public class MainWorld implements Serializable, World, Runnable{
      */
     @Override
     public void addDisease(Disease d){
+        System.out.println("Adding a disease: " + d.getName());
         int id = _diseases.size();
         _diseases.add(d);
         d.setID(id);
@@ -150,7 +154,7 @@ public class MainWorld implements Serializable, World, Runnable{
      */
     @Override
     public long getInfected(){
-        return _infected - _dead;
+        return _infected;
     }
 
     /**
@@ -208,7 +212,14 @@ public class MainWorld implements Serializable, World, Runnable{
     
     @Override
     public void introduceDisease(int d, int r){
-        _regions.get(r).introduceDisease(_diseases.get(d));
+        System.out.println("Introducing " + d + " to " + r);
+//        _regions.get(r).introduceDisease(_diseases.get(d));
+//        _numRegionsPicked++;
+    }
+    
+    @Override
+    public boolean allDiseasesPicked(){
+        return _allDiseasesPicked;
     }
     
     public void pause(){
@@ -436,6 +447,8 @@ public class MainWorld implements Serializable, World, Runnable{
      */
     @Override
     public void run(){
+        while(_numRegionsPicked < _diseases.size()){
+        }
         while (!_gameOver){
             if (!_paused){
                 long start = System.currentTimeMillis();

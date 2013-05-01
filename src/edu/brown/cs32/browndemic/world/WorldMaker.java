@@ -53,8 +53,8 @@ public class WorldMaker{
         }
     }
     
-    public static MainWorld makeNewEarthSP() throws IOException{
-        MainWorld w = new MainWorld();
+    public static WorldSP makeNewEarthSP() throws IOException{
+        WorldSP w = new WorldSP();
         addRegions(w, "EarthRegions.csv");
         return w;
     }

@@ -55,7 +55,8 @@ public class ClientWorld implements ChatServer, World{
     }
     
     public void acceptMessage(String msg){
-        _handler.addMessage(msg);
+        System.out.println("Accepting message: " + msg);
+        //_handler.addMessage(msg);
     }
     
     @Override
@@ -142,6 +143,17 @@ public class ClientWorld implements ChatServer, World{
     public void introduceDisease(int r, int d){
         DiseaseIntroducer di = new DiseaseIntroducer(r, d);
         _output.add(di);
+    }
+    
+    @Override
+    public void changeDiseasesPicked(int c){
+        DiseasePicked dp = new DiseasePicked(c);
+        _output.add(dp);
+    }
+    
+    @Override
+    public boolean allDiseasesPicked(){
+        return _world.allDiseasesPicked();
     }
     
     @Override

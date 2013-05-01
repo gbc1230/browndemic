@@ -13,5 +13,12 @@ public class WorldSP extends MainWorld{
     public WorldSP(){
         super();
     }
+        
+    @Override
+    public void changeDiseasesPicked(int change){
+        _numDiseasesPicked += change;
+        if (_numDiseasesPicked == 1)
+            _allDiseasesPicked = true;
+    }
     
 }

@@ -20,6 +20,22 @@ public class ServerWorld extends MainWorld{
         _output = new ArrayBlockingQueue<>(10);
     }
     
+    @Override
+    public void changeDiseasesPicked(int change){
+        System.out.println("Changing DP by " + change);
+        _numDiseasesPicked += change;
+    }
+    
+    public void updatePickedStatus(int total){
+        if (_numDiseasesPicked == total)
+            _allDiseasesPicked = true;
+        else 
+            _allDiseasesPicked = false;
+        if (_numDiseasesPicked > total)
+            System.out.println("You have more diseases than players!");
+        System.out.println("All diseases picked? " + _allDiseasesPicked);
+    }
+    
     /**
      * Gets the next world to send out: used only for MP maps
      * @return The next world to send out

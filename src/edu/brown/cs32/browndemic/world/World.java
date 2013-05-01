@@ -80,8 +80,15 @@ public interface World {
     //introduce a disease to a region
     public void introduceDisease(int r, int d);
     
+    //add a new disease 
     public void addDisease(Disease d);
+    
+    //tell this world that a user has picked or unpicked a disease when
+    //choosing diseases 
+    public void changeDiseasesPicked(int change);
 
+    //tells me if all diseases have been picked
+    public boolean allDiseasesPicked();
     /**
      * Lets me know if all diseases have been cured
      * @return boolean

@@ -116,6 +116,11 @@ public class GameServer implements Runnable{
             DiseaseIntroducer di = (DiseaseIntroducer)gd;
             _world.introduceDisease(di.getRegion(), di.getDisease());
         }
+        else if (id.equals("DP")){
+            DiseasePicked dp = (DiseasePicked)gd;
+            _world.changeDiseasesPicked(dp.getChange());
+        _world.updatePickedStatus(_clients.size());
+        }
     }
 
     /**

@@ -6,6 +6,7 @@
 package edu.brown.cs32.browndemic.network;
 import edu.brown.cs32.browndemic.world.ClientWorld;
 import edu.brown.cs32.browndemic.world.ServerWorld;
+import edu.brown.cs32.browndemic.disease.Virus;
 import java.io.*;
 
 /**
@@ -60,8 +61,20 @@ public class NetworkTest implements Runnable{
                 else if (line.startsWith("W")){
                     _serverWorld.addCommand();
                 }
-                else if (line.startsWith(("D"))){
+                else if (line.startsWith(("DC"))){
                     _client1.stop();
+                }
+                else if (line.startsWith(("DA"))){
+                    _clientWorld1.addDisease(new Virus("swag"));
+                }
+                else if (line.startsWith("DI")){
+                    _clientWorld2.introduceDisease(0, 0);
+                }
+                else if (line.startsWith("DP1")){
+                    _clientWorld1.changeDiseasesPicked(1);
+                }
+                else if (line.startsWith("DP2")){
+                    _clientWorld2.changeDiseasesPicked(1);
                 }
             }
             catch(IOException e){
