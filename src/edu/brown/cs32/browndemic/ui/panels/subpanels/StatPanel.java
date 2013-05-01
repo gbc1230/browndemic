@@ -1,6 +1,5 @@
 package edu.brown.cs32.browndemic.ui.panels.subpanels;
 
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 

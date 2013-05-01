@@ -24,6 +24,7 @@ import edu.brown.cs32.browndemic.ui.panels.UIPanel;
 import edu.brown.cs32.browndemic.ui.panels.subpanels.ChatPanel;
 import edu.brown.cs32.browndemic.ui.panels.subpanels.InformationBar;
 import edu.brown.cs32.browndemic.ui.panels.subpanels.NewsPanel;
+import edu.brown.cs32.browndemic.ui.panels.subpanels.RegionPanel;
 import edu.brown.cs32.browndemic.ui.panels.subpanels.StatPanel;
 import edu.brown.cs32.browndemic.ui.panels.subpanels.UpgradePanel;
 import edu.brown.cs32.browndemic.ui.panels.titlebars.InGameTitleBar;
@@ -111,6 +112,7 @@ public class GameMenu extends UIPanel {
 		}
 		botRight.addTab("News", new NewsPanel(_world));
 		botRight.addTab("Stats", new StatPanel(_world.getDiseases().get(_disease)));
+		botRight.addTab("Regions", new RegionPanel(_world));
 		for (int i = 0; i < botRight.getTabCount(); i++) {
 			botRight.setBackgroundAt(i, Colors.MENU_BACKGROUND);
 		}

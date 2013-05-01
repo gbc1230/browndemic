@@ -243,7 +243,7 @@ public class WorldMap extends JComponent implements MouseListener {
 				float percentInfected = 0f;
 				if (r != null) {
 					try {
-						percentInfected = (float)r.getInfected().get(_disease) / (float)r.getPopulation();
+						percentInfected = ((float)r.getInfected().get(_disease) + (float)r.getKilled().get(_disease)) / (float)r.getPopulation();
 					} catch (IndexOutOfBoundsException e1) {
 						percentInfected = 0f;
 					}
@@ -322,8 +322,8 @@ public class WorldMap extends JComponent implements MouseListener {
 		}
 		g2.drawString(name, 5, getHeight() - 80);
 
-		g2.drawString(String.format("Infected: %d (%.2f%%)", infected, (double)infected/(double)total), 15, getHeight() - 55);
-		g2.drawString(String.format("Dead: %d (%.2f%%)", dead, (double)dead/(double)total), 15, getHeight() - 35);
+		g2.drawString(String.format("Infected: %d (%.2f%%)", infected, 100*(double)infected/(double)total), 15, getHeight() - 55);
+		g2.drawString(String.format("Dead: %d (%.2f%%)", dead, 100*(double)dead/(double)total), 15, getHeight() - 35);
 		g2.drawString(String.format("Total: %d", total), 15, getHeight() - 15);
 		
 		if (airports > 0) {
