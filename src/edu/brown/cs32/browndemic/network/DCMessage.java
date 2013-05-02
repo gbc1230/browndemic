@@ -10,10 +10,10 @@ package edu.brown.cs32.browndemic.network;
  */
 public class DCMessage implements GameData{
     
-    private String _msg;
+    private int _id;
     
-    public DCMessage(String msg){
-        _msg = msg;
+    public DCMessage(int id){
+        _id = id;
     }
     
     @Override
@@ -21,8 +21,8 @@ public class DCMessage implements GameData{
         return "DC";
     }
     
-    public String getMessage(){
-        return _msg;
+    public int getPlayerID(){
+    	return _id;
     }
     
 }

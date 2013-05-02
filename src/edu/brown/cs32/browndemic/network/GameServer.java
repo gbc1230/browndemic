@@ -59,12 +59,8 @@ public class GameServer implements Runnable{
                 continue;
             }
             catch(IOException e){
-                System.out.println("IOEXCEPTION!");
-                e.printStackTrace();
-                if (_thread != null){
-                    _accepting = false;
-                    _thread = null;
-                }
+            	System.out.println("IOException at GameServer");
+                continue;
             }
         }
     }
@@ -140,7 +136,7 @@ public class GameServer implements Runnable{
             _clients.remove(toKill);
             _world.removeDisease(pos);
             toKill.close();
-            DCMessage msg = new DCMessage("Player " + pos + " has disconnected.");
+            DCMessage msg = new DCMessage(pos);
             for (GameServerThread gst : _clients){
                 gst.sendMessage(msg);
             }
@@ -157,6 +153,20 @@ public class GameServer implements Runnable{
         temp.open();
         temp.start();
         _clients.add(temp);
+    }
+    
+    public void stop(){
+    	try{
+    		_server.close();
+    		for (GameServerThread kill : _clients){
+    			kill.close();
+    		}
+    		_clients.clear();
+    		_thread = null;
+    	}
+    	catch(IOException e){
+    		//Error closing
+    	}
     }
 
     /*public static void main(String [] args) throws Exception{
