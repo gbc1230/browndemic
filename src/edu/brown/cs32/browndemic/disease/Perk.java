@@ -64,20 +64,24 @@ public class Perk implements Serializable{
   
   //the boolean saying whether or not this perk is owned by the disease
   private boolean _owned = false;
-  
+
   //the ArrayList of perks that this perk's purchase makes available
-  private ArrayList<Perk> _nextPerks = new ArrayList<Perk>();
+  private ArrayList<Integer> _nextPerks = new ArrayList<Integer>();
 
   //the ArrayList of perks whose purchase makes this perk available
-  private ArrayList<Perk> _prevPerks = new ArrayList<Perk>();
-  
+  private ArrayList<Integer> _prevPerks = new ArrayList<Integer>();
+
+  //Array of all other perks
+  private Perk[] _perks;
+
   //constuctor: sets cost, change in infectivity/lethality/visibility and
   //the perks that, when this perk is bought, become available for purchase
-  public Perk(String tempname, String tempdesc, int tempcost, int tempsell, 
-		      double tempinf, double templeth, double tempvis, double tempheat, 
-		      double tempcold, double tempwet, double tempdry, double tempmed, 
-		      double tempwater, double tempair){
-    
+  public Perk(int ID, String tempname, String tempdesc, int tempcost, int tempsell,
+		      double tempinf, double templeth, double tempvis, double tempheat,
+		      double tempcold, double tempwet, double tempdry, double tempmed,
+		      double tempwater, double tempair, ArrayList<Integer> prev, ArrayList<Integer> next){
+
+    this._id = ID;
 	this._name = tempname;
 	this._description = tempdesc;
     this._cost = tempcost;
@@ -92,7 +96,13 @@ public class Perk implements Serializable{
     this._medResChange = tempmed;
     this._waterTransChange = tempwater;
     this._airTransChange = tempair;
-    
+    this._prevPerks = prev;
+    this._nextPerks = next;
+
+  }
+
+  public void setPerksArray(Perk[] toSet){
+      this._perks = toSet;
   }
   
   /**
@@ -126,26 +136,6 @@ public class Perk implements Serializable{
   }
   
   /**
-   * adds perk to this perk's 'next' ArrayList
-   * @param perk             the perk to insert into the 'next' ArrayList
-   */
-  public void addToNext(Perk perk){
-	  
-	  this._nextPerks.add(perk);
-	  
-  }
-  
-  /**
-   * adds perk to this perk's 'prev' ArrayList
-   * @param perk             the perk to insert into the 'prev' ArrayList
-   */
-  public void addToPrev(Perk perk){
-	  
-	  this._prevPerks.add(perk);
-	  
-  }
-  
-  /**
    * gets the String name of this perk
    * @return _name
    */
@@ -175,9 +165,9 @@ public class Perk implements Serializable{
   public int getCumSellPrice(){
    
       int returnPrice = this._sellPrice;
-      for(Perk p : this._nextPerks){
-          if(p.isOwned() && p.isOnlyOwnedPrev(this))
-              returnPrice += p.getCumSellPrice();
+      for(Integer p : this._nextPerks){
+          if(this._perks[p].isOwned() && this._perks[p].isOnlyOwnedPrev(this))
+              returnPrice += this._perks[p].getCumSellPrice();
       }
       return returnPrice;
   }
@@ -220,9 +210,9 @@ public class Perk implements Serializable{
   public double getCumInf(){
    
       double returnInf = this._infectivityChange;
-      for(Perk p : this._nextPerks){
-          if(p.isOwned() && p.isOnlyOwnedPrev(this))
-              returnInf += p.getCumInf();
+      for(Integer p : this._nextPerks){
+          if(this._perks[p].isOwned() && this._perks[p].isOnlyOwnedPrev(this))
+              returnInf += this._perks[p].getCumInf();
       }
       return returnInf;
   }
@@ -245,9 +235,9 @@ public class Perk implements Serializable{
   public double getCumLeth(){
 
       double returnLeth = this._lethalityChange;
-      for(Perk p : this._nextPerks){
-          if(p.isOwned() && p.isOnlyOwnedPrev(this))
-              returnLeth += p.getCumLeth();
+      for(Integer p : this._nextPerks){
+          if(this._perks[p].isOwned() && this._perks[p].isOnlyOwnedPrev(this))
+              returnLeth += this._perks[p].getCumLeth();
       }
       return returnLeth;
   }
@@ -270,9 +260,9 @@ public class Perk implements Serializable{
   public double getCumVis(){
 
       double returnVis = this._visibilityChange;
-      for(Perk p : this._nextPerks){
-          if(p.isOwned() && p.isOnlyOwnedPrev(this))
-              returnVis += p.getCumVis();
+      for(Integer p : this._nextPerks){
+          if(this._perks[p].isOwned() && this._perks[p].isOnlyOwnedPrev(this))
+              returnVis += this._perks[p].getCumVis();
       }
       return returnVis;
   }
@@ -295,9 +285,9 @@ public class Perk implements Serializable{
   public double getCumHeatRes(){
 
       double returnHeatRes = this._heatResChange;
-      for(Perk p : this._nextPerks){
-          if(p.isOwned() && p.isOnlyOwnedPrev(this))
-              returnHeatRes += p.getCumHeatRes();
+      for(Integer p : this._nextPerks){
+          if(this._perks[p].isOwned() && this._perks[p].isOnlyOwnedPrev(this))
+              returnHeatRes += this._perks[p].getCumHeatRes();
       }
       return returnHeatRes;
   }
@@ -320,9 +310,9 @@ public class Perk implements Serializable{
   public double getCumColdRes(){
 
       double returnColdRes = this._coldResChange;
-      for(Perk p : this._nextPerks){
-          if(p.isOwned() && p.isOnlyOwnedPrev(this))
-              returnColdRes += p.getCumColdRes();
+      for(Integer p : this._nextPerks){
+          if(this._perks[p].isOwned() && this._perks[p].isOnlyOwnedPrev(this))
+              returnColdRes += this._perks[p].getCumColdRes();
       }
       return returnColdRes;
   }
@@ -345,9 +335,9 @@ public class Perk implements Serializable{
   public double getCumWetRes(){
 
       double returnWetRes = this._wetResChange;
-      for(Perk p : this._nextPerks){
-          if(p.isOwned() && p.isOnlyOwnedPrev(this))
-              returnWetRes += p.getCumWetRes();
+      for(Integer p : this._nextPerks){
+          if(this._perks[p].isOwned() && this._perks[p].isOnlyOwnedPrev(this))
+              returnWetRes += this._perks[p].getCumWetRes();
       }
       return returnWetRes;
   }
@@ -370,9 +360,9 @@ public class Perk implements Serializable{
   public double getCumDryRes(){
 
       double returnDryRes = this._dryResChange;
-      for(Perk p : this._nextPerks){
-          if(p.isOwned() && p.isOnlyOwnedPrev(this))
-              returnDryRes += p.getCumDryRes();
+      for(Integer p : this._nextPerks){
+          if(this._perks[p].isOwned() && this._perks[p].isOnlyOwnedPrev(this))
+              returnDryRes += this._perks[p].getCumDryRes();
       }
       return returnDryRes;
   }
@@ -395,9 +385,9 @@ public class Perk implements Serializable{
   public double getCumMedRes(){
 
       double returnMedRes = this._medResChange;
-      for(Perk p : this._nextPerks){
-          if(p.isOwned() && p.isOnlyOwnedPrev(this))
-              returnMedRes += p.getCumMedRes();
+      for(Integer p : this._nextPerks){
+          if(this._perks[p].isOwned() && this._perks[p].isOnlyOwnedPrev(this))
+              returnMedRes += this._perks[p].getCumMedRes();
       }
       return returnMedRes;
   }
@@ -420,9 +410,9 @@ public class Perk implements Serializable{
   public double getCumWaterTrans(){
 
       double returnWaterTrans = this._waterTransChange;
-      for(Perk p : this._nextPerks){
-          if(p.isOwned() && p.isOnlyOwnedPrev(this))
-              returnWaterTrans += p.getCumWaterTrans();
+      for(Integer p : this._nextPerks){
+          if(this._perks[p].isOwned() && this._perks[p].isOnlyOwnedPrev(this))
+              returnWaterTrans += this._perks[p].getCumWaterTrans();
       }
       return returnWaterTrans;
   }
@@ -445,9 +435,9 @@ public class Perk implements Serializable{
   public double getCumAirTrans(){
 
       double returnAirTrans = this._airTransChange;
-      for(Perk p : this._nextPerks){
-          if(p.isOwned() && p.isOnlyOwnedPrev(this))
-              returnAirTrans += p.getCumAirTrans();
+      for(Integer p : this._nextPerks){
+          if(this._perks[p].isOwned() && this._perks[p].isOnlyOwnedPrev(this))
+              returnAirTrans += this._perks[p].getCumAirTrans();
       }
       return returnAirTrans;
   }
@@ -481,26 +471,37 @@ public class Perk implements Serializable{
     return this._owned;
     
   }
-  
+
   /**
-   * gets the ArrayList of Perks this perk opens up once it is bought
-   * @return _nextPerks
+   * gets the ArrayList of Perks that make this perk available
+   * @return _prevPerks
    */
-  public ArrayList<Perk> getNext(){
-      
-      return this._nextPerks;
-      
+  public ArrayList<Integer> getPrev(){
+
+      return this._prevPerks;
+
   }
 
   /**
    * gets the ArrayList of Perks that make this perk available
    * @return _prevPerks
    */
-  public ArrayList<Perk> getPrev(){
+  public ArrayList<Integer> getNext(){
 
-      return this._prevPerks;
+      return this._nextPerks;
 
   }
+
+  /**
+   * gets the ArrayList of Perks that make this perk available
+   * @return _prevPerks
+   */
+  public Perk[] getPerksArray(){
+
+      return this._perks;
+
+  }
+
 
   /**
    * returns true if the perk's only owned predecessor is parent
@@ -514,9 +515,9 @@ public class Perk implements Serializable{
 
       if(!parent.isOwned()) return false;
       else
-          for(Perk p : this._prevPerks){
+          for(Integer p : this._prevPerks){
 
-              if(p.getID() != parent.getID() && p.isOwned()) return false;
+              if(p != parent.getID() && this._perks[p].isOwned()) return false;
 
           }
      return true;

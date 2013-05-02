@@ -1,0 +1,48 @@
+ID,Name,Description,Cost,Sell,Infectivity,Lethality,Visibility,Heat Resistance,Cold Resistance,Wet Resistance,Dry Resistance,Medicinal Resistance,Water Transmission,Air Transmission,Previous,Next
+0,Sneezing,Sneezing allows your disease to spread easier but also brings it some attention.,2,1,3,0,1,0,0,0,0,0,0,0,,8
+1,Coughing ,Coughing allows your disease to spread easier but also brings it some attention.,3,1,5,0,2,0,0,0,0,0,0,0,,13
+2,Nausea,Nausea allows your disease to spread through mouth-to-mouth contact and draws some attention to it.,2,1,1,1,1,0,0,0,0,0,0,0,,5
+3,Rash,People avoid the infected more but they are more contagious. And more visible.,3,2,3,1,4,0,0,0,0,0,0,0,,11and12
+4,Dehydration,Dehydration can be deadly and is slightly noticeable.,3,1,0,3,2,0,0,0,0,0,0,0,,6and9
+5,Vomiting,Vomiting brings a lot of attention but also can make the infected frail and weak.,6,3,2,5,5,0,0,0,0,0,0,0,2,
+6,Dizziness,Dizziness can lead to dangerous accidents!,5,2,0,1,1,0,0,0,0,0,0,0,4,
+7,Fatigue,Fatigue weakens the immune system of the infected.,5,2,0,1,1,0,0,0,0,0,0,0,,10
+8,Fever,Fevers can be deadly.,6,2,2,4,3,0,0,0,0,0,0,0,0,14
+9,Diarrhea ,Diarrhea and its dehydrating effects can be deadly and can spread infection to the water supply.,7,2,7,6,4,0,0,0,0,0,0,0,4,
+10,Insomnia,Insomnia weakens immune system responses.,6,2,2,5,2,0,0,0,0,0,0,0,7,17
+11,Lesions,Lesions can cause open wounds leading to death and spread of infection.,6,2,6,6,7,0,0,0,0,0,0,0,3,
+12,Cysts,Cysts hold pathogens can burst and spread the disease.,6,2,4,4,6,0,0,0,0,0,0,0,3,
+13,Pulmonary Obstruction,This is - long-term - a very deadly symptom. Limited breathing and lung damage are very visible however.,8,3,6,20,25,0,0,0,0,0,0,0,1,18and19
+14,Inflammation,Inflammation is harmful and disrupting for many bodily processes. Can be deadly,9,2,6,10,9,0,0,0,0,0,0,0,8,15
+15,Paralysis,Paralysis is deadly but makes it much less likely for infected to infect others.,17,9,-2,20,30,0,0,0,0,0,0,0,14,16
+16,Coma,Comas are very deadly and make it much less likely for infected to infect others.,30,17,-15,40,50,0,0,0,0,0,0,0,15,
+17,Delirium,Delerium comes after not sleeping for way too long. It is very dangerous and very noticeable.,15,3,-3,15,20,0,0,0,0,0,0,0,10,
+18,Pulmonary Edema,Blood in the lungs - or Pulmonary Edema - makes a disease more infective and deadly and visible.,28,14,10,25,35,0,0,0,0,0,0,0,13,
+19,Hypoxia,Hypoxia - the death of organs - is extremely deadly and will lead to much notice.,35,15,0,50,70,0,0,0,0,0,0,0,13,
+20,Heat Resistance I,Resistance to low heat.,10,10,0,0,0,1,0,0,0,0,0,0,,21
+21,Heat Resistance II,Resistance to medium heat.,15,15,0,0,0,1,0,0,0,0,0,0,20,22
+22,Heat Resistance III,Resistance to high heat.,20,20,0,0,0,1,0,0,0,0,0,0,21,
+23,Cold Resistance I,Resistance to low cold.,10,10,0,0,0,1,0,0,0,0,0,0,,24
+24,Cold Resistance II,Resistance to medium cold.,15,15,0,0,0,1,0,0,0,0,0,0,23,25
+25,Cold Resistance III,Resistance to high cold.,20,20,0,0,0,1,0,0,0,0,0,0,24,
+26,Wet Resistance I,Resistance to low wetness.,10,10,0,0,0,1,0,0,0,0,0,0,,27
+27,Wet Resistance II,Resistance to medium wetness.,15,15,0,0,0,1,0,0,0,0,0,0,26,28
+28,Wet Resistance III,Resistance to high wetness.,20,20,0,0,0,1,0,0,0,0,0,0,27,
+29,Dry Resistance I,Resistance to low dryness.,10,10,0,0,0,1,0,0,0,0,0,0,,30
+30,Dry Resistance II,Resistance to medium dryness.,15,15,0,0,0,1,0,0,0,0,0,0,29,31
+31,Dry Resistance III,Resistance to high dryness.,20,20,0,0,0,1,0,0,0,0,0,0,30,
+32,Medicinal Resistance I,Resistance to low levels of medicine.,10,10,0,0,0,1,0,0,0,0,0,0,,33
+33,Medicinal Resistance II,Resistance to medium levels of medicine.,15,15,0,0,0,1,0,0,0,0,0,0,32,34
+34,Medicinal Resistance III,Resistance to high levels of medicine.,20,20,0,0,0,1,0,0,0,0,0,0,33,
+35,Water Transmission I,Low ability to be transmitted through water.,10,10,0,0,0,0,0,0,0,0,9,0,,36
+36,Water Transmission II,Medium ability to be transmitted through water.,15,15,0,0,0,0,0,0,0,0,15,0,35,37
+37,Water Transmission III,High ability to be transmitted through water.,25,25,0,0,0,0,0,0,0,0,25,0,36,
+38,Air Transmission I,Low ability to be transmitted through air.,10,10,0,0,0,0,0,0,0,0,0,1,,39
+39,Air Transmission II,Medium ability to be transmitted through air.,15,15,0,0,0,0,0,0,0,0,0,3,38,40
+40,Air Transmission III,High ability to be transmitted through air.,25,25,0,0,0,0,0,0,0,0,0,7,39,
+41,Avian Transmission I,Low ability to be transmitted through birds.,10,10,0,0,0,0,0,0,0,0,0,1,,42
+42,Avian Transmission II,Medium ability to be transmitted through birds.,15,15,0,0,0,0,0,0,0,0,0,3,41,43
+43,Avian Transmission III,High ability to be transmitted through brids.,25,25,0,0,0,0,0,0,0,0,0,7,42,
+44,Insect Transmission I,Low ability to be transmitted through insects.,10,10,0,0,0,0,0,0,0,0,0,1,,45
+45,Insect Transmission II,Medium ability to be transmitted through insects.,15,15,0,0,0,0,0,0,0,0,0,3,44,46
+46,Insect Transmission III,High ability to be transmitted through insects.,25,25,0,0,0,0,0,0,0,0,0,7,45,

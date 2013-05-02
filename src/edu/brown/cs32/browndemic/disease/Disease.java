@@ -212,7 +212,7 @@ public abstract class Disease implements Serializable{
     public List<Perk> getAvailablePerks(){
         List<Perk> ans = new ArrayList<Perk>();
         for (Perk p : _perks){
-            if (p.isAvail())
+            if (p.isAvail() && !p.isOwned())
                 ans.add(p);
         }
         return ans;
@@ -253,30 +253,30 @@ public abstract class Disease implements Serializable{
         return this._perks;
 
     }
-    
+  
     /**
      * buyPerk(int perkID) buys a perk, sets the availability of appropriate
      * perks to true, and appropriately changes the qualities of this disease
      * to match
      */
     public void buyPerk(int perkID) throws IllegalAccessException{
-        
-        if(!this._perks[perkID].isAvail() 
+
+        if(!this._perks[perkID].isAvail()
                 || this._perks[perkID].getCost() > this._points){
-            
+
             throw new IllegalAccessException();
-            
+
         }
-        
+
         this._perks[perkID].setOwned(true);
         Perk boughtPerk = this._perks[perkID];
-        
-        for(Perk p: boughtPerk.getNext()){
-            
-            this._perks[p.getID()].setAvailability(true);
-            
+
+        for(Integer p: boughtPerk.getNext()){
+
+            this._perks[p].setAvailability(true);
+
         }
-        
+
         this._infectivity += boughtPerk.getInf();
         this._lethality += boughtPerk.getLeth();
         this._visibility += boughtPerk.getVis();
@@ -305,9 +305,9 @@ public abstract class Disease implements Serializable{
         this._perks[perkID].setOwned(true);
         Perk boughtPerk = this._perks[perkID];
 
-        for(Perk p: boughtPerk.getNext()){
+        for(Integer p: boughtPerk.getNext()){
 
-            this._perks[p.getID()].setAvailability(true);
+            this._perks[p].setAvailability(true);
 
         }
 
@@ -361,7 +361,7 @@ public abstract class Disease implements Serializable{
      * visbility-positive perks
      * @return MAX_LETHALITY
      */
-    public abstract double getMaVisibility();
+    public abstract double getMaxVisibility();
 
     /**
      * The cumulative method that sells every perk that is exlusively relies on
