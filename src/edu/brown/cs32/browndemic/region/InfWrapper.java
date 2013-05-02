@@ -12,7 +12,9 @@ import java.io.Serializable;
  * This class is just a container for holding infected populations and identifying them
  */
 public class InfWrapper implements Serializable{
-    private String _ID;
+	private static final long serialVersionUID = -6770719284990673588L;
+	
+	private String _ID;
     private long _inf;
     
     public InfWrapper(String ID, long inf){

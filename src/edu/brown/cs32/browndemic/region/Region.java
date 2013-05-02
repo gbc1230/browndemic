@@ -6,8 +6,8 @@ package edu.brown.cs32.browndemic.region;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 
 import edu.brown.cs32.browndemic.disease.Disease;
@@ -18,9 +18,10 @@ import edu.brown.cs32.browndemic.disease.Disease;
  */
 public class Region implements Serializable{
 	
-    //ArrayList of all land neighboring Regions by String name
+	private static final long serialVersionUID = 4373669006142652684L;
 
-    private ArrayList<Integer> _landNeighbors;
+    //ArrayList of all land neighboring Regions by String name
+	private ArrayList<Integer> _landNeighbors;
 
     //ArrayList of all sea neighboring Regions by String name
     private ArrayList<Integer> _waterNeighbors;
