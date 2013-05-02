@@ -37,7 +37,8 @@ public class ClientWorld implements ChatServer, World{
     //the index/diseaseID of this disease
     private int _picked, _diseaseID;
     //is this world ready to start the game
-    private boolean _isGameReady;
+    //has the host disconnected?
+    private boolean _isGameReady, _hostDisconnected;
     
     public ClientWorld(String name){
         super();
@@ -45,6 +46,7 @@ public class ClientWorld implements ChatServer, World{
         _name = name;
         _isGameReady = false;
         _diseaseID = -1;
+        _hostDisconnected = false;
     }
     
     public GameData getNextData(){
@@ -85,6 +87,22 @@ public class ClientWorld implements ChatServer, World{
     public void acceptMessage(String msg){
         System.out.println(_name + ": Accepting message: " + msg);
         _handler.addMessage(msg);
+    }
+    
+    public void getDisconnect(int id){
+    	String dc = "Player " + id + " has disconnected.";
+    	_handler.addMessage(dc);
+    	if (id < _diseaseID)
+    		_diseaseID--;
+    }
+    
+    public void disconnectHost(){
+    	System.out.println(_name + " disconnected.");
+    	_hostDisconnected = true;
+    }
+    
+    public boolean hostDisconnected(){
+    	return _hostDisconnected;
     }
     
     @Override

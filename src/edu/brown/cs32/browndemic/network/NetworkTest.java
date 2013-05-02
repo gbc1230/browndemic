@@ -101,6 +101,9 @@ public class NetworkTest implements Runnable{
                 else if (line.startsWith("CD")){
                     _serverWorld.collectDiseases();
                 }
+                else if (line.startsWith("H")){
+                	_serverWorld.killServer();
+                }
             }
             catch(IOException e){
                 System.out.println("Couldn't read line.");

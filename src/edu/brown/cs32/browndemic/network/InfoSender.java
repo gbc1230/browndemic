@@ -41,6 +41,12 @@ public class InfoSender extends Thread{
                     thread.sendMessage(out);
                 }
             }
+            else if (data.getID().equals("H")){
+            	for (GameServerThread thread : _clients){
+            		thread.sendMessage(data);
+            	}
+            	//_server
+            }
             else{
                 CollectDiseases out = (CollectDiseases)data;
                 ServerWorld world = out.getWorld();

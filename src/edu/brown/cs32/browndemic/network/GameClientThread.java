@@ -50,9 +50,11 @@ public class GameClientThread extends Thread{
                 }
                 catch(IOException e){
                     _client.stop();
+                    break;
                 }
                 catch(ClassNotFoundException e){
                     _client.stop();
+                    break;
                 }
             }
         }

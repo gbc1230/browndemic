@@ -57,7 +57,6 @@ public class GameServerThread extends Thread{
             catch(IOException e){
                 System.out.println("ERROR: " + _ID + " can't read.");
                 _server.remove(_ID);
-                e.printStackTrace();
                 break;
             }
             catch(ClassNotFoundException e){

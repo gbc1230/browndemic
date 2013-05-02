@@ -6,6 +6,7 @@ package edu.brown.cs32.browndemic.world;
 import edu.brown.cs32.browndemic.disease.Disease;
 import edu.brown.cs32.browndemic.network.CollectDiseases;
 import edu.brown.cs32.browndemic.network.GameData;
+import edu.brown.cs32.browndemic.network.HostDisconnect;
 import edu.brown.cs32.browndemic.network.LobbyMember;
 import edu.brown.cs32.browndemic.network.LobbySender;
 import edu.brown.cs32.browndemic.region.Region;
@@ -74,6 +75,10 @@ public class ServerWorld extends MainWorld{
         _outWorlds.add(this);
     }
     
+    //stops the server from running
+    public void killServer(){
+    	_outData.add(new HostDisconnect());
+    }
         
     /**
      * Stop a disease that has left the game : used only for MP maps
