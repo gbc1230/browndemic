@@ -45,6 +45,8 @@ public class BrowndemicFrame extends JFrame {
 	public BrowndemicFrame() {
 		init();
 		setPanel(new Loading(new Loading.LoadImageWorker(new InitialLoadingDone(), Images.MENU_IMAGES)));
+		System.setProperty("sun.java2d.opengl", "True");
+		System.out.println(System.getProperty("sun.java2d.opengl"));
 	}
 	
 	private class InitialLoadingDone implements Action {

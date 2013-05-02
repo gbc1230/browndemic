@@ -1,10 +1,11 @@
 package edu.brown.cs32.browndemic.ui.panels.menus;
 
-import edu.brown.cs32.browndemic.network.LobbyMember;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -17,7 +18,7 @@ import javax.swing.Timer;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import edu.brown.cs32.browndemic.ui.DumbChatServer;
+import edu.brown.cs32.browndemic.network.LobbyMember;
 import edu.brown.cs32.browndemic.ui.Resources;
 import edu.brown.cs32.browndemic.ui.UIConstants.Colors;
 import edu.brown.cs32.browndemic.ui.UIConstants.Fonts;
@@ -34,8 +35,6 @@ import edu.brown.cs32.browndemic.ui.panels.subpanels.MultiplayerLobbyPanel;
 import edu.brown.cs32.browndemic.ui.panels.titlebars.BackTitleBar;
 import edu.brown.cs32.browndemic.world.ClientWorld;
 import edu.brown.cs32.browndemic.world.ServerWorld;
-import java.util.ArrayList;
-import java.util.List;
 
 public class MultiplayerLobby extends UIPanel implements DocumentListener {
 	private static final long serialVersionUID = -210420477317108195L;
@@ -88,7 +87,7 @@ public class MultiplayerLobby extends UIPanel implements DocumentListener {
 		bot.setOpaque(false);
 		
 		bot.add(scrollPane);
-		bot.add(new ChatPanel(new DumbChatServer()));
+		bot.add(new ChatPanel(_thisWorld));
 		
 		JPanel top = new JPanel();
 		top.setLayout(new BoxLayout(top, BoxLayout.Y_AXIS));
@@ -243,7 +242,7 @@ public class MultiplayerLobby extends UIPanel implements DocumentListener {
         _timer.stop();
         _thisWorld.leaveLobby();
         if (_isHost) {
-            
+        	
         }
     }
 }
