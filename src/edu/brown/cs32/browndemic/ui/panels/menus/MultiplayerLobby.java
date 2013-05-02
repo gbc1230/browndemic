@@ -42,7 +42,6 @@ public class MultiplayerLobby extends UIPanel {
 	private JLabel _start;
     private ClientWorld _thisWorld;
     private ServerWorld _serverWorld;
-//        private List<ClientWorld> _others;
     private List<LobbyMember> _lobby;
     private Timer _timer;
 	
@@ -157,7 +156,7 @@ public class MultiplayerLobby extends UIPanel {
 		
 		public SelectAction(int id, SelectButton... other) {
 			this.other = other;
-                        this.id = id;
+            this.id = id;
 		}
 
 		@Override
@@ -172,7 +171,8 @@ public class MultiplayerLobby extends UIPanel {
 
 	@Override
 	public void setupForDisplay() {
-		_timer = new Timer(1000/5, new ActionListener() {
+		update();
+		_timer = new Timer(1000/4, new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				update();
@@ -199,7 +199,8 @@ public class MultiplayerLobby extends UIPanel {
         _timer.stop();
         _thisWorld.leaveLobby();
         if (_isHost) {
-        	
+        	System.out.println("KILLING SERVER");
+        	_serverWorld.killServer();
         }
     }
 }

@@ -45,7 +45,7 @@ public class InfoSender extends Thread{
             	for (GameServerThread thread : _clients){
             		thread.sendMessage(data);
             	}
-            	//_server
+            	_server.stop();
             }
             else{
                 CollectDiseases out = (CollectDiseases)data;

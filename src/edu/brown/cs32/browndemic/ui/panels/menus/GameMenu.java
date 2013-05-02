@@ -152,11 +152,13 @@ public class GameMenu extends UIPanel {
 	}
 	
 	private void stop() {
-		_news.stop();
-		_info.stop();
-		_regions.stop();
-		_stats.stop();
-		_upgrade.stop();
+		if (_loaded) {
+			_news.stop();
+			_info.stop();
+			_regions.stop();
+			_stats.stop();
+			_upgrade.stop();
+		}
 	}
         
     @Override

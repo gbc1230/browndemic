@@ -135,9 +135,13 @@ public class BrowndemicFrame extends JFrame {
 	 */
 	public void setPanel(UIPanel p) {
 		_content.removeAll();
+		if (_current != null) {
+			_current.stopPanel();
+		}
 		revalidate();
 		repaint();
 		_content.add(p);
+		_current = p;
 		p.setupForDisplay();
 		setVisible(true);
 	}
