@@ -76,6 +76,7 @@ public class InGameTitleBar extends TitleBar {
 			save.setBackground(Colors.MENU_BACKGROUND);
 			save.setForeground(Colors.RED_TEXT);
 			menu.add(save);
+			Utils.setDefaultLook(save);
 		}
 			
 		exit = new JMenuItem("Exit");
@@ -85,7 +86,7 @@ public class InGameTitleBar extends TitleBar {
 		exit.setForeground(Colors.RED_TEXT);
 		menu.add(exit);
 		
-		Utils.setDefaultLook(menuBar, quit, save, exit);
+		Utils.setDefaultLook(menuBar, quit, exit);
 		
 		menuBar.add(menu);
 		add(menuBar);

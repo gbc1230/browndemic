@@ -108,9 +108,9 @@ public class GameMenu extends UIPanel {
 		
 		
 		JTabbedPane botRight = new JTabbedPane();
-		botRight.setMaximumSize(new Dimension((int)(UI.WIDTH/3.5), UI.CONTENT_HEIGHT));
-		botRight.setMinimumSize(new Dimension((int)(UI.WIDTH/3.5), 0));
-		botRight.setPreferredSize(new Dimension((int)(UI.WIDTH/3.5), 0));
+		botRight.setMaximumSize(new Dimension((int)(UI.WIDTH/3), UI.CONTENT_HEIGHT));
+		botRight.setMinimumSize(new Dimension((int)(UI.WIDTH/3), 0));
+		botRight.setPreferredSize(new Dimension((int)(UI.WIDTH/3), 0));
 		Utils.setDefaultLook(botRight);
 		
 		botRight.setForeground(Colors.RED_TEXT);
@@ -133,7 +133,7 @@ public class GameMenu extends UIPanel {
 	@Override
 	public void setupForDisplay() {
 		if (_loaded) {
-			Utils.getParentFrame(this).setTitle(new InGameTitleBar(_world, true));
+			Utils.getParentFrame(this).setTitle(new InGameTitleBar(_world, !_multiplayer));
 			new Timer(3000, new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
@@ -152,11 +152,13 @@ public class GameMenu extends UIPanel {
 	}
 	
 	private void stop() {
-		_news.stop();
-		_info.stop();
-		_regions.stop();
-		_stats.stop();
-		_upgrade.stop();
+		if (_loaded) {
+			_news.stop();
+			_info.stop();
+			_regions.stop();
+			_stats.stop();
+			_upgrade.stop();
+		}
 	}
         
     @Override

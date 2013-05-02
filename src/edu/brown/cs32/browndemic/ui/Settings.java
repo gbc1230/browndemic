@@ -32,7 +32,7 @@ public class Settings {
 		BufferedWriter bw = new BufferedWriter(new FileWriter(new File(PATH), true));
 
 		if (!_booleans.containsKey(CACHING)) {
-			bw.write(String.format("%s=%s", CACHING, "false"));
+			bw.write(String.format("%s=%s", CACHING, "true"));
 			bw.newLine();
 		}
 		if (!_settings.containsKey(NAME)) {

@@ -60,7 +60,7 @@ public class GameServer implements Runnable{
             }
             catch(IOException e){
             	System.out.println("IOException at GameServer");
-                continue;
+                break;
             }
         }
     }

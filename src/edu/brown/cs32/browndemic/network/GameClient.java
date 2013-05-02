@@ -27,23 +27,18 @@ public class GameClient implements Runnable{
     private ClientWorld _world;
 
     //constructor
-    public GameClient(String host, int port, ClientWorld w) throws IOException{
-        try{
-            _socket = new Socket(host, port);
-            _output = new ObjectOutputStream(_socket.getOutputStream());
-            _client = new GameClientThread(this, _socket);
-            _world = w;
-            _thread = new Thread(this);
-            String name = _world.getName();
-            String IP = InetAddress.getLocalHost().getHostAddress();
-            LobbyMember lm = new LobbyMember(name, IP);
-            _output.writeObject(lm);
-            _output.flush();
-            _thread.start();
-        }
-        catch(UnknownHostException e){
-            System.out.println("Host Unknown: " + e.getMessage());
-        }
+    public GameClient(String host, int port, ClientWorld w) throws IOException {
+        _socket = new Socket(host, port);
+        _output = new ObjectOutputStream(_socket.getOutputStream());
+        _client = new GameClientThread(this, _socket);
+        _world = w;
+        _thread = new Thread(this);
+        String name = _world.getName();
+        String IP = InetAddress.getLocalHost().getHostAddress();
+        LobbyMember lm = new LobbyMember(name, IP);
+        _output.writeObject(lm);
+        _output.flush();
+        _thread.start();
     }
 
     //run method for runnable: runs immediately, loops reading input and sending
