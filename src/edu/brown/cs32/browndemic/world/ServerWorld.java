@@ -3,6 +3,11 @@
  * and open the template in the editor.
  */
 package edu.brown.cs32.browndemic.world;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
+
 import edu.brown.cs32.browndemic.disease.Disease;
 import edu.brown.cs32.browndemic.network.CollectDiseases;
 import edu.brown.cs32.browndemic.network.GameData;
@@ -10,11 +15,6 @@ import edu.brown.cs32.browndemic.network.HostDisconnect;
 import edu.brown.cs32.browndemic.network.LobbyMember;
 import edu.brown.cs32.browndemic.network.LobbySender;
 import edu.brown.cs32.browndemic.region.Region;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Queue;
-import java.util.concurrent.ArrayBlockingQueue;
 
 /**
  *
@@ -31,9 +31,9 @@ public class ServerWorld extends MainWorld{
     
     public ServerWorld(){
         super();
-        _outWorlds = new ArrayBlockingQueue<>(10);
+        _outWorlds = new ConcurrentLinkedQueue<>();
         _lobby = new ArrayList<>();
-        _outData = new ArrayBlockingQueue<>(10);
+        _outData = new ConcurrentLinkedQueue<>();
     }
     
     @Override
