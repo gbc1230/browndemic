@@ -11,7 +11,6 @@ import javax.swing.Timer;
 import javax.swing.UIManager;
 
 import edu.brown.cs32.browndemic.ui.BrowndemicFrame;
-import edu.brown.cs32.browndemic.ui.DumbChatServer;
 import edu.brown.cs32.browndemic.ui.Resources;
 import edu.brown.cs32.browndemic.ui.UIConstants.Colors;
 import edu.brown.cs32.browndemic.ui.UIConstants.Fonts;
@@ -20,6 +19,7 @@ import edu.brown.cs32.browndemic.ui.UIConstants.Strings;
 import edu.brown.cs32.browndemic.ui.Utils;
 import edu.brown.cs32.browndemic.ui.actions.Action;
 import edu.brown.cs32.browndemic.ui.components.WorldMap;
+import edu.brown.cs32.browndemic.ui.interfaces.ChatServer;
 import edu.brown.cs32.browndemic.ui.panels.UIPanel;
 import edu.brown.cs32.browndemic.ui.panels.subpanels.ChatPanel;
 import edu.brown.cs32.browndemic.ui.panels.subpanels.InformationBar;
@@ -106,12 +106,14 @@ public class GameMenu extends UIPanel {
 		
 		
 		JTabbedPane botRight = new JTabbedPane();
+		//botRight.setMaximumSize(new Dimension(UI.WIDTH, 200));
 		Utils.setDefaultLook(botRight);
 		
 		botRight.setForeground(Colors.RED_TEXT);
 		botRight.setFont(Fonts.TITLE_BAR);
 		if (_multiplayer) {
-			botRight.addTab("Chat", _chat = new ChatPanel(new DumbChatServer()));
+			if (_world instanceof ChatServer)
+				botRight.addTab("Chat", _chat = new ChatPanel((ChatServer)_world));
 		}
 		botRight.addTab("News", _news = new NewsPanel(_world));
 		botRight.addTab("Stats", _stats = new StatPanel(_world.getDiseases().get(_disease)));

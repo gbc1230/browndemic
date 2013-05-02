@@ -73,9 +73,9 @@ public class UpgradePanel extends BrowndemicPanel implements ListSelectionListen
 		JPanel info = new JPanel();
 		info.setLayout(new BoxLayout(info, BoxLayout.Y_AXIS));
 		info.setBackground(Colors.MENU_BACKGROUND);
-		info.setPreferredSize(new Dimension(250, UI.HEIGHT));
-		info.setMinimumSize(new Dimension(250, UI.HEIGHT));
-		info.setMaximumSize(new Dimension(250, UI.HEIGHT));
+		info.setPreferredSize(new Dimension(250, UI.CONTENT_HEIGHT));
+		info.setMinimumSize(new Dimension(250, UI.CONTENT_HEIGHT));
+		info.setMaximumSize(new Dimension(250, UI.CONTENT_HEIGHT));
 		
 		_perkName = new JLabel();
 		_perkName.setFont(Fonts.TITLE_BAR);
@@ -124,7 +124,7 @@ public class UpgradePanel extends BrowndemicPanel implements ListSelectionListen
 	}
 	
 	private void setDescription(String description) {
-		_perkInfo.setText(String.format("<html><body style='width: %dpx'>%s</body></html>", 200, description));
+		_perkInfo.setText(String.format("<html><body style='width: %dpx'><font size=%dpt family='%s'>%s</font></body></html>", 200, Fonts.NORMAL_TEXT.getSize(), Fonts.NORMAL_TEXT.getFamily(),description));
 	}
 
 	@Override

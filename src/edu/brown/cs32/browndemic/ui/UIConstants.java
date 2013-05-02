@@ -3,6 +3,7 @@ package edu.brown.cs32.browndemic.ui;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontFormatException;
+import java.awt.GraphicsEnvironment;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -215,6 +216,8 @@ public class UIConstants {
 		
 		public static void init() throws FileNotFoundException, FontFormatException, IOException {
 			TITLE_BAR = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream(new File(RESOURCE_PATH + "fonts/GhostWriter.ttf"))).deriveFont(22f);
+			GraphicsEnvironment genv = GraphicsEnvironment.getLocalGraphicsEnvironment();
+			genv.registerFont(TITLE_BAR);
 			BIG_TEXT = TITLE_BAR.deriveFont(38f);
 			NORMAL_TEXT = TITLE_BAR.deriveFont(16f);
 			BUTTON_TEXT = TITLE_BAR.deriveFont(46f);

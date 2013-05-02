@@ -3,6 +3,7 @@ package edu.brown.cs32.browndemic.ui.panels.subpanels;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -46,8 +47,11 @@ public class NewsPanel extends BrowndemicPanel {
 		
 		_news = new JPanel();
 		_news.setLayout(new BoxLayout(_news, BoxLayout.Y_AXIS));
+		_news.setBackground(Colors.MENU_BACKGROUND);
 		
-		add(new JScrollPane(_news));
+		JScrollPane scroll = new JScrollPane(_news, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scroll.getViewport().setBackground(Colors.MENU_BACKGROUND);
+		add(scroll);
 		
 		if (_world.getNews() != null) {
 			_localCopy = new ArrayList<>(_world.getNews());
@@ -60,6 +64,7 @@ public class NewsPanel extends BrowndemicPanel {
 	
 	private void updateNews() {
 		_news.removeAll();
+		Collections.reverse(_localCopy);
 		for (String s : _localCopy) {
 			JLabel newsItem = new JLabel(s);
 			newsItem.setForeground(Colors.RED_TEXT);
@@ -67,6 +72,8 @@ public class NewsPanel extends BrowndemicPanel {
 			_news.add(newsItem);
 		}
 		_news.revalidate();
+		_news.repaint();
+		Collections.reverse(_localCopy);
 	}
 	
 	private void update() {
