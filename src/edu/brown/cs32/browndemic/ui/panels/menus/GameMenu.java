@@ -1,5 +1,6 @@
 package edu.brown.cs32.browndemic.ui.panels.menus;
 
+import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,6 +17,7 @@ import edu.brown.cs32.browndemic.ui.UIConstants.Colors;
 import edu.brown.cs32.browndemic.ui.UIConstants.Fonts;
 import edu.brown.cs32.browndemic.ui.UIConstants.Images;
 import edu.brown.cs32.browndemic.ui.UIConstants.Strings;
+import edu.brown.cs32.browndemic.ui.UIConstants.UI;
 import edu.brown.cs32.browndemic.ui.Utils;
 import edu.brown.cs32.browndemic.ui.actions.Action;
 import edu.brown.cs32.browndemic.ui.components.WorldMap;
@@ -106,7 +108,9 @@ public class GameMenu extends UIPanel {
 		
 		
 		JTabbedPane botRight = new JTabbedPane();
-		//botRight.setMaximumSize(new Dimension(UI.WIDTH, 200));
+		botRight.setMaximumSize(new Dimension((int)(UI.WIDTH/3.5), UI.CONTENT_HEIGHT));
+		botRight.setMinimumSize(new Dimension((int)(UI.WIDTH/3.5), 0));
+		botRight.setPreferredSize(new Dimension((int)(UI.WIDTH/3.5), 0));
 		Utils.setDefaultLook(botRight);
 		
 		botRight.setForeground(Colors.RED_TEXT);
@@ -121,7 +125,6 @@ public class GameMenu extends UIPanel {
 		for (int i = 0; i < botRight.getTabCount(); i++) {
 			botRight.setBackgroundAt(i, Colors.MENU_BACKGROUND);
 		}
-		
 		bottom.add(botRight);
 		
 		add(bottom);

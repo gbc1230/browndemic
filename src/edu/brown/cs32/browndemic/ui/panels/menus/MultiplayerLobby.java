@@ -168,7 +168,7 @@ public class MultiplayerLobby extends UIPanel implements DocumentListener {
 			_start.setEnabled(_serverWorld.allReady());
 		}
 		if (_thisWorld.isGameReady()) {
-			Utils.getParentFrame(this).setPanel(new GameMenu(_thisWorld, _thisWorld.getDiseaseID(), true));
+			Utils.getParentFrame(this).setPanel(new GameMenu(_thisWorld, _thisWorld.getDiseaseID(), false));
 			_timer.stop();
 		}
 	}
