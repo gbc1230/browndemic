@@ -101,20 +101,34 @@ public class ServerWorld extends MainWorld{
     }
     
     public void collectDiseases(){
+    	for (int i = 0; i < _lobby.size(); i++){
+    		_diseases.add(null);
+    	}
     	for (Region r : _regions){
             _population += r.getPopulation();
     	}
         _outData.add(new CollectDiseases(-1, this));
     }
     
+    //special version for server
+    public void addDisease(Disease d, int ind){
+    	d.setID(ind);
+    	_diseases.set(ind, d);
+    	if (diseasesFull())
+    		start();
+    }
+    
     @Override
     public void addDisease(Disease d){
-        System.out.println("Adding a disease: " + d.getName());
-        int id = _diseases.size();
-        _diseases.add(d);
-        d.setID(id);
-        if (_diseases.size() == _lobby.size())
-            start();
+        //not used here
+    }
+    
+    private boolean diseasesFull(){
+    	for (Disease d : _diseases){
+    		if (d == null)
+    			return false;
+    	}
+    	return true;
     }
     
     public List<LobbyMember> getLobby(){
