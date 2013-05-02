@@ -1,5 +1,8 @@
 package edu.brown.cs32.browndemic.ui.panels.menus;
 
+import edu.brown.cs32.browndemic.network.GameClient;
+import edu.brown.cs32.browndemic.network.GameServer;
+import edu.brown.cs32.browndemic.ui.Settings;
 import java.awt.Dimension;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -18,6 +21,10 @@ import edu.brown.cs32.browndemic.ui.Utils;
 import edu.brown.cs32.browndemic.ui.components.HoverLabel;
 import edu.brown.cs32.browndemic.ui.panels.UIPanel;
 import edu.brown.cs32.browndemic.ui.panels.titlebars.BackTitleBar;
+import edu.brown.cs32.browndemic.world.ClientWorld;
+import edu.brown.cs32.browndemic.world.ServerWorld;
+import edu.brown.cs32.browndemic.world.WorldMaker;
+import java.io.IOException;
 
 public class MultiplayerMenu extends UIPanel implements MouseListener {
 
@@ -89,13 +96,34 @@ public class MultiplayerMenu extends UIPanel implements MouseListener {
 	
 	@Override
 	public void mouseReleasedInside(MouseEvent e) {
+                int port = 6000;
+//                int port = Integer.parseInt(Settings.get(Settings.PORT));
+//                String name = Settings.get(Settings.NAME);
 		if (e.getSource() == _join) {
 			System.out.printf("Connect to %s\n", _host.getText());
-			Utils.getParentFrame(this).setPanel(new MultiplayerLobby(false));
+                        
+                        try{
+                            int d = (int)(Math.random() * 100);
+                            ClientWorld world = new ClientWorld("Client: " + d);
+                            GameClient cli = new GameClient(_host.getText(), port, world);
+                            Utils.getParentFrame(this).setPanel(new MultiplayerLobby(false, world, null));
+                        }
+                        catch(IOException ex){
+                            //TODO: set message saying can't join
+                        }
 			//Utils.getParentFrame(this).setPanel(new MultiplayerJoinServer());
 		} else if (e.getSource() == _create) {
-			Utils.getParentFrame(this).setPanel(new MultiplayerLobby(true));
+                    try{
+                        ServerWorld sw = WorldMaker.makeNewEarthServer();
+                        GameServer server = new GameServer(sw, port);
+                        ClientWorld world = new ClientWorld("Server");
+                        GameClient cli = new GameClient("localhost", port, world);
+			Utils.getParentFrame(this).setPanel(new MultiplayerLobby(true, world, sw));
 			//Utils.getParentFrame(this).setPanel(new MultiplayerCreateServer());
+                    }
+                    catch(IOException ex){
+                        //TODO: set message saying can't make server
+                    }
 		}
 	}
 

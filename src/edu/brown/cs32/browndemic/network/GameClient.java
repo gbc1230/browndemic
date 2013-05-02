@@ -7,6 +7,7 @@ package edu.brown.cs32.browndemic.network;
 import edu.brown.cs32.browndemic.world.*;
 import java.io.*;
 import java.net.*;
+import java.util.List;
 
 /**
  *
@@ -14,7 +15,6 @@ import java.net.*;
  */
 public class GameClient implements Runnable{
 
-    private final int PORT = 6000;
     //the socket this client is at
     private Socket _socket;
     //the thread this client will run on
@@ -27,13 +27,18 @@ public class GameClient implements Runnable{
     private ClientWorld _world;
 
     //constructor
-    public GameClient(String host, ClientWorld w) throws IOException{
+    public GameClient(String host, int port, ClientWorld w) throws IOException{
         try{
-            _socket = new Socket(host, PORT);
+            _socket = new Socket(host, port);
             _output = new ObjectOutputStream(_socket.getOutputStream());
             _client = new GameClientThread(this, _socket);
             _world = w;
             _thread = new Thread(this);
+            String name = _world.getName();
+            String IP = InetAddress.getLocalHost().getHostAddress();
+            LobbyMember lm = new LobbyMember(name, IP);
+            _output.writeObject(lm);
+            _output.flush();
             _thread.start();
         }
         catch(UnknownHostException e){
@@ -76,6 +81,11 @@ public class GameClient implements Runnable{
         }
         else if (id.equals("DC")){
             System.out.println("got the d");
+        }
+        else if (id.equals("LS")){
+            LobbySender ls = (LobbySender)msg;
+            List<LobbyMember> lobby = ls.getLobby();
+            _world.setLobby(lobby);
         }
     }
 

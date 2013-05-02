@@ -1,5 +1,6 @@
 package edu.brown.cs32.browndemic.ui.panels.menus;
 
+import edu.brown.cs32.browndemic.network.LobbyMember;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -31,6 +32,10 @@ import edu.brown.cs32.browndemic.ui.panels.UIPanel;
 import edu.brown.cs32.browndemic.ui.panels.subpanels.ChatPanel;
 import edu.brown.cs32.browndemic.ui.panels.subpanels.MultiplayerLobbyPanel;
 import edu.brown.cs32.browndemic.ui.panels.titlebars.BackTitleBar;
+import edu.brown.cs32.browndemic.world.ClientWorld;
+import edu.brown.cs32.browndemic.world.ServerWorld;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MultiplayerLobby extends UIPanel implements DocumentListener {
 	private static final long serialVersionUID = -210420477317108195L;
@@ -42,17 +47,24 @@ public class MultiplayerLobby extends UIPanel implements DocumentListener {
 	private SelectButton _disease1, _disease2, _disease3;
 	private JTextField _diseaseName;
 	private JLabel _start;
+        private ClientWorld _thisWorld;
+        private ServerWorld _serverWorld;
+//        private List<ClientWorld> _others;
+        private List<LobbyMember> _lobby;
 	
-	public MultiplayerLobby(boolean isHost) {
+	public MultiplayerLobby(boolean isHost, ClientWorld cli, ServerWorld ser) {
 		super();
 		_isHost = isHost;
+                _thisWorld = cli;
+                _serverWorld = ser;
+                _lobby = new ArrayList<>();
 		makeUI();
-		new Timer(1000/300, new ActionListener() {
+		new Timer(5000, new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				update();
 			}
-		});
+		}).start();
 	}
 	
 	@Override
@@ -65,22 +77,11 @@ public class MultiplayerLobby extends UIPanel implements DocumentListener {
 		_players.setBackground(Colors.TRANSPARENT);
 		//_players.setMinimumSize(new Dimension(UI.WIDTH/2, 0));
 		//_players.setMaximumSize(new Dimension(UI.WIDTH/2, UI.CONTENT_HEIGHT));
-		
-		
+			
 		_players.add(new MultiplayerLobbyPanel("Test", "127.0.0.1", _isHost, null));
 		_players.add(new MultiplayerLobbyPanel("Test", "127.0.0.1", _isHost, null));
 		_players.add(new MultiplayerLobbyPanel("Test", "127.0.0.1", _isHost, null));
-		_players.add(new MultiplayerLobbyPanel("Test", "127.0.0.1", _isHost, null));
-		_players.add(new MultiplayerLobbyPanel("Test", "127.0.0.1", _isHost, null));
-		_players.add(new MultiplayerLobbyPanel("Test", "127.0.0.1", _isHost, null));
-		_players.add(new MultiplayerLobbyPanel("Test", "127.0.0.1", _isHost, null));
-		_players.add(new MultiplayerLobbyPanel("Test", "127.0.0.1", _isHost, null));
-		_players.add(new MultiplayerLobbyPanel("Test", "127.0.0.1", _isHost, null));
-		_players.add(new MultiplayerLobbyPanel("Test", "127.0.0.1", _isHost, null));
-		_players.add(new MultiplayerLobbyPanel("Test", "127.0.0.1", _isHost, null));
-		_players.add(new MultiplayerLobbyPanel("Test", "127.0.0.1", _isHost, null));
-		_players.add(new MultiplayerLobbyPanel("Test", "127.0.0.1", _isHost, null));
-		_players.add(new MultiplayerLobbyPanel("Test", "127.0.0.1", _isHost, null));
+                _players.add(new MultiplayerLobbyPanel("Test", "127.0.0.1", _isHost, null));
 		_players.add(Box.createGlue());
 		
 		JScrollPane scrollPane = new JScrollPane(_players, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -139,9 +140,9 @@ public class MultiplayerLobby extends UIPanel implements DocumentListener {
 		_disease1 = new SelectButton(Resources.getImage(Images.DISEASE1), Resources.getImage(Images.DISEASE1_SELECTED));
 		_disease2 = new SelectButton(Resources.getImage(Images.DISEASE2), Resources.getImage(Images.DISEASE2_SELECTED));
 		_disease3 = new SelectButton(Resources.getImage(Images.DISEASE3), Resources.getImage(Images.DISEASE3_SELECTED));
-		_disease2.addOnSelectAction(new SelectAction(_disease1, _disease3));
-		_disease1.addOnSelectAction(new SelectAction(_disease2, _disease3));
-		_disease3.addOnSelectAction(new SelectAction(_disease2, _disease1));
+		_disease2.addOnSelectAction(new SelectAction(2, _disease1, _disease3));
+		_disease1.addOnSelectAction(new SelectAction(1, _disease2, _disease3));
+		_disease3.addOnSelectAction(new SelectAction(3, _disease2, _disease1));
 
 		diseaseContainer.add(Box.createGlue());
 		diseaseContainer.add(_disease1);
@@ -167,20 +168,26 @@ public class MultiplayerLobby extends UIPanel implements DocumentListener {
 	}
 	
 	private void update() {
-		// Check if players are ready
+            _lobby = _thisWorld.getLobby();
+            System.out.println(_lobby);
+            if (_isHost)
+                System.out.println(_serverWorld.allReady());
 	}
 	
 	private class SelectAction implements Action {
 		
 		private SelectButton[] other;
+                private int id;
 		
-		public SelectAction(SelectButton... other) {
+		public SelectAction(int id, SelectButton... other) {
 			this.other = other;
+                        this.id = id;
 		}
 
 		@Override
 		public void doAction() {
 			_diseaseSelected = true;
+                        _thisWorld.changeDiseasesPicked(id);
 			for (SelectButton b : other) {
 				b.deSelect();
 			}

@@ -23,12 +23,13 @@ import edu.brown.cs32.browndemic.ui.UIConstants.Colors;
 import edu.brown.cs32.browndemic.ui.UIConstants.Fonts;
 import edu.brown.cs32.browndemic.ui.panels.BrowndemicPanel;
 import edu.brown.cs32.browndemic.world.MainWorld;
+import edu.brown.cs32.browndemic.world.World;
 
 public class RegionPanel extends BrowndemicPanel implements ListSelectionListener {
 
 	private static final long serialVersionUID = -8537192795533968336L;
 
-	private MainWorld _world;
+	private World _world;
 	private JTable _healthy, _infected, _dead;
 	private DefaultTableModel _tmhealthy, _tminfected, _tmdead;
 	private TableRowSorter<DefaultTableModel> _shealthy, _sinfected, _sdead;

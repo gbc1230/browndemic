@@ -34,6 +34,7 @@ public class GameServerThread extends Thread{
      */
     public void sendMessage(GameData msg){
         try{
+            _output.reset();
             _output.writeObject(msg);
             _output.flush();
         }

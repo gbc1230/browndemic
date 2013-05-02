@@ -26,10 +26,15 @@ public class ClientWorld implements ChatServer, World{
     private ChatHandler _handler;
     //for sending off data
     private Queue<GameData> _output;
+    //the lobby
+    private List<LobbyMember> _lobby;
+    //name of this client
+    private String _name;
     
-    public ClientWorld(){
+    public ClientWorld(String name){
         super();
         _output = new ArrayBlockingQueue<>(10);
+        _name = name;
     }
     
     public GameData getNextData(){
@@ -37,9 +42,16 @@ public class ClientWorld implements ChatServer, World{
     }
     
     public void setWorld(ServerWorld w){
-        System.out.println("Setting world to:\n" + w.toString());
         _world = w;
-        System.out.println("Set world.");
+    }
+    
+    public void setLobby(List<LobbyMember> lobby){
+        System.out.println(_name + ": Got a new lobby: " + lobby);
+        _lobby = lobby;
+    }
+    
+    public List<LobbyMember> getLobby(){
+        return _lobby;
     }
     
     @Override
@@ -55,7 +67,7 @@ public class ClientWorld implements ChatServer, World{
     }
     
     public void acceptMessage(String msg){
-        System.out.println("Accepting message: " + msg);
+        System.out.println(_name + ": Accepting message: " + msg);
         //_handler.addMessage(msg);
     }
     
@@ -164,8 +176,25 @@ public class ClientWorld implements ChatServer, World{
     
     @Override
     public void addPerk(int dis, int perk, boolean buy){
-        System.out.println("Adding perk: " + dis + ", " + perk + ", " + buy);
+        System.out.println(_name + " :Adding perk: " + dis + ", " + perk + ", " + buy);
         PerkInput pi = new PerkInput(dis, perk, buy);
         _output.add(pi);
+    }
+    
+    public String getName(){
+        return _name;
+    }
+    
+    //not used in multiplayer
+    @Override
+    public void pause(){
+    }
+    
+    @Override
+    public void unpause(){
+    }
+    
+    @Override
+    public void setSpeed(int t){
     }
 }

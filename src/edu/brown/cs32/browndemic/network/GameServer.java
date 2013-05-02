@@ -16,7 +16,6 @@ import java.util.ArrayList;
  */
 public class GameServer implements Runnable{
 
-    private final int PORT = 6000;
     //one thread per client
     private List<GameServerThread> _clients;
     //the socket this server runs on
@@ -27,46 +26,45 @@ public class GameServer implements Runnable{
     private boolean _accepting;
     //the world i'm operating on
     private ServerWorld _world;
+    //sending out lobbies and then worlds
+    private InfoSender _sender;
 
     // constructor
-    public GameServer(ServerWorld w) throws IOException{
-        _server = new ServerSocket(PORT);
+    public GameServer(ServerWorld w, int port) throws IOException{
+        _server = new ServerSocket(port);
         _server.setSoTimeout(5000);
         _thread = new Thread(this);
         _clients = new ArrayList<GameServerThread>();
         _accepting = true;
         _world = w;
+        _sender = new InfoSender(_clients, _world);
+        _sender.start();
         _thread.start();
     }
 
     //run method: catches new threads as they come in
     @Override
     public void run(){
-        while (_accepting){
+        while (!_world.isGameOver()){
             try{
-                System.out.println("looking...");
-                Socket temp = _server.accept();
-                if (temp != null){
-                    addThread(temp);
-                    System.out.println("Got new client.");
+                if (_accepting){
+                    Socket temp = _server.accept();
+                    if (temp != null){
+                        addThread(temp);
+                        System.out.println("Got new client.");
+                    }
                 }
             }
+            catch(SocketTimeoutException e){
+                continue;
+            }
             catch(IOException e){
+                System.out.println("IOEXCEPTION!");
+                e.printStackTrace();
                 if (_thread != null){
                     _accepting = false;
                     _thread = null;
                 }
-            }
-        }
-        System.out.println("Sending worlds....");
-        while (true){
-            ServerWorld w = _world.getNextCommand();
-            if (w == null)
-                continue;
-            WorldOutput wo = new WorldOutput(w);
-            for (GameServerThread thread : _clients){
-                System.out.println("Sending a world...");
-                thread.sendMessage(wo);
             }
         }
     }
@@ -118,8 +116,11 @@ public class GameServer implements Runnable{
         }
         else if (id.equals("DP")){
             DiseasePicked dp = (DiseasePicked)gd;
-            _world.changeDiseasesPicked(dp.getChange());
-        _world.updatePickedStatus(_clients.size());
+            _world.changeDiseasesPicked(findClient(ID));
+        }
+        else if (id.equals("LM")){
+            LobbyMember lm = (LobbyMember)gd;
+            _world.addLobbyMember(lm);
         }
     }
 

@@ -14,12 +14,13 @@ import edu.brown.cs32.browndemic.ui.UIConstants.Colors;
 import edu.brown.cs32.browndemic.ui.UIConstants.Fonts;
 import edu.brown.cs32.browndemic.ui.panels.BrowndemicPanel;
 import edu.brown.cs32.browndemic.world.MainWorld;
+import edu.brown.cs32.browndemic.world.World;
 
 public class NewsPanel extends BrowndemicPanel {
 
 	private static final long serialVersionUID = 1350112995198953245L;
 	
-	private MainWorld _world;
+	private World _world;
 	private List<String> _localCopy;
 	
 	public NewsPanel(MainWorld world) {

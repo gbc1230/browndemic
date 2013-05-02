@@ -97,7 +97,7 @@ public abstract class MainWorld implements Serializable, World, Runnable{
     @Override
     public void addPerk(int dis, int perk, boolean buy){
         System.out.println("Adding perk: " + dis + " , " + perk +  ", " + buy);
-        /*Disease d = _diseases.get(dis);
+        Disease d = _diseases.get(dis);
         try{
             if (buy)
                 d.buyPerk(perk);
@@ -106,7 +106,7 @@ public abstract class MainWorld implements Serializable, World, Runnable{
         }
         catch(IllegalAccessException e){
             
-        }*/
+        }
     }
     
     /**
@@ -213,8 +213,8 @@ public abstract class MainWorld implements Serializable, World, Runnable{
     @Override
     public void introduceDisease(int d, int r){
         System.out.println("Introducing " + d + " to " + r);
-//        _regions.get(r).introduceDisease(_diseases.get(d));
-//        _numRegionsPicked++;
+        _regions.get(r).introduceDisease(_diseases.get(d));
+        _numRegionsPicked++;
     }
     
     @Override
@@ -447,8 +447,8 @@ public abstract class MainWorld implements Serializable, World, Runnable{
      */
     @Override
     public void run(){
-        while(_numRegionsPicked < _diseases.size()){
-        }
+        //while(_numRegionsPicked < _diseases.size()){
+        //}
         while (!_gameOver){
             if (!_paused){
                 long start = System.currentTimeMillis();

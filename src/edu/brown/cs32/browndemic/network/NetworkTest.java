@@ -23,16 +23,15 @@ public class NetworkTest implements Runnable{
     
     public NetworkTest(){
         _serverWorld = new ServerWorld();
-        _clientWorld1 = new ClientWorld();
-        _clientWorld2 = new ClientWorld();
+        _clientWorld1 = new ClientWorld("Client 1");
+        _clientWorld2 = new ClientWorld("Client 2");
         try{
-            _server = new GameServer(_serverWorld);
-            _client1 = new GameClient("localhost", _clientWorld1);
-            _client2 = new GameClient("localhost", _clientWorld2);
+            _server = new GameServer(_serverWorld, 6000);
+            _client1 = new GameClient("localhost", 6000, _clientWorld1);
             for (long i = 0; i < 100000000L; i++){
                 
             }
-            System.out.println("done");
+            _client2 = new GameClient("localhost", 6000, _clientWorld2);
             _server.stopAccepting();
             _input = new BufferedReader(new InputStreamReader(System.in));
         }

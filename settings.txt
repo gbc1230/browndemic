@@ -1,3 +1,0 @@
-name=Graham
-caching=false
-port=6000

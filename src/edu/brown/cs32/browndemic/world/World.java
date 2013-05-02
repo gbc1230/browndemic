@@ -100,6 +100,16 @@ public interface World {
      * @return boolean
      */
     public boolean allKilled();
+    
+    //pausing: only works in SP
+    public void pause();
+    
+    //unpausing: only works in SP
+    public void unpause();
+    
+    //change speed: only works in MP
+    public void setSpeed(int t);
+    
 
     
 }
