@@ -441,14 +441,23 @@ public abstract class MainWorld implements Serializable, World, Runnable{
         _started = true;
         new Thread(this).start();
     }
-    
+
     /**
      * Runs the game
      */
     @Override
     public void run(){
-        //while(_numRegionsPicked < _diseases.size()){
-        //}
+        System.out.println("begin the loop");
+        int i = 0;
+        while(_numRegionsPicked < _diseases.size()){
+            try{
+                Thread.sleep(1);
+            }
+            catch(Exception e){
+                
+            }
+        }
+        System.out.println("starting game");
         while (!_gameOver){
             if (!_paused){
                 long start = System.currentTimeMillis();

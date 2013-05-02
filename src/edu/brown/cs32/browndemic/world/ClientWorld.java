@@ -3,11 +3,14 @@
  * and open the template in the editor.
  */
 package edu.brown.cs32.browndemic.world;
+import edu.brown.cs32.browndemic.disease.Bacteria;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 
 import edu.brown.cs32.browndemic.disease.Disease;
+import edu.brown.cs32.browndemic.disease.Parasite;
+import edu.brown.cs32.browndemic.disease.Virus;
 import edu.brown.cs32.browndemic.network.*;
 import edu.brown.cs32.browndemic.region.Region;
 import edu.brown.cs32.browndemic.region.RegionTransmission;
@@ -30,6 +33,8 @@ public class ClientWorld implements ChatServer, World{
     private List<LobbyMember> _lobby;
     //name of this client
     private String _name;
+    //which disease this world has picked currently, for use in lobby
+    private int _picked;
     
     public ClientWorld(String name){
         super();
@@ -52,6 +57,11 @@ public class ClientWorld implements ChatServer, World{
     
     public List<LobbyMember> getLobby(){
         return _lobby;
+    }
+    
+    public void leaveLobby(){
+        LobbyRemoval lr = new LobbyRemoval();
+        _output.add(lr);
     }
     
     @Override
@@ -159,6 +169,7 @@ public class ClientWorld implements ChatServer, World{
     
     @Override
     public void changeDiseasesPicked(int c){
+        _picked = c;
         DiseasePicked dp = new DiseasePicked(c);
         _output.add(dp);
     }
@@ -172,6 +183,15 @@ public class ClientWorld implements ChatServer, World{
     public void addDisease(Disease d){
         DiseaseAdder da = new DiseaseAdder(d);
         _output.add(da);
+    }
+    
+    public void sendDisease(){
+        if (_picked == 0)
+            addDisease(new Bacteria(_name));
+        else if (_picked == 1)
+            addDisease(new Virus(_name));
+        else if (_picked == 2)
+            addDisease(new Parasite(_name));
     }
     
     @Override

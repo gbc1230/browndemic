@@ -4,10 +4,14 @@
  */
 
 package edu.brown.cs32.browndemic.network;
+import edu.brown.cs32.browndemic.disease.Bacteria;
 import edu.brown.cs32.browndemic.world.ClientWorld;
 import edu.brown.cs32.browndemic.world.ServerWorld;
 import edu.brown.cs32.browndemic.disease.Virus;
+import edu.brown.cs32.browndemic.region.Region;
 import java.io.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Test class for my object sending 
@@ -25,6 +29,10 @@ public class NetworkTest implements Runnable{
         _serverWorld = new ServerWorld();
         _clientWorld1 = new ClientWorld("Client 1");
         _clientWorld2 = new ClientWorld("Client 2");
+        Region r = new Region(0, "murica", 30000L, new ArrayList<Integer>(), 
+                new ArrayList<Integer>(), new HashMap<Integer, Region>(), 2,
+                2, 1.0, 1.0, 1.0, 1.0, 1.0, 2.0);
+        _serverWorld.addRegion(r);
         try{
             _server = new GameServer(_serverWorld, 6000);
             _client1 = new GameClient("localhost", 6000, _clientWorld1);
@@ -63,17 +71,32 @@ public class NetworkTest implements Runnable{
                 else if (line.startsWith(("DC"))){
                     _client1.stop();
                 }
-                else if (line.startsWith(("DA"))){
-                    _clientWorld1.addDisease(new Virus("swag"));
+                else if (line.startsWith("DA1")){
+                    _clientWorld1.addDisease(new Virus("Virus"));
                 }
-                else if (line.startsWith("DI")){
-                    _clientWorld2.introduceDisease(0, 0);
+                else if (line.startsWith("DA2")){
+                    _clientWorld2.addDisease(new Bacteria("Bacteria"));
+                }
+                else if (line.startsWith("DI1")){
+                    _clientWorld1.introduceDisease(0, 0);
+                }
+                else if (line.startsWith("DI2")){
+                    _clientWorld2.introduceDisease(1, 0);
                 }
                 else if (line.startsWith("DP1")){
                     _clientWorld1.changeDiseasesPicked(1);
                 }
                 else if (line.startsWith("DP2")){
                     _clientWorld2.changeDiseasesPicked(1);
+                }
+                else if (line.startsWith("LR")){
+                    _clientWorld2.leaveLobby();
+                }
+                else if (line.startsWith("S")){
+                    _serverWorld.start();
+                }
+                else if (line.startsWith("CD")){
+                    _serverWorld.collectDiseases();
                 }
             }
             catch(IOException e){

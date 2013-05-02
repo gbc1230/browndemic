@@ -87,6 +87,9 @@ public class GameClient implements Runnable{
             List<LobbyMember> lobby = ls.getLobby();
             _world.setLobby(lobby);
         }
+        else if (id.equals("CD")){
+            _world.sendDisease();
+        }
     }
 
     /**

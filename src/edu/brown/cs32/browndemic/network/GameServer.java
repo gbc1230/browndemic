@@ -37,7 +37,7 @@ public class GameServer implements Runnable{
         _clients = new ArrayList<GameServerThread>();
         _accepting = true;
         _world = w;
-        _sender = new InfoSender(_clients, _world);
+        _sender = new InfoSender(_clients, _world, this);
         _sender.start();
         _thread.start();
     }
@@ -97,13 +97,14 @@ public class GameServer implements Runnable{
      */
     public synchronized void handle(int ID, GameData gd) throws IOException, ClassNotFoundException{
         String id = gd.getID();
+        int client = findClient(ID);
         if (id.equals("P")){
             PerkInput pi = (PerkInput)gd;
             _world.addPerk(pi.getDiseaseID(), pi.getPerkID(), pi.isBuying());
         }
         else if(id.equals("M")){
-            for (GameServerThread client : _clients){
-                client.sendMessage(gd);
+            for (GameServerThread c : _clients){
+                c.sendMessage(gd);
             }
         }
         else if (id.equals("DA")){
@@ -116,11 +117,14 @@ public class GameServer implements Runnable{
         }
         else if (id.equals("DP")){
             DiseasePicked dp = (DiseasePicked)gd;
-            _world.changeDiseasesPicked(findClient(ID));
+            _world.changeDiseasesPicked(client);
         }
         else if (id.equals("LM")){
             LobbyMember lm = (LobbyMember)gd;
             _world.addLobbyMember(lm);
+        }
+        else if (id.equals("LR")){
+            _world.removeLobbyMember(client);
         }
     }
 

@@ -8,15 +8,15 @@ package edu.brown.cs32.browndemic.network;
  *
  * @author Graham
  */
-public class LobbyRemoval implements GameData{
-
-    
-    public LobbyRemoval(){
+public class CollectDiseases implements GameData{
+ 
+    public CollectDiseases(){
+        
     }
     
     @Override
     public String getID(){
-        return "LR";
-    }
+        return "CD";
+    } 
     
 }

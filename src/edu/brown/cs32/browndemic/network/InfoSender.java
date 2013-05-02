@@ -20,22 +20,33 @@ public class InfoSender extends Thread{
     //whether the game has started and I should send worlds or just info about
     //the lobby, whether the game is over
     private boolean _gameStarted, _gameOver;
+    private GameServer _server;
     
-    public InfoSender(List<GameServerThread> clients, ServerWorld w){
+    public InfoSender(List<GameServerThread> clients, ServerWorld w, GameServer s){
         _clients = clients;
         _world = w;
         _gameStarted = false;
+        _server = s;
     }
     
     @Override
     public void run(){
         while (!_gameStarted){
-            List<LobbyMember> lobby = _world.getNextLobby();
-            if (lobby == null)
+            GameData data = _world.getNextLobby();
+            if (data == null)
                 continue;
-            LobbySender ls = new LobbySender(lobby);
+            GameData out;
+            if (data.getID().equals("LS")){
+                out = (LobbySender)data;
+            }
+            else{
+                out = (CollectDiseases)data;
+                startGame();
+                _server.stopAccepting();
+                System.out.println("Sent off the CD call");
+            }
             for (GameServerThread thread : _clients){
-                thread.sendMessage(ls);
+                thread.sendMessage(out);
             }
         }
         while (!_gameOver){
