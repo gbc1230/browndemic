@@ -21,4 +21,12 @@ public class WorldSP extends MainWorld{
             _allDiseasesPicked = true;
     }
     
+    @Override
+    public void introduceDisease(int d, int r){
+        System.out.println("Introducing " + d + " to " + r);
+        _regions.get(r).introduceDisease(_diseases.get(d));
+        _numRegionsPicked++;
+        start();
+    }
+    
 }

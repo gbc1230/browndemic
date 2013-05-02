@@ -35,11 +35,14 @@ public class ClientWorld implements ChatServer, World{
     private String _name;
     //which disease this world has picked currently, for use in lobby
     private int _picked;
+    //is this world ready to start the game
+    private boolean _isGameReady;
     
     public ClientWorld(String name){
         super();
         _output = new ArrayBlockingQueue<>(10);
         _name = name;
+        _isGameReady = false;
     }
     
     public GameData getNextData(){
@@ -192,6 +195,12 @@ public class ClientWorld implements ChatServer, World{
             addDisease(new Virus(_name));
         else if (_picked == 2)
             addDisease(new Parasite(_name));
+        if (_picked >= 0 && _picked <= 2)
+        	_isGameReady = true;
+    }
+    
+    public boolean isGameReady(){
+    	return _isGameReady;
     }
     
     @Override
