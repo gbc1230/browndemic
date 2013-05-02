@@ -23,12 +23,13 @@ public class StatPanel extends BrowndemicPanel {
 	
 	private Disease _disease;
 	private JProgressBar _infectivity, _lethality, _visibility, _heat, _cold, _wet, _dry, _medicine;
+	private Timer _timer;
 
 	public StatPanel(Disease d) {
 		super();
 		_disease = d;
 		makeUI();
-		new Timer(1000/10, new ActionListener() {
+		_timer = new Timer(1000/5, new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				_infectivity.setValue((int)_disease.getInfectivity());
@@ -40,7 +41,8 @@ public class StatPanel extends BrowndemicPanel {
 				_dry.setValue((int)_disease.getDryRes());
 				_medicine.setValue((int)_disease.getMedRes());
 			}
-		}).start();
+		});
+		_timer.start();
 	}
 	
 	private void makeUI() {
@@ -104,5 +106,9 @@ public class StatPanel extends BrowndemicPanel {
 		out.add(pb);
 		
 		return out;
+	}
+	
+	public void stop() {
+		_timer.stop();
 	}
 }

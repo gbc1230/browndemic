@@ -22,17 +22,19 @@ public class NewsPanel extends BrowndemicPanel {
 	
 	private World _world;
 	private List<String> _localCopy;
+	private Timer _timer;
 	
 	public NewsPanel(MainWorld world) {
 		super();
 		_world = world;
 		makeUI();
-		new Timer(1000/3, new ActionListener() {
+		_timer = new Timer(1000/3, new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				update();
 			}
 		});
+		_timer.start();
 	}
 	
 	private void makeUI() {
@@ -65,6 +67,10 @@ public class NewsPanel extends BrowndemicPanel {
 			_localCopy = new ArrayList<>(_world.getNews());
 			updateNews();
 		}
+	}
+	
+	public void stop() {
+		_timer.stop();
 	}
 	
 

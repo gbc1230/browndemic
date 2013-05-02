@@ -22,6 +22,7 @@ public class InformationBar extends BrowndemicPanel {
 	private static final long serialVersionUID = 5751262776229759464L;
 	private World _world;
 	private int _disease;
+	private Timer _timer;
 	
 	private JLabel infected, dead, total; 
 
@@ -30,12 +31,13 @@ public class InformationBar extends BrowndemicPanel {
 		_world = w;
 		makeUI();
 		_disease = disease;
-		new Timer(1000/3, new ActionListener() {
+		_timer = new Timer(1000/3, new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				updateInfo();
 			}
-		}).start();
+		});
+		_timer.start();
 	}
 	
 	private void makeUI() {
@@ -81,5 +83,9 @@ public class InformationBar extends BrowndemicPanel {
 	@Override
 	public void mouseReleasedInside(MouseEvent e) {
 		
+	}
+	
+	public void stop() {
+		_timer.stop();
 	}
 }

@@ -26,6 +26,7 @@ import edu.brown.cs32.browndemic.ui.actions.Action;
 import edu.brown.cs32.browndemic.ui.components.HoverLabel;
 import edu.brown.cs32.browndemic.ui.components.SelectButton;
 import edu.brown.cs32.browndemic.ui.panels.DragWindow;
+import edu.brown.cs32.browndemic.ui.panels.menus.GameMenu;
 import edu.brown.cs32.browndemic.ui.panels.menus.MainMenu;
 import edu.brown.cs32.browndemic.world.MainWorld;
 
@@ -38,11 +39,13 @@ public class InGameTitleBar extends TitleBar {
 	private JMenuItem quit, save, exit;
 	private MainWorld _world;
 	private boolean _single;
+	private GameMenu _game;
 	
-	public InGameTitleBar(MainWorld world, boolean singlePlayer) {
+	public InGameTitleBar(MainWorld world, boolean singlePlayer, GameMenu game) {
 		super();
 		_world = world;
 		_single = singlePlayer;
+		_game = game;
 		makeUI();
 	}
 	
@@ -163,8 +166,10 @@ public class InGameTitleBar extends TitleBar {
 										"Are you sure you want to quit?  Any unsaved progress will be lost", 
 										"Confirm quit", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, 
 										null, null, null);
-			if (choice == 0)
+			if (choice == 0) {
 				Utils.getParentFrame(this).setPanel(new MainMenu());
+				_game.stop();
+			}
 		} else if (e.getSource() == save) {
 			File saves = new File("saves");
 			saves.mkdir();

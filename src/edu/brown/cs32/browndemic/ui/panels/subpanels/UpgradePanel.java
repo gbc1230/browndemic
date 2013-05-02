@@ -31,24 +31,25 @@ public class UpgradePanel extends BrowndemicPanel implements ListSelectionListen
 
 	private static final long serialVersionUID = 687716354790239279L;
 	private Disease _disease;
-	//private JList<String> _perks;
 	private DefaultListModel<Perk> _perks = new DefaultListModel<>();
 	private JList<Perk> _perkList;
 	private List<Perk> _availCopy;
 	private List<Perk> _ownedCopy;
 	private JLabel _perkName, _perkInfo, _points, _buysell, _addPoint;
+	private Timer _timer;
 	
 	public UpgradePanel(Disease d) {
 		super();
 		_disease = d;
 		makeUI();
-		new Timer(1000/10, new ActionListener() {
+		_timer = new Timer(1000/5, new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				update();
 			}
 			
-		}).start();
+		});
+		_timer.start();
 	}
 	
 	private void makeUI() {
@@ -171,5 +172,9 @@ public class UpgradePanel extends BrowndemicPanel implements ListSelectionListen
 		if (e.getSource() == _addPoint) {
 			_disease.addPoint();
 		}
+	}
+	
+	public void stop() {
+		_timer.stop();
 	}
 }

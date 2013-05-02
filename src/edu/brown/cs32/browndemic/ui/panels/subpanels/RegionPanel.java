@@ -33,17 +33,19 @@ public class RegionPanel extends BrowndemicPanel implements ListSelectionListene
 	private JTable _healthy, _infected, _dead;
 	private DefaultTableModel _tmhealthy, _tminfected, _tmdead;
 	private TableRowSorter<DefaultTableModel> _shealthy, _sinfected, _sdead;
+	private Timer _timer;
 	
 	public RegionPanel(MainWorld w) {
 		super();
 		_world = w;
 		makeUI();
-		new Timer(1000/3, new ActionListener() {
+		_timer = new Timer(1000/3, new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				update();
 			}
-		}).start();
+		});
+		_timer.start();
 	}
 	
 	@SuppressWarnings("serial")
@@ -201,5 +203,9 @@ public class RegionPanel extends BrowndemicPanel implements ListSelectionListene
 	public void valueChanged(ListSelectionEvent e) {
 		//_table.clearSelection();
 		System.out.println(e.getLastIndex());
+	}
+	
+	public void stop() {
+		_timer.stop();
 	}
 }
