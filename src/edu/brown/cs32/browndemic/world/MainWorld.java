@@ -424,24 +424,6 @@ public abstract class MainWorld implements Serializable, World, Runnable{
         updateCured();
     }
 
-    public void start(){
-        for (int i = 0; i < _diseases.size(); i++){
-            _cures.add(0L);
-            _kills.add(0L);
-            _infects.add(0L);
-            _sent.add(false);
-            _cured.add(false);
-        }
-        for (Region r : _regions){
-            _population += r.getPopulation();
-            r.setNumDiseases(_diseases.size());
-            _cureTotal += r.getWealth() * r.getPopulation() * _MINCURETICKS;
-        }
-        _paused = false;
-        _started = true;
-        new Thread(this).start();
-    }
-
     /**
      * Runs the game
      */

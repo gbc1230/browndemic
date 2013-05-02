@@ -8,6 +8,8 @@ import edu.brown.cs32.browndemic.network.CollectDiseases;
 import edu.brown.cs32.browndemic.network.GameData;
 import edu.brown.cs32.browndemic.network.LobbyMember;
 import edu.brown.cs32.browndemic.network.LobbySender;
+import edu.brown.cs32.browndemic.region.Region;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
@@ -69,9 +71,7 @@ public class ServerWorld extends MainWorld{
      * For adding onto my command queue
      */
     public void addCommand(){
-        System.out.println("Adding...");
         _outWorlds.add(this);
-        System.out.println("Added.");
     }
     
         
@@ -96,7 +96,10 @@ public class ServerWorld extends MainWorld{
     }
     
     public void collectDiseases(){
-        _outData.add(new CollectDiseases(-1));
+    	for (Region r : _regions){
+            _population += r.getPopulation();
+    	}
+        _outData.add(new CollectDiseases(-1, this));
     }
     
     @Override
@@ -111,6 +114,23 @@ public class ServerWorld extends MainWorld{
     
     public List<LobbyMember> getLobby(){
         return _lobby;
+    }
+    
+    public void start(){
+        for (int i = 0; i < _diseases.size(); i++){
+            _cures.add(0L);
+            _kills.add(0L);
+            _infects.add(0L);
+            _sent.add(false);
+            _cured.add(false);
+        }
+        for (Region r : _regions){
+            r.setNumDiseases(_diseases.size());
+            _cureTotal += r.getWealth() * r.getPopulation() * _MINCURETICKS;
+        }
+        _paused = false;
+        _started = true;
+        new Thread(this).start();
     }
     
     @Override

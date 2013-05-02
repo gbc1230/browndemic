@@ -4,12 +4,14 @@
  */
 package edu.brown.cs32.browndemic.region;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Chet
  * This class is just a container for holding infected populations and identifying them
  */
-public class InfWrapper {
+public class InfWrapper implements Serializable{
     private String _ID;
     private long _inf;
     

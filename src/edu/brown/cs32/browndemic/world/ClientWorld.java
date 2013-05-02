@@ -89,7 +89,7 @@ public class ClientWorld implements ChatServer, World{
     
     @Override
     public boolean allKilled(){
-        return _world.allKilled();
+    	return _world.allKilled();
     }
     
     @Override
@@ -191,7 +191,7 @@ public class ClientWorld implements ChatServer, World{
         _output.add(da);
     }
     
-    public void sendDisease(int id){
+    public void sendDisease(int id, ServerWorld world){
         if (_picked == 0)
             addDisease(new Bacteria(_name));
         else if (_picked == 1)
@@ -201,6 +201,7 @@ public class ClientWorld implements ChatServer, World{
         if (_picked >= 0 && _picked <= 2){
         	_diseaseID = id;
         	_isGameReady = true;
+        	setWorld(world);
         	System.out.println("Is game ready is true");
         }
     }

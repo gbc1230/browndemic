@@ -43,11 +43,11 @@ public class InfoSender extends Thread{
             }
             else{
                 CollectDiseases out = (CollectDiseases)data;
+                ServerWorld world = out.getWorld();
                 startGame();
                 _server.stopAccepting();
-                System.out.println("Sent off the CD call");
                 for (int i = 0; i < _clients.size(); i++){
-                	CollectDiseases temp = new CollectDiseases(i);
+                	CollectDiseases temp = new CollectDiseases(i, world);
                 	_clients.get(i).sendMessage(temp);
                 }
             }

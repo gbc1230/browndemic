@@ -7,6 +7,7 @@ package edu.brown.cs32.browndemic.network;
 import edu.brown.cs32.browndemic.disease.Bacteria;
 import edu.brown.cs32.browndemic.world.ClientWorld;
 import edu.brown.cs32.browndemic.world.ServerWorld;
+import edu.brown.cs32.browndemic.world.WorldMaker;
 import edu.brown.cs32.browndemic.disease.Virus;
 import edu.brown.cs32.browndemic.region.Region;
 import java.io.*;
@@ -24,22 +25,24 @@ public class NetworkTest implements Runnable{
     private GameClient _client1, _client2;
     private GameServer _server;
     private BufferedReader _input;
+    private final int PORT = 6000;
     
     public NetworkTest(){
-        _serverWorld = new ServerWorld();
+    	try{
+    		_serverWorld = WorldMaker.makeNewEarthServer();
+    	}
+    	catch(IOException e){
+    		
+    	}
         _clientWorld1 = new ClientWorld("Client 1");
         _clientWorld2 = new ClientWorld("Client 2");
-        Region r = new Region(0, "murica", 30000L, new ArrayList<Integer>(), 
-                new ArrayList<Integer>(), new HashMap<Integer, Region>(), 2,
-                2, 1.0, 1.0, 1.0, 1.0, 1.0, 2.0);
-        _serverWorld.addRegion(r);
         try{
-            _server = new GameServer(_serverWorld, 6000);
-            _client1 = new GameClient("localhost", 6000, _clientWorld1);
+            _server = new GameServer(_serverWorld, PORT);
+            _client1 = new GameClient("localhost", PORT, _clientWorld1);
             for (long i = 0; i < 100000000L; i++){
                 
             }
-            _client2 = new GameClient("localhost", 6000, _clientWorld2);
+            _client2 = new GameClient("localhost", PORT, _clientWorld2);
             _server.stopAccepting();
             _input = new BufferedReader(new InputStreamReader(System.in));
         }

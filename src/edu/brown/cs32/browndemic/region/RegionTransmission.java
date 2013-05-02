@@ -5,13 +5,15 @@
 
 package edu.brown.cs32.browndemic.region;
 
+import java.io.Serializable;
+
 /**
  *
  * @author ckilfoyl
  * This class represents a transmission of a disease from one region to another
  * by ship or by plane
  */
-public class RegionTransmission {
+public class RegionTransmission implements Serializable{
     private String _start;
     private String _end;
     private int _disease;

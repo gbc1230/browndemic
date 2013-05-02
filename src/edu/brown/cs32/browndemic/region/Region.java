@@ -4,6 +4,7 @@
  */
 package edu.brown.cs32.browndemic.region;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.HashMap;
@@ -15,7 +16,8 @@ import edu.brown.cs32.browndemic.disease.Disease;
  *
  * @author ckilfoyl
  */
-public class Region {
+public class Region implements Serializable{
+	
     //ArrayList of all land neighboring Regions by String name
 
     private ArrayList<Integer> _landNeighbors;

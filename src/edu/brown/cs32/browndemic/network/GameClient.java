@@ -89,7 +89,7 @@ public class GameClient implements Runnable{
         }
         else if (id.equals("CD")){
         	CollectDiseases cd = (CollectDiseases)msg;
-            _world.sendDisease(cd.getDiseaseID());
+            _world.sendDisease(cd.getDiseaseID(), cd.getWorld());
         }
     }
 
