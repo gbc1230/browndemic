@@ -36,8 +36,8 @@ import edu.brown.cs32.browndemic.world.ServerWorld;
 public class MultiplayerLobby extends UIPanel {
 	private static final long serialVersionUID = -210420477317108195L;
 	
-	private boolean _isHost;
-	private JPanel _players;
+	private boolean _isHost, _started = false;
+	private JPanel _players, _chat;
 	private SelectButton _disease1, _disease2, _disease3;
 	private JLabel _start;
     private ClientWorld _thisWorld;
@@ -81,7 +81,7 @@ public class MultiplayerLobby extends UIPanel {
 		bot.setOpaque(false);
 		
 		bot.add(scrollPane);
-		bot.add(new ChatPanel(_thisWorld));
+		bot.add(_chat = new ChatPanel(_thisWorld));
 		
 		JPanel top = new JPanel();
 		top.setLayout(new BoxLayout(top, BoxLayout.Y_AXIS));
@@ -145,6 +145,7 @@ public class MultiplayerLobby extends UIPanel {
 			_start.setEnabled(_serverWorld.allReady());
 		}
 		if (_thisWorld.isGameReady()) {
+			_started = true;
 			Utils.getParentFrame(this).setPanel(new GameMenu(_thisWorld, _thisWorld.getDiseaseID(), true));
 			_timer.stop();
 		}
@@ -180,6 +181,7 @@ public class MultiplayerLobby extends UIPanel {
 			}
 		});
 		_timer.start();
+		_chat.requestFocusInWindow();
 		Utils.getParentFrame(this).setTitle(new BackTitleBar(new MultiplayerMenu()));
 	}
 
@@ -198,10 +200,11 @@ public class MultiplayerLobby extends UIPanel {
     @Override
     public void stopPanel() {
         _timer.stop();
-        _thisWorld.leaveLobby();
-        if (_isHost) {
-        	System.out.println("KILLING SERVER");
-        	_serverWorld.killServer();
+        if (!_started) {
+	        _thisWorld.leaveLobby();
+	        if (_isHost) {
+	        	_serverWorld.killServer();
+	        }
         }
     }
 }

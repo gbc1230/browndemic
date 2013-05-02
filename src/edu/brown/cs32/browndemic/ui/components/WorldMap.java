@@ -11,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
@@ -39,7 +40,7 @@ import edu.brown.cs32.browndemic.ui.UIConstants.Images;
 import edu.brown.cs32.browndemic.ui.actions.Action;
 import edu.brown.cs32.browndemic.world.World;
 
-public class WorldMap extends JComponent implements MouseListener {
+public class WorldMap extends JComponent implements MouseListener, MouseMotionListener {
 
 	private static final long serialVersionUID = -4481136165457141240L;
 	
@@ -51,7 +52,7 @@ public class WorldMap extends JComponent implements MouseListener {
 	private Map<Integer, AlphaComposite> _composites = new HashMap<>();
 	private ArrayList<Location> _airports = new ArrayList<>();
 	private List<MovingObject> _objects = new ArrayList<>();
-	private int _selected, _disease;
+	private int _selected, _disease, _hover;
 	private boolean _chooseMode;
 	
 	private static final double AIRPLANE_SPEED = 6.0;
@@ -64,6 +65,7 @@ public class WorldMap extends JComponent implements MouseListener {
 		_selected = 0;
 		_disease = disease;
 		addMouseListener(this);
+		addMouseMotionListener(this);
 		setPreferredSize(new Dimension(map.getWidth(), map.getHeight()));
 		setMaximumSize(new Dimension(map.getWidth(), map.getHeight()));
 		setMinimumSize(new Dimension(map.getWidth(), map.getHeight()));
@@ -269,6 +271,11 @@ public class WorldMap extends JComponent implements MouseListener {
 			drawInfoPanel(g2);
 		}
 		
+		if (isValid(_hover)) {
+			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .5f));
+			g2.drawImage(_highlightOverlays.get(_hover), 0, 0, null);
+		}
+		
 		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
 		
 		for (MovingObject m : _objects) {
@@ -392,5 +399,14 @@ public class WorldMap extends JComponent implements MouseListener {
 	private int getID(int x, int y) {
 		int color = _regions.getRGB(x, y);
 		return (color & 0xFF000000) == 0xFF000000 ? color & 0x000000FF : 0;
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent e) {
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent e) {
+		_hover = getID(e.getPoint().x, e.getPoint().y);
 	}
 }
