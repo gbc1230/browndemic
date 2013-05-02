@@ -77,13 +77,14 @@ public class ClientWorld implements ChatServer, World{
     @Override
     public void sendMessage(String msg){
         System.out.println("Sending: " + msg);
+        msg = _name + ": " + msg;
         ChatMessage cm = new ChatMessage(msg);
         _output.add(cm);
     }
     
     public void acceptMessage(String msg){
         System.out.println(_name + ": Accepting message: " + msg);
-        //_handler.addMessage(msg);
+        _handler.addMessage(msg);
     }
     
     @Override
