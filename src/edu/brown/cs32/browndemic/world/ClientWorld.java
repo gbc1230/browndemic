@@ -200,6 +200,7 @@ public class ClientWorld implements ChatServer, World{
         if (_picked >= 0 && _picked <= 2){
         	_diseaseID = id;
         	_isGameReady = true;
+        	System.out.println("Is game ready is true");
         }
     }
     

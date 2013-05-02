@@ -23,10 +23,10 @@ public class WorldSP extends MainWorld{
     
     @Override
     public void introduceDisease(int d, int r){
+        start();
         System.out.println("Introducing " + d + " to " + r);
         _regions.get(r).introduceDisease(_diseases.get(d));
         _numRegionsPicked++;
-        start();
     }
     
 }
