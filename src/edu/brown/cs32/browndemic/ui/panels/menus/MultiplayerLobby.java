@@ -47,11 +47,11 @@ public class MultiplayerLobby extends UIPanel implements DocumentListener {
 	private SelectButton _disease1, _disease2, _disease3;
 	private JTextField _diseaseName;
 	private JLabel _start;
-        private ClientWorld _thisWorld;
-        private ServerWorld _serverWorld;
+    private ClientWorld _thisWorld;
+    private ServerWorld _serverWorld;
 //        private List<ClientWorld> _others;
-        private List<LobbyMember> _lobby;
-        private Timer _timer;
+    private List<LobbyMember> _lobby;
+    private Timer _timer;
 	
 	public MultiplayerLobby(boolean isHost, ClientWorld cli, ServerWorld ser) {
 		super();
@@ -170,6 +170,7 @@ public class MultiplayerLobby extends UIPanel implements DocumentListener {
 		}
 		if (_thisWorld.isGameReady()) {
 			Utils.getParentFrame(this).setPanel(new GameMenu(_thisWorld, _thisWorld.getDiseaseID(), true));
+			_timer.stop();
 		}
 	}
 	
