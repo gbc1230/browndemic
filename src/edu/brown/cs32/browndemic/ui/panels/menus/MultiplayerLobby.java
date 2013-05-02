@@ -13,10 +13,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextField;
 import javax.swing.Timer;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
 import edu.brown.cs32.browndemic.network.LobbyMember;
 import edu.brown.cs32.browndemic.ui.Resources;
@@ -36,15 +33,12 @@ import edu.brown.cs32.browndemic.ui.panels.titlebars.BackTitleBar;
 import edu.brown.cs32.browndemic.world.ClientWorld;
 import edu.brown.cs32.browndemic.world.ServerWorld;
 
-public class MultiplayerLobby extends UIPanel implements DocumentListener {
+public class MultiplayerLobby extends UIPanel {
 	private static final long serialVersionUID = -210420477317108195L;
 	
 	private boolean _isHost;
-	private boolean _nameSelected = false;
-	private boolean _diseaseSelected = false;
 	private JPanel _players;
 	private SelectButton _disease1, _disease2, _disease3;
-	private JTextField _diseaseName;
 	private JLabel _start;
     private ClientWorld _thisWorld;
     private ServerWorld _serverWorld;
@@ -94,24 +88,6 @@ public class MultiplayerLobby extends UIPanel implements DocumentListener {
 		top.setBackground(Colors.TRANSPARENT);
 		top.setOpaque(false);
 		
-		JPanel diseaseName = new JPanel();
-		diseaseName.setLayout(new BoxLayout(diseaseName, BoxLayout.X_AXIS));
-		diseaseName.setMaximumSize(new Dimension(UI.WIDTH-150, 200));
-		diseaseName.setBackground(Colors.TRANSPARENT);
-		
-		JLabel diseaseNameLabel = new JLabel(Strings.ENTER_DISEASE_NAME);
-		diseaseNameLabel.setFont(Fonts.BIG_TEXT);
-		diseaseNameLabel.setForeground(Colors.RED_TEXT);
-		_diseaseName = new JTextField();
-		_diseaseName.setFont(Fonts.BIG_TEXT);
-		_diseaseName.setForeground(Colors.RED_TEXT);
-		_diseaseName.setBackground(Colors.MENU_BACKGROUND);
-		_diseaseName.getDocument().addDocumentListener(this);
-		diseaseName.add(diseaseNameLabel);
-		diseaseName.add(_diseaseName);
-		top.add(diseaseName);
-		top.add(Box.createRigidArea(new Dimension(0, 25)));
-		
 		JLabel selectDisease = new JLabel(Strings.SELECT_DISEASE);
 		selectDisease.setFont(Fonts.BIG_TEXT);
 		selectDisease.setForeground(Colors.RED_TEXT);
@@ -122,6 +98,7 @@ public class MultiplayerLobby extends UIPanel implements DocumentListener {
 		JPanel diseaseContainer = new JPanel();
 		diseaseContainer.setLayout(new BoxLayout(diseaseContainer, BoxLayout.X_AXIS));
 		diseaseContainer.setBackground(Colors.TRANSPARENT);
+		diseaseContainer.setOpaque(false);
 
 		_disease1 = new SelectButton(Resources.getImage(Images.DISEASE1), Resources.getImage(Images.DISEASE1_SELECTED));
 		_disease2 = new SelectButton(Resources.getImage(Images.DISEASE2), Resources.getImage(Images.DISEASE2_SELECTED));
@@ -168,7 +145,7 @@ public class MultiplayerLobby extends UIPanel implements DocumentListener {
 			_start.setEnabled(_serverWorld.allReady());
 		}
 		if (_thisWorld.isGameReady()) {
-			Utils.getParentFrame(this).setPanel(new GameMenu(_thisWorld, _thisWorld.getDiseaseID(), false));
+			Utils.getParentFrame(this).setPanel(new GameMenu(_thisWorld, _thisWorld.getDiseaseID(), true));
 			_timer.stop();
 		}
 	}
@@ -185,8 +162,7 @@ public class MultiplayerLobby extends UIPanel implements DocumentListener {
 
 		@Override
 		public void doAction() {
-			_diseaseSelected = true;
-                        _thisWorld.changeDiseasesPicked(id);
+			_thisWorld.changeDiseasesPicked(id);
 			for (SelectButton b : other) {
 				b.deSelect();
 			}
@@ -209,25 +185,6 @@ public class MultiplayerLobby extends UIPanel implements DocumentListener {
 	@Override
 	public String toString() {
 		return Strings.MULTIPLAYER_LOBBY;
-	}
-
-	@Override
-	public void changedUpdate(DocumentEvent e) {
-		if (e.getDocument() == _diseaseName.getDocument()) {
-			if (_diseaseName.getText().equals("")) {
-				_nameSelected = false;
-			} else {
-				_nameSelected = true;
-			}
-		}
-	}
-
-	@Override
-	public void insertUpdate(DocumentEvent arg0) {
-	}
-
-	@Override
-	public void removeUpdate(DocumentEvent arg0) {
 	}
 	
 	@Override
