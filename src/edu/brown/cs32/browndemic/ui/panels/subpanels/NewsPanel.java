@@ -8,6 +8,8 @@ import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.Timer;
 
 import edu.brown.cs32.browndemic.ui.UIConstants.Colors;
@@ -23,6 +25,7 @@ public class NewsPanel extends BrowndemicPanel {
 	private World _world;
 	private List<String> _localCopy;
 	private Timer _timer;
+	private JPanel _news;
 	
 	public NewsPanel(MainWorld world) {
 		super();
@@ -42,6 +45,11 @@ public class NewsPanel extends BrowndemicPanel {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		setBorder(BorderFactory.createLineBorder(Colors.RED_TEXT, 2));
 		
+		_news = new JPanel();
+		_news.setLayout(new BoxLayout(_news, BoxLayout.Y_AXIS));
+		
+		add(new JScrollPane(_news));
+		
 		if (_world.getNews() != null) {
 			_localCopy = new ArrayList<>(_world.getNews());
 		} else {
@@ -52,14 +60,14 @@ public class NewsPanel extends BrowndemicPanel {
 	}
 	
 	private void updateNews() {
-		removeAll();
+		_news.removeAll();
 		for (String s : _localCopy) {
 			JLabel newsItem = new JLabel(s);
 			newsItem.setForeground(Colors.RED_TEXT);
 			newsItem.setFont(Fonts.NORMAL_TEXT);
-			add(newsItem);
+			_news.add(newsItem);
 		}
-		revalidate();
+		_news.revalidate();
 	}
 	
 	private void update() {

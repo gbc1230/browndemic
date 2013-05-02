@@ -56,17 +56,10 @@ public class MultiplayerLobby extends UIPanel implements DocumentListener {
 	public MultiplayerLobby(boolean isHost, ClientWorld cli, ServerWorld ser) {
 		super();
 		_isHost = isHost;
-                _thisWorld = cli;
-                _serverWorld = ser;
-                _lobby = new ArrayList<>();
+        _thisWorld = cli;
+        _serverWorld = ser;
+        _lobby = new ArrayList<>();
 		makeUI();
-		_timer = new Timer(1000/5, new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				update();
-			}
-		});
-                _timer.start();
 	}
 	
 	@Override
@@ -77,13 +70,7 @@ public class MultiplayerLobby extends UIPanel implements DocumentListener {
 		_players = new JPanel();
 		_players.setLayout(new BoxLayout(_players, BoxLayout.Y_AXIS));
 		_players.setBackground(Colors.TRANSPARENT);
-		//_players.setMinimumSize(new Dimension(UI.WIDTH/2, 0));
-		//_players.setMaximumSize(new Dimension(UI.WIDTH/2, UI.CONTENT_HEIGHT));
-			
-		_players.add(new MultiplayerLobbyPanel("Test", "127.0.0.1", _isHost, null));
-		_players.add(new MultiplayerLobbyPanel("Test", "127.0.0.1", _isHost, null));
-		_players.add(new MultiplayerLobbyPanel("Test", "127.0.0.1", _isHost, null));
-                _players.add(new MultiplayerLobbyPanel("Test", "127.0.0.1", _isHost, null));
+		_players.setOpaque(false);
 		_players.add(Box.createGlue());
 		
 		JScrollPane scrollPane = new JScrollPane(_players, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -92,13 +79,13 @@ public class MultiplayerLobby extends UIPanel implements DocumentListener {
 		scrollPane.setMinimumSize(new Dimension(UI.WIDTH/2, 0));
 		scrollPane.setPreferredSize(new Dimension(UI.WIDTH/2, UI.CONTENT_HEIGHT));
 		scrollPane.setMaximumSize(new Dimension(UI.WIDTH/2, UI.CONTENT_HEIGHT));
+		scrollPane.getViewport().setBackground(Colors.TRANSPARENT);
+		scrollPane.setOpaque(false);
 		
 		JPanel bot = new JPanel();
 		bot.setBackground(Colors.TRANSPARENT);
 		bot.setLayout(new BoxLayout(bot, BoxLayout.X_AXIS));
 		bot.setOpaque(false);
-		//bot.setMaximumSize(new Dimension(UI.WIDTH, UI.CONTENT_HEIGHT/2));
-		//bot.setMinimumSize(new Dimension(UI.WIDTH/2, UI.CONTENT_HEIGHT));
 		
 		bot.add(scrollPane);
 		bot.add(new ChatPanel(new DumbChatServer()));
@@ -107,8 +94,6 @@ public class MultiplayerLobby extends UIPanel implements DocumentListener {
 		top.setLayout(new BoxLayout(top, BoxLayout.Y_AXIS));
 		top.setBackground(Colors.TRANSPARENT);
 		top.setOpaque(false);
-		//top.setMinimumSize(new Dimension(UI.WIDTH/2, 0));
-		//top.setMaximumSize(new Dimension(UI.WIDTH/2, UI.CONTENT_HEIGHT));
 		
 		JPanel diseaseName = new JPanel();
 		diseaseName.setLayout(new BoxLayout(diseaseName, BoxLayout.X_AXIS));
@@ -170,10 +155,17 @@ public class MultiplayerLobby extends UIPanel implements DocumentListener {
 	}
 	
 	private void update() {
-            _lobby = _thisWorld.getLobby();
-            System.out.println(_lobby);
-            if (_isHost)
-                System.out.println(_serverWorld.allReady());
+		if (!_lobby.equals(_thisWorld.getLobby())) {
+			System.out.println("UPDATING LOBBY");
+			_lobby = _thisWorld.getLobby();
+			_players.removeAll();
+			for (LobbyMember l : _lobby) {
+		        _players.add(new MultiplayerLobbyPanel(l.getName(), l.getIP(), _isHost, null, l.isReady()));
+			}
+	        _players.add(Box.createGlue());
+			_players.revalidate();
+		}
+        _lobby = _thisWorld.getLobby();
 	}
 	
 	private class SelectAction implements Action {
@@ -199,6 +191,13 @@ public class MultiplayerLobby extends UIPanel implements DocumentListener {
 
 	@Override
 	public void setupForDisplay() {
+		_timer = new Timer(1000/5, new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				update();
+			}
+		});
+		_timer.start();
 		Utils.getParentFrame(this).setTitle(new BackTitleBar(new MultiplayerMenu()));
 	}
 
