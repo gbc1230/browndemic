@@ -55,7 +55,9 @@ public class GameServerThread extends Thread{
                 _server.handle(_ID, (GameData)_input.readObject());
             }
             catch(IOException e){
-                System.out.println("ERROR: " + _ID + " can't read.");
+            	int id = _server.findClient(_ID);
+                System.out.println("Player " + id + " couldn't be read from.");
+                e.printStackTrace();
                 _server.remove(_ID);
                 break;
             }
