@@ -39,13 +39,11 @@ public class InGameTitleBar extends TitleBar {
 	private JMenuItem quit, save, exit;
 	private MainWorld _world;
 	private boolean _single;
-	private GameMenu _game;
 	
-	public InGameTitleBar(MainWorld world, boolean singlePlayer, GameMenu game) {
+	public InGameTitleBar(MainWorld world, boolean singlePlayer) {
 		super();
 		_world = world;
 		_single = singlePlayer;
-		_game = game;
 		makeUI();
 	}
 	
@@ -168,7 +166,6 @@ public class InGameTitleBar extends TitleBar {
 										null, null, null);
 			if (choice == 0) {
 				Utils.getParentFrame(this).setPanel(new MainMenu());
-				_game.stop();
 			}
 		} else if (e.getSource() == save) {
 			File saves = new File("saves");

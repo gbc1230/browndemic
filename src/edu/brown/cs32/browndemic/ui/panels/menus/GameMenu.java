@@ -128,7 +128,7 @@ public class GameMenu extends UIPanel {
 	@Override
 	public void setupForDisplay() {
 		if (_loaded) {
-			Utils.getParentFrame(this).setTitle(new InGameTitleBar(_world, true, this));
+			Utils.getParentFrame(this).setTitle(new InGameTitleBar(_world, true));
 			new Timer(3000, new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
@@ -146,12 +146,17 @@ public class GameMenu extends UIPanel {
 		return Strings.SINGLEPLAYER_GAME;
 	}
 	
-	public void stop() {
+	private void stop() {
 		_news.stop();
 		_info.stop();
 		_regions.stop();
 		_stats.stop();
 		_upgrade.stop();
 	}
+        
+        @Override
+        public void stopPanel() {
+            stop();
+        }
 	
 }

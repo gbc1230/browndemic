@@ -51,6 +51,7 @@ public class MultiplayerLobby extends UIPanel implements DocumentListener {
         private ServerWorld _serverWorld;
 //        private List<ClientWorld> _others;
         private List<LobbyMember> _lobby;
+        private Timer _timer;
 	
 	public MultiplayerLobby(boolean isHost, ClientWorld cli, ServerWorld ser) {
 		super();
@@ -59,12 +60,13 @@ public class MultiplayerLobby extends UIPanel implements DocumentListener {
                 _serverWorld = ser;
                 _lobby = new ArrayList<>();
 		makeUI();
-		new Timer(5000, new ActionListener() {
+		_timer = new Timer(1000/5, new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				update();
 			}
-		}).start();
+		});
+                _timer.start();
 	}
 	
 	@Override
@@ -230,4 +232,13 @@ public class MultiplayerLobby extends UIPanel implements DocumentListener {
 			
 		}
 	}
+        
+        @Override
+        public void stopPanel() {
+            _timer.stop();
+            _thisWorld.leaveLobby();
+            if (_isHost) {
+                
+            }
+        }
 }

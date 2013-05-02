@@ -96,15 +96,13 @@ public class MultiplayerMenu extends UIPanel implements MouseListener {
 	
 	@Override
 	public void mouseReleasedInside(MouseEvent e) {
-                int port = 6000;
-//                int port = Integer.parseInt(Settings.get(Settings.PORT));
-//                String name = Settings.get(Settings.NAME);
+                int port = Settings.getInt(Settings.PORT);
+                String name = Settings.get(Settings.NAME);
 		if (e.getSource() == _join) {
 			System.out.printf("Connect to %s\n", _host.getText());
                         
                         try{
-                            int d = (int)(Math.random() * 100);
-                            ClientWorld world = new ClientWorld("Client: " + d);
+                            ClientWorld world = new ClientWorld(name);
                             GameClient cli = new GameClient(_host.getText(), port, world);
                             Utils.getParentFrame(this).setPanel(new MultiplayerLobby(false, world, null));
                         }
@@ -116,7 +114,7 @@ public class MultiplayerMenu extends UIPanel implements MouseListener {
                     try{
                         ServerWorld sw = WorldMaker.makeNewEarthServer();
                         GameServer server = new GameServer(sw, port);
-                        ClientWorld world = new ClientWorld("Server");
+                        ClientWorld world = new ClientWorld(name);
                         GameClient cli = new GameClient("localhost", port, world);
 			Utils.getParentFrame(this).setPanel(new MultiplayerLobby(true, world, sw));
 			//Utils.getParentFrame(this).setPanel(new MultiplayerCreateServer());
