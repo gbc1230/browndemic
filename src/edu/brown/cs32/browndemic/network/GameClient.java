@@ -54,6 +54,8 @@ public class GameClient implements Runnable{
                 }
             }
             catch(IOException e){
+            	System.out.println("Client side problem:");
+            	e.printStackTrace();
                 stop();
                 break;
             }
