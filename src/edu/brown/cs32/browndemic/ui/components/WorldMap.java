@@ -11,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
@@ -37,13 +38,13 @@ import edu.brown.cs32.browndemic.ui.UIConstants.Colors;
 import edu.brown.cs32.browndemic.ui.UIConstants.Fonts;
 import edu.brown.cs32.browndemic.ui.UIConstants.Images;
 import edu.brown.cs32.browndemic.ui.actions.Action;
-import edu.brown.cs32.browndemic.world.MainWorld;
+import edu.brown.cs32.browndemic.world.World;
 
-public class WorldMap extends JComponent implements MouseListener {
+public class WorldMap extends JComponent implements MouseListener, MouseMotionListener {
 
 	private static final long serialVersionUID = -4481136165457141240L;
 	
-	private MainWorld _world;
+	private World _world;
 	private BufferedImage _map, _regions;
 	private Map<Integer, BufferedImage> _diseaseOverlays = new HashMap<>();
 	private Map<Integer, BufferedImage> _highlightOverlays = new HashMap<>();
@@ -51,12 +52,12 @@ public class WorldMap extends JComponent implements MouseListener {
 	private Map<Integer, AlphaComposite> _composites = new HashMap<>();
 	private ArrayList<Location> _airports = new ArrayList<>();
 	private List<MovingObject> _objects = new ArrayList<>();
-	private int _selected, _disease;
+	private int _selected, _disease, _hover;
 	private boolean _chooseMode;
 	
 	private static final double AIRPLANE_SPEED = 6.0;
 	
-	public WorldMap(MainWorld _world2, BufferedImage map, BufferedImage regions, int disease) {
+	public WorldMap(World _world2, BufferedImage map, BufferedImage regions, int disease) {
 		super();
 		_world = _world2;
 		_map = map;
@@ -64,6 +65,7 @@ public class WorldMap extends JComponent implements MouseListener {
 		_selected = 0;
 		_disease = disease;
 		addMouseListener(this);
+		addMouseMotionListener(this);
 		setPreferredSize(new Dimension(map.getWidth(), map.getHeight()));
 		setMaximumSize(new Dimension(map.getWidth(), map.getHeight()));
 		setMinimumSize(new Dimension(map.getWidth(), map.getHeight()));
@@ -243,7 +245,7 @@ public class WorldMap extends JComponent implements MouseListener {
 				float percentInfected = 0f;
 				if (r != null) {
 					try {
-						percentInfected = (float)r.getInfected().get(_disease) / (float)r.getPopulation();
+						percentInfected = ((float)r.getInfected().get(_disease) + (float)r.getKilled().get(_disease)) / (float)r.getPopulation();
 					} catch (IndexOutOfBoundsException e1) {
 						percentInfected = 0f;
 					}
@@ -267,6 +269,11 @@ public class WorldMap extends JComponent implements MouseListener {
 			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, Math.abs((System.currentTimeMillis() % 3000) - 1500)/5000.0f + 0.2f));
 			g2.drawImage(_highlightOverlays.get(_selected), 0, 0, null);
 			drawInfoPanel(g2);
+		}
+		
+		if (isValid(_hover)) {
+			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .5f));
+			g2.drawImage(_highlightOverlays.get(_hover), 0, 0, null);
 		}
 		
 		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
@@ -308,6 +315,7 @@ public class WorldMap extends JComponent implements MouseListener {
 		Region r = _world.getRegion(_selected);
 		String name = "";
 		long infected = 0, dead = 0, total = 1;
+		long airports = 0, seaports = 0;
 		
 		if (r != null) {
 			name = r.getName();
@@ -316,12 +324,25 @@ public class WorldMap extends JComponent implements MouseListener {
 			for (long l : r.getKilled())
 				dead += l;
 			total = r.getPopulation();
+			airports = r.getAir();
+			seaports = r.getSea();
 		}
 		g2.drawString(name, 5, getHeight() - 80);
 
-		g2.drawString(String.format("Infected: %d (%.2f%%)", infected, (double)infected/(double)total), 15, getHeight() - 55);
-		g2.drawString(String.format("Dead: %d (%.2f%%)", dead, (double)dead/(double)total), 15, getHeight() - 35);
+		g2.drawString(String.format("Infected: %d (%.2f%%)", infected, 100*(double)infected/(double)total), 15, getHeight() - 55);
+		g2.drawString(String.format("Dead: %d (%.2f%%)", dead, 100*(double)dead/(double)total), 15, getHeight() - 35);
 		g2.drawString(String.format("Total: %d", total), 15, getHeight() - 15);
+		
+		if (airports > 0) {
+			g2.drawImage(Resources.getImage(Images.AIRPORT_OPEN_BIG), 220, getHeight() - 85, null);
+		} else {
+			g2.drawImage(Resources.getImage(Images.AIRPORT_CLOSED_BIG), 220, getHeight() - 85, null);
+		}
+		if (seaports > 0) {
+			g2.drawImage(Resources.getImage(Images.SEAPORT_OPEN_BIG), 220, getHeight() - 45, null);
+		} else {
+			g2.drawImage(Resources.getImage(Images.SEAPORT_CLOSED_BIG), 220, getHeight() - 45, null);
+		}
 	}
 	
 	private class RepaintListener implements ActionListener {
@@ -357,8 +378,7 @@ public class WorldMap extends JComponent implements MouseListener {
 		int id = getID(p.x, p.y);
 		if (isValid(id)) {
 			if (_chooseMode) {
-				_world.start();
-				_world.getRegion(id).introduceDisease(_world.getDiseases().get(_disease));
+                _world.introduceDisease(_disease, id-1);
 				_chooseMode = false;
 			}
 			setSelection(id);
@@ -379,5 +399,14 @@ public class WorldMap extends JComponent implements MouseListener {
 	private int getID(int x, int y) {
 		int color = _regions.getRGB(x, y);
 		return (color & 0xFF000000) == 0xFF000000 ? color & 0x000000FF : 0;
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent e) {
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent e) {
+		_hover = getID(e.getPoint().x, e.getPoint().y);
 	}
 }

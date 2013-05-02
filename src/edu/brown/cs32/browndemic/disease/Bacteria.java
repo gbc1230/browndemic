@@ -178,6 +178,7 @@ public class Bacteria extends Disease{
         this._dryResistance -= soldPerk.getDryRes();
         this._medResistance -= soldPerk.getMedRes();
         this._points += soldPerk.getSellPrice();
+
     }
     
 }

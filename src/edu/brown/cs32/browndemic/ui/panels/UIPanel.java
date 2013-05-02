@@ -18,6 +18,10 @@ public abstract class UIPanel extends BrowndemicPanel {
 	}
 	
 	public abstract void setupForDisplay();
+        
+        public void stopPanel() {
+            
+        }
 	
 	protected void makeUI() {
 		setBackground(Colors.TRANSPARENT);

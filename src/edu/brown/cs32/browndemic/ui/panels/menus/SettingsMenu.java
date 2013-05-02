@@ -89,6 +89,8 @@ public class SettingsMenu extends UIPanel implements ItemListener, DocumentListe
 		_port.setFont(Fonts.BIG_TEXT);
 		_port.getDocument().addDocumentListener(this);
 		
+		Utils.setDefaultLook(_port, _name);
+		
 		port.add(Box.createGlue());
 		port.add(portLabel);
 		port.add(_port);

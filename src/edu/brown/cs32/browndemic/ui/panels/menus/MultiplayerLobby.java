@@ -4,6 +4,8 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -11,12 +13,9 @@ import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextField;
 import javax.swing.Timer;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
-import edu.brown.cs32.browndemic.ui.DumbChatServer;
+import edu.brown.cs32.browndemic.network.LobbyMember;
 import edu.brown.cs32.browndemic.ui.Resources;
 import edu.brown.cs32.browndemic.ui.UIConstants.Colors;
 import edu.brown.cs32.browndemic.ui.UIConstants.Fonts;
@@ -31,28 +30,28 @@ import edu.brown.cs32.browndemic.ui.panels.UIPanel;
 import edu.brown.cs32.browndemic.ui.panels.subpanels.ChatPanel;
 import edu.brown.cs32.browndemic.ui.panels.subpanels.MultiplayerLobbyPanel;
 import edu.brown.cs32.browndemic.ui.panels.titlebars.BackTitleBar;
+import edu.brown.cs32.browndemic.world.ClientWorld;
+import edu.brown.cs32.browndemic.world.ServerWorld;
 
-public class MultiplayerLobby extends UIPanel implements DocumentListener {
+public class MultiplayerLobby extends UIPanel {
 	private static final long serialVersionUID = -210420477317108195L;
 	
-	private boolean _isHost;
-	private boolean _nameSelected = false;
-	private boolean _diseaseSelected = false;
-	private JPanel _players;
+	private boolean _isHost, _started = false;
+	private JPanel _players, _chat;
 	private SelectButton _disease1, _disease2, _disease3;
-	private JTextField _diseaseName;
 	private JLabel _start;
+    private ClientWorld _thisWorld;
+    private ServerWorld _serverWorld;
+    private List<LobbyMember> _lobby;
+    private Timer _timer;
 	
-	public MultiplayerLobby(boolean isHost) {
+	public MultiplayerLobby(boolean isHost, ClientWorld cli, ServerWorld ser) {
 		super();
 		_isHost = isHost;
+        _thisWorld = cli;
+        _serverWorld = ser;
+        _lobby = new ArrayList<>();
 		makeUI();
-		new Timer(1000/300, new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				update();
-			}
-		});
 	}
 	
 	@Override
@@ -63,24 +62,7 @@ public class MultiplayerLobby extends UIPanel implements DocumentListener {
 		_players = new JPanel();
 		_players.setLayout(new BoxLayout(_players, BoxLayout.Y_AXIS));
 		_players.setBackground(Colors.TRANSPARENT);
-		//_players.setMinimumSize(new Dimension(UI.WIDTH/2, 0));
-		//_players.setMaximumSize(new Dimension(UI.WIDTH/2, UI.CONTENT_HEIGHT));
-		
-		
-		_players.add(new MultiplayerLobbyPanel("Test", "127.0.0.1", _isHost, null));
-		_players.add(new MultiplayerLobbyPanel("Test", "127.0.0.1", _isHost, null));
-		_players.add(new MultiplayerLobbyPanel("Test", "127.0.0.1", _isHost, null));
-		_players.add(new MultiplayerLobbyPanel("Test", "127.0.0.1", _isHost, null));
-		_players.add(new MultiplayerLobbyPanel("Test", "127.0.0.1", _isHost, null));
-		_players.add(new MultiplayerLobbyPanel("Test", "127.0.0.1", _isHost, null));
-		_players.add(new MultiplayerLobbyPanel("Test", "127.0.0.1", _isHost, null));
-		_players.add(new MultiplayerLobbyPanel("Test", "127.0.0.1", _isHost, null));
-		_players.add(new MultiplayerLobbyPanel("Test", "127.0.0.1", _isHost, null));
-		_players.add(new MultiplayerLobbyPanel("Test", "127.0.0.1", _isHost, null));
-		_players.add(new MultiplayerLobbyPanel("Test", "127.0.0.1", _isHost, null));
-		_players.add(new MultiplayerLobbyPanel("Test", "127.0.0.1", _isHost, null));
-		_players.add(new MultiplayerLobbyPanel("Test", "127.0.0.1", _isHost, null));
-		_players.add(new MultiplayerLobbyPanel("Test", "127.0.0.1", _isHost, null));
+		_players.setOpaque(false);
 		_players.add(Box.createGlue());
 		
 		JScrollPane scrollPane = new JScrollPane(_players, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -89,41 +71,22 @@ public class MultiplayerLobby extends UIPanel implements DocumentListener {
 		scrollPane.setMinimumSize(new Dimension(UI.WIDTH/2, 0));
 		scrollPane.setPreferredSize(new Dimension(UI.WIDTH/2, UI.CONTENT_HEIGHT));
 		scrollPane.setMaximumSize(new Dimension(UI.WIDTH/2, UI.CONTENT_HEIGHT));
+		scrollPane.getViewport().setBackground(Colors.TRANSPARENT);
+		scrollPane.setOpaque(false);
+		scrollPane.getViewport().setOpaque(false);
 		
 		JPanel bot = new JPanel();
 		bot.setBackground(Colors.TRANSPARENT);
 		bot.setLayout(new BoxLayout(bot, BoxLayout.X_AXIS));
 		bot.setOpaque(false);
-		//bot.setMaximumSize(new Dimension(UI.WIDTH, UI.CONTENT_HEIGHT/2));
-		//bot.setMinimumSize(new Dimension(UI.WIDTH/2, UI.CONTENT_HEIGHT));
 		
 		bot.add(scrollPane);
-		bot.add(new ChatPanel(new DumbChatServer()));
+		bot.add(_chat = new ChatPanel(_thisWorld));
 		
 		JPanel top = new JPanel();
 		top.setLayout(new BoxLayout(top, BoxLayout.Y_AXIS));
 		top.setBackground(Colors.TRANSPARENT);
 		top.setOpaque(false);
-		//top.setMinimumSize(new Dimension(UI.WIDTH/2, 0));
-		//top.setMaximumSize(new Dimension(UI.WIDTH/2, UI.CONTENT_HEIGHT));
-		
-		JPanel diseaseName = new JPanel();
-		diseaseName.setLayout(new BoxLayout(diseaseName, BoxLayout.X_AXIS));
-		diseaseName.setMaximumSize(new Dimension(UI.WIDTH-150, 200));
-		diseaseName.setBackground(Colors.TRANSPARENT);
-		
-		JLabel diseaseNameLabel = new JLabel(Strings.ENTER_DISEASE_NAME);
-		diseaseNameLabel.setFont(Fonts.BIG_TEXT);
-		diseaseNameLabel.setForeground(Colors.RED_TEXT);
-		_diseaseName = new JTextField();
-		_diseaseName.setFont(Fonts.BIG_TEXT);
-		_diseaseName.setForeground(Colors.RED_TEXT);
-		_diseaseName.setBackground(Colors.MENU_BACKGROUND);
-		_diseaseName.getDocument().addDocumentListener(this);
-		diseaseName.add(diseaseNameLabel);
-		diseaseName.add(_diseaseName);
-		top.add(diseaseName);
-		top.add(Box.createRigidArea(new Dimension(0, 25)));
 		
 		JLabel selectDisease = new JLabel(Strings.SELECT_DISEASE);
 		selectDisease.setFont(Fonts.BIG_TEXT);
@@ -135,13 +98,14 @@ public class MultiplayerLobby extends UIPanel implements DocumentListener {
 		JPanel diseaseContainer = new JPanel();
 		diseaseContainer.setLayout(new BoxLayout(diseaseContainer, BoxLayout.X_AXIS));
 		diseaseContainer.setBackground(Colors.TRANSPARENT);
+		diseaseContainer.setOpaque(false);
 
 		_disease1 = new SelectButton(Resources.getImage(Images.DISEASE1), Resources.getImage(Images.DISEASE1_SELECTED));
 		_disease2 = new SelectButton(Resources.getImage(Images.DISEASE2), Resources.getImage(Images.DISEASE2_SELECTED));
 		_disease3 = new SelectButton(Resources.getImage(Images.DISEASE3), Resources.getImage(Images.DISEASE3_SELECTED));
-		_disease2.addOnSelectAction(new SelectAction(_disease1, _disease3));
-		_disease1.addOnSelectAction(new SelectAction(_disease2, _disease3));
-		_disease3.addOnSelectAction(new SelectAction(_disease2, _disease1));
+		_disease2.addOnSelectAction(new SelectAction(2, _disease1, _disease3));
+		_disease1.addOnSelectAction(new SelectAction(1, _disease2, _disease3));
+		_disease3.addOnSelectAction(new SelectAction(3, _disease2, _disease1));
 
 		diseaseContainer.add(Box.createGlue());
 		diseaseContainer.add(_disease1);
@@ -167,20 +131,39 @@ public class MultiplayerLobby extends UIPanel implements DocumentListener {
 	}
 	
 	private void update() {
-		// Check if players are ready
+		if (!_lobby.equals(_thisWorld.getLobby())) {
+			System.out.println("UPDATING LOBBY");
+			_lobby = _thisWorld.getLobby();
+			_players.removeAll();
+			for (LobbyMember l : _lobby) {
+		        _players.add(new MultiplayerLobbyPanel(l.getName(), l.getIP(), _isHost, null, l.isReady()));
+			}
+	        _players.add(Box.createGlue());
+			_players.revalidate();
+		}
+		if (_serverWorld != null) {
+			_start.setEnabled(_serverWorld.allReady());
+		}
+		if (_thisWorld.isGameReady()) {
+			_started = true;
+			Utils.getParentFrame(this).setPanel(new GameMenu(_thisWorld, _thisWorld.getDiseaseID(), true));
+			_timer.stop();
+		}
 	}
 	
 	private class SelectAction implements Action {
 		
 		private SelectButton[] other;
+                private int id;
 		
-		public SelectAction(SelectButton... other) {
+		public SelectAction(int id, SelectButton... other) {
 			this.other = other;
+            this.id = id;
 		}
 
 		@Override
 		public void doAction() {
-			_diseaseSelected = true;
+			_thisWorld.changeDiseasesPicked(id);
 			for (SelectButton b : other) {
 				b.deSelect();
 			}
@@ -190,6 +173,15 @@ public class MultiplayerLobby extends UIPanel implements DocumentListener {
 
 	@Override
 	public void setupForDisplay() {
+		update();
+		_timer = new Timer(1000/4, new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				update();
+			}
+		});
+		_timer.start();
+		_chat.requestFocusInWindow();
 		Utils.getParentFrame(this).setTitle(new BackTitleBar(new MultiplayerMenu()));
 	}
 
@@ -197,30 +189,22 @@ public class MultiplayerLobby extends UIPanel implements DocumentListener {
 	public String toString() {
 		return Strings.MULTIPLAYER_LOBBY;
 	}
-
-	@Override
-	public void changedUpdate(DocumentEvent e) {
-		if (e.getDocument() == _diseaseName.getDocument()) {
-			if (_diseaseName.getText().equals("")) {
-				_nameSelected = false;
-			} else {
-				_nameSelected = true;
-			}
-		}
-	}
-
-	@Override
-	public void insertUpdate(DocumentEvent arg0) {
-	}
-
-	@Override
-	public void removeUpdate(DocumentEvent arg0) {
-	}
 	
 	@Override
 	public void mouseReleasedInside(MouseEvent e) {
 		if (e.getSource() == _start && _start.isEnabled()) {
-			
+			_serverWorld.collectDiseases();
 		}
 	}
+        
+    @Override
+    public void stopPanel() {
+        _timer.stop();
+        if (!_started) {
+	        _thisWorld.leaveLobby();
+	        if (_isHost) {
+	        	_serverWorld.killServer();
+	        }
+        }
+    }
 }

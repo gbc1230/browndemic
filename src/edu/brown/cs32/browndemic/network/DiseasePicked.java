@@ -8,21 +8,21 @@ package edu.brown.cs32.browndemic.network;
  *
  * @author Graham
  */
-public class DCMessage implements GameData{
+public class DiseasePicked implements GameData{
     
-    private int _id;
+    private int _change;
     
-    public DCMessage(int id){
-        _id = id;
+    public DiseasePicked(int c){
+        _change = c;
     }
     
     @Override
     public String getID(){
-        return "DC";
+        return "DP";
     }
     
-    public int getPlayerID(){
-    	return _id;
+    public int getChange(){
+        return _change;
     }
     
 }

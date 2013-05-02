@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import edu.brown.cs32.browndemic.disease.Bacteria;
+import edu.brown.cs32.browndemic.disease.Parasite;
 import edu.brown.cs32.browndemic.disease.Virus;
 import edu.brown.cs32.browndemic.ui.BrowndemicFrame;
 import edu.brown.cs32.browndemic.ui.Resources;
@@ -27,7 +28,7 @@ import edu.brown.cs32.browndemic.ui.components.HoverLabel;
 import edu.brown.cs32.browndemic.ui.components.SelectButton;
 import edu.brown.cs32.browndemic.ui.panels.UIPanel;
 import edu.brown.cs32.browndemic.ui.panels.titlebars.BackTitleBar;
-import edu.brown.cs32.browndemic.world.MainWorld;
+import edu.brown.cs32.browndemic.world.World;
 import edu.brown.cs32.browndemic.world.WorldMaker;
 
 public class SinglePlayerMenu extends UIPanel {
@@ -71,6 +72,7 @@ public class SinglePlayerMenu extends UIPanel {
 		diseaseNameLabel.setFont(Fonts.BIG_TEXT);
 		diseaseNameLabel.setForeground(Colors.RED_TEXT);
 		_diseaseName = new JTextField();
+		Utils.setDefaultLook(_diseaseName);
 		_diseaseName.setFont(Fonts.BIG_TEXT);
 		_diseaseName.setForeground(Colors.RED_TEXT);
 		_diseaseName.setBackground(Colors.MENU_BACKGROUND);
@@ -151,9 +153,7 @@ public class SinglePlayerMenu extends UIPanel {
 				//TODO: Error, invalid disease name
 			}
 			
-			System.out.println("Start game with:\n\tDisease: " + disease + "\n\tName: " + name);
-			
-			MainWorld w;
+			World w;
 			try {
 				w = WorldMaker.makeNewEarthSP();
 			} catch (IOException e1) {
@@ -165,6 +165,8 @@ public class SinglePlayerMenu extends UIPanel {
 				w.addDisease(new Bacteria(name));
 			if (disease == 2)
 				w.addDisease(new Virus(name));
+			if (disease == 3)
+				w.addDisease(new Parasite(name));
 			
 			Utils.getParentFrame(this).setPanel(new GameMenu(w, 0, false));
 		} else if (e.getSource() == _load) {

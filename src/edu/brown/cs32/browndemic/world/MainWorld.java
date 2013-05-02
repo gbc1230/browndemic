@@ -18,7 +18,7 @@ import edu.brown.cs32.browndemic.region.RegionTransmission;
  *
  * @author gcarling
  */
-public class MainWorld extends Thread implements Serializable, World{
+public abstract class MainWorld implements Serializable, World, Runnable{
 
     //ArrayList of Regions
     protected List<Region> _regions;
@@ -37,7 +37,7 @@ public class MainWorld extends Thread implements Serializable, World{
     //also the progress towards the cure
     protected List<Long> _kills, _infects, _cures;
     
-        //winners takes care of the winners: if empty at the end of the game,
+    //winners takes care of the winners: if empty at the end of the game,
     //it signifies that all diseases were erradicated
     protected List<Integer> _winners;
     
@@ -49,14 +49,17 @@ public class MainWorld extends Thread implements Serializable, World{
     //news
     protected List<String> _news;
     
-    //whether or not the game is still going on
-    protected boolean _started, _gameOver, _paused;
+    //whether or not the game is still going on, whether the game is paused
+    protected boolean _started, _gameOver, _paused, _allDiseasesPicked;
     
     //for keeping track of transmissions
     protected List<RegionTransmission> _transmissions;
     
     //minimum ticks to a cure
     protected final int _MINCURETICKS = 540;
+    
+    //how many disease / starting regions have been picked
+    protected int _numDiseasesPicked, _numRegionsPicked;
     
     //NOTE: each index of diseases, killed, cures refers to the same disease:
     //i.e. index 2 of each refers to the disease object, how many it has killed,
@@ -74,6 +77,7 @@ public class MainWorld extends Thread implements Serializable, World{
         _cures = new ArrayList<>();
         _sent = new ArrayList<>();
         _cured = new ArrayList<>();
+        _news = new ArrayList<>();
         _transmissions = new ArrayList<>();
         _dead = 0;
         _infected = 0;
@@ -92,8 +96,7 @@ public class MainWorld extends Thread implements Serializable, World{
      */
     @Override
     public void addPerk(int dis, int perk, boolean buy){
-        System.out.println("Got perk: " + dis + ", " + perk + ", " + buy);
-        /*
+        System.out.println("Adding perk: " + dis + " , " + perk +  ", " + buy);
         Disease d = _diseases.get(dis);
         try{
             if (buy)
@@ -103,7 +106,7 @@ public class MainWorld extends Thread implements Serializable, World{
         }
         catch(IllegalAccessException e){
             
-        }*/
+        }
     }
     
     /**
@@ -119,7 +122,9 @@ public class MainWorld extends Thread implements Serializable, World{
      * addDisease() adds the given Disease to _diseases
      * @param d the Disease to add
      */
+    @Override
     public void addDisease(Disease d){
+        System.out.println("Adding a disease: " + d.getName());
         int id = _diseases.size();
         _diseases.add(d);
         d.setID(id);
@@ -149,7 +154,7 @@ public class MainWorld extends Thread implements Serializable, World{
      */
     @Override
     public long getInfected(){
-        return _infected - _dead;
+        return _infected;
     }
 
     /**
@@ -187,6 +192,11 @@ public class MainWorld extends Thread implements Serializable, World{
     }
     
     @Override
+    public double getCurePercentage(int d){
+    	return (_cures.get(d) / _cureTotal) * 100.0;
+    }
+    
+    @Override
     public List<String> getNews(){
         return _news;
     }
@@ -198,6 +208,18 @@ public class MainWorld extends Thread implements Serializable, World{
             _waitTime = 200L;
         else if (time == 3)
             _waitTime = 100L;
+    }
+    
+    @Override
+    public void introduceDisease(int d, int r){
+        System.out.println("Introducing " + d + " to " + r);
+        _regions.get(r).introduceDisease(_diseases.get(d));
+        _numRegionsPicked++;
+    }
+    
+    @Override
+    public boolean allDiseasesPicked(){
+        return _allDiseasesPicked;
     }
     
     public void pause(){
@@ -401,26 +423,23 @@ public class MainWorld extends Thread implements Serializable, World{
         checkCures();
         updateCured();
     }
-    
+
     /**
      * Runs the game
      */
     @Override
     public void run(){
-        for (int i = 0; i < _diseases.size(); i++){
-            _cures.add(0L);
-            _kills.add(0L);
-            _infects.add(0L);
-            _sent.add(false);
-            _cured.add(false);
+        System.out.println("begin the loop");
+        int i = 0;
+        while(_numRegionsPicked < _diseases.size()){
+            try{
+                Thread.sleep(1);
+            }
+            catch(Exception e){
+                
+            }
         }
-        for (Region r : _regions){
-            _population += r.getPopulation();
-            r.setNumDiseases(_diseases.size());
-            _cureTotal += r.getWealth() * r.getPopulation() * _MINCURETICKS;
-        }
-        _paused = false;
-        _started = true;
+        System.out.println("starting game");
         while (!_gameOver){
             if (!_paused){
                 long start = System.currentTimeMillis();

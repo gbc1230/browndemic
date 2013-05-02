@@ -16,7 +16,7 @@ public class Settings {
 	public static final String NAME = "name";
 	public static final String PORT = "port";
 	
-	private static final int DEFAULT_PORT = 22222;
+	private static final int DEFAULT_PORT = 6000;
 
 	private static Map<String, String> _settings = new HashMap<>();
 	private static Map<String, Boolean> _booleans = new HashMap<>();
@@ -32,7 +32,7 @@ public class Settings {
 		BufferedWriter bw = new BufferedWriter(new FileWriter(new File(PATH), true));
 
 		if (!_booleans.containsKey(CACHING)) {
-			bw.write(String.format("%s=%s", CACHING, "false"));
+			bw.write(String.format("%s=%s", CACHING, "true"));
 			bw.newLine();
 		}
 		if (!_settings.containsKey(NAME)) {

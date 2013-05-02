@@ -62,6 +62,9 @@ public interface World {
     //tells me which diseases are cured
     public List<Boolean> getCured();
     
+    //percentage to the cure
+    public double getCurePercentage(int d);
+    
     //gets the news
     public List<String> getNews();
     
@@ -73,7 +76,19 @@ public interface World {
     
     //tells if the game is over
     public boolean isGameOver();
+    
+    //introduce a disease to a region
+    public void introduceDisease(int r, int d);
+    
+    //add a new disease 
+    public void addDisease(Disease d);
+    
+    //tell this world that a user has picked or unpicked a disease when
+    //choosing diseases 
+    public void changeDiseasesPicked(int change);
 
+    //tells me if all diseases have been picked
+    public boolean allDiseasesPicked();
     /**
      * Lets me know if all diseases have been cured
      * @return boolean
@@ -85,6 +100,16 @@ public interface World {
      * @return boolean
      */
     public boolean allKilled();
+    
+    //pausing: only works in SP
+    public void pause();
+    
+    //unpausing: only works in SP
+    public void unpause();
+    
+    //change speed: only works in MP
+    public void setSpeed(int t);
+    
 
     
 }

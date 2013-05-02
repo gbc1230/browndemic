@@ -7,6 +7,7 @@ package edu.brown.cs32.browndemic.network;
 import edu.brown.cs32.browndemic.world.*;
 import java.io.*;
 import java.net.*;
+import java.util.List;
 
 /**
  *
@@ -14,7 +15,6 @@ import java.net.*;
  */
 public class GameClient implements Runnable{
 
-    private final int PORT = 6000;
     //the socket this client is at
     private Socket _socket;
     //the thread this client will run on
@@ -27,18 +27,18 @@ public class GameClient implements Runnable{
     private ClientWorld _world;
 
     //constructor
-    public GameClient(String host, ClientWorld w) throws IOException{
-        try{
-            _socket = new Socket(host, PORT);
-            _output = new ObjectOutputStream(_socket.getOutputStream());
-            _client = new GameClientThread(this, _socket);
-            _world = w;
-            _thread = new Thread(this);
-            _thread.start();
-        }
-        catch(UnknownHostException e){
-            System.out.println("Host Unknown: " + e.getMessage());
-        }
+    public GameClient(String host, int port, ClientWorld w) throws IOException {
+        _socket = new Socket(host, port);
+        _output = new ObjectOutputStream(_socket.getOutputStream());
+        _client = new GameClientThread(this, _socket);
+        _world = w;
+        _thread = new Thread(this);
+        String name = _world.getName();
+        String IP = InetAddress.getLocalHost().getHostAddress();
+        LobbyMember lm = new LobbyMember(name, IP);
+        _output.writeObject(lm);
+        _output.flush();
+        _thread.start();
     }
 
     //run method for runnable: runs immediately, loops reading input and sending
@@ -54,8 +54,8 @@ public class GameClient implements Runnable{
                 }
             }
             catch(IOException e){
-                System.out.println("ERROR");
                 stop();
+                break;
             }
         }
     }
@@ -67,7 +67,6 @@ public class GameClient implements Runnable{
     public void handle(GameData msg){
         String id = msg.getID();
         if (id.equals("W")){
-            System.out.println("Received a new world");
             WorldOutput wo = (WorldOutput)msg;
             _world.setWorld(wo.getWorld());
         }
@@ -75,8 +74,21 @@ public class GameClient implements Runnable{
             ChatMessage m = (ChatMessage)msg;
             _world.acceptMessage(m.getMessage());
         }
-        else if (id.equals("D")){
-            System.out.println("got the d");
+        else if (id.equals("DC")){
+        	DCMessage dc = (DCMessage)msg;
+        	_world.getDisconnect(dc.getPlayerID());
+        }
+        else if (id.equals("LS")){
+            LobbySender ls = (LobbySender)msg;
+            List<LobbyMember> lobby = ls.getLobby();
+            _world.setLobby(lobby);
+        }
+        else if (id.equals("CD")){
+        	CollectDiseases cd = (CollectDiseases)msg;
+            _world.sendDisease(cd.getDiseaseID(), cd.getWorld());
+        }
+        else if (id.equals("H")){
+        	stop();
         }
     }
 
@@ -84,6 +96,8 @@ public class GameClient implements Runnable{
      * Close down this client
      */
     public void stop(){
+        System.out.println(_world.getName() + " is disconnecting from host...");
+        _world.disconnectHost();
         try{
             _output.close();
             _socket.close();
@@ -91,7 +105,7 @@ public class GameClient implements Runnable{
             _client.close();
         }
         catch(Exception e){
-            //System.out.println("Error closing...");
+            System.out.println("Error closing GameClient");
         }
     }
 

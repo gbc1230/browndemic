@@ -8,21 +8,15 @@ package edu.brown.cs32.browndemic.network;
  *
  * @author Graham
  */
-public class DCMessage implements GameData{
+public class LobbyRemoval implements GameData{
+
     
-    private int _id;
-    
-    public DCMessage(int id){
-        _id = id;
+    public LobbyRemoval(){
     }
     
     @Override
     public String getID(){
-        return "DC";
-    }
-    
-    public int getPlayerID(){
-    	return _id;
+        return "LR";
     }
     
 }

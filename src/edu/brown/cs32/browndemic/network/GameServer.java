@@ -16,7 +16,6 @@ import java.util.ArrayList;
  */
 public class GameServer implements Runnable{
 
-    private final int PORT = 6000;
     //one thread per client
     private List<GameServerThread> _clients;
     //the socket this server runs on
@@ -27,46 +26,41 @@ public class GameServer implements Runnable{
     private boolean _accepting;
     //the world i'm operating on
     private ServerWorld _world;
+    //sending out lobbies and then worlds
+    private InfoSender _sender;
 
     // constructor
-    public GameServer(ServerWorld w) throws IOException{
-        _server = new ServerSocket(PORT);
+    public GameServer(ServerWorld w, int port) throws IOException{
+        _server = new ServerSocket(port);
         _server.setSoTimeout(5000);
         _thread = new Thread(this);
         _clients = new ArrayList<GameServerThread>();
         _accepting = true;
         _world = w;
+        _sender = new InfoSender(_clients, _world, this);
+        _sender.start();
         _thread.start();
     }
 
     //run method: catches new threads as they come in
     @Override
     public void run(){
-        while (_accepting){
+        while (!_world.isGameOver()){
             try{
-                System.out.println("looking...");
-                Socket temp = _server.accept();
-                if (temp != null){
-                    addThread(temp);
-                    System.out.println("Got new client.");
+                if (_accepting){
+                    Socket temp = _server.accept();
+                    if (temp != null){
+                        addThread(temp);
+                        System.out.println("Got new client.");
+                    }
                 }
+            }
+            catch(SocketTimeoutException e){
+                continue;
             }
             catch(IOException e){
-                if (_thread != null){
-                    _accepting = false;
-                    _thread = null;
-                }
-            }
-        }
-        System.out.println("Sending worlds....");
-        while (true){
-            ServerWorld w = _world.getNextCommand();
-            if (w == null)
+            	System.out.println("IOException at GameServer");
                 continue;
-            WorldOutput wo = new WorldOutput(w);
-            for (GameServerThread thread : _clients){
-                System.out.println("Sending a world...");
-                thread.sendMessage(wo);
             }
         }
     }
@@ -99,14 +93,34 @@ public class GameServer implements Runnable{
      */
     public synchronized void handle(int ID, GameData gd) throws IOException, ClassNotFoundException{
         String id = gd.getID();
+        int client = findClient(ID);
         if (id.equals("P")){
             PerkInput pi = (PerkInput)gd;
             _world.addPerk(pi.getDiseaseID(), pi.getPerkID(), pi.isBuying());
         }
         else if(id.equals("M")){
-            for (GameServerThread client : _clients){
-                client.sendMessage(gd);
+            for (GameServerThread c : _clients){
+                c.sendMessage(gd);
             }
+        }
+        else if (id.equals("DA")){
+            DiseaseAdder da = (DiseaseAdder)gd;
+            _world.addDisease(da.getDisease(), client);
+        }
+        else if (id.equals("DI")){
+            DiseaseIntroducer di = (DiseaseIntroducer)gd;
+            _world.introduceDisease(di.getRegion(), di.getDisease());
+        }
+        else if (id.equals("DP")){
+            DiseasePicked dp = (DiseasePicked)gd;
+            _world.changeDiseasesPicked(client);
+        }
+        else if (id.equals("LM")){
+            LobbyMember lm = (LobbyMember)gd;
+            _world.addLobbyMember(lm);
+        }
+        else if (id.equals("LR")){
+            _world.removeLobbyMember(client);
         }
     }
 
@@ -122,7 +136,7 @@ public class GameServer implements Runnable{
             _clients.remove(toKill);
             _world.removeDisease(pos);
             toKill.close();
-            DCMessage msg = new DCMessage("Player " + pos + " has disconnected.");
+            DCMessage msg = new DCMessage(pos);
             for (GameServerThread gst : _clients){
                 gst.sendMessage(msg);
             }
@@ -139,6 +153,20 @@ public class GameServer implements Runnable{
         temp.open();
         temp.start();
         _clients.add(temp);
+    }
+    
+    public void stop(){
+    	try{
+    		_server.close();
+    		for (GameServerThread kill : _clients){
+    			kill.close();
+    		}
+    		_clients.clear();
+    		_thread = null;
+    	}
+    	catch(IOException e){
+    		//Error closing
+    	}
     }
 
     /*public static void main(String [] args) throws Exception{

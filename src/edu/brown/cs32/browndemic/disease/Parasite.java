@@ -178,6 +178,7 @@ public class Parasite extends Disease{
             if(p.isOwned()) ans.add(p);
         }
         return ans;
+
     }
 
 }
