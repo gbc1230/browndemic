@@ -55,9 +55,9 @@ public class UpgradePanel extends BrowndemicPanel implements ListSelectionListen
 	private void makeUI() {
 		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		setBackground(Colors.MENU_BACKGROUND);
-		setPreferredSize(new Dimension((int)(UI.WIDTH/1.5), UI.CONTENT_HEIGHT));
-		setMinimumSize(new Dimension((int)(UI.WIDTH/1.5), 0));
-		setMaximumSize(new Dimension((int)(UI.WIDTH/1.5), UI.CONTENT_HEIGHT));
+		//setPreferredSize(new Dimension((int)(UI.WIDTH/1.5), UI.CONTENT_HEIGHT));
+		//setMinimumSize(new Dimension((int)(UI.WIDTH/1.5), 0));
+		//setMaximumSize(new Dimension((int)(UI.WIDTH/1.5), UI.CONTENT_HEIGHT));
 		
 		_perkList = new JList<>(_perks);
 		_perkList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -73,8 +73,8 @@ public class UpgradePanel extends BrowndemicPanel implements ListSelectionListen
 		JPanel info = new JPanel();
 		info.setLayout(new BoxLayout(info, BoxLayout.Y_AXIS));
 		info.setBackground(Colors.MENU_BACKGROUND);
-		info.setPreferredSize(new Dimension(250, UI.CONTENT_HEIGHT));
-		info.setMinimumSize(new Dimension(250, UI.CONTENT_HEIGHT));
+		info.setPreferredSize(new Dimension(250, 0));
+		info.setMinimumSize(new Dimension(250, 0));
 		info.setMaximumSize(new Dimension(250, UI.CONTENT_HEIGHT));
 		
 		_perkName = new JLabel();
