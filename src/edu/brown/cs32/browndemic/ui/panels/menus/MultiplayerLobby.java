@@ -165,7 +165,12 @@ public class MultiplayerLobby extends UIPanel implements DocumentListener {
 	        _players.add(Box.createGlue());
 			_players.revalidate();
 		}
-        _lobby = _thisWorld.getLobby();
+		if (_serverWorld != null) {
+			_start.setEnabled(_serverWorld.allReady());
+		}
+		if (_thisWorld.isGameReady()) {
+			Utils.getParentFrame(this).setPanel(new GameMenu(_thisWorld, _thisWorld.getDiseaseID(), true));
+		}
 	}
 	
 	private class SelectAction implements Action {
@@ -228,16 +233,16 @@ public class MultiplayerLobby extends UIPanel implements DocumentListener {
 	@Override
 	public void mouseReleasedInside(MouseEvent e) {
 		if (e.getSource() == _start && _start.isEnabled()) {
-			
+			_serverWorld.collectDiseases();
 		}
 	}
         
-        @Override
-        public void stopPanel() {
-            _timer.stop();
-            _thisWorld.leaveLobby();
-            if (_isHost) {
-                
-            }
+    @Override
+    public void stopPanel() {
+        _timer.stop();
+        _thisWorld.leaveLobby();
+        if (_isHost) {
+            
         }
+    }
 }

@@ -37,13 +37,13 @@ import edu.brown.cs32.browndemic.ui.UIConstants.Colors;
 import edu.brown.cs32.browndemic.ui.UIConstants.Fonts;
 import edu.brown.cs32.browndemic.ui.UIConstants.Images;
 import edu.brown.cs32.browndemic.ui.actions.Action;
-import edu.brown.cs32.browndemic.world.MainWorld;
+import edu.brown.cs32.browndemic.world.World;
 
 public class WorldMap extends JComponent implements MouseListener {
 
 	private static final long serialVersionUID = -4481136165457141240L;
 	
-	private MainWorld _world;
+	private World _world;
 	private BufferedImage _map, _regions;
 	private Map<Integer, BufferedImage> _diseaseOverlays = new HashMap<>();
 	private Map<Integer, BufferedImage> _highlightOverlays = new HashMap<>();
@@ -56,7 +56,7 @@ public class WorldMap extends JComponent implements MouseListener {
 	
 	private static final double AIRPLANE_SPEED = 6.0;
 	
-	public WorldMap(MainWorld _world2, BufferedImage map, BufferedImage regions, int disease) {
+	public WorldMap(World _world2, BufferedImage map, BufferedImage regions, int disease) {
 		super();
 		_world = _world2;
 		_map = map;
@@ -371,9 +371,7 @@ public class WorldMap extends JComponent implements MouseListener {
 		int id = getID(p.x, p.y);
 		if (isValid(id)) {
 			if (_chooseMode) {
-				_world.start();
-                                _world.introduceDisease(_disease, id-1);
-				//_world.getRegion(id).introduceDisease(_world.getDiseases().get(_disease));
+                _world.introduceDisease(_disease, id-1);
 				_chooseMode = false;
 			}
 			setSelection(id);

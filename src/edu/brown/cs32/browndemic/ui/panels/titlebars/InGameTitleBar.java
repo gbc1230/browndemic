@@ -26,9 +26,8 @@ import edu.brown.cs32.browndemic.ui.actions.Action;
 import edu.brown.cs32.browndemic.ui.components.HoverLabel;
 import edu.brown.cs32.browndemic.ui.components.SelectButton;
 import edu.brown.cs32.browndemic.ui.panels.DragWindow;
-import edu.brown.cs32.browndemic.ui.panels.menus.GameMenu;
 import edu.brown.cs32.browndemic.ui.panels.menus.MainMenu;
-import edu.brown.cs32.browndemic.world.MainWorld;
+import edu.brown.cs32.browndemic.world.World;
 
 public class InGameTitleBar extends TitleBar {
 
@@ -37,10 +36,10 @@ public class InGameTitleBar extends TitleBar {
 	private JLabel minimize; 
 	private SelectButton pause, play1, play2, play3;
 	private JMenuItem quit, save, exit;
-	private MainWorld _world;
+	private World _world;
 	private boolean _single;
 	
-	public InGameTitleBar(MainWorld world, boolean singlePlayer) {
+	public InGameTitleBar(World world, boolean singlePlayer) {
 		super();
 		_world = world;
 		_single = singlePlayer;

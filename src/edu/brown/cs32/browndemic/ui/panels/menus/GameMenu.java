@@ -28,13 +28,13 @@ import edu.brown.cs32.browndemic.ui.panels.subpanels.RegionPanel;
 import edu.brown.cs32.browndemic.ui.panels.subpanels.StatPanel;
 import edu.brown.cs32.browndemic.ui.panels.subpanels.UpgradePanel;
 import edu.brown.cs32.browndemic.ui.panels.titlebars.InGameTitleBar;
-import edu.brown.cs32.browndemic.world.MainWorld;
+import edu.brown.cs32.browndemic.world.World;
 
 public class GameMenu extends UIPanel {
 	
 	private static final long serialVersionUID = 3275157554958820602L;
 	
-	private MainWorld _world;
+	private World _world;
 	private WorldMap _map;
 	private boolean _loaded = false, _multiplayer;
 	private int _disease;
@@ -45,7 +45,7 @@ public class GameMenu extends UIPanel {
 	private StatPanel _stats;
 	private UpgradePanel _upgrade;
 	
-	public GameMenu(MainWorld w, int disease, boolean multiplayer) {
+	public GameMenu(World w, int disease, boolean multiplayer) {
 		super();
 		_world = w;
 		_disease = disease;
@@ -154,9 +154,9 @@ public class GameMenu extends UIPanel {
 		_upgrade.stop();
 	}
         
-        @Override
-        public void stopPanel() {
-            stop();
-        }
+    @Override
+    public void stopPanel() {
+        stop();
+    }
 	
 }

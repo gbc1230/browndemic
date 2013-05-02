@@ -15,7 +15,6 @@ import javax.swing.Timer;
 import edu.brown.cs32.browndemic.ui.UIConstants.Colors;
 import edu.brown.cs32.browndemic.ui.UIConstants.Fonts;
 import edu.brown.cs32.browndemic.ui.panels.BrowndemicPanel;
-import edu.brown.cs32.browndemic.world.MainWorld;
 import edu.brown.cs32.browndemic.world.World;
 
 public class NewsPanel extends BrowndemicPanel {
@@ -27,7 +26,7 @@ public class NewsPanel extends BrowndemicPanel {
 	private Timer _timer;
 	private JPanel _news;
 	
-	public NewsPanel(MainWorld world) {
+	public NewsPanel(World world) {
 		super();
 		_world = world;
 		makeUI();

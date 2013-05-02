@@ -28,7 +28,7 @@ import edu.brown.cs32.browndemic.ui.components.HoverLabel;
 import edu.brown.cs32.browndemic.ui.components.SelectButton;
 import edu.brown.cs32.browndemic.ui.panels.UIPanel;
 import edu.brown.cs32.browndemic.ui.panels.titlebars.BackTitleBar;
-import edu.brown.cs32.browndemic.world.MainWorld;
+import edu.brown.cs32.browndemic.world.World;
 import edu.brown.cs32.browndemic.world.WorldMaker;
 
 public class SinglePlayerMenu extends UIPanel {
@@ -153,7 +153,7 @@ public class SinglePlayerMenu extends UIPanel {
 				//TODO: Error, invalid disease name
 			}
 			
-			MainWorld w;
+			World w;
 			try {
 				w = WorldMaker.makeNewEarthSP();
 			} catch (IOException e1) {
