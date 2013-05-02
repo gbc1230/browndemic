@@ -58,7 +58,7 @@ public class InfoSender extends Thread{
                 continue;
             WorldOutput wo = new WorldOutput(w);
             for (GameServerThread thread : _clients){
-                System.out.println("Sending a world...");
+//                System.out.println("Sending a world...");
                 thread.sendMessage(wo);
             }
         }

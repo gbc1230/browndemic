@@ -130,6 +130,7 @@ public class ServerWorld extends MainWorld{
         }
         _paused = false;
         _started = true;
+        addCommand();
         new Thread(this).start();
     }
     
