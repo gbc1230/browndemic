@@ -96,7 +96,7 @@ public class ServerWorld extends MainWorld{
     }
     
     public void collectDiseases(){
-        _outData.add(new CollectDiseases());
+        _outData.add(new CollectDiseases(-1));
     }
     
     @Override

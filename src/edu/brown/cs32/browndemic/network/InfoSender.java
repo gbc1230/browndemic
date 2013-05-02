@@ -35,18 +35,21 @@ public class InfoSender extends Thread{
             GameData data = _world.getNextLobby();
             if (data == null)
                 continue;
-            GameData out;
             if (data.getID().equals("LS")){
-                out = (LobbySender)data;
+                LobbySender out = (LobbySender)data;
+                for (GameServerThread thread : _clients){
+                    thread.sendMessage(out);
+                }
             }
             else{
-                out = (CollectDiseases)data;
+                CollectDiseases out = (CollectDiseases)data;
                 startGame();
                 _server.stopAccepting();
                 System.out.println("Sent off the CD call");
-            }
-            for (GameServerThread thread : _clients){
-                thread.sendMessage(out);
+                for (int i = 0; i < _clients.size(); i++){
+                	CollectDiseases temp = new CollectDiseases(i);
+                	_clients.get(i).sendMessage(temp);
+                }
             }
         }
         while (!_gameOver){

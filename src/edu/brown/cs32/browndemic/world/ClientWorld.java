@@ -34,7 +34,8 @@ public class ClientWorld implements ChatServer, World{
     //name of this client
     private String _name;
     //which disease this world has picked currently, for use in lobby
-    private int _picked;
+    //the index/diseaseID of this disease
+    private int _picked, _diseaseID;
     //is this world ready to start the game
     private boolean _isGameReady;
     
@@ -43,6 +44,7 @@ public class ClientWorld implements ChatServer, World{
         _output = new ArrayBlockingQueue<>(10);
         _name = name;
         _isGameReady = false;
+        _diseaseID = -1;
     }
     
     public GameData getNextData(){
@@ -188,19 +190,25 @@ public class ClientWorld implements ChatServer, World{
         _output.add(da);
     }
     
-    public void sendDisease(){
+    public void sendDisease(int id){
         if (_picked == 0)
             addDisease(new Bacteria(_name));
         else if (_picked == 1)
             addDisease(new Virus(_name));
         else if (_picked == 2)
             addDisease(new Parasite(_name));
-        if (_picked >= 0 && _picked <= 2)
+        if (_picked >= 0 && _picked <= 2){
+        	_diseaseID = id;
         	_isGameReady = true;
+        }
     }
     
     public boolean isGameReady(){
     	return _isGameReady;
+    }
+    
+    public int getDiseaseID(){
+    	return _diseaseID;
     }
     
     @Override
