@@ -73,6 +73,7 @@ public class MultiplayerLobby extends UIPanel {
 		scrollPane.setMaximumSize(new Dimension(UI.WIDTH/2, UI.CONTENT_HEIGHT));
 		scrollPane.getViewport().setBackground(Colors.TRANSPARENT);
 		scrollPane.setOpaque(false);
+		scrollPane.getViewport().setOpaque(false);
 		
 		JPanel bot = new JPanel();
 		bot.setBackground(Colors.TRANSPARENT);
