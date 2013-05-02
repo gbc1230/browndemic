@@ -154,7 +154,7 @@ public class UpgradePanel extends BrowndemicPanel implements ListSelectionListen
 				Perk selected = _perks.get(_perkList.getSelectedIndex());
 				if (selected.isOwned()) {
 					try {
-						_disease.sellPerk(selected.getID());
+						_disease.sellCumPerk(selected.getID());
 						_buysell.setText("");
 					} catch (IllegalAccessException e1) {
 						// Don't sell it!

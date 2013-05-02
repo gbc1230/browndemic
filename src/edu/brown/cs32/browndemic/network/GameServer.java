@@ -4,11 +4,14 @@
  */
 
 package edu.brown.cs32.browndemic.network;
-import edu.brown.cs32.browndemic.world.ServerWorld;
-import java.io.*;
-import java.net.*;
-import java.util.List;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
+import java.util.List;
+
+import edu.brown.cs32.browndemic.world.ServerWorld;
 
 /**
  *
@@ -112,7 +115,6 @@ public class GameServer implements Runnable{
             _world.introduceDisease(di.getRegion(), di.getDisease());
         }
         else if (id.equals("DP")){
-            DiseasePicked dp = (DiseasePicked)gd;
             _world.changeDiseasesPicked(client);
         }
         else if (id.equals("LM")){

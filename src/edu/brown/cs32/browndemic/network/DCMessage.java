@@ -9,8 +9,9 @@ package edu.brown.cs32.browndemic.network;
  * @author Graham
  */
 public class DCMessage implements GameData{
-    
-    private int _id;
+	private static final long serialVersionUID = -3317533768431261843L;
+	
+	private int _id;
     
     public DCMessage(int id){
         _id = id;

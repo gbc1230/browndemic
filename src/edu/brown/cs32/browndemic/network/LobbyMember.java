@@ -9,8 +9,9 @@ package edu.brown.cs32.browndemic.network;
  * @author Graham
  */
 public class LobbyMember implements GameData{
-    
-    //this lobby member's name and IP they are coming from
+	private static final long serialVersionUID = 6845578981856285152L;
+	
+	//this lobby member's name and IP they are coming from
     private String _name, _IP;
     //whether this lobby member is ready or not
     private boolean _ready;

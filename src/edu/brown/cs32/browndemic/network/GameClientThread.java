@@ -4,9 +4,9 @@
  */
 
 package edu.brown.cs32.browndemic.network;
-import edu.brown.cs32.browndemic.world.MainWorld;
-import java.net.*;
-import java.io.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.net.Socket;
 
 /**
  *

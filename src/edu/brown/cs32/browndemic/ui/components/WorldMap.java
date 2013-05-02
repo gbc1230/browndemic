@@ -52,6 +52,7 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 	private Map<Integer, AlphaComposite> _composites = new HashMap<>();
 	private ArrayList<Location> _airports = new ArrayList<>();
 	private List<MovingObject> _objects = new ArrayList<>();
+	private Map<Integer, Float> _highlights = new HashMap<>();
 	private int _selected, _disease, _hover;
 	private boolean _chooseMode;
 	
@@ -95,6 +96,7 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 					int id = getID(x, y);
 					if (!isValid(id)) continue;
 					if (!_diseaseOverlays.containsKey(id)) {
+						_highlights.put(id, 0f);
 						File disease = new File("cache/disease" + id + ".png");
 						File highlight = new File("cache/highlight" + id + ".png");
 						if (Settings.getBoolean(Settings.CACHING) && disease.exists() && highlight.exists()) {
@@ -239,7 +241,7 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 		
 		g.drawImage(_map, 0, 0, null);
 		
-		if (!_chooseMode) {
+		//if (!_chooseMode) {
 			for (Map.Entry<Integer, BufferedImage> e : _diseaseOverlays.entrySet()) {
 				Region r = _world.getRegion(e.getKey());
 				float percentInfected = 0f;
@@ -258,8 +260,15 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 				g2.setComposite(_composites.get(e.getKey()));
 				g2.drawImage(e.getValue(), 0, 0, null);
 	
+				float highlight = _highlights.get(e.getKey());
+				g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, highlight));
+				g2.drawImage(_highlightOverlays.get(e.getKey()), 0, 0, null);
+				if (e.getKey() == _hover)
+					_highlights.put(e.getKey(), Math.min(0.5f, highlight + 0.025f));
+				else
+					_highlights.put(e.getKey(), Math.max(0, highlight - 0.015f));
 			}
-		}
+		//}
 			
 		if (_chooseMode) {
 			drawChoosePanel(g2);
@@ -271,10 +280,10 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 			drawInfoPanel(g2);
 		}
 		
-		if (isValid(_hover)) {
-			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .5f));
-			g2.drawImage(_highlightOverlays.get(_hover), 0, 0, null);
-		}
+//		if (isValid(_hover)) {
+//			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .5f));
+//			g2.drawImage(_highlightOverlays.get(_hover), 0, 0, null);
+//		}
 		
 		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
 		

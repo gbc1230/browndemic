@@ -11,9 +11,9 @@ import java.util.List;
  * @author Graham
  */
 public class LobbySender implements GameData{
-    
-    private static long serialVersionUID = 42L;
-    
+	
+	private static final long serialVersionUID = -2442268800083564695L;
+	
     private List<LobbyMember> _lobby;
     
     public LobbySender(List<LobbyMember> lobby){
