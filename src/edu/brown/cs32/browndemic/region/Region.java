@@ -17,7 +17,6 @@ import edu.brown.cs32.browndemic.disease.Disease;
  * @author ckilfoyl
  */
 public class Region implements Serializable{
-	
     //ArrayList of all land neighboring Regions by String name
 
     private ArrayList<Integer> _landNeighbors;
