@@ -21,13 +21,14 @@ import edu.brown.cs32.browndemic.region.Region;
  * @author Graham
  */
 public class ServerWorld extends MainWorld{
-    
-    //for sending copies of this world out
-    private Queue<ServerWorld> _outWorlds;
+	private static final long serialVersionUID = 1774845179387841713L;
+
+	//for sending copies of this world out
+    transient private Queue<ServerWorld> _outWorlds;
     //the lobby I have
     private List<LobbyMember> _lobby;
     //the queue for sending out lobbies
-    private Queue<GameData> _outData;
+    transient private Queue<GameData> _outData;
     
     public ServerWorld(){
         super();

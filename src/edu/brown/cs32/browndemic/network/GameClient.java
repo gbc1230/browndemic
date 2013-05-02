@@ -30,6 +30,7 @@ public class GameClient implements Runnable{
     public GameClient(String host, int port, ClientWorld w) throws IOException {
         _socket = new Socket(host, port);
         _output = new ObjectOutputStream(_socket.getOutputStream());
+        _output.flush();
         _client = new GameClientThread(this, _socket);
         _world = w;
         _thread = new Thread(this);
@@ -90,6 +91,7 @@ public class GameClient implements Runnable{
             _world.sendDisease(cd.getDiseaseID(), cd.getWorld());
         }
         else if (id.equals("H")){
+        	System.out.println("got an H");
         	stop();
         }
     }

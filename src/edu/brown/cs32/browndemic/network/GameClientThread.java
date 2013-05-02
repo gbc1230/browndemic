@@ -49,12 +49,13 @@ public class GameClientThread extends Thread{
                     _client.handle(input);
                 }
                 catch(IOException e){
+                	System.out.println("IOException in ClientThread");
+                	e.printStackTrace();
                     _client.stop();
                     break;
                 }
                 catch(ClassNotFoundException e){
-                    _client.stop();
-                    break;
+                	continue;
                 }
             }
         }
