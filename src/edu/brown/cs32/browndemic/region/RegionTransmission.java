@@ -14,7 +14,9 @@ import java.io.Serializable;
  * by ship or by plane
  */
 public class RegionTransmission implements Serializable{
-    private String _start;
+	private static final long serialVersionUID = -6843584036923113594L;
+	
+	private String _start;
     private String _end;
     private int _disease;
     private boolean _air;

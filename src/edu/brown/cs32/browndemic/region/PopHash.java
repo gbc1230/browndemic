@@ -19,7 +19,9 @@ import java.util.ArrayList;
  */
 public class PopHash implements Serializable{
 
-    private HashMap<String, InfWrapper> _hash;
+	private static final long serialVersionUID = 6203081608920511616L;
+	
+	private HashMap<String, InfWrapper> _hash;
     private int _len;
 
     public PopHash(int len) {
