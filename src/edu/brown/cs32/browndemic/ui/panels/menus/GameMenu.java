@@ -1,5 +1,6 @@
 package edu.brown.cs32.browndemic.ui.panels.menus;
 
+import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,34 +12,42 @@ import javax.swing.Timer;
 import javax.swing.UIManager;
 
 import edu.brown.cs32.browndemic.ui.BrowndemicFrame;
-import edu.brown.cs32.browndemic.ui.DumbChatServer;
 import edu.brown.cs32.browndemic.ui.Resources;
 import edu.brown.cs32.browndemic.ui.UIConstants.Colors;
 import edu.brown.cs32.browndemic.ui.UIConstants.Fonts;
 import edu.brown.cs32.browndemic.ui.UIConstants.Images;
 import edu.brown.cs32.browndemic.ui.UIConstants.Strings;
+import edu.brown.cs32.browndemic.ui.UIConstants.UI;
 import edu.brown.cs32.browndemic.ui.Utils;
 import edu.brown.cs32.browndemic.ui.actions.Action;
 import edu.brown.cs32.browndemic.ui.components.WorldMap;
+import edu.brown.cs32.browndemic.ui.interfaces.ChatServer;
 import edu.brown.cs32.browndemic.ui.panels.UIPanel;
 import edu.brown.cs32.browndemic.ui.panels.subpanels.ChatPanel;
 import edu.brown.cs32.browndemic.ui.panels.subpanels.InformationBar;
 import edu.brown.cs32.browndemic.ui.panels.subpanels.NewsPanel;
+import edu.brown.cs32.browndemic.ui.panels.subpanels.RegionPanel;
 import edu.brown.cs32.browndemic.ui.panels.subpanels.StatPanel;
 import edu.brown.cs32.browndemic.ui.panels.subpanels.UpgradePanel;
 import edu.brown.cs32.browndemic.ui.panels.titlebars.InGameTitleBar;
-import edu.brown.cs32.browndemic.world.MainWorld;
+import edu.brown.cs32.browndemic.world.World;
 
 public class GameMenu extends UIPanel {
 	
 	private static final long serialVersionUID = 3275157554958820602L;
 	
-	private MainWorld _world;
+	private World _world;
 	private WorldMap _map;
 	private boolean _loaded = false, _multiplayer;
 	private int _disease;
+	private InformationBar _info;
+	private ChatPanel _chat;
+	private NewsPanel _news;
+	private RegionPanel _regions;
+	private StatPanel _stats;
+	private UpgradePanel _upgrade;
 	
-	public GameMenu(MainWorld w, int disease, boolean multiplayer) {
+	public GameMenu(World w, int disease, boolean multiplayer) {
 		super();
 		_world = w;
 		_disease = disease;
@@ -74,10 +83,7 @@ public class GameMenu extends UIPanel {
 	protected void makeUI() {
 		super.makeUI();
 		
-		JPanel info = new InformationBar(_world, _disease);
-		
-		
-		add(info);
+		add(_info = new InformationBar(_world, _disease));
 		
 		add(_map);
 		
@@ -86,7 +92,7 @@ public class GameMenu extends UIPanel {
 		bottom.setOpaque(false);
 		bottom.setLayout(new BoxLayout(bottom, BoxLayout.X_AXIS));
 		
-		bottom.add(new UpgradePanel(_world.getDiseases().get(_disease)));
+		bottom.add(_upgrade = new UpgradePanel(_world.getDiseases().get(_disease)));
 
 		UIManager.put("TabbedPane.selected", Colors.MENU_BACKGROUND);
 		UIManager.put("TabbedPane.focus", Colors.MENU_BACKGROUND);
@@ -102,17 +108,23 @@ public class GameMenu extends UIPanel {
 		
 		
 		JTabbedPane botRight = new JTabbedPane();
+		botRight.setMaximumSize(new Dimension((int)(UI.WIDTH/3), UI.CONTENT_HEIGHT));
+		botRight.setMinimumSize(new Dimension((int)(UI.WIDTH/3), 0));
+		botRight.setPreferredSize(new Dimension((int)(UI.WIDTH/3), 0));
 		Utils.setDefaultLook(botRight);
 		
 		botRight.setForeground(Colors.RED_TEXT);
 		botRight.setFont(Fonts.TITLE_BAR);
-		botRight.addTab("Chat", new ChatPanel(new DumbChatServer()));
-		botRight.addTab("News", new NewsPanel(_world));
-		botRight.addTab("Stats", new StatPanel(_world.getDiseases().get(_disease)));
+		if (_multiplayer) {
+			if (_world instanceof ChatServer)
+				botRight.addTab("Chat", _chat = new ChatPanel((ChatServer)_world));
+		}
+		botRight.addTab("News", _news = new NewsPanel(_world));
+		botRight.addTab("Stats", _stats = new StatPanel(_world.getDiseases().get(_disease)));
+		botRight.addTab("Regions", _regions =  new RegionPanel(_world));
 		for (int i = 0; i < botRight.getTabCount(); i++) {
 			botRight.setBackgroundAt(i, Colors.MENU_BACKGROUND);
 		}
-		//bottom.add(new ChatPanel(new DumbChatServer()));
 		bottom.add(botRight);
 		
 		add(bottom);
@@ -121,7 +133,7 @@ public class GameMenu extends UIPanel {
 	@Override
 	public void setupForDisplay() {
 		if (_loaded) {
-			Utils.getParentFrame(this).setTitle(new InGameTitleBar(_world, true));
+			Utils.getParentFrame(this).setTitle(new InGameTitleBar(_world, !_multiplayer));
 			new Timer(3000, new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
@@ -138,5 +150,20 @@ public class GameMenu extends UIPanel {
 	public String toString() {
 		return Strings.SINGLEPLAYER_GAME;
 	}
+	
+	private void stop() {
+		if (_loaded) {
+			_news.stop();
+			_info.stop();
+			_regions.stop();
+			_stats.stop();
+			_upgrade.stop();
+		}
+	}
+        
+    @Override
+    public void stopPanel() {
+        stop();
+    }
 	
 }

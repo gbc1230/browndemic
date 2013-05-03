@@ -1,4 +1,4 @@
 #!/bin/sh
 BINDIR=`dirname $0`
 export CLASSPATH=$($BINDIR/jars lib):derived/browndemic.jar
-$JAVA_HOME/bin/java network.GameServer $*
+$JAVA_HOME/bin/java edu.brown.cs32.browndemic.Main $*

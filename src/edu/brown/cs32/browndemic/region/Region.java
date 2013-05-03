@@ -4,9 +4,11 @@
  */
 package edu.brown.cs32.browndemic.region;
 
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Random;
 
 import edu.brown.cs32.browndemic.disease.Disease;
 
@@ -14,10 +16,11 @@ import edu.brown.cs32.browndemic.disease.Disease;
  *
  * @author ckilfoyl
  */
-public class Region {
-    //ArrayList of all land neighboring Regions by String name
+public class Region implements Serializable{
+	private static final long serialVersionUID = 4373669006142652684L;
 
-    private ArrayList<Integer> _landNeighbors;
+    //ArrayList of all land neighboring Regions by String name
+	private ArrayList<Integer> _landNeighbors;
 
     //ArrayList of all sea neighboring Regions by String name
     private ArrayList<Integer> _waterNeighbors;
@@ -27,12 +30,20 @@ public class Region {
 
     //ArrayList of diseases in this Region
     private Disease[] _diseases;
-
-    private int _INFDOUBLETIME = 60;
-    private double _INFSCALE = Math.pow(2.0,1.0/(double)_INFDOUBLETIME);
+    
+    private double[] _infDoubleTime;
+    private static final int _INFTIMESCALE = 180;
+    private static final double _INFSCALE = 1.0/60;
+    
+    private double[] _lethDoubleTime;
+    private static final int _LETHTIMESCALE = 180;
+    private static final double _LETHSCALE = 1.0/60;
 
     //number of diseases in game
     private int _numDiseases;
+    
+    //Random number generator for this region
+    private Random _rand;
 
     //Custom HashMap to keep track of overlapping infected populations
     private PopHash _hash;
@@ -62,10 +73,14 @@ public class Region {
     //number of seaports and airports open in this Region
     private int _sea;
     private int _air;
+    
     //wealth of this Region (reflects infrastructure, productivity, actual wealth, etc.)
     private double _wealth,  _wet,  _dry,  _heat,  _cold, _med;
+    //Lists of transmissions to other regions and news
     private ArrayList<RegionTransmission> _transmissions;
     private ArrayList<String> _news;
+    
+    private double _remInf, _remDead;
 
     /**
      * constructs a new Region with the given info
@@ -77,7 +92,7 @@ public class Region {
      */
     public Region(int ID, String name, long population, List<Integer> landNeighbors,
             List<Integer> waterNeighbors, HashMap<Integer, Region> hash,
-            int seaports, int airports, double wealth, double wet, double dry,
+            int airports, int seaports, double wealth, double wet, double dry,
             double heat, double cold, double med) {
         _name = name;
         _ID = ID;
@@ -95,6 +110,9 @@ public class Region {
         _med = med;
         _transmissions = new ArrayList<RegionTransmission>();
         _news = new ArrayList<String>();
+        _rand = new Random();
+        _remInf = 0;
+        _remDead = 0;
     }
 
     /**
@@ -115,20 +133,19 @@ public class Region {
             }
         }
     }
-
+    
     /**
      * calculates the number of pop to be infected
      * @param d the index of the disease
      * @param pop the population to infect
      * @return how many to infect
      */
-    public long getNumInfected(int d, long pop) {
-        double number = 0;
-        double wetResFactor = 1;
-        double dryResFactor = 1;
-        double heatResFactor = 1;
-        double coldResFactor = 1;
-        double medResFactor = 1;
+    public long getTotNumInfected(int d) {
+        double wetResFactor = 1.0;
+        double dryResFactor = 1.0;
+        double heatResFactor = 1.0;
+        double coldResFactor = 1.0;
+        double medResFactor = 1.0;
         if(_diseases[d].getWetRes() < _wet)
             wetResFactor = _diseases[d].getWetRes()/_wet;
         if(_diseases[d].getDryRes() < _dry)
@@ -139,13 +156,19 @@ public class Region {
             coldResFactor = _diseases[d].getColdRes()/_cold;
         if(_diseases[d].getMedRes() < _med)
             medResFactor = _diseases[d].getMedRes()/_med;
-        double max = _diseases[d].getMaxInfectivity();
-        number = _INFSCALE/5.0 * pop * (_diseases[d].getInfectivity() / max) *
-                ( wetResFactor + dryResFactor + heatResFactor + coldResFactor + medResFactor);
-        if(number != 0)
-            System.out.println(number);
-        if(Math.random()*_INFDOUBLETIME == 0)
+        double maxInf = _diseases[d].getMaxInfectivity();
+        double inf = getInfected().get(d);
+        double growthFactor = (_diseases[d].getInfectivity() + maxInf) / maxInf * _INFSCALE *
+                ( wetResFactor + dryResFactor + heatResFactor + coldResFactor + medResFactor)/5;
+        double number = inf*Math.pow(growthFactor,_infDoubleTime[d]/_INFTIMESCALE);
+        if(_remInf >= 1){
+            number++;
+            _remInf--;
+        }
+        _remInf += number % 1;
+        if(_rand.nextInt(_INFTIMESCALE) == 0){
             number = Math.ceil(number);
+        }
         else
             number = Math.floor(number);
         return (long) number;
@@ -157,8 +180,10 @@ public class Region {
      **/
     public void infect(Disease disease) {
         int index = disease.getID();
+        long totNumber = getTotNumInfected(index);
         for(InfWrapper inf : _hash.getAllOfType(index,0)){
-            long number = getNumInfected(index, inf.getInf());
+            double ratio = (double)inf.getInf()/_population;
+            long number = (long) Math.ceil(totNumber*ratio);
             String infID = inf.getID().substring(0,index) + "1" + inf.getID().substring(index + 1);
             if (inf.getInf() < number){
                 _hash.put(new InfWrapper(inf.getID(), 0L));
@@ -177,13 +202,21 @@ public class Region {
     public void kill(Disease disease) {
         int index = disease.getID();
         for (InfWrapper inf : _hash.getAllOfType(index,1)) {
-            long number = (long) (disease.getLethality() * inf.getInf());
+            double rate = 1 - disease.getLethality()/disease.getMaxLethality()*_LETHSCALE;
+            double number = (1 - Math.pow(rate, _lethDoubleTime[disease.getID()]/_LETHTIMESCALE)) * inf.getInf();
+            if(_remDead >= 1){
+                number++;
+                _remDead--;
+            }
+            if(disease.getLethality() / disease.getMaxLethality() > .3)
+                _remDead += number % 1;
+            number = Math.floor(number);
             if (inf.getInf() < number) {
                 _dead[index] = _dead[index] + inf.getInf();
                 _hash.put(new InfWrapper(inf.getID(), 0L));
             } else {
-                _dead[index] =  _dead[index] + number;
-                _hash.put(new InfWrapper(inf.getID(), inf.getInf() - number));
+                _dead[index] =  _dead[index] + (long)number;
+                _hash.put(new InfWrapper(inf.getID(), inf.getInf() - (long)number));
             }
         }
     }
@@ -261,7 +294,7 @@ public class Region {
         //TODO flesh this out, the values used here are complete guesses
         for(int i = 0; i < _numDiseases; i++){
 //            double awareMax = _diseases[i].getMaxVisibility()*_population*_INFDOUBLETIME;
-            double awareMax = 280*_population*_INFDOUBLETIME;
+            double awareMax = 280*_population*_INFTIMESCALE;
             boolean closePorts = (_awareness[i] > awareMax / 2);
             if (closePorts  && !(_air == 0 && _sea == 0)) {
                 _air = 0;
@@ -290,6 +323,10 @@ public class Region {
      * @param d hte disease to introduce
      */
     public void introduceDisease(Disease d) {
+        if(_diseases[d.getID()] != null){
+            System.out.println("Introduced disease that existed already");
+            return;
+        }
         int index = d.getID();
         String ID = "";
         for (int i = 0; i < _numDiseases; i++) {
@@ -299,12 +336,24 @@ public class Region {
                 ID += "0";
             }
         }
-        _hash.put(new InfWrapper(ID, 1L));
+        InfWrapper inf = _hash.get(ID);
+        _hash.put(new InfWrapper(ID, inf.getInf() + 1));
+        _hash.addZero(_hash.getZero().getInf() - 1);
         _diseases[index] = d;
         _dead[index] = 0L;
         _hasCure[index] = false;
         _awareness[index] = 0.0;
         _cureProgress[index] = 0L;
+        double maxInf = d.getMaxInfectivity();
+        //TODO
+//        double minInf = d.getStartInfectivity();
+        double minInf = 5;
+        _infDoubleTime[index] = Math.log(2.0)/Math.log((maxInf + minInf)/maxInf);
+        double maxLeth = d.getMaxLethality();
+        //TOD
+//        double minLeth = d.getStartLethality();
+        double minLeth = 1;
+        _infDoubleTime[index] = Math.log(0.5)/Math.log(1 - minLeth/maxLeth);
         _news.add(d.getName() + " has infected " + _name + ".");
     }
 
@@ -314,6 +363,7 @@ public class Region {
      * @param d the disease to transmit
      */
     public void transmitSeaAndAir(Disease d) {
+        //TODO revise this calc
         for (Region region : _regions.values()) {
             if (region.hasDisease(d)) {
                 continue;
@@ -322,21 +372,35 @@ public class Region {
             int sea = region.getAir();
             if (air > 0 && _air > 0) {
                 boolean transmit = false;
-                //TODO conditions for plane/sea transmit
+                for(int i = 0; i < _air; i++)
+                    if(_rand.nextInt(_INFTIMESCALE*5) == 0)
+                        transmit = true;
+                double inf = getInfected().get(d.getID());
+                double trans = inf/_population;
+                if(transmit)
+                    transmit = trans > _rand.nextDouble();
                 if (transmit) {
                     RegionTransmission rt = new RegionTransmission(_name, region.getName(), d.getID(), true);
                     _transmissions.add(rt);
                     region.introduceDisease(d);
+                    System.out.println("Plane Trans");
                     continue;
                 }
             }
             if (sea > 0 && _sea > 0) {
                 boolean transmit = false;
-                //TODO fill in conditions for ship transmission
+                for(int i = 0; i < _sea; i++)
+                    if(_rand.nextInt(_INFTIMESCALE*5) == 0)
+                        transmit = true;
+                double inf = getInfected().get(d.getID());
+                double trans = inf/_population;
+                if(transmit)
+                    transmit = trans > _rand.nextDouble();
                 if (transmit) {
                     RegionTransmission rt = new RegionTransmission(_name, region.getName(), d.getID(), true);
                     _transmissions.add(rt);
                     region.introduceDisease(d);
+                    System.out.println("Ship Trans");
                 }
             }
         }
@@ -353,8 +417,11 @@ public class Region {
                 continue;
             }
             boolean transmit = false;
-            //TODO fill in conditions for land transmission
+            double inf = getInfected().get(d.getID());
+            double trans = inf /_population *(d.getAirTrans() + d.getInfectivity())/311.0;
+            transmit = _rand.nextDouble() < trans;
             if (transmit) {
+                System.out.println("Land Trans");
                 region.introduceDisease(d);
             }
         }
@@ -371,8 +438,11 @@ public class Region {
                 continue;
             }
             boolean transmit = false;
-            //TODO fill in conditions for water transmission
+            double inf = getInfected().get(d.getID());
+            double trans = inf/_population * (d.getAirTrans() + d.getWaterTrans())/82;
+            transmit = _rand.nextDouble() < trans;
             if (transmit) {
+                System.out.println("Water Trans");
                 region.introduceDisease(d);
             }
         }
@@ -424,7 +494,7 @@ public class Region {
      * @return
      */
     public boolean hasDisease(Disease d) {
-        return _diseases[d.getID()] == null;
+        return _diseases[d.getID()] != null;
     }
 
     public void setNumDiseases(int num) {
@@ -436,6 +506,8 @@ public class Region {
         _cureProgress = new long[num];
         _hash = new PopHash(num);
         _hash.addZero(_population);
+        _infDoubleTime = new double[num];
+        _lethDoubleTime = new double[num];
     }
 
     /**

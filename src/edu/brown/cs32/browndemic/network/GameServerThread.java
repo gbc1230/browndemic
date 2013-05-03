@@ -4,9 +4,12 @@
  */
 
 package edu.brown.cs32.browndemic.network;
-import edu.brown.cs32.browndemic.world.MainWorld;
-import java.net.*;
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 
 /**
  *
@@ -32,8 +35,9 @@ public class GameServerThread extends Thread{
      * Send a message to the the client
      * @param msg The message to send
      */
-    public void sendMessage(GameData msg){
+    public synchronized void sendMessage(GameData msg){
         try{
+            _output.reset();
             _output.writeObject(msg);
             _output.flush();
         }
@@ -54,7 +58,9 @@ public class GameServerThread extends Thread{
                 _server.handle(_ID, (GameData)_input.readObject());
             }
             catch(IOException e){
-                System.out.println("ERROR: " + _ID + " can't read.");
+            	int id = _server.findClient(_ID);
+                System.out.println("Player " + id + " couldn't be read from.");
+                e.printStackTrace();
                 _server.remove(_ID);
                 break;
             }
@@ -71,10 +77,12 @@ public class GameServerThread extends Thread{
      */
     
     public void open() throws IOException{
-        _input = new ObjectInputStream(new BufferedInputStream(_socket.getInputStream()));
-        _output = new ObjectOutputStream(new BufferedOutputStream(_socket.getOutputStream()));
+    	_output = new ObjectOutputStream(new BufferedOutputStream(_socket.getOutputStream()));
+    	_output.flush();
+    	_input = new ObjectInputStream(new BufferedInputStream(_socket.getInputStream()));
     }
-
+    
+        
     /**
      * Closes the streams
      * @throws java.io.IOException

@@ -5,12 +5,16 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GraphicsConfiguration;
+import java.awt.GraphicsEnvironment;
 import java.awt.Point;
 import java.awt.RenderingHints;
+import java.awt.Transparency;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
@@ -37,13 +41,13 @@ import edu.brown.cs32.browndemic.ui.UIConstants.Colors;
 import edu.brown.cs32.browndemic.ui.UIConstants.Fonts;
 import edu.brown.cs32.browndemic.ui.UIConstants.Images;
 import edu.brown.cs32.browndemic.ui.actions.Action;
-import edu.brown.cs32.browndemic.world.MainWorld;
+import edu.brown.cs32.browndemic.world.World;
 
-public class WorldMap extends JComponent implements MouseListener {
+public class WorldMap extends JComponent implements MouseListener, MouseMotionListener {
 
 	private static final long serialVersionUID = -4481136165457141240L;
 	
-	private MainWorld _world;
+	private World _world;
 	private BufferedImage _map, _regions;
 	private Map<Integer, BufferedImage> _diseaseOverlays = new HashMap<>();
 	private Map<Integer, BufferedImage> _highlightOverlays = new HashMap<>();
@@ -51,12 +55,14 @@ public class WorldMap extends JComponent implements MouseListener {
 	private Map<Integer, AlphaComposite> _composites = new HashMap<>();
 	private ArrayList<Location> _airports = new ArrayList<>();
 	private List<MovingObject> _objects = new ArrayList<>();
-	private int _selected, _disease;
+	private Map<Integer, Float> _highlights = new HashMap<>();
+	private int _selected, _disease, _hover;
 	private boolean _chooseMode;
+	private static GraphicsConfiguration gc = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
 	
 	private static final double AIRPLANE_SPEED = 6.0;
 	
-	public WorldMap(MainWorld _world2, BufferedImage map, BufferedImage regions, int disease) {
+	public WorldMap(World _world2, BufferedImage map, BufferedImage regions, int disease) {
 		super();
 		_world = _world2;
 		_map = map;
@@ -64,6 +70,7 @@ public class WorldMap extends JComponent implements MouseListener {
 		_selected = 0;
 		_disease = disease;
 		addMouseListener(this);
+		addMouseMotionListener(this);
 		setPreferredSize(new Dimension(map.getWidth(), map.getHeight()));
 		setMaximumSize(new Dimension(map.getWidth(), map.getHeight()));
 		setMinimumSize(new Dimension(map.getWidth(), map.getHeight()));
@@ -93,14 +100,15 @@ public class WorldMap extends JComponent implements MouseListener {
 					int id = getID(x, y);
 					if (!isValid(id)) continue;
 					if (!_diseaseOverlays.containsKey(id)) {
+						_highlights.put(id, 0f);
 						File disease = new File("cache/disease" + id + ".png");
 						File highlight = new File("cache/highlight" + id + ".png");
 						if (Settings.getBoolean(Settings.CACHING) && disease.exists() && highlight.exists()) {
 							// ImageIO.read is going to give us the wrong format making rendering way too slow
 							BufferedImage diseaseFromFile = ImageIO.read(disease);
 							BufferedImage highlightFromFile = ImageIO.read(highlight);
-							BufferedImage convertedDisease = new BufferedImage(diseaseFromFile.getWidth(), diseaseFromFile.getHeight(), BufferedImage.TYPE_INT_ARGB);
-							BufferedImage convertedHighlight = new BufferedImage(diseaseFromFile.getWidth(), diseaseFromFile.getHeight(), BufferedImage.TYPE_INT_ARGB);
+							BufferedImage convertedDisease = gc.createCompatibleImage(diseaseFromFile.getWidth(), diseaseFromFile.getHeight(), Transparency.TRANSLUCENT);//new BufferedImage(diseaseFromFile.getWidth(), diseaseFromFile.getHeight(), BufferedImage.TYPE_INT_ARGB);
+							BufferedImage convertedHighlight = gc.createCompatibleImage(diseaseFromFile.getWidth(), diseaseFromFile.getHeight(), Transparency.TRANSLUCENT);//new BufferedImage(diseaseFromFile.getWidth(), diseaseFromFile.getHeight(), BufferedImage.TYPE_INT_ARGB);
 
 							convertedDisease.getGraphics().drawImage(diseaseFromFile, 0, 0, null);
 							convertedHighlight.getGraphics().drawImage(highlightFromFile, 0, 0, null);
@@ -139,7 +147,7 @@ public class WorldMap extends JComponent implements MouseListener {
 		BufferedImage original, transform;
 		public MovingObject(Location l, double speed, BufferedImage img) { 
 			this.x = l.x; this.y = l.y; this.speed = speed; this.original = img;
-			transform = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_ARGB);
+			transform = gc.createCompatibleImage(img.getWidth(), img.getHeight(), Transparency.TRANSLUCENT);//new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_ARGB);
 			xoffset = img.getWidth()/2;
 			yoffset = img.getHeight()/2;
 		}
@@ -196,7 +204,7 @@ public class WorldMap extends JComponent implements MouseListener {
 	private BufferedImage[] createRegion(int id, Color... c) {
 		BufferedImage[] out = new BufferedImage[c.length];
 		for (int i = 0; i < c.length; i++) {
-			out[i] = new BufferedImage(_regions.getWidth(), _regions.getHeight(), BufferedImage.TYPE_INT_ARGB);
+			out[i] = gc.createCompatibleImage(_regions.getWidth(), _regions.getHeight(), Transparency.TRANSLUCENT);//new BufferedImage(_regions.getWidth(), _regions.getHeight(), BufferedImage.TYPE_INT_ARGB);
 		}
 
 		for (int x = 0; x < _regions.getWidth(); x++) {
@@ -237,13 +245,13 @@ public class WorldMap extends JComponent implements MouseListener {
 		
 		g.drawImage(_map, 0, 0, null);
 		
-		if (!_chooseMode) {
+		//if (!_chooseMode) {
 			for (Map.Entry<Integer, BufferedImage> e : _diseaseOverlays.entrySet()) {
 				Region r = _world.getRegion(e.getKey());
 				float percentInfected = 0f;
 				if (r != null) {
 					try {
-						percentInfected = (float)r.getInfected().get(_disease) / (float)r.getPopulation();
+						percentInfected = ((float)r.getInfected().get(_disease) + (float)r.getKilled().get(_disease)) / (float)r.getPopulation();
 					} catch (IndexOutOfBoundsException e1) {
 						percentInfected = 0f;
 					}
@@ -256,8 +264,15 @@ public class WorldMap extends JComponent implements MouseListener {
 				g2.setComposite(_composites.get(e.getKey()));
 				g2.drawImage(e.getValue(), 0, 0, null);
 	
+				float highlight = _highlights.get(e.getKey());
+				g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, highlight));
+				g2.drawImage(_highlightOverlays.get(e.getKey()), 0, 0, null);
+				if (e.getKey() == _hover)
+					_highlights.put(e.getKey(), Math.min(0.5f, highlight + 0.035f));
+				else
+					_highlights.put(e.getKey(), Math.max(0, highlight - 0.015f));
 			}
-		}
+		//}
 			
 		if (_chooseMode) {
 			drawChoosePanel(g2);
@@ -268,6 +283,11 @@ public class WorldMap extends JComponent implements MouseListener {
 			g2.drawImage(_highlightOverlays.get(_selected), 0, 0, null);
 			drawInfoPanel(g2);
 		}
+		
+//		if (isValid(_hover)) {
+//			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .5f));
+//			g2.drawImage(_highlightOverlays.get(_hover), 0, 0, null);
+//		}
 		
 		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
 		
@@ -308,6 +328,7 @@ public class WorldMap extends JComponent implements MouseListener {
 		Region r = _world.getRegion(_selected);
 		String name = "";
 		long infected = 0, dead = 0, total = 1;
+		long airports = 0, seaports = 0;
 		
 		if (r != null) {
 			name = r.getName();
@@ -316,12 +337,25 @@ public class WorldMap extends JComponent implements MouseListener {
 			for (long l : r.getKilled())
 				dead += l;
 			total = r.getPopulation();
+			airports = r.getAir();
+			seaports = r.getSea();
 		}
 		g2.drawString(name, 5, getHeight() - 80);
 
-		g2.drawString(String.format("Infected: %d (%.2f%%)", infected, (double)infected/(double)total), 15, getHeight() - 55);
-		g2.drawString(String.format("Dead: %d (%.2f%%)", dead, (double)dead/(double)total), 15, getHeight() - 35);
+		g2.drawString(String.format("Infected: %d (%.2f%%)", infected, 100*(double)infected/(double)total), 15, getHeight() - 55);
+		g2.drawString(String.format("Dead: %d (%.2f%%)", dead, 100*(double)dead/(double)total), 15, getHeight() - 35);
 		g2.drawString(String.format("Total: %d", total), 15, getHeight() - 15);
+		
+		if (airports > 0) {
+			g2.drawImage(Resources.getImage(Images.AIRPORT_OPEN_BIG), 220, getHeight() - 85, null);
+		} else {
+			g2.drawImage(Resources.getImage(Images.AIRPORT_CLOSED_BIG), 220, getHeight() - 85, null);
+		}
+		if (seaports > 0) {
+			g2.drawImage(Resources.getImage(Images.SEAPORT_OPEN_BIG), 220, getHeight() - 45, null);
+		} else {
+			g2.drawImage(Resources.getImage(Images.SEAPORT_CLOSED_BIG), 220, getHeight() - 45, null);
+		}
 	}
 	
 	private class RepaintListener implements ActionListener {
@@ -357,8 +391,7 @@ public class WorldMap extends JComponent implements MouseListener {
 		int id = getID(p.x, p.y);
 		if (isValid(id)) {
 			if (_chooseMode) {
-				_world.start();
-				_world.getRegion(id).introduceDisease(_world.getDiseases().get(_disease));
+                _world.introduceDisease(_disease, id-1);
 				_chooseMode = false;
 			}
 			setSelection(id);
@@ -379,5 +412,14 @@ public class WorldMap extends JComponent implements MouseListener {
 	private int getID(int x, int y) {
 		int color = _regions.getRGB(x, y);
 		return (color & 0xFF000000) == 0xFF000000 ? color & 0x000000FF : 0;
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent e) {
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent e) {
+		_hover = getID(e.getPoint().x, e.getPoint().y);
 	}
 }

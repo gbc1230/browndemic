@@ -18,7 +18,7 @@ import edu.brown.cs32.browndemic.region.RegionTransmission;
  *
  * @author gcarling
  */
-public class MainWorld implements Serializable, World, Runnable{
+public abstract class MainWorld implements Serializable, World, Runnable{
 
     //ArrayList of Regions
     protected List<Region> _regions;
@@ -35,11 +35,13 @@ public class MainWorld implements Serializable, World, Runnable{
     
     //ArrayLists keeping track of how many people each disease has killed / has infected currently
     //also the progress towards the cure
-    protected List<Long> _kills, _infects, _cures;
+    //oldInf helps me with 
+    protected List<Long> _kills, _infects, _cures, _oldInf;
     
-        //winners takes care of the winners: if empty at the end of the game,
+    //winners takes care of the winners: if empty at the end of the game,
     //it signifies that all diseases were erradicated
-    protected List<Integer> _winners;
+    //benchMarks is for giving out points, tells me how far along they are
+    protected List<Integer> _winners, _benchMarks;
     
     //which cures have been sent out already
     //NOTE: a cure is the progress towards distributing the cure; a disease
@@ -49,14 +51,17 @@ public class MainWorld implements Serializable, World, Runnable{
     //news
     protected List<String> _news;
     
-    //whether or not the game is still going on
-    protected boolean _started, _gameOver, _paused;
+    //whether or not the game is still going on, whether the game is paused
+    protected boolean _started, _gameOver, _paused, _allDiseasesPicked;
     
     //for keeping track of transmissions
     protected List<RegionTransmission> _transmissions;
     
     //minimum ticks to a cure
     protected final int _MINCURETICKS = 540;
+    
+    //how many disease / starting regions have been picked
+    protected int _numDiseasesPicked, _numRegionsPicked;
     
     //NOTE: each index of diseases, killed, cures refers to the same disease:
     //i.e. index 2 of each refers to the disease object, how many it has killed,
@@ -71,7 +76,9 @@ public class MainWorld implements Serializable, World, Runnable{
         _kills = new ArrayList<>();
         _infects = new ArrayList<>();
         _winners = new ArrayList<>();
+        _benchMarks = new ArrayList<>();
         _cures = new ArrayList<>();
+        _oldInf = new ArrayList<>();
         _sent = new ArrayList<>();
         _cured = new ArrayList<>();
         _news = new ArrayList<>();
@@ -93,6 +100,7 @@ public class MainWorld implements Serializable, World, Runnable{
      */
     @Override
     public void addPerk(int dis, int perk, boolean buy){
+        System.out.println("Adding perk: " + dis + " , " + perk +  ", " + buy);
         Disease d = _diseases.get(dis);
         try{
             if (buy)
@@ -118,7 +126,9 @@ public class MainWorld implements Serializable, World, Runnable{
      * addDisease() adds the given Disease to _diseases
      * @param d the Disease to add
      */
+    @Override
     public void addDisease(Disease d){
+        System.out.println("Adding a disease: " + d.getName());
         int id = _diseases.size();
         _diseases.add(d);
         d.setID(id);
@@ -148,7 +158,7 @@ public class MainWorld implements Serializable, World, Runnable{
      */
     @Override
     public long getInfected(){
-        return _infected - _dead;
+        return _infected;
     }
 
     /**
@@ -186,6 +196,11 @@ public class MainWorld implements Serializable, World, Runnable{
     }
     
     @Override
+    public double getCurePercentage(int d){
+    	return (_cures.get(d) / _cureTotal) * 100.0;
+    }
+    
+    @Override
     public List<String> getNews(){
         return _news;
     }
@@ -197,6 +212,11 @@ public class MainWorld implements Serializable, World, Runnable{
             _waitTime = 200L;
         else if (time == 3)
             _waitTime = 100L;
+    }
+    
+    @Override
+    public boolean allDiseasesPicked(){
+        return _allDiseasesPicked;
     }
     
     public void pause(){
@@ -386,6 +406,24 @@ public class MainWorld implements Serializable, World, Runnable{
         _winners = ans;
     }
     
+    //gives out points to each disease
+    private void givePoints(){
+    	
+    }
+    
+    //sets up disease related lists
+    protected void setupDiseases(){
+        for (int i = 0; i < _diseases.size(); i++){
+            _cures.add(0L);
+            _oldInf.add(0L);
+            _benchMarks.add(10);
+            _kills.add(0L);
+            _infects.add(0L);
+            _sent.add(false);
+            _cured.add(false);
+        }
+    }
+    
     /**
      * Updates everything necessary from regions
      */
@@ -397,56 +435,9 @@ public class MainWorld implements Serializable, World, Runnable{
         updateCures();
         updateNews();
         updateTransmissions();
+        givePoints();
         checkCures();
         updateCured();
-    }
-
-    public void start(){
-        for (int i = 0; i < _diseases.size(); i++){
-            _cures.add(0L);
-            _kills.add(0L);
-            _infects.add(0L);
-            _sent.add(false);
-            _cured.add(false);
-        }
-        for (Region r : _regions){
-            _population += r.getPopulation();
-            r.setNumDiseases(_diseases.size());
-            _cureTotal += r.getWealth() * r.getPopulation() * _MINCURETICKS;
-        }
-        _paused = false;
-        _started = true;
-        new Thread(this).start();
-    }
-    
-    /**
-     * Runs the game
-     */
-    @Override
-    public void run(){
-        while (!_gameOver){
-            if (!_paused){
-                long start = System.currentTimeMillis();
-                update();
-                if (allCured()){
-                    _gameOver = true;
-                    break;
-                }
-                else if (allKilled()){
-                    crownWinners();
-                    _gameOver = true;
-                    break;
-                }
-                long end = System.currentTimeMillis();
-                long offset = end - start;
-                try{
-                    Thread.sleep(_waitTime - offset);
-                }
-                catch(InterruptedException e){
-                    System.out.println("Couldn't sleep...");
-                }
-            }
-        }
     }
     
     @Override

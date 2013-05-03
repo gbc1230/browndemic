@@ -3,13 +3,20 @@ package edu.brown.cs32.browndemic.ui.panels.menus;
 import java.awt.Dimension;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.IOException;
+import java.net.BindException;
+import java.net.UnknownHostException;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import edu.brown.cs32.browndemic.network.GameClient;
+import edu.brown.cs32.browndemic.network.GameServer;
+import edu.brown.cs32.browndemic.ui.Settings;
 import edu.brown.cs32.browndemic.ui.UIConstants.Colors;
 import edu.brown.cs32.browndemic.ui.UIConstants.Fonts;
 import edu.brown.cs32.browndemic.ui.UIConstants.Strings;
@@ -18,6 +25,9 @@ import edu.brown.cs32.browndemic.ui.Utils;
 import edu.brown.cs32.browndemic.ui.components.HoverLabel;
 import edu.brown.cs32.browndemic.ui.panels.UIPanel;
 import edu.brown.cs32.browndemic.ui.panels.titlebars.BackTitleBar;
+import edu.brown.cs32.browndemic.world.ClientWorld;
+import edu.brown.cs32.browndemic.world.ServerWorld;
+import edu.brown.cs32.browndemic.world.WorldMaker;
 
 public class MultiplayerMenu extends UIPanel implements MouseListener {
 
@@ -89,13 +99,30 @@ public class MultiplayerMenu extends UIPanel implements MouseListener {
 	
 	@Override
 	public void mouseReleasedInside(MouseEvent e) {
+                int port = Settings.getInt(Settings.PORT);
+                String name = Settings.get(Settings.NAME);
 		if (e.getSource() == _join) {
-			System.out.printf("Connect to %s\n", _host.getText());
-			Utils.getParentFrame(this).setPanel(new MultiplayerLobby(false));
-			//Utils.getParentFrame(this).setPanel(new MultiplayerJoinServer());
+	        try{
+	            ClientWorld world = new ClientWorld(name);
+	            new GameClient(_host.getText(), port, world);
+	            Utils.getParentFrame(this).setPanel(new MultiplayerLobby(false, world, null));
+	        } catch (UnknownHostException ex) {
+	            JOptionPane.showMessageDialog(this, "Host not found (" + _host.getText() + ")", "Error", JOptionPane.ERROR_MESSAGE);
+	        } catch(IOException ex) {
+	            JOptionPane.showMessageDialog(this, "Error connecting to host (" + _host.getText() + ")", "Error", JOptionPane.ERROR_MESSAGE);
+	        }
 		} else if (e.getSource() == _create) {
-			Utils.getParentFrame(this).setPanel(new MultiplayerLobby(true));
-			//Utils.getParentFrame(this).setPanel(new MultiplayerCreateServer());
+	        try {
+	            ServerWorld sw = WorldMaker.makeNewEarthServer();
+	            new GameServer(sw, port);
+	            ClientWorld world = new ClientWorld(name);
+	            new GameClient("localhost", port, world);
+            	Utils.getParentFrame(this).setPanel(new MultiplayerLobby(true, world, sw));
+	        } catch (BindException ex) {
+	            JOptionPane.showMessageDialog(this, "Could not listen on port " + port + ".  The port can be changed in the settings menu.", "Error", JOptionPane.ERROR_MESSAGE);
+	        } catch (IOException ex){
+	            JOptionPane.showMessageDialog(this, "Error creating server.", "Error", JOptionPane.ERROR_MESSAGE);
+	        }
 		}
 	}
 

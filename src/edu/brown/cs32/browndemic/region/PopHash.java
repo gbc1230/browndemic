@@ -4,6 +4,7 @@
  */
 package edu.brown.cs32.browndemic.region;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.ArrayList;
 
@@ -16,9 +17,11 @@ import java.util.ArrayList;
  * 1----infected
  * 2----cured
  */
-public class PopHash {
+public class PopHash implements Serializable{
 
-    private HashMap<String, InfWrapper> _hash;
+	private static final long serialVersionUID = 6203081608920511616L;
+	
+	private HashMap<String, InfWrapper> _hash;
     private int _len;
 
     public PopHash(int len) {
@@ -68,7 +71,7 @@ public class PopHash {
 
     public InfWrapper getZero() {
         String id = "";
-        for (int i = 0; i < _len - 1; i++) {
+        for (int i = 0; i < _len; i++) {
             id += "0";
         }
         return _hash.get(id);
@@ -76,7 +79,7 @@ public class PopHash {
 
     public void addZero(long num) {
         String id = "";
-        for (int i = 0; i < _len - 1; i++) {
+        for (int i = 0; i < _len; i++) {
             id += "0";
         }
         _hash.put(id, new InfWrapper(id, num));

@@ -3,14 +3,15 @@
  * and open the template in the editor.
  */
 package edu.brown.cs32.browndemic.world;
+import edu.brown.cs32.browndemic.disease.Bacteria;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 
 import edu.brown.cs32.browndemic.disease.Disease;
-import edu.brown.cs32.browndemic.network.ChatMessage;
-import edu.brown.cs32.browndemic.network.GameData;
-import edu.brown.cs32.browndemic.network.PerkInput;
+import edu.brown.cs32.browndemic.disease.Parasite;
+import edu.brown.cs32.browndemic.disease.Virus;
+import edu.brown.cs32.browndemic.network.*;
 import edu.brown.cs32.browndemic.region.Region;
 import edu.brown.cs32.browndemic.region.RegionTransmission;
 import edu.brown.cs32.browndemic.ui.interfaces.ChatHandler;
@@ -27,21 +28,47 @@ public class ClientWorld implements ChatServer, World{
     //the chat handler I'm using
     private ChatHandler _handler;
     //for sending off data
-    private Queue<GameData> _data;
+    private Queue<GameData> _output;
+    //the lobby
+    private List<LobbyMember> _lobby;
+    //name of this client
+    private String _name;
+    //which disease this world has picked currently, for use in lobby
+    //the index/diseaseID of this disease
+    private int _picked, _diseaseID;
+    //is this world ready to start the game
+    //has the host disconnected?
+    private boolean _isGameReady, _hostDisconnected;
     
-    public ClientWorld(){
+    public ClientWorld(String name){
         super();
-        _data = new ArrayBlockingQueue<>(10);
+        _output = new ArrayBlockingQueue<>(10);
+        _name = name;
+        _isGameReady = false;
+        _diseaseID = -1;
+        _hostDisconnected = false;
     }
     
     public GameData getNextData(){
-        return _data.poll();
+        return _output.poll();
     }
     
     public void setWorld(ServerWorld w){
-        System.out.println("Setting world to:\n" + w.toString());
         _world = w;
-        System.out.println("Set world.");
+    }
+    
+    public void setLobby(List<LobbyMember> lobby){
+        System.out.println(_name + ": Got a new lobby: " + lobby);
+        _lobby = lobby;
+    }
+    
+    public List<LobbyMember> getLobby(){
+        return _lobby;
+    }
+    
+    public void leaveLobby(){
+        LobbyRemoval lr = new LobbyRemoval();
+        _output.add(lr);
     }
     
     @Override
@@ -52,19 +79,35 @@ public class ClientWorld implements ChatServer, World{
     @Override
     public void sendMessage(String msg){
         System.out.println("Sending: " + msg);
+        msg = _name + ": " + msg;
         ChatMessage cm = new ChatMessage(msg);
-        _data.add(cm);
+        _output.add(cm);
     }
     
     public void acceptMessage(String msg){
-        //System.out.println("About to handle the message...");
-        //_handler.addMessage(msg);
-        System.out.println("Handled the message: " + msg);
+        System.out.println(_name + ": Accepting message: " + msg);
+        _handler.addMessage(msg);
+    }
+    
+    public void getDisconnect(String name, int id){
+    	String dc = name + " has disconnected.";
+    	_handler.addMessage(dc);
+    	if (id < _diseaseID)
+    		_diseaseID--;
+    }
+    
+    public void disconnectHost(){
+    	System.out.println(_name + " disconnected.");
+    	_hostDisconnected = true;
+    }
+    
+    public boolean hostDisconnected(){
+    	return _hostDisconnected;
     }
     
     @Override
     public boolean allKilled(){
-        return _world.allKilled();
+    	return _world.allKilled();
     }
     
     @Override
@@ -95,6 +138,11 @@ public class ClientWorld implements ChatServer, World{
     @Override
     public List<Boolean> getCured(){
         return _world.getCured();
+    }
+    
+    @Override
+    public double getCurePercentage(int d){
+    	return _world.getCurePercentage(d);
     }
     
     @Override
@@ -138,9 +186,73 @@ public class ClientWorld implements ChatServer, World{
     }
     
     @Override
+    public void introduceDisease(int r, int d){
+        DiseaseIntroducer di = new DiseaseIntroducer(r, d);
+        _output.add(di);
+    }
+    
+    @Override
+    public void changeDiseasesPicked(int c){
+        _picked = c;
+        DiseasePicked dp = new DiseasePicked(c);
+        _output.add(dp);
+    }
+    
+    @Override
+    public boolean allDiseasesPicked(){
+        return _world.allDiseasesPicked();
+    }
+    
+    @Override
+    public void addDisease(Disease d){
+        DiseaseAdder da = new DiseaseAdder(d);
+        _output.add(da);
+    }
+    
+    public void sendDisease(int id, ServerWorld world){
+        if (_picked == 0)
+            addDisease(new Bacteria(_name));
+        else if (_picked == 1)
+            addDisease(new Virus(_name));
+        else if (_picked == 2)
+            addDisease(new Parasite(_name));
+        if (_picked >= 0 && _picked <= 2){
+        	_diseaseID = id;
+        	_isGameReady = true;
+        	setWorld(world);
+        	System.out.println("Is game ready is true");
+        }
+    }
+    
+    public boolean isGameReady(){
+    	return _isGameReady;
+    }
+    
+    public int getDiseaseID(){
+    	return _diseaseID;
+    }
+    
+    @Override
     public void addPerk(int dis, int perk, boolean buy){
-        System.out.println("Adding perk: " + dis + ", " + perk + ", " + buy);
+        System.out.println(_name + " :Adding perk: " + dis + ", " + perk + ", " + buy);
         PerkInput pi = new PerkInput(dis, perk, buy);
-        _data.add(pi);
+        _output.add(pi);
+    }
+    
+    public String getName(){
+        return _name;
+    }
+    
+    //not used in multiplayer
+    @Override
+    public void pause(){
+    }
+    
+    @Override
+    public void unpause(){
+    }
+    
+    @Override
+    public void setSpeed(int t){
     }
 }

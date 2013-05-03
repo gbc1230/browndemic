@@ -4,9 +4,9 @@
  */
 
 package edu.brown.cs32.browndemic.network;
-import edu.brown.cs32.browndemic.world.MainWorld;
-import java.net.*;
-import java.io.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.net.Socket;
 
 /**
  *
@@ -49,15 +49,18 @@ public class GameClientThread extends Thread{
                     _client.handle(input);
                 }
                 catch(IOException e){
+                	System.out.println("IOException in ClientThread");
+                	e.printStackTrace();
                     _client.stop();
+                    break;
                 }
                 catch(ClassNotFoundException e){
-                    _client.stop();
+                	continue;
                 }
             }
         }
-        catch(Exception e){
-            System.out.println("Couldn't get it done man.");
+        catch(IOException e){
+            System.out.println("Error in GameClientThread when reading.");
         }
     }
 

@@ -13,6 +13,7 @@ import javax.swing.JTextField;
 import edu.brown.cs32.browndemic.ui.UIConstants.Colors;
 import edu.brown.cs32.browndemic.ui.UIConstants.Fonts;
 import edu.brown.cs32.browndemic.ui.UIConstants.UI;
+import edu.brown.cs32.browndemic.ui.Utils;
 import edu.brown.cs32.browndemic.ui.interfaces.ChatHandler;
 import edu.brown.cs32.browndemic.ui.interfaces.ChatServer;
 import edu.brown.cs32.browndemic.ui.panels.BrowndemicPanel;
@@ -23,6 +24,7 @@ public class ChatPanel extends BrowndemicPanel implements KeyListener, ChatHandl
 	
 	private JTextField _input;
 	private JTextArea _chat;
+	private JScrollPane _scroll;
 	private ChatServer _chatServer;
 	
 	public ChatPanel(ChatServer chatServer) {
@@ -43,6 +45,7 @@ public class ChatPanel extends BrowndemicPanel implements KeyListener, ChatHandl
 		_input.addKeyListener(this);
 		_input.setMaximumSize(new Dimension(UI.WIDTH, 100));
 		_input.setBorder(BorderFactory.createLineBorder(Colors.RED_TEXT, 2));
+		Utils.setDefaultLook(_input);
 		
 		_chat = new JTextArea();
 		_chat.setBackground(Colors.MENU_BACKGROUND);
@@ -51,9 +54,9 @@ public class ChatPanel extends BrowndemicPanel implements KeyListener, ChatHandl
 		_chat.setEditable(false);
 		_chat.setBorder(BorderFactory.createEmptyBorder());
 		
-		JScrollPane scrollPane = new JScrollPane(_chat, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		scrollPane.setBorder(BorderFactory.createLineBorder(Colors.RED_TEXT, 2));
-		add(scrollPane);
+		_scroll = new JScrollPane(_chat, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		_scroll.setBorder(BorderFactory.createLineBorder(Colors.RED_TEXT, 2));
+		add(_scroll);
 		add(_input);
 	}
 
@@ -76,6 +79,7 @@ public class ChatPanel extends BrowndemicPanel implements KeyListener, ChatHandl
 	@Override
 	public void addMessage(String message) {
 		_chat.setText((_chat.getText() + "\n" + message).trim());
+		_chat.setCaretPosition(_chat.getDocument().getLength());
 	}
 
 }

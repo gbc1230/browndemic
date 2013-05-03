@@ -9,20 +9,27 @@ package edu.brown.cs32.browndemic.network;
  * @author Graham
  */
 public class DCMessage implements GameData{
+	private static final long serialVersionUID = -3317533768431261843L;
+	
+	private String _name;
+	private int _id;
     
-    private String _msg;
-    
-    public DCMessage(String msg){
-        _msg = msg;
+    public DCMessage(String name, int id){
+        _name = name;
+        _id = id;
     }
     
     @Override
     public String getID(){
-        return "D";
+        return "DC";
     }
     
-    public String getMessage(){
-        return _msg;
+    public String getName(){
+    	return _name;
+    }
+    
+    public int getPlayerID(){
+    	return _id;
     }
     
 }

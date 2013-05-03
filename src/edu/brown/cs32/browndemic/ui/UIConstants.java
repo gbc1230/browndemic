@@ -3,6 +3,7 @@ package edu.brown.cs32.browndemic.ui;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontFormatException;
+import java.awt.GraphicsEnvironment;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -131,6 +132,14 @@ public class UIConstants {
 		public static final String MAP = IMAGE_PATH + "earth_large.png";
 		public static final String REGIONS = IMAGE_PATH + "earth_large_regions.png";
 		public static final String AIRPLANE = IMAGE_PATH + "airplane.png";
+		public static final String AIRPORT_OPEN = IMAGE_PATH + "airport_open.png";
+		public static final String AIRPORT_CLOSED = IMAGE_PATH + "airport_closed.png";
+		public static final String AIRPORT_OPEN_BIG = IMAGE_PATH + "airport_open_big.png";
+		public static final String AIRPORT_CLOSED_BIG = IMAGE_PATH + "airport_closed_big.png";
+		public static final String SEAPORT_OPEN = IMAGE_PATH + "seaport_open.png";
+		public static final String SEAPORT_CLOSED = IMAGE_PATH + "seaport_closed.png";
+		public static final String SEAPORT_OPEN_BIG = IMAGE_PATH + "seaport_open_big.png";
+		public static final String SEAPORT_CLOSED_BIG = IMAGE_PATH + "seaport_closed_big.png";
 		
 		/*
 		 * Images that should be loaded when the program starts.
@@ -165,6 +174,14 @@ public class UIConstants {
 			MAP,
 			REGIONS,
 			AIRPLANE,
+			AIRPORT_OPEN,
+			AIRPORT_CLOSED,
+			AIRPORT_OPEN_BIG,
+			AIRPORT_CLOSED_BIG,
+			SEAPORT_OPEN,
+			SEAPORT_CLOSED,
+			SEAPORT_OPEN_BIG,
+			SEAPORT_CLOSED_BIG,
 		};
 		
 	}
@@ -199,6 +216,8 @@ public class UIConstants {
 		
 		public static void init() throws FileNotFoundException, FontFormatException, IOException {
 			TITLE_BAR = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream(new File(RESOURCE_PATH + "fonts/GhostWriter.ttf"))).deriveFont(22f);
+			GraphicsEnvironment genv = GraphicsEnvironment.getLocalGraphicsEnvironment();
+			genv.registerFont(TITLE_BAR);
 			BIG_TEXT = TITLE_BAR.deriveFont(38f);
 			NORMAL_TEXT = TITLE_BAR.deriveFont(16f);
 			BUTTON_TEXT = TITLE_BAR.deriveFont(46f);

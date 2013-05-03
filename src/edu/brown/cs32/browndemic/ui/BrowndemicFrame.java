@@ -36,6 +36,7 @@ public class BrowndemicFrame extends JFrame {
 	private static final long serialVersionUID = -8808883923263763897L;
 	private JPanel _content;
 	private JPanel _titleContainer;
+	private UIPanel _current;
 	
 	/**
 	 * Creates a BrowndemicFrame and does initial loading.  When
@@ -134,24 +135,33 @@ public class BrowndemicFrame extends JFrame {
 	 */
 	public void setPanel(UIPanel p) {
 		_content.removeAll();
+		if (_current != null) {
+			_current.stopPanel();
+		}
 		revalidate();
 		repaint();
 		_content.add(p);
+		_current = p;
 		p.setupForDisplay();
 		setVisible(true);
 	}
 	
 	public void setPanel(UIPanel p, boolean doSetup) {
 		_content.removeAll();
+		if (_current != null) {
+			_current.stopPanel();
+		}
 		revalidate();
 		repaint();
 		_content.add(p);
+		_current = p;
 		if (doSetup)
 			p.setupForDisplay();
 		setVisible(true);
 	}
 	
 	public static void main(String[] args) {
+		System.setProperty("sun.java2d.opengl", "true");
 		new BrowndemicFrame();
 	}
 }
