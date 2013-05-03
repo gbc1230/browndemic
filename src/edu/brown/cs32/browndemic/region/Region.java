@@ -142,6 +142,8 @@ public class Region {
         double max = _diseases[d].getMaxInfectivity();
         number = _INFSCALE/5.0 * pop * (_diseases[d].getInfectivity() / max) *
                 ( wetResFactor + dryResFactor + heatResFactor + coldResFactor + medResFactor);
+        if(number != 0)
+            System.out.println(number);
         if(Math.random()*_INFDOUBLETIME == 0)
             number = Math.ceil(number);
         else
