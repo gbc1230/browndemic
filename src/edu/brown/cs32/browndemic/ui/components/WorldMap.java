@@ -5,8 +5,11 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GraphicsConfiguration;
+import java.awt.GraphicsEnvironment;
 import java.awt.Point;
 import java.awt.RenderingHints;
+import java.awt.Transparency;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -55,6 +58,7 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 	private Map<Integer, Float> _highlights = new HashMap<>();
 	private int _selected, _disease, _hover;
 	private boolean _chooseMode;
+	private static GraphicsConfiguration gc = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
 	
 	private static final double AIRPLANE_SPEED = 6.0;
 	
@@ -103,8 +107,8 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 							// ImageIO.read is going to give us the wrong format making rendering way too slow
 							BufferedImage diseaseFromFile = ImageIO.read(disease);
 							BufferedImage highlightFromFile = ImageIO.read(highlight);
-							BufferedImage convertedDisease = new BufferedImage(diseaseFromFile.getWidth(), diseaseFromFile.getHeight(), BufferedImage.TYPE_INT_ARGB);
-							BufferedImage convertedHighlight = new BufferedImage(diseaseFromFile.getWidth(), diseaseFromFile.getHeight(), BufferedImage.TYPE_INT_ARGB);
+							BufferedImage convertedDisease = gc.createCompatibleImage(diseaseFromFile.getWidth(), diseaseFromFile.getHeight(), Transparency.TRANSLUCENT);//new BufferedImage(diseaseFromFile.getWidth(), diseaseFromFile.getHeight(), BufferedImage.TYPE_INT_ARGB);
+							BufferedImage convertedHighlight = gc.createCompatibleImage(diseaseFromFile.getWidth(), diseaseFromFile.getHeight(), Transparency.TRANSLUCENT);//new BufferedImage(diseaseFromFile.getWidth(), diseaseFromFile.getHeight(), BufferedImage.TYPE_INT_ARGB);
 
 							convertedDisease.getGraphics().drawImage(diseaseFromFile, 0, 0, null);
 							convertedHighlight.getGraphics().drawImage(highlightFromFile, 0, 0, null);
@@ -143,7 +147,7 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 		BufferedImage original, transform;
 		public MovingObject(Location l, double speed, BufferedImage img) { 
 			this.x = l.x; this.y = l.y; this.speed = speed; this.original = img;
-			transform = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_ARGB);
+			transform = gc.createCompatibleImage(img.getWidth(), img.getHeight(), Transparency.TRANSLUCENT);//new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_ARGB);
 			xoffset = img.getWidth()/2;
 			yoffset = img.getHeight()/2;
 		}
@@ -200,7 +204,7 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 	private BufferedImage[] createRegion(int id, Color... c) {
 		BufferedImage[] out = new BufferedImage[c.length];
 		for (int i = 0; i < c.length; i++) {
-			out[i] = new BufferedImage(_regions.getWidth(), _regions.getHeight(), BufferedImage.TYPE_INT_ARGB);
+			out[i] = gc.createCompatibleImage(_regions.getWidth(), _regions.getHeight(), Transparency.TRANSLUCENT);//new BufferedImage(_regions.getWidth(), _regions.getHeight(), BufferedImage.TYPE_INT_ARGB);
 		}
 
 		for (int x = 0; x < _regions.getWidth(); x++) {
@@ -264,7 +268,7 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 				g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, highlight));
 				g2.drawImage(_highlightOverlays.get(e.getKey()), 0, 0, null);
 				if (e.getKey() == _hover)
-					_highlights.put(e.getKey(), Math.min(0.5f, highlight + 0.025f));
+					_highlights.put(e.getKey(), Math.min(0.5f, highlight + 0.035f));
 				else
 					_highlights.put(e.getKey(), Math.max(0, highlight - 0.015f));
 			}
