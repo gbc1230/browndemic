@@ -30,6 +30,8 @@ public class Region implements Serializable{
 
     //ArrayList of diseases in this Region
     private Disease[] _diseases;
+
+    private double _awareMax;
     
     private double[] _infDoubleTime;
     private static final int _INFTIMESCALE = 180;
@@ -38,6 +40,10 @@ public class Region implements Serializable{
     private double[] _lethDoubleTime;
     private static final int _LETHTIMESCALE = 180;
     private static final double _LETHSCALE = 1.0/60;
+
+    private static final int _PLANEFREQ = 120;
+    private static final int _SHIPFREQ = 120;
+    private static final int _LANDFREQ = 60;
 
     //number of diseases in game
     private int _numDiseases;
@@ -268,7 +274,7 @@ public class Region implements Serializable{
             }
         }
         for(int j = 0; j < _numDiseases; j++){
-            if(_hasCure[j])
+            if(_awareness[j] > _awareMax)
                 _cureProgress[j] = _cureProgress[j] + (long) (_wealth*weightedPop);
         }
     }
@@ -293,9 +299,7 @@ public class Region implements Serializable{
     public void awarenessCheck() {
         //TODO flesh this out, the values used here are complete guesses
         for(int i = 0; i < _numDiseases; i++){
-//            double awareMax = _diseases[i].getMaxVisibility()*_population*_INFDOUBLETIME;
-            double awareMax = 280*_population*_INFTIMESCALE;
-            boolean closePorts = (_awareness[i] > awareMax / 2);
+            boolean closePorts = (_awareness[i] > _awareMax / 2);
             if (closePorts  && !(_air == 0 && _sea == 0)) {
                 _air = 0;
                 _sea = 0;
@@ -307,7 +311,8 @@ public class Region implements Serializable{
     public void updateAwareness(Disease d) {
         int index = d.getID();
         //TODO awareness += vis*(infected + dead)
-        _awareness[index] = _awareness[index] + d.getVisibility() * (getInfected().get(index) + 2*_dead[index]);
+        double maxVis = d.getMaxVisibility();
+        _awareness[index] = _awareness[index] + (d.getVisibility() + maxVis)/maxVis * (getInfected().get(index) + 2*_dead[index]);
     }
 
     /**
@@ -373,7 +378,7 @@ public class Region implements Serializable{
             if (air > 0 && _air > 0) {
                 boolean transmit = false;
                 for(int i = 0; i < _air; i++)
-                    if(_rand.nextInt(_INFTIMESCALE*5) == 0)
+                    if(_rand.nextInt(_PLANEFREQ) == 0)
                         transmit = true;
                 double inf = getInfected().get(d.getID());
                 double trans = inf/_population;
@@ -383,14 +388,14 @@ public class Region implements Serializable{
                     RegionTransmission rt = new RegionTransmission(_name, region.getName(), d.getID(), true);
                     _transmissions.add(rt);
                     region.introduceDisease(d);
-                    System.out.println("Plane Trans");
+//                    System.out.println("Plane Trans");
                     continue;
                 }
             }
             if (sea > 0 && _sea > 0) {
                 boolean transmit = false;
                 for(int i = 0; i < _sea; i++)
-                    if(_rand.nextInt(_INFTIMESCALE*5) == 0)
+                    if(_rand.nextInt(_SHIPFREQ) == 0)
                         transmit = true;
                 double inf = getInfected().get(d.getID());
                 double trans = inf/_population;
@@ -400,7 +405,7 @@ public class Region implements Serializable{
                     RegionTransmission rt = new RegionTransmission(_name, region.getName(), d.getID(), true);
                     _transmissions.add(rt);
                     region.introduceDisease(d);
-                    System.out.println("Ship Trans");
+//                    System.out.println("Ship Trans");
                 }
             }
         }
@@ -418,10 +423,15 @@ public class Region implements Serializable{
             }
             boolean transmit = false;
             double inf = getInfected().get(d.getID());
-            double trans = inf /_population *(d.getAirTrans() + d.getInfectivity())/311.0;
-            transmit = _rand.nextDouble() < trans;
+            if(_rand.nextInt(_LANDFREQ) == 0)
+                transmit = true;
+            if(transmit){
+                double max = d.getMaxInfectivity();
+                double trans = inf /_population *(d.getAirTrans() + d.getInfectivity() +max)/max;
+                transmit = _rand.nextDouble() < trans;
+            }
             if (transmit) {
-                System.out.println("Land Trans");
+//                System.out.println("Land Trans");
                 region.introduceDisease(d);
             }
         }
@@ -442,7 +452,7 @@ public class Region implements Serializable{
             double trans = inf/_population * (d.getAirTrans() + d.getWaterTrans())/82;
             transmit = _rand.nextDouble() < trans;
             if (transmit) {
-                System.out.println("Water Trans");
+//                System.out.println("Water Trans");
                 region.introduceDisease(d);
             }
         }
@@ -508,6 +518,7 @@ public class Region implements Serializable{
         _hash.addZero(_population);
         _infDoubleTime = new double[num];
         _lethDoubleTime = new double[num];
+        _awareMax = 140*_population*_INFTIMESCALE;
     }
 
     /**
