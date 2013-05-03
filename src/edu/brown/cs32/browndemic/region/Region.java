@@ -30,9 +30,14 @@ public class Region implements Serializable{
 
     //ArrayList of diseases in this Region
     private Disease[] _diseases;
-
-    private final int _INFDOUBLETIME = 60;
-    private final double _INFSCALE = Math.pow(2.0,1.0/(double)_INFDOUBLETIME) - 1.0;
+    
+    private double[] _infDoubleTime;
+    private static final int _INFTIMESCALE = 180;
+    private static final double _INFSCALE = 1.0/60;
+    
+    private double[] _lethDoubleTime;
+    private static final int _LETHTIMESCALE = 180;
+    private static final double _LETHSCALE = 1.0/60;
 
     //number of diseases in game
     private int _numDiseases;
@@ -68,10 +73,14 @@ public class Region implements Serializable{
     //number of seaports and airports open in this Region
     private int _sea;
     private int _air;
+    
     //wealth of this Region (reflects infrastructure, productivity, actual wealth, etc.)
     private double _wealth,  _wet,  _dry,  _heat,  _cold, _med;
+    //Lists of transmissions to other regions and news
     private ArrayList<RegionTransmission> _transmissions;
     private ArrayList<String> _news;
+    
+    private double _remInf, _remDead;
 
     /**
      * constructs a new Region with the given info
@@ -102,6 +111,8 @@ public class Region implements Serializable{
         _transmissions = new ArrayList<RegionTransmission>();
         _news = new ArrayList<String>();
         _rand = new Random();
+        _remInf = 0;
+        _remDead = 0;
     }
 
     /**
@@ -122,15 +133,14 @@ public class Region implements Serializable{
             }
         }
     }
-
+    
     /**
      * calculates the number of pop to be infected
      * @param d the index of the disease
      * @param pop the population to infect
      * @return how many to infect
      */
-    public long getNumInfected(int d, long pop) {
-        double number = 0;
+    public long getTotNumInfected(int d) {
         double wetResFactor = 1.0;
         double dryResFactor = 1.0;
         double heatResFactor = 1.0;
@@ -146,12 +156,19 @@ public class Region implements Serializable{
             coldResFactor = _diseases[d].getColdRes()/_cold;
         if(_diseases[d].getMedRes() < _med)
             medResFactor = _diseases[d].getMedRes()/_med;
-        double max = _diseases[d].getMaxInfectivity();
+        double maxInf = _diseases[d].getMaxInfectivity();
         double inf = getInfected().get(d);
-        number = .2 * pop * (inf/_population) * (_diseases[d].getInfectivity() / max) *
-                ( wetResFactor + dryResFactor + heatResFactor + coldResFactor + medResFactor);
-        if(_rand.nextInt(_INFDOUBLETIME) == 0)
+        double growthFactor = (_diseases[d].getInfectivity() + maxInf) / maxInf * _INFSCALE *
+                ( wetResFactor + dryResFactor + heatResFactor + coldResFactor + medResFactor)/5;
+        double number = inf*Math.pow(growthFactor,_infDoubleTime[d]/_INFTIMESCALE);
+        if(_remInf >= 1){
+            number++;
+            _remInf--;
+        }
+        _remInf += number % 1;
+        if(_rand.nextInt(_INFTIMESCALE) == 0){
             number = Math.ceil(number);
+        }
         else
             number = Math.floor(number);
         return (long) number;
@@ -163,8 +180,11 @@ public class Region implements Serializable{
      **/
     public void infect(Disease disease) {
         int index = disease.getID();
+        long totNumber = getTotNumInfected(index);
         for(InfWrapper inf : _hash.getAllOfType(index,0)){
-            long number = getNumInfected(index, inf.getInf());
+            double ratio = (double)inf.getInf()/_population;
+            long number = (long) Math.ceil(totNumber*ratio);
+            System.out.println("Infected: " + number);
             String infID = inf.getID().substring(0,index) + "1" + inf.getID().substring(index + 1);
             if (inf.getInf() < number){
                 _hash.put(new InfWrapper(inf.getID(), 0L));
@@ -183,8 +203,17 @@ public class Region implements Serializable{
     public void kill(Disease disease) {
         int index = disease.getID();
         for (InfWrapper inf : _hash.getAllOfType(index,1)) {
-            double number = (disease.getLethality()/disease.getMaxLethality()/_INFDOUBLETIME/3 * inf.getInf());
+            double rate = 1 - disease.getLethality()/disease.getMaxLethality()*_LETHSCALE;
+            double number = (1 - Math.pow(rate, _lethDoubleTime[disease.getID()]/_LETHTIMESCALE)) * inf.getInf();
+            System.out.println(Math.pow(rate, _lethDoubleTime[disease.getID()]/_LETHTIMESCALE));
+            if(_remDead >= 1){
+                number++;
+                _remDead--;
+            }
+            if(disease.getLethality() / disease.getMaxLethality() > .3)
+                _remDead += number % 1;
             number = Math.floor(number);
+            System.out.println("Killed: " + number);
             if (inf.getInf() < number) {
                 _dead[index] = _dead[index] + inf.getInf();
                 _hash.put(new InfWrapper(inf.getID(), 0L));
@@ -268,7 +297,7 @@ public class Region implements Serializable{
         //TODO flesh this out, the values used here are complete guesses
         for(int i = 0; i < _numDiseases; i++){
 //            double awareMax = _diseases[i].getMaxVisibility()*_population*_INFDOUBLETIME;
-            double awareMax = 280*_population*_INFDOUBLETIME;
+            double awareMax = 280*_population*_INFTIMESCALE;
             boolean closePorts = (_awareness[i] > awareMax / 2);
             if (closePorts  && !(_air == 0 && _sea == 0)) {
                 _air = 0;
@@ -310,13 +339,24 @@ public class Region implements Serializable{
                 ID += "0";
             }
         }
-        _hash.put(new InfWrapper(ID, 1L));
+        InfWrapper inf = _hash.get(ID);
+        _hash.put(new InfWrapper(ID, inf.getInf() + 1));
         _hash.addZero(_hash.getZero().getInf() - 1);
         _diseases[index] = d;
         _dead[index] = 0L;
         _hasCure[index] = false;
         _awareness[index] = 0.0;
         _cureProgress[index] = 0L;
+        double maxInf = d.getMaxInfectivity();
+        //TODO
+//        double minInf = d.getStartInfectivity();
+        double minInf = 5;
+        _infDoubleTime[index] = Math.log(2.0)/Math.log((maxInf + minInf)/maxInf);
+        double maxLeth = d.getMaxLethality();
+        //TOD
+//        double minLeth = d.getStartLethality();
+        double minLeth = 1;
+        _infDoubleTime[index] = Math.log(0.5)/Math.log(1 - minLeth/maxLeth);
         _news.add(d.getName() + " has infected " + _name + ".");
     }
 
@@ -336,7 +376,7 @@ public class Region implements Serializable{
             if (air > 0 && _air > 0) {
                 boolean transmit = false;
                 for(int i = 0; i < _air; i++)
-                    if(_rand.nextInt(_INFDOUBLETIME*5) == 0)
+                    if(_rand.nextInt(_INFTIMESCALE*5) == 0)
                         transmit = true;
                 double inf = getInfected().get(d.getID());
                 double trans = inf/_population;
@@ -353,7 +393,7 @@ public class Region implements Serializable{
             if (sea > 0 && _sea > 0) {
                 boolean transmit = false;
                 for(int i = 0; i < _sea; i++)
-                    if(_rand.nextInt(_INFDOUBLETIME*5) == 0)
+                    if(_rand.nextInt(_INFTIMESCALE*5) == 0)
                         transmit = true;
                 double inf = getInfected().get(d.getID());
                 double trans = inf/_population;
@@ -469,6 +509,8 @@ public class Region implements Serializable{
         _cureProgress = new long[num];
         _hash = new PopHash(num);
         _hash.addZero(_population);
+        _infDoubleTime = new double[num];
+        _lethDoubleTime = new double[num];
     }
 
     /**
