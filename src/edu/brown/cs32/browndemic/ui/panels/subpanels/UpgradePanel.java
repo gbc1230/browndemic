@@ -170,7 +170,7 @@ public class UpgradePanel extends BrowndemicPanel implements ListSelectionListen
 			}
 		}
 		if (e.getSource() == _addPoint) {
-			_disease.addPoint();
+			_disease.addPoints(10);
 		}
 	}
 	

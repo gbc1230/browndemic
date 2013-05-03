@@ -135,6 +135,8 @@ public class MultiplayerLobby extends UIPanel {
 			System.out.println("UPDATING LOBBY");
 			_lobby = _thisWorld.getLobby();
 			_players.removeAll();
+			if (_lobby == null)
+				return;
 			for (LobbyMember l : _lobby) {
 		        _players.add(new MultiplayerLobbyPanel(l.getName(), l.getIP(), _isHost, null, l.isReady()));
 			}

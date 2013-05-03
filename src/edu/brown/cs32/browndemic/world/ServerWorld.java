@@ -136,6 +136,13 @@ public class ServerWorld extends MainWorld{
         return _lobby;
     }
     
+    @Override
+    public void introduceDisease(int d, int r){
+        System.out.println("Introducing " + d + " to " + r);
+        _regions.get(r).introduceDisease(_diseases.get(d));
+        _numRegionsPicked++;
+    }
+    
     public void start(){
         for (int i = 0; i < _diseases.size(); i++){
             _cures.add(0L);

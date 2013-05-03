@@ -35,11 +35,13 @@ public abstract class MainWorld implements Serializable, World, Runnable{
     
     //ArrayLists keeping track of how many people each disease has killed / has infected currently
     //also the progress towards the cure
-    protected List<Long> _kills, _infects, _cures;
+    //oldInf helps me with 
+    protected List<Long> _kills, _infects, _cures, _oldInf;
     
     //winners takes care of the winners: if empty at the end of the game,
     //it signifies that all diseases were erradicated
-    protected List<Integer> _winners;
+    //benchMarks is for giving out points, tells me how far along they are
+    protected List<Integer> _winners, _benchMarks;
     
     //which cures have been sent out already
     //NOTE: a cure is the progress towards distributing the cure; a disease
@@ -75,6 +77,7 @@ public abstract class MainWorld implements Serializable, World, Runnable{
         _infects = new ArrayList<>();
         _winners = new ArrayList<>();
         _cures = new ArrayList<>();
+        _oldInf = new ArrayList<>();
         _sent = new ArrayList<>();
         _cured = new ArrayList<>();
         _news = new ArrayList<>();
@@ -208,13 +211,6 @@ public abstract class MainWorld implements Serializable, World, Runnable{
             _waitTime = 200L;
         else if (time == 3)
             _waitTime = 100L;
-    }
-    
-    @Override
-    public void introduceDisease(int d, int r){
-        System.out.println("Introducing " + d + " to " + r);
-        _regions.get(r).introduceDisease(_diseases.get(d));
-        _numRegionsPicked++;
     }
     
     @Override
@@ -409,6 +405,11 @@ public abstract class MainWorld implements Serializable, World, Runnable{
         _winners = ans;
     }
     
+    //gives out points to each disease
+    private void givePoints(){
+    	
+    }
+    
     /**
      * Updates everything necessary from regions
      */
@@ -420,49 +421,9 @@ public abstract class MainWorld implements Serializable, World, Runnable{
         updateCures();
         updateNews();
         updateTransmissions();
+        givePoints();
         checkCures();
         updateCured();
-    }
-
-    /**
-     * Runs the game
-     */
-    @Override
-    public void run(){
-        System.out.println("begin the loop");
-        int i = 0;
-        while(_numRegionsPicked < _diseases.size()){
-            try{
-                Thread.sleep(1);
-            }
-            catch(Exception e){
-                
-            }
-        }
-        System.out.println("starting game");
-        while (!_gameOver){
-            if (!_paused){
-                long start = System.currentTimeMillis();
-                update();
-                if (allCured()){
-                    _gameOver = true;
-                    break;
-                }
-                else if (allKilled()){
-                    crownWinners();
-                    _gameOver = true;
-                    break;
-                }
-                long end = System.currentTimeMillis();
-                long offset = end - start;
-                try{
-                    Thread.sleep(_waitTime - offset);
-                }
-                catch(InterruptedException e){
-                    System.out.println("Couldn't sleep...");
-                }
-            }
-        }
     }
     
     @Override

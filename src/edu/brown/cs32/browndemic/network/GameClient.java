@@ -79,7 +79,7 @@ public class GameClient implements Runnable{
         }
         else if (id.equals("DC")){
         	DCMessage dc = (DCMessage)msg;
-        	_world.getDisconnect(dc.getPlayerID());
+        	_world.getDisconnect(dc.getName(), dc.getPlayerID());
         }
         else if (id.equals("LS")){
             LobbySender ls = (LobbySender)msg;

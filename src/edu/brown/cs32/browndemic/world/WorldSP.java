@@ -16,6 +16,7 @@ public class WorldSP extends MainWorld{
         super();
     }
         
+    //when the user picks a disease
     @Override
     public void changeDiseasesPicked(int change){
         _numDiseasesPicked += change;
@@ -47,5 +48,47 @@ public class WorldSP extends MainWorld{
         _paused = false;
         _started = true;
         new Thread(this).start();
+    }
+    
+
+    /**
+     * Runs the game
+     */
+    @Override
+    public void run(){
+        System.out.println("begin the loop");
+        int i = 0;
+        while(_numRegionsPicked < _diseases.size()){
+            try{
+                Thread.sleep(1);
+            }
+            catch(Exception e){
+                
+            }
+        }
+        System.out.println("starting game");
+        while (!_gameOver){
+            if (!_paused){
+                long start = System.currentTimeMillis();
+                update();
+                if (allCured()){
+                    _gameOver = true;
+                    break;
+                }
+                else if (allKilled()){
+                    crownWinners();
+                    _gameOver = true;
+                    break;
+                }
+                long end = System.currentTimeMillis();
+                long offset = end - start;
+                try{
+                    Thread.sleep(_waitTime - offset);
+                }
+                catch(InterruptedException e){
+                    System.out.println("Couldn't sleep...");
+                }
+            }
+        }
     }
 }

@@ -138,7 +138,8 @@ public class GameServer implements Runnable{
             _clients.remove(toKill);
             _world.removeDisease(pos);
             toKill.close();
-            DCMessage msg = new DCMessage(pos);
+            String name = _world.getDiseases().get(pos).getName();
+            DCMessage msg = new DCMessage(name, pos);
             for (GameServerThread gst : _clients){
                 gst.sendMessage(msg);
             }
