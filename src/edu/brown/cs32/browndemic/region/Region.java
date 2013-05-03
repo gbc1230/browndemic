@@ -92,7 +92,7 @@ public class Region implements Serializable{
      */
     public Region(int ID, String name, long population, List<Integer> landNeighbors,
             List<Integer> waterNeighbors, HashMap<Integer, Region> hash,
-            int seaports, int airports, double wealth, double wet, double dry,
+            int airports, int seaports, double wealth, double wet, double dry,
             double heat, double cold, double med) {
         _name = name;
         _ID = ID;
