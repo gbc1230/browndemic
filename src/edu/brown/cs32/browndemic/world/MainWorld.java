@@ -280,7 +280,7 @@ public abstract class MainWorld implements Serializable, World, Runnable{
             List<Long> rInfected = r.getInfected();
             for (int i = 0; i < rInfected.size(); i++){
                 long d = infects.get(i);
-                infects.set(i, infects.get(i) + d);
+                infects.set(i, rInfected.get(i) + d);
                 infected += rInfected.get(i);
             }
         }
@@ -408,7 +408,28 @@ public abstract class MainWorld implements Serializable, World, Runnable{
     
     //gives out points to each disease
     private void givePoints(){
-    	
+    	for (int i = 0; i < _diseases.size(); i++){
+    		Disease d = _diseases.get(i);
+    		long newInf = _infects.get(i);
+    		long oldInf = _oldInf.get(i);
+    		long change = newInf - oldInf;
+    		int bench = _benchMarks.get(i);
+    		if (bench * 10L <= newInf){
+    			_benchMarks.set(i, bench*10);
+    			bench = _benchMarks.get(i);
+    		}
+    		if (change > bench){
+	    		long val = change / bench;
+	    		for (int c = 0; c < val; c++){
+	    			int rand = (int)(Math.random() * 2);
+	    			if (rand == 0)
+	    				d.addPoints(2);
+	    			else 
+						d.addPoints(3);
+	    		}
+	    		_oldInf.set(i, oldInf + val * bench);
+    		}
+    	}
     }
     
     //sets up disease related lists
