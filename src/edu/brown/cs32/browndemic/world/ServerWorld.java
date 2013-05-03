@@ -144,13 +144,7 @@ public class ServerWorld extends MainWorld{
     }
     
     public void start(){
-        for (int i = 0; i < _diseases.size(); i++){
-            _cures.add(0L);
-            _kills.add(0L);
-            _infects.add(0L);
-            _sent.add(false);
-            _cured.add(false);
-        }
+    	setupDiseases();
         for (Region r : _regions){
             r.setNumDiseases(_diseases.size());
             _cureTotal += r.getWealth() * r.getPopulation() * _MINCURETICKS;

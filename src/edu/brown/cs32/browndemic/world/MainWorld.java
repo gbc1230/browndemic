@@ -76,6 +76,7 @@ public abstract class MainWorld implements Serializable, World, Runnable{
         _kills = new ArrayList<>();
         _infects = new ArrayList<>();
         _winners = new ArrayList<>();
+        _benchMarks = new ArrayList<>();
         _cures = new ArrayList<>();
         _oldInf = new ArrayList<>();
         _sent = new ArrayList<>();
@@ -408,6 +409,19 @@ public abstract class MainWorld implements Serializable, World, Runnable{
     //gives out points to each disease
     private void givePoints(){
     	
+    }
+    
+    //sets up disease related lists
+    protected void setupDiseases(){
+        for (int i = 0; i < _diseases.size(); i++){
+            _cures.add(0L);
+            _oldInf.add(0L);
+            _benchMarks.add(10);
+            _kills.add(0L);
+            _infects.add(0L);
+            _sent.add(false);
+            _cured.add(false);
+        }
     }
     
     /**

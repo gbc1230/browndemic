@@ -184,7 +184,6 @@ public class Region implements Serializable{
         for(InfWrapper inf : _hash.getAllOfType(index,0)){
             double ratio = (double)inf.getInf()/_population;
             long number = (long) Math.ceil(totNumber*ratio);
-            System.out.println("Infected: " + number);
             String infID = inf.getID().substring(0,index) + "1" + inf.getID().substring(index + 1);
             if (inf.getInf() < number){
                 _hash.put(new InfWrapper(inf.getID(), 0L));
@@ -205,7 +204,6 @@ public class Region implements Serializable{
         for (InfWrapper inf : _hash.getAllOfType(index,1)) {
             double rate = 1 - disease.getLethality()/disease.getMaxLethality()*_LETHSCALE;
             double number = (1 - Math.pow(rate, _lethDoubleTime[disease.getID()]/_LETHTIMESCALE)) * inf.getInf();
-            System.out.println(Math.pow(rate, _lethDoubleTime[disease.getID()]/_LETHTIMESCALE));
             if(_remDead >= 1){
                 number++;
                 _remDead--;
@@ -213,7 +211,6 @@ public class Region implements Serializable{
             if(disease.getLethality() / disease.getMaxLethality() > .3)
                 _remDead += number % 1;
             number = Math.floor(number);
-            System.out.println("Killed: " + number);
             if (inf.getInf() < number) {
                 _dead[index] = _dead[index] + inf.getInf();
                 _hash.put(new InfWrapper(inf.getID(), 0L));
