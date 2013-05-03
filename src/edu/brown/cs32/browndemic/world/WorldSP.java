@@ -77,7 +77,11 @@ public class WorldSP extends MainWorld{
                 long end = System.currentTimeMillis();
                 long offset = end - start;
                 try{
-                    Thread.sleep(_waitTime - offset);
+                	if (offset < _waitTime)
+                		Thread.sleep(_waitTime - offset);
+                	else
+                		System.out.println("Offset of " + offset + " was higher than " +
+                				"waitTime of " + _waitTime);
                 }
                 catch(InterruptedException e){
                     System.out.println("Couldn't sleep...");
