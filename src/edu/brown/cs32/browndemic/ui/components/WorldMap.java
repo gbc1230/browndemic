@@ -48,6 +48,9 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 
 	private static final long serialVersionUID = -4481136165457141240L;
 	
+	private static final int TICKS_FOR_UPDATE = 10;
+	private static final int MAX_FPS = 60;
+	
 	private World _world;
 	private BufferedImage _map, _regions;
 	private Map<Integer, BufferedImage> _diseaseOverlays = new HashMap<>();
@@ -62,7 +65,10 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 	private static GraphicsConfiguration gc = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
 	private double fps = 0.0f;
 	private long lastUpdate = 0;
+	private BufferedImage _regionCache;
+	private int _ticksSinceUpdate = TICKS_FOR_UPDATE;
 	private MarqueeLabel _ml;
+	private Timer _timer;
 	
 	private static final double AIRPLANE_SPEED = 6.0;
 	
@@ -79,7 +85,9 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 		setPreferredSize(new Dimension(map.getWidth(), map.getHeight()));
 		setMaximumSize(new Dimension(map.getWidth(), map.getHeight()));
 		setMinimumSize(new Dimension(map.getWidth(), map.getHeight()));
-		new Timer(1000/60, new RepaintListener()).start();
+		_regionCache = gc.createCompatibleImage(map.getWidth(), map.getHeight(), Transparency.TRANSLUCENT);
+		_timer = new Timer(1000/MAX_FPS, new RepaintListener());
+		_timer.start();
 	}
 	
 	public void setChooseMode(boolean chooseMode) {
@@ -255,24 +263,37 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 		
 		g.drawImage(_map, 0, 0, null);
 		
+		if (_ticksSinceUpdate >= TICKS_FOR_UPDATE) {
+			Graphics2D cacheg2 = (Graphics2D) _regionCache.getGraphics();
+			cacheg2.setComposite(AlphaComposite.Clear);
+			cacheg2.fillRect(0, 0, _regionCache.getWidth(), _regionCache.getHeight());
+		}
+		
 		for (Map.Entry<Integer, BufferedImage> e : _diseaseOverlays.entrySet()) {
-			Region r = _world.getRegion(e.getKey());
-			float percentInfected = 0f;
-			if (r != null) {
-				try {
-					percentInfected = ((float)r.getInfected().get(_disease) + (float)r.getKilled().get(_disease)) / (float)r.getPopulation();
-				} catch (IndexOutOfBoundsException e1) {
-					percentInfected = 0f;
+			
+			if (_ticksSinceUpdate >= TICKS_FOR_UPDATE) {
+				
+				Graphics2D cacheg2 = (Graphics2D) _regionCache.getGraphics();
+			
+				Region r = _world.getRegion(e.getKey());
+				float percentInfected = 0f;
+				if (r != null) {
+					try {
+						percentInfected = ((float)r.getInfected().get(_disease) + (float)r.getKilled().get(_disease)) / (float)r.getPopulation();
+					} catch (IndexOutOfBoundsException e1) {
+						percentInfected = 0f;
+					}
+					if (percentInfected > 0f && percentInfected < .2f) percentInfected = .2f;
 				}
-				if (percentInfected > 0f && percentInfected < .2f) percentInfected = .2f;
-			}
-			if (percentInfected != _infected.get(e.getKey())) {
-				_composites.put(e.getKey(), AlphaComposite.getInstance(AlphaComposite.SRC_OVER, percentInfected/2.0f));
-				_infected.put(e.getKey(), percentInfected);
-			}
-			if (percentInfected > 0) {
-				g2.setComposite(_composites.get(e.getKey()));
-				g2.drawImage(e.getValue(), 0, 0, null);
+				if (percentInfected != _infected.get(e.getKey())) {
+					_composites.put(e.getKey(), AlphaComposite.getInstance(AlphaComposite.SRC_OVER, percentInfected/2.0f));
+					_infected.put(e.getKey(), percentInfected);
+				}
+				if (percentInfected > 0) {
+					cacheg2.setComposite(_composites.get(e.getKey()));
+					cacheg2.drawImage(e.getValue(), 0, 0, null);
+				}
+			
 			}
 			
 			float highlight = _highlights.get(e.getKey());
@@ -285,6 +306,9 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 			else
 				_highlights.put(e.getKey(), Math.max(0, highlight - 0.015f));
 		}
+		
+		g2.setComposite(AlphaComposite.SrcOver);
+		g2.drawImage(_regionCache, 0, 0, null);
 			
 		if (_chooseMode) {
 			drawChoosePanel(g2);
@@ -309,6 +333,12 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 		}
 		
 		_ml.paintComponent(g);
+		
+		if (_ticksSinceUpdate >= TICKS_FOR_UPDATE) {
+			_ticksSinceUpdate = 0;
+		} else {
+			_ticksSinceUpdate++;
+		}
 	}
 	
 	public void addRandomPlane() {
@@ -436,5 +466,9 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 	@Override
 	public void mouseMoved(MouseEvent e) {
 		_hover = getID(e.getPoint().x, e.getPoint().y);
+	}
+	
+	public void stop() {
+		_timer.stop();
 	}
 }

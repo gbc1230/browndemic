@@ -166,6 +166,7 @@ public class GameMenu extends UIPanel {
 			_regions.stop();
 			_stats.stop();
 			_upgrade.stop();
+			_map.stop();
 		}
 	}
         
