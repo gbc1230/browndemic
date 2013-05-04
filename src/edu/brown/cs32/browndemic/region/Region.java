@@ -41,9 +41,9 @@ public class Region implements Serializable{
     private static final int _LETHTIMESCALE = 180;
     private static final double _LETHSCALE = 1.0/60;
 
-    private static final int _PLANEFREQ = 120;
-    private static final int _SHIPFREQ = 120;
-    private static final int _LANDFREQ = 60;
+    private static final int _PLANEFREQ = 180;
+    private static final int _SHIPFREQ = 180;
+    private static final int _LANDFREQ = 30;
 
     //number of diseases in game
     private int _numDiseases;
@@ -306,7 +306,7 @@ public class Region implements Serializable{
     public void awarenessCheck() {
         //TODO flesh this out, the values used here are complete guesses
         for(int i = 0; i < _numDiseases; i++){
-            boolean closePorts = (_awareness[i] > _awareMax / 2);
+            boolean closePorts = (_awareness[i] > _awareMax / 3);
             if (closePorts  && !(_air == 0 && _sea == 0)) {
                 _air = 0;
                 _sea = 0;
@@ -381,7 +381,7 @@ public class Region implements Serializable{
                 continue;
             }
             int air = region.getAir();
-            int sea = region.getAir();
+            int sea = region.getSea();
             if (air > 0 && _air > 0) {
                 boolean transmit = false;
                 for(int i = 0; i < _air; i++)
@@ -449,7 +449,7 @@ public class Region implements Serializable{
      * @param d the disease to transmit
      */
     public void transmitToWaterNeighbors(Disease d) {
-        for (Integer id : _landNeighbors) {
+        for (Integer id : _waterNeighbors) {
             Region region = _regions.get(id);
             if (region.hasDisease(d)) {
                 continue;
