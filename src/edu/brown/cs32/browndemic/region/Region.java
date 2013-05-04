@@ -33,17 +33,17 @@ public class Region implements Serializable{
 
     private double _awareMax;
     
-    private double[] _infDoubleTime;
+    private double[] _infDoubleTicks;
     private static final int _INFTIMESCALE = 180;
-    private static final double _INFSCALE = 1.0/60;
+    private static final double _INFSCALE = 1.0/360;
     
-    private double[] _lethDoubleTime;
-    private static final int _LETHTIMESCALE = 180;
-    private static final double _LETHSCALE = 1.0/60;
+    private double[] _lethDoubleTicks;
+    private static final int _LETHTIMESCALE = 360;
+    private static final double _LETHSCALE = 1.0/360;
 
-    private static final int _PLANEFREQ = 180;
-    private static final int _SHIPFREQ = 180;
-    private static final int _LANDFREQ = 30;
+    private static final int _PLANEFREQ = 240;
+    private static final int _SHIPFREQ = 240;
+    private static final int _LANDFREQ = 60;
 
     //number of diseases in game
     private int _numDiseases;
@@ -170,9 +170,9 @@ public class Region implements Serializable{
             medResFactor = _diseases[d].getMedRes()/_med;
         double maxInf = _diseases[d].getMaxInfectivity();
         double inf = getInfected().get(d);
-        double growthFactor = (_diseases[d].getInfectivity() + maxInf/5) / (maxInf/5) * _INFSCALE *
+        double growthFactor = (_diseases[d].getInfectivity() + maxInf/3) / (maxInf/3) * _INFSCALE *
                 ( wetResFactor + dryResFactor + heatResFactor + coldResFactor + medResFactor)/5;
-        double number = inf*Math.pow(growthFactor,_infDoubleTime[d]/_INFTIMESCALE);
+        double number = inf*Math.pow(growthFactor,_infDoubleTicks[d]/_INFTIMESCALE);
         if(_remInf >= 1){
             number++;
             _remInf--;
@@ -214,14 +214,15 @@ public class Region implements Serializable{
     public void kill(Disease disease) {
         int index = disease.getID();
         for (InfWrapper inf : _hash.getAllOfType(index,1)) {
-            double rate = disease.getLethality()/disease.getMaxLethality();
-            double number = (1 - Math.pow(1 - rate, _lethDoubleTime[disease.getID()]/_LETHTIMESCALE)) * inf.getInf();
+            double rate = disease.getLethality()/disease.getMaxLethality()*_LETHSCALE;
+            double number = (1 - Math.pow(rate, _lethDoubleTicks[disease.getID()]/_LETHTIMESCALE)) * inf.getInf();
             if(_remDead >= 1){
                 number++;
                 _remDead--;
             }
-            if(disease.getLethality() / disease.getMaxLethality() > .05)
+            if(disease.getLethality() / disease.getMaxLethality() > .1)
                 _remDead += number % 1;
+            else number = 0;
             number = Math.floor(number);
             if (inf.getInf() < number) {
                 _dead[index] = _dead[index] + inf.getInf();
@@ -375,6 +376,7 @@ public class Region implements Serializable{
         InfWrapper inf = _hash.get(ID);
         _hash.put(new InfWrapper(ID, inf.getInf() + 1));
         _hash.addZero(_hash.getZero().getInf() - 1);
+        d.addPoints(2);
         _diseases[index] = d;
         _dead[index] = 0L;
         _hasCure[index] = false;
@@ -382,10 +384,10 @@ public class Region implements Serializable{
         _cureProgress[index] = 0L;
         double maxInf = d.getMaxInfectivity();
         double minInf = d.getStartInfectivity();
-        _infDoubleTime[index] = Math.log(2.0)/Math.log((maxInf + minInf/5)/(maxInf/5));
+        _infDoubleTicks[index] = Math.log(2.0)/Math.log( 1 + (maxInf + minInf)/(maxInf)*_INFSCALE);
         double maxLeth = d.getMaxLethality();
         double minLeth = d.getStartLethality();
-        _infDoubleTime[index] = Math.log(0.5)/Math.log(1 - minLeth/maxLeth);
+        _lethDoubleTicks[index] = Math.log(0.5)/Math.log(1 - minLeth/maxLeth*_LETHSCALE);
         _news.add(d.getName() + " has infected " + _name + ".");
     }
 
@@ -538,8 +540,8 @@ public class Region implements Serializable{
         _cureProgress = new long[num];
         _hash = new PopHash(num);
         _hash.addZero(_population);
-        _infDoubleTime = new double[num];
-        _lethDoubleTime = new double[num];
+        _infDoubleTicks = new double[num];
+        _lethDoubleTicks = new double[num];
         _awareMax = 140 * _population;
     }
 
