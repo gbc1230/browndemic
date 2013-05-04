@@ -22,10 +22,16 @@ public class Virus extends Disease{
     final private double MAX_LETHALITY = 217;
     //Maximum visibility
     final private double MAX_VISIBILITY = 281;
+    //Starting infectivity
+    final private double START_INFECTIVITY = 5;
+    //Starting lethality
+    final private double START_LETHALITY = 1;
+    //Starting visibility
+    final private double START_VISIBILITY = 5;
     //The hardcoded file path for this disease's perks
     final private String FILE_PATH = "Virus.csv";
 
-    //Constructor using built in file path for the bacteria perks
+    //Constructor using built in file path for the virus perks
     public Virus(String tempname){
     
         this._name = tempname;
@@ -46,9 +52,9 @@ public class Virus extends Disease{
         int[] availablePerks = {0, 1, 2, 3, 4, 7, 20, 23, 26, 29, 32, 35, 38,
                                 41, 44};
         for(Integer i : availablePerks) this._perks[i].setAvailability(true);
-        this._infectivity = 5;
-        this._visibility = 3;
-        this._lethality = 1;
+        this._infectivity = START_INFECTIVITY;
+        this._lethality = START_LETHALITY;
+        this._visibility = START_VISIBILITY;
         
     }
 
@@ -73,9 +79,9 @@ public class Virus extends Disease{
         int[] availablePerks = {0, 1, 2, 3, 4, 7, 20, 23, 26, 29, 32, 35, 38,
                                 41, 44};
         for(Integer i : availablePerks) this._perks[i].setAvailability(true);
-        this._infectivity = 5;
-        this._visibility = 3;
-        this._lethality = 1;
+        this._infectivity = START_INFECTIVITY;
+        this._lethality = START_LETHALITY;
+        this._visibility = START_VISIBILITY;
 
     }
 
@@ -122,6 +128,33 @@ public class Virus extends Disease{
     @Override
     public double getMaxVisibility() {
         return this.MAX_VISIBILITY;
+    }
+
+    /**
+     * gets the starting infectivity this disease has
+     * @return START_INFECTIVITY
+     */
+    @Override
+    public double getStartInfectivity(){
+        return this.START_INFECTIVITY;
+    }
+
+    /**
+     * gets the starting letahlity this disease has
+     * @return START_LETHALITY
+     */
+    @Override
+    public double getStartLethality(){
+        return this.START_LETHALITY;
+    }
+
+    /**
+     * gets the starting visibility this disease has
+     * @return START_LETHALITY
+     */
+    @Override
+    public double getStartVisibility(){
+        return this.START_VISIBILITY;
     }
 
     /**

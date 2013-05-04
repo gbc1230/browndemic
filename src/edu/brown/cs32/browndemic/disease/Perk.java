@@ -146,7 +146,7 @@ public class Perk implements Serializable{
   
   /**
    * sets this perk's isVirus parameter to isVirus
-   * @paran isvirus       whether this perk is a virus
+   * @param isvirus       whether this perk is a virus
    */
   public void setVirus(boolean isvirus){
       

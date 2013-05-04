@@ -15,11 +15,22 @@ import java.util.List;
  */
 public class Parasite extends Disease{
 
+    //Maximum infectivity
     final private double MAX_INFECTIVITY = 59;
+    //Maximum lethality
     final private double MAX_LETHALITY = 217;
+    //Maximum visibility
     final private double MAX_VISIBILITY = 279;
+    //Starting infectivity
+    final private double START_INFECTIVITY = 1;
+    //Starting lethality
+    final private double START_LETHALITY = 5;
+    //Starting visibility
+    final private double START_VISIBILITY = 1;
+    //The hardcoded file path for this disease's perks
     final private String FILE_PATH = "Parasite.csv";
 
+    //Constructor using built in file path for the parasite perks
     public Parasite(String tempname){
 
         this._name = tempname;
@@ -34,6 +45,7 @@ public class Parasite extends Disease{
             System.out.println("Missing/Unknown filed in the parasite file!!");
             ex.printStackTrace();
         }
+        //Sets the appropriate perks to initially available
         int[] availablePerks = {0, 1, 2, 3, 4, 7, 20, 23, 26, 29, 32, 35, 38,
                                 41, 44};
         for(Integer i : availablePerks) this._perks[i].setAvailability(true);
@@ -43,6 +55,7 @@ public class Parasite extends Disease{
 
     }
 
+    //Constructor with an inputted filepath
     public Parasite(String tempname, String filepath){
 
         this._name = tempname;
@@ -57,6 +70,7 @@ public class Parasite extends Disease{
             System.out.println("Missing/Unknown filed in the parasite file!!");
             ex.printStackTrace();
         }
+        //Sets the appropriate perks to initially available
         int[] availablePerks = {0, 1, 2, 3, 4, 7, 20, 23, 26, 29, 32, 35, 38,
                                 41, 44};
         for(Integer i : availablePerks) this._perks[i].setAvailability(true);
@@ -66,24 +80,60 @@ public class Parasite extends Disease{
 
     }
 
+    //Parasites don't engage in such random events!!!
     @Override
     public void buyRandomPerk() {}
 
+    //Gets the max infectivity this disease can have
     @Override
     public double getMaxInfectivity() {
         return this.MAX_INFECTIVITY;
     }
 
+    //Gets the max lethality this disease can have
     @Override
     public double getMaxLethality() {
         return this.MAX_LETHALITY;
     }
 
+    //Gets the max visibility this disease can have
     @Override
     public double getMaxVisibility() {
         return this.MAX_VISIBILITY;
     }
 
+    /**
+     * gets the starting infectivity this disease has
+     * @return START_INFECTIVITY
+     */
+    @Override
+    public double getStartInfectivity(){
+        return this.START_INFECTIVITY;
+    }
+
+    /**
+     * gets the starting letahlity this disease has
+     * @return START_LETHALITY
+     */
+    @Override
+    public double getStartLethality(){
+        return this.START_LETHALITY;
+    }
+
+    /**
+     * gets the starting visibility this disease has
+     * @return START_LETHALITY
+     */
+    @Override
+    public double getStartVisibility(){
+        return this.START_VISIBILITY;
+    }
+
+    /**
+     * Sells this perk and all owned perks that directly rely on it.
+     * @param perkID                   the id of the perk to be sold
+     * @throws IllegalAccessException  if you try to sell an unowned perks.
+     */
     @Override
     public void sellCumPerk(int perkID) throws IllegalAccessException {
         if(!this._perks[perkID].isOwned()){
@@ -116,6 +166,13 @@ public class Parasite extends Disease{
         this._points += soldPerk.getSellPrice();
     }
 
+    /**
+     * Sells this perk
+     * @param perkID                   the id of the perk to be sold
+     * @throws IllegalAccessException  thrown if the perk is not owned, or
+     *                                 if perks after it are also owned and solely
+     *                                 reliant on this perk to exist.
+     */
     @Override
     public void sellPerk(int perkID) throws IllegalAccessException {
         if(!this._perks[perkID].isOwned()){
@@ -149,6 +206,11 @@ public class Parasite extends Disease{
         this._points += soldPerk.getSellPrice();
     }
 
+    /**
+     * Gets the perks that can be sold by this disease (all owned perks, for a
+     * parasite)
+     * @return the list of perks available to be sold by this disease
+     */
     @Override
     public List<Perk> getSellablePerks() {
          List<Perk> ans = new ArrayList<Perk>();
