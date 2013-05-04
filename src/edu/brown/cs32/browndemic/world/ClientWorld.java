@@ -171,6 +171,11 @@ public class ClientWorld implements ChatServer, World{
     }
     
     @Override
+    public long getDead(int d){
+        return _world.getDead(d);
+    }
+    
+    @Override
     public long getHealthy(){
         return _world.getHealthy();
     }
@@ -178,6 +183,11 @@ public class ClientWorld implements ChatServer, World{
     @Override
     public long getInfected(){
         return _world.getInfected();
+    }
+    
+    @Override
+    public long getInfected(int d){
+        return _world.getInfected(d);
     }
     
     @Override

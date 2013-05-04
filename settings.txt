@@ -1,4 +1,0 @@
-caching=true
-name=Player
-port=6000
-fps=false

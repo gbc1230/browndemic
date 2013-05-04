@@ -16,6 +16,8 @@ import java.util.List;
  */
 public class Bacteria extends Disease{
 
+    //SerialVersionUID for this perk
+    private static final long serialVersionUID = 9086224726997457013L;
     //Maximum infectivity
     final private double MAX_INFECTIVITY = 111;
     //Maximum lethality

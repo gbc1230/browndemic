@@ -80,6 +80,10 @@ public class ServerWorld extends MainWorld{
     public void killServer(){
     	_outData.add(new HostDisconnect());
     }
+    
+    public boolean hasStarted(){
+    	return _started;
+    }
         
     /**
      * Stop a disease that has left the game : used only for MP maps
@@ -97,7 +101,7 @@ public class ServerWorld extends MainWorld{
     
     public void removeLobbyMember(int r){
         _lobby.remove(r);
-        _outData.add(new LobbySender(_lobby));
+        _outData.add(new LobbySender(_lobby, r));
         System.out.println("Lobby ready? " + allReady());
     }
     

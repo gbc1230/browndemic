@@ -11,8 +11,9 @@ import java.util.List;
  *@author bkoatz 
  */
 public class Perk implements Serializable{
- 
-  //the name of this perk
+	private static final long serialVersionUID = -5944513730395801585L;
+
+//the name of this perk
   private String _name;
   
   //the integer cost to buy this perk

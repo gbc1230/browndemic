@@ -15,6 +15,8 @@ import java.util.List;
  */
 public class Parasite extends Disease{
 
+    //SerialVersionUID for this perk
+	private static final long serialVersionUID = -6836486974707322172L;
     //Maximum infectivity
     final private double MAX_INFECTIVITY = 169;
     //Maximum lethality

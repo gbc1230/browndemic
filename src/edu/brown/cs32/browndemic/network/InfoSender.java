@@ -37,6 +37,7 @@ public class InfoSender extends Thread{
                 continue;
             if (data.getID().equals("LS")){
                 LobbySender out = (LobbySender)data;
+                _server.remove(out.getRemove());
                 for (GameServerThread thread : _clients){
                     thread.sendMessage(out);
                 }

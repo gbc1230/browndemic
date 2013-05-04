@@ -48,7 +48,6 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 
 	private static final long serialVersionUID = -4481136165457141240L;
 	
-	private static final int TICKS_FOR_UPDATE = 10;
 	private static final int MAX_FPS = 60;
 	
 	private World _world;
@@ -66,9 +65,10 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 	private double fps = 0.0f;
 	private long lastUpdate = 0;
 	private BufferedImage _regionCache;
-	private int _ticksSinceUpdate = TICKS_FOR_UPDATE;
+	private BufferedImage _regionCache2;
 	private MarqueeLabel _ml;
 	private Timer _timer;
+	private OverlayWorker _ow;
 	
 	private static final double AIRPLANE_SPEED = 6.0;
 	
@@ -85,13 +85,68 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 		setPreferredSize(new Dimension(map.getWidth(), map.getHeight()));
 		setMaximumSize(new Dimension(map.getWidth(), map.getHeight()));
 		setMinimumSize(new Dimension(map.getWidth(), map.getHeight()));
+		setDoubleBuffered(true);
 		_regionCache = gc.createCompatibleImage(map.getWidth(), map.getHeight(), Transparency.TRANSLUCENT);
+		_regionCache2 = gc.createCompatibleImage(map.getWidth(), map.getHeight(), Transparency.TRANSLUCENT);
+		_ow = new OverlayWorker();
 		_timer = new Timer(1000/MAX_FPS, new RepaintListener());
 		_timer.start();
 	}
 	
 	public void setChooseMode(boolean chooseMode) {
 		_chooseMode = chooseMode;
+	}
+	
+	private class OverlayWorker implements Runnable {
+		boolean running = true;
+		
+		public void cancel() {
+			running = false;
+		}
+
+		@Override
+		public void run() {
+			while (running) {
+				Graphics2D cacheg2 = (Graphics2D) _regionCache2.getGraphics();
+				
+				cacheg2.setComposite(AlphaComposite.Clear);
+				cacheg2.fillRect(0, 0, _regionCache2.getWidth(), _regionCache2.getHeight());
+				for (Map.Entry<Integer, BufferedImage> e : _diseaseOverlays.entrySet()) {
+				
+					Region r = _world.getRegion(e.getKey());
+					float percentInfected = 0f;
+					if (r != null) {
+						try {
+							percentInfected = ((float)r.getInfected().get(_disease) + (float)r.getKilled().get(_disease)) / (float)r.getPopulation();
+						} catch (IndexOutOfBoundsException e1) {
+							percentInfected = 0f;
+						}
+						if (percentInfected > 0f && percentInfected < .2f) percentInfected = .2f;
+					}
+					if (percentInfected != _infected.get(e.getKey())) {
+						_composites.put(e.getKey(), AlphaComposite.getInstance(AlphaComposite.SRC_OVER, percentInfected/2.0f));
+						_infected.put(e.getKey(), percentInfected);
+					}
+					if (percentInfected > 0) {
+						cacheg2.setComposite(_composites.get(e.getKey()));
+						cacheg2.drawImage(e.getValue(), 0, 0, null);
+					}
+				}
+				synchronized(_regionCache) {
+					cacheg2 = (Graphics2D) _regionCache.getGraphics();
+					cacheg2.setComposite(AlphaComposite.Clear);
+					cacheg2.fillRect(0, 0, _regionCache.getWidth(), _regionCache.getHeight());
+					cacheg2.setComposite(AlphaComposite.SrcOver);
+					cacheg2.drawImage(_regionCache2, 0, 0, null);
+				}
+				try {
+					Thread.sleep(200);
+				} catch (InterruptedException e1) {
+					break;
+				}
+			}
+		}
+		
 	}
 	
 	public class Loader extends SwingWorker<Void, Void> {
@@ -149,6 +204,7 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 		@Override
 		protected void done() {
 			_done.doAction();
+			new Thread(_ow).start();
 		}
 	}
 	
@@ -263,38 +319,7 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 		
 		g.drawImage(_map, 0, 0, null);
 		
-		if (_ticksSinceUpdate >= TICKS_FOR_UPDATE) {
-			Graphics2D cacheg2 = (Graphics2D) _regionCache.getGraphics();
-			cacheg2.setComposite(AlphaComposite.Clear);
-			cacheg2.fillRect(0, 0, _regionCache.getWidth(), _regionCache.getHeight());
-		}
-		
 		for (Map.Entry<Integer, BufferedImage> e : _diseaseOverlays.entrySet()) {
-			
-			if (_ticksSinceUpdate >= TICKS_FOR_UPDATE) {
-				
-				Graphics2D cacheg2 = (Graphics2D) _regionCache.getGraphics();
-			
-				Region r = _world.getRegion(e.getKey());
-				float percentInfected = 0f;
-				if (r != null) {
-					try {
-						percentInfected = ((float)r.getInfected().get(_disease) + (float)r.getKilled().get(_disease)) / (float)r.getPopulation();
-					} catch (IndexOutOfBoundsException e1) {
-						percentInfected = 0f;
-					}
-					if (percentInfected > 0f && percentInfected < .2f) percentInfected = .2f;
-				}
-				if (percentInfected != _infected.get(e.getKey())) {
-					_composites.put(e.getKey(), AlphaComposite.getInstance(AlphaComposite.SRC_OVER, percentInfected/2.0f));
-					_infected.put(e.getKey(), percentInfected);
-				}
-				if (percentInfected > 0) {
-					cacheg2.setComposite(_composites.get(e.getKey()));
-					cacheg2.drawImage(e.getValue(), 0, 0, null);
-				}
-			
-			}
 			
 			float highlight = _highlights.get(e.getKey());
 			if (highlight > 0) {
@@ -307,9 +332,11 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 				_highlights.put(e.getKey(), Math.max(0, highlight - 0.015f));
 		}
 		
-		g2.setComposite(AlphaComposite.SrcOver);
-		g2.drawImage(_regionCache, 0, 0, null);
-			
+		synchronized (_regionCache) {
+			g2.setComposite(AlphaComposite.SrcOver);
+			g2.drawImage(_regionCache, 0, 0, null);
+		}
+		
 		if (_chooseMode) {
 			drawChoosePanel(g2);
 		}
@@ -331,14 +358,13 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 		for (MovingObject m : _objects) {
 			m.draw(g);
 		}
-		
 		_ml.paintComponent(g);
 		
-		if (_ticksSinceUpdate >= TICKS_FOR_UPDATE) {
-			_ticksSinceUpdate = 0;
-		} else {
-			_ticksSinceUpdate++;
-		}
+//		if (_ticksSinceUpdate >= TICKS_FOR_UPDATE) {
+//			_ticksSinceUpdate = 0;
+//		} else {
+//			_ticksSinceUpdate++;
+//		}
 	}
 	
 	public void addRandomPlane() {
@@ -365,14 +391,14 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 	private void drawInfoPanel(Graphics2D g2) {
 		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .8f));
 		g2.setColor(Color.BLACK);
-		g2.fillRect(0, getHeight() - 100, 275, 100);
+		g2.fillRect(0, getHeight() - 140, 295, 140);
 
 		g2.setColor(Colors.RED_TEXT);
 		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
 		g2.setFont(Fonts.NORMAL_TEXT);
 		Region r = _world.getRegion(_selected);
 		String name = "";
-		long infected = 0, dead = 0, total = 1;
+		long infected = 0, dead = 0, total = 1, healthy = 0, cured = 0;
 		long airports = 0, seaports = 0;
 		
 		if (r != null) {
@@ -381,25 +407,30 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 				infected += l;
 			for (long l : r.getKilled())
 				dead += l;
+			for (long l : r.getCured())
+				cured += l;
+			healthy = r.getHealthy();
 			total = r.getPopulation();
 			airports = r.getAir();
 			seaports = r.getSea();
 		}
-		g2.drawString(name, 5, getHeight() - 80);
-
-		g2.drawString(String.format("Infected: %s (%.2f%%)", NumberFormat.getInstance().format(infected), 100*(double)infected/(double)total), 15, getHeight() - 55);
-		g2.drawString(String.format("Dead: %s (%.2f%%)", NumberFormat.getInstance().format(dead), 100*(double)dead/(double)total), 15, getHeight() - 35);
+		g2.drawString(name, 5, getHeight() - 120);
+		
+		g2.drawString(String.format("Healthy: %s (%.2f%%)", NumberFormat.getInstance().format(healthy), 100*(double)healthy/(double)total), 15, getHeight() - 95);
+		g2.drawString(String.format("Infected: %s (%.2f%%)", NumberFormat.getInstance().format(infected), 100*(double)infected/(double)total), 15, getHeight() - 75);
+		g2.drawString(String.format("Dead: %s (%.2f%%)", NumberFormat.getInstance().format(dead), 100*(double)dead/(double)total), 15, getHeight() - 55);
+		g2.drawString(String.format("Cured: %s (%.2f%%)", NumberFormat.getInstance().format(cured), 100*(double)cured/(double)total), 15, getHeight() - 35);
 		g2.drawString(String.format("Total: %s", NumberFormat.getInstance().format(total)), 15, getHeight() - 15);
 		
 		if (airports > 0) {
-			g2.drawImage(Resources.getImage(Images.AIRPORT_OPEN_BIG), 220, getHeight() - 85, null);
+			g2.drawImage(Resources.getImage(Images.AIRPORT_OPEN_BIG), 260, getHeight() - 85, null);
 		} else {
-			g2.drawImage(Resources.getImage(Images.AIRPORT_CLOSED_BIG), 220, getHeight() - 85, null);
+			g2.drawImage(Resources.getImage(Images.AIRPORT_CLOSED_BIG), 260, getHeight() - 85, null);
 		}
 		if (seaports > 0) {
-			g2.drawImage(Resources.getImage(Images.SEAPORT_OPEN_BIG), 220, getHeight() - 45, null);
+			g2.drawImage(Resources.getImage(Images.SEAPORT_OPEN_BIG), 260, getHeight() - 45, null);
 		} else {
-			g2.drawImage(Resources.getImage(Images.SEAPORT_CLOSED_BIG), 220, getHeight() - 45, null);
+			g2.drawImage(Resources.getImage(Images.SEAPORT_CLOSED_BIG), 260, getHeight() - 45, null);
 		}
 	}
 	
@@ -470,5 +501,6 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 	
 	public void stop() {
 		_timer.stop();
+		_ow.cancel();
 	}
 }

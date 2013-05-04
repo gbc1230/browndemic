@@ -12,7 +12,9 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.Timer;
 import javax.swing.UIManager;
@@ -65,9 +67,18 @@ public class UpgradePanel extends BrowndemicPanel {
 //		_perkList.setFont(Fonts.NORMAL_TEXT);
 
 		_owned = new PerkList(new ArrayList<Perk>(), this);
-		_owned.setBorder(BorderFactory.createLineBorder(Colors.RED_TEXT, 2));
+		JScrollPane owned = new JScrollPane(_owned, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		owned.setBorder(BorderFactory.createLineBorder(Colors.RED_TEXT, 2));
+		owned.getViewport().setBackground(Colors.MENU_BACKGROUND);
+		owned.getVerticalScrollBar().setUnitIncrement(16);
+
 		_available = new PerkList(new ArrayList<Perk>(), this);
-		_available.setBorder(BorderFactory.createLineBorder(Colors.RED_TEXT, 2));
+		JScrollPane avail = new JScrollPane(_available, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		avail.setBorder(BorderFactory.createLineBorder(Colors.RED_TEXT, 2));
+		avail.getViewport().setBackground(Colors.MENU_BACKGROUND);
+		avail.getVerticalScrollBar().setUnitIncrement(16);
+		
+
 		
 		UIManager.put("TabbedPane.selected", Colors.MENU_BACKGROUND);
 		UIManager.put("TabbedPane.focus", Colors.MENU_BACKGROUND);
@@ -84,9 +95,11 @@ public class UpgradePanel extends BrowndemicPanel {
 		JTabbedPane perks = new JTabbedPane();
 		perks.setFont(Fonts.TITLE_BAR);
 		perks.setForeground(Colors.RED_TEXT);
-		perks.addTab("Owned", _owned);
-		perks.addTab("Available", _available);
+		perks.addTab("Available", avail);
+		perks.addTab("Owned", owned);
 		Utils.setDefaultLook(perks);
+		
+		Utils.setOSLook(avail, owned);
 		
 		add(perks);
 		
@@ -135,13 +148,6 @@ public class UpgradePanel extends BrowndemicPanel {
 		if (!_disease.getAvailablePerks().equals(_availCopy) || !_disease.getOwnedPerks().equals(_ownedCopy)) {
 			_availCopy = new ArrayList<>(_disease.getAvailablePerks());
 			_ownedCopy = new ArrayList<>(_disease.getOwnedPerks());
-//			_perks.clear();
-//			for (Perk p : _ownedCopy) {
-//				_perks.addElement(p);
-//			}
-//			for (Perk p : _availCopy) {
-//				_perks.addElement(p);
-//			}
 			_owned.setList(_ownedCopy);
 			List<Perk> _tempList = new ArrayList<>();
 			for (Perk p : _availCopy) {
@@ -157,6 +163,12 @@ public class UpgradePanel extends BrowndemicPanel {
 	}
 	
 	public void setPerk(Perk p) {
+		if (p == null) {
+			_perkName.setText("");
+			setDescription("");
+			_buysell.setText("");
+			return;
+		}
 		_perkName.setText(p.getName());
 		setDescription(p.getDescription());
 		_selected = p;
@@ -176,16 +188,19 @@ public class UpgradePanel extends BrowndemicPanel {
 				if (_selected.isOwned()) {
 					try {
 						_disease.sellCumPerk(_selected.getID());
-						_buysell.setText("");
+						setPerk(null);
 					} catch (IllegalAccessException e1) {
 						// Don't sell it!
 					}
 				} else if (_selected.isAvail()) {
 					try {
 						_disease.buyPerk(_selected.getID());
-						_buysell.setText("");
+						setPerk(null);
 					} catch (IllegalAccessException e1) {
-						// Don't buy it!
+						JOptionPane.showMessageDialog(Utils.getParentFrame(this), 
+								String.format("Could not buy perk '%s' because %d points are required and you currently have %d points.", 
+										_selected.getName(), _selected.getCost(), _disease.getPoints()), 
+								"Not Enough Points!", JOptionPane.PLAIN_MESSAGE);
 					}
 				}
 			}

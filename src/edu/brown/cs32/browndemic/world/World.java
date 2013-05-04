@@ -47,6 +47,12 @@ public interface World {
      */
     public long getDead();
     
+    //get infected for a specific disease
+    public long getInfected(int d);
+    
+    //get dead for a specific disease
+    public long getDead(int d);
+    
     //get all regions
     public List<Region> getRegions();
     

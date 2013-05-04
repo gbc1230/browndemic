@@ -149,7 +149,7 @@ public abstract class MainWorld implements Serializable, World, Runnable{
      */
     @Override
     public long getHealthy(){
-        return _population - _infected;
+        return _population - _infected - _dead;
     }
 
     /**
@@ -168,6 +168,16 @@ public abstract class MainWorld implements Serializable, World, Runnable{
     @Override
     public long getDead(){
         return _dead;
+    }
+    
+    @Override
+    public long getInfected(int d){
+        return _infects.get(d);
+    }
+    
+    @Override
+    public long getDead(int d){
+        return _kills.get(d);
     }
     
     @Override
@@ -197,7 +207,7 @@ public abstract class MainWorld implements Serializable, World, Runnable{
     
     @Override
     public double getCurePercentage(int d){
-    	return (_cures.get(d) / _cureTotal) * 100.0;
+    	return ((double)_cures.get(d) / (double)_cureTotal) * 100.0;
     }
     
     @Override
@@ -309,14 +319,12 @@ public abstract class MainWorld implements Serializable, World, Runnable{
     public void updateNews(){
         for (Region r : _regions){
             _news.addAll(r.getNews());
-            r.clearNews();
         }
     }
     
     public void updateTransmissions(){
         for (Region r : _regions){
             _transmissions.addAll(r.getTransmissions());
-            r.clearTransmissions();
         }
     }
     

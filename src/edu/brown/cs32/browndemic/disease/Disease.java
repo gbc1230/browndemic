@@ -14,8 +14,9 @@ import java.util.ArrayList;
  * @author bkoatz
  */
 public abstract class Disease implements Serializable{
-    
-    //The user-input string name of the disease
+	private static final long serialVersionUID = 2897681652961462017L;
+
+	//The user-input string name of the disease
     protected String _name;
     
     //The unique integer identifier of the disease
