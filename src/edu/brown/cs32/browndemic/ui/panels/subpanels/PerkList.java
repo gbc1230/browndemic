@@ -43,6 +43,7 @@ public class PerkList extends JPanel implements MouseListener {
 			PerkPanel pp = new PerkPanel().setImage(Resources.getImage(Images.DISEASE).getScaledInstance(50, 50, Image.SCALE_FAST))
 					.setText(p.getName()).setTextFont(Fonts.TITLE_BAR).setTextColor(Colors.RED_TEXT);
 			pp.setBackground(Colors.MENU_BACKGROUND);
+			//pp.setOpaque(false);
 			pp.addMouseListener(this);
 			pp.setBorder(BorderFactory.createEmptyBorder(4, 8, 4, 8));
 			_buttons.put(pp, p);
@@ -74,7 +75,7 @@ public class PerkList extends JPanel implements MouseListener {
 				if (_selected != null) {
 					_selected.setTextColor(Colors.RED_TEXT).setBackground(Colors.MENU_BACKGROUND);
 				}
-				pp.setTextColor(Colors.HOVER_TEXT).setBackground(new Color(255, 0, 0, 100));
+				pp.setTextColor(Colors.HOVER_TEXT).setBackground(new Color(150, 0, 0));
 				_selected = pp;
 				_parent.setPerk(_buttons.get(pp));
 			}
@@ -86,7 +87,7 @@ public class PerkList extends JPanel implements MouseListener {
 		if (e.getSource() instanceof PerkPanel) {
 			PerkPanel pp = (PerkPanel) e.getSource();
 			if (pp != _selected) {
-				pp.setTextColor(Colors.HOVER_TEXT).setBackground(new Color(255, 0, 0, 45));
+				pp.setTextColor(Colors.HOVER_TEXT).setBackground(new Color(100, 0, 0));
 			}
 		}
 	}

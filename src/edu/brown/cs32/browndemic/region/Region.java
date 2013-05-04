@@ -220,8 +220,7 @@ public class Region implements Serializable{
                 number++;
                 _remDead--;
             }
-            System.out.println("Kill" + number);
-            if(disease.getLethality() / disease.getMaxLethality() > .1)
+            if(disease.getLethality() / disease.getMaxLethality() > .05)
                 _remDead += number % 1;
             number = Math.floor(number);
             if (inf.getInf() < number) {
@@ -281,8 +280,8 @@ public class Region implements Serializable{
             }
         }
         for(int j = 0; j < _numDiseases; j++){
-            if(_awareness[j] > _awareMax/2)
-                _cureProgress[j] = _cureProgress[j] + (long) (_wealth*weightedPop);
+            if(_awareness[j] > _awareMax/3)
+                _cureProgress[j] = _cureProgress[j] + (long) (_wealth*weightedPop*_med/_diseases[j].getMedRes());
         }
     }
 
@@ -323,7 +322,8 @@ public class Region implements Serializable{
             _awareness[index] = tot;
             notifyNeighbors(d);
         }
-        else if(_awareness[index] < _awareMax/2 && tot > _awareMax/2){
+        else if(_awareness[index] < _awareMax/3 && tot > _awareMax/3){
+            _news.add(_name + " has begun work on a cure for " + d.getName());
             _awareness[index] = tot;
             notifyNeighbors(d);
         }
@@ -373,8 +373,8 @@ public class Region implements Serializable{
             }
         }
         InfWrapper inf = _hash.get(ID);
-        _hash.put(new InfWrapper(ID, inf.getInf() + 10000000));
-        _hash.addZero(_hash.getZero().getInf() - 10000000);
+        _hash.put(new InfWrapper(ID, inf.getInf() + 1));
+        _hash.addZero(_hash.getZero().getInf() - 1);
         _diseases[index] = d;
         _dead[index] = 0L;
         _hasCure[index] = false;
@@ -540,7 +540,7 @@ public class Region implements Serializable{
         _hash.addZero(_population);
         _infDoubleTime = new double[num];
         _lethDoubleTime = new double[num];
-        _awareMax = 280 * _population;
+        _awareMax = 140 * _population;
     }
 
     /**
