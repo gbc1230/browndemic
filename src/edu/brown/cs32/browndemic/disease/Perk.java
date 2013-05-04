@@ -10,8 +10,9 @@ import java.util.ArrayList;
  *@author bkoatz 
  */
 public class Perk implements Serializable{
- 
-  //the name of this perk
+	private static final long serialVersionUID = -5944513730395801585L;
+
+//the name of this perk
   private String _name;
   
   //the integer cost to buy this perk
@@ -65,14 +66,17 @@ public class Perk implements Serializable{
   //the boolean saying whether or not this perk is owned by the disease
   private boolean _owned = false;
 
-  //the ArrayList of perks that this perk's purchase makes available
+  //the ArrayList of perk ids that this perk's purchase makes available
   private ArrayList<Integer> _nextPerks = new ArrayList<Integer>();
 
-  //the ArrayList of perks whose purchase makes this perk available
+  //the ArrayList of perk ids whose purchase makes this perk available
   private ArrayList<Integer> _prevPerks = new ArrayList<Integer>();
 
   //Array of all other perks
   private Perk[] _perks;
+  
+  //says whether this perk belongs to a virus
+  private boolean _isVirus = false;
 
   //constuctor: sets cost, change in infectivity/lethality/visibility and
   //the perks that, when this perk is bought, become available for purchase
@@ -99,10 +103,6 @@ public class Perk implements Serializable{
     this._prevPerks = prev;
     this._nextPerks = next;
 
-  }
-
-  public void setPerksArray(Perk[] toSet){
-      this._perks = toSet;
   }
   
   /**
@@ -133,6 +133,36 @@ public class Perk implements Serializable{
     
     this._id = tempid;
     
+  }
+  
+  /**
+   * sets the array of all perks
+   * @param toSet          the new perk array of this perk
+   */
+  public void setPerksArray(Perk[] toSet){
+      
+      this._perks = toSet;
+      
+  }
+  
+  /**
+   * sets this perk's isVirus parameter to isVirus
+   * @param isvirus       whether this perk is a virus
+   */
+  public void setVirus(boolean isvirus){
+      
+      this._isVirus = isvirus;
+      
+  }
+  
+  /**
+   * returns whether this perk is for a virus or not
+   * @return _isVirus
+   */
+  public boolean isVirus(){
+      
+      return this._isVirus;
+      
   }
   
   /**
@@ -169,7 +199,9 @@ public class Perk implements Serializable{
           if(this._perks[p].isOwned() && this._perks[p].isOnlyOwnedPrev(this))
               returnPrice += this._perks[p].getCumSellPrice();
       }
-      return returnPrice;
+      if(_isVirus)
+      return returnPrice*-1;
+      else return returnPrice;
   }
 
   /**
@@ -178,7 +210,9 @@ public class Perk implements Serializable{
    */
   public int getSellPrice(){
 
-      return this._sellPrice;
+      if(_isVirus)
+      return this._sellPrice*-1;
+      else return this._sellPrice;
 
   }
   

@@ -41,9 +41,9 @@ public class Region implements Serializable{
     private static final int _LETHTIMESCALE = 180;
     private static final double _LETHSCALE = 1.0/60;
 
-    private static final int _PLANEFREQ = 120;
-    private static final int _SHIPFREQ = 120;
-    private static final int _LANDFREQ = 60;
+    private static final int _PLANEFREQ = 180;
+    private static final int _SHIPFREQ = 180;
+    private static final int _LANDFREQ = 30;
 
     //number of diseases in game
     private int _numDiseases;
@@ -86,6 +86,9 @@ public class Region implements Serializable{
     private ArrayList<RegionTransmission> _transmissions;
     private ArrayList<String> _news;
     
+    private ArrayList<Integer> _disIDs;
+    private ArrayList<NaturalDisaster> _disasters;
+    
     private double _remInf, _remDead;
 
     /**
@@ -99,12 +102,13 @@ public class Region implements Serializable{
     public Region(int ID, String name, long population, List<Integer> landNeighbors,
             List<Integer> waterNeighbors, HashMap<Integer, Region> hash,
             int airports, int seaports, double wealth, double wet, double dry,
-            double heat, double cold, double med) {
+            double heat, double cold, double med, List<NaturalDisaster> disasters, 
+            List<Integer> disIDs) {
         _name = name;
         _ID = ID;
         _population = population;
-        _landNeighbors = new ArrayList<Integer>(landNeighbors);
-        _waterNeighbors = new ArrayList<Integer>(waterNeighbors);
+        _landNeighbors = new ArrayList<>(landNeighbors);
+        _waterNeighbors = new ArrayList<>(waterNeighbors);
         _regions = hash;
         _sea = seaports;
         _air = airports;
@@ -114,11 +118,13 @@ public class Region implements Serializable{
         _heat = heat;
         _cold = cold;
         _med = med;
-        _transmissions = new ArrayList<RegionTransmission>();
-        _news = new ArrayList<String>();
+        _transmissions = new ArrayList<>();
+        _news = new ArrayList<>();
         _rand = new Random();
         _remInf = 0;
         _remDead = 0;
+        _disIDs = new ArrayList<>(disIDs);
+        _disasters = new ArrayList<>(disasters);
     }
 
     /**
@@ -128,8 +134,8 @@ public class Region implements Serializable{
         updateCures();
         for (Disease d : _diseases) {
             if (null != d) {
-                awarenessCheck();
-                updateAwareness(d);
+                naturalDisaster();
+                updateAwareness(d,getAwareIncrement(d));
                 cure(d);
                 kill(d);
                 infect(d);
@@ -164,7 +170,7 @@ public class Region implements Serializable{
             medResFactor = _diseases[d].getMedRes()/_med;
         double maxInf = _diseases[d].getMaxInfectivity();
         double inf = getInfected().get(d);
-        double growthFactor = (_diseases[d].getInfectivity() + maxInf) / maxInf * _INFSCALE *
+        double growthFactor = (_diseases[d].getInfectivity() + maxInf/5) / (maxInf/5) * _INFSCALE *
                 ( wetResFactor + dryResFactor + heatResFactor + coldResFactor + medResFactor)/5;
         double number = inf*Math.pow(growthFactor,_infDoubleTime[d]/_INFTIMESCALE);
         if(_remInf >= 1){
@@ -208,13 +214,14 @@ public class Region implements Serializable{
     public void kill(Disease disease) {
         int index = disease.getID();
         for (InfWrapper inf : _hash.getAllOfType(index,1)) {
-            double rate = 1 - disease.getLethality()/disease.getMaxLethality()*_LETHSCALE;
-            double number = (1 - Math.pow(rate, _lethDoubleTime[disease.getID()]/_LETHTIMESCALE)) * inf.getInf();
+            double rate = disease.getLethality()/disease.getMaxLethality();
+            double number = (1 - Math.pow(1 - rate, _lethDoubleTime[disease.getID()]/_LETHTIMESCALE)) * inf.getInf();
             if(_remDead >= 1){
                 number++;
                 _remDead--;
             }
-            if(disease.getLethality() / disease.getMaxLethality() > .3)
+            System.out.println("Kill" + number);
+            if(disease.getLethality() / disease.getMaxLethality() > .1)
                 _remDead += number % 1;
             number = Math.floor(number);
             if (inf.getInf() < number) {
@@ -274,7 +281,7 @@ public class Region implements Serializable{
             }
         }
         for(int j = 0; j < _numDiseases; j++){
-            if(_awareness[j] > _awareMax)
+            if(_awareness[j] > _awareMax/2)
                 _cureProgress[j] = _cureProgress[j] + (long) (_wealth*weightedPop);
         }
     }
@@ -284,7 +291,7 @@ public class Region implements Serializable{
      * @return
      */
     public ArrayList<Long> getCures(){
-        ArrayList<Long> cures = new ArrayList<Long>();
+        ArrayList<Long> cures = new ArrayList<>();
         for(int i = 0; i < _numDiseases; i++){
             if(_diseases[i] != null)
                 cures.add(_cureProgress[i]);
@@ -292,27 +299,51 @@ public class Region implements Serializable{
         }
         return cures;
     }
-
+    
     /**
-     * checks if ports should be closed
+     * calculates how much to increment awareness by
+     * @param d
+     * @return 
      */
-    public void awarenessCheck() {
-        //TODO flesh this out, the values used here are complete guesses
-        for(int i = 0; i < _numDiseases; i++){
-            boolean closePorts = (_awareness[i] > _awareMax / 2);
-            if (closePorts  && !(_air == 0 && _sea == 0)) {
-                _air = 0;
-                _sea = 0;
-                _news.add(_name + " has closed it's air and seaports.");
-            }
-        }
+    public double getAwareIncrement(Disease d){
+        int index = d.getID();
+        double maxVis = d.getMaxVisibility();
+        return (d.getVisibility() + maxVis)/maxVis * (getInfected().get(index) + 2*_dead[index]);
     }
 
-    public void updateAwareness(Disease d) {
+    /**
+     * updates Awareness and checks to notify neighbors/close ports
+     * @param d the disease
+     * @param aware the increment to awareness
+     */
+    public void updateAwareness(Disease d, double aware) {
         int index = d.getID();
-        //TODO awareness += vis*(infected + dead)
-        double maxVis = d.getMaxVisibility();
-        _awareness[index] = _awareness[index] + (d.getVisibility() + maxVis)/maxVis * (getInfected().get(index) + 2*_dead[index]);
+        double tot = _awareness[index] + aware;
+        if(_awareness[index] < _awareMax/4 && tot > _awareMax/4){
+            _awareness[index] = tot;
+            notifyNeighbors(d);
+        }
+        else if(_awareness[index] < _awareMax/2 && tot > _awareMax/2){
+            _awareness[index] = tot;
+            notifyNeighbors(d);
+        }
+        else if(_awareness[index] < _awareMax && tot > _awareMax){
+            _awareness[index] = tot;
+            notifyNeighbors(d);
+            if(_air != 0 || _sea != 0)
+                _news.add(_name + " has closed its sea and airports.");
+        }
+    }
+    
+    public void notifyNeighbors(Disease d) {
+        for (Integer ind : _waterNeighbors) {
+            Region r = _regions.get(ind);
+            r.updateAwareness(d, _awareness[d.getID()] / 5);
+        }
+        for (Integer ind : _landNeighbors) {
+            Region r = _regions.get(ind);
+            r.updateAwareness(d, _awareness[d.getID()] / 5);
+        }
     }
 
     /**
@@ -342,22 +373,18 @@ public class Region implements Serializable{
             }
         }
         InfWrapper inf = _hash.get(ID);
-        _hash.put(new InfWrapper(ID, inf.getInf() + 1));
-        _hash.addZero(_hash.getZero().getInf() - 1);
+        _hash.put(new InfWrapper(ID, inf.getInf() + 10000000));
+        _hash.addZero(_hash.getZero().getInf() - 10000000);
         _diseases[index] = d;
         _dead[index] = 0L;
         _hasCure[index] = false;
         _awareness[index] = 0.0;
         _cureProgress[index] = 0L;
         double maxInf = d.getMaxInfectivity();
-        //TODO
-//        double minInf = d.getStartInfectivity();
-        double minInf = 5;
-        _infDoubleTime[index] = Math.log(2.0)/Math.log((maxInf + minInf)/maxInf);
+        double minInf = d.getStartInfectivity();
+        _infDoubleTime[index] = Math.log(2.0)/Math.log((maxInf + minInf/5)/(maxInf/5));
         double maxLeth = d.getMaxLethality();
-        //TOD
-//        double minLeth = d.getStartLethality();
-        double minLeth = 1;
+        double minLeth = d.getStartLethality();
         _infDoubleTime[index] = Math.log(0.5)/Math.log(1 - minLeth/maxLeth);
         _news.add(d.getName() + " has infected " + _name + ".");
     }
@@ -374,7 +401,7 @@ public class Region implements Serializable{
                 continue;
             }
             int air = region.getAir();
-            int sea = region.getAir();
+            int sea = region.getSea();
             if (air > 0 && _air > 0) {
                 boolean transmit = false;
                 for(int i = 0; i < _air; i++)
@@ -442,15 +469,14 @@ public class Region implements Serializable{
      * @param d the disease to transmit
      */
     public void transmitToWaterNeighbors(Disease d) {
-        for (Integer id : _landNeighbors) {
+        for (Integer id : _waterNeighbors) {
             Region region = _regions.get(id);
             if (region.hasDisease(d)) {
                 continue;
             }
-            boolean transmit = false;
             double inf = getInfected().get(d.getID());
-            double trans = inf/_population * (d.getAirTrans() + d.getWaterTrans())/82;
-            transmit = _rand.nextDouble() < trans;
+            double trans = inf/_population * (d.getAirTrans() + d.getWaterTrans() + 82)/82;
+            boolean transmit = _rand.nextDouble() < trans;
             if (transmit) {
 //                System.out.println("Water Trans");
                 region.introduceDisease(d);
@@ -459,13 +485,19 @@ public class Region implements Serializable{
     }
 
     /**
-     * prompts a natural disaster with the given intensity in this region
-     * @param intensity on a scale of 1-10
+     * prompts a natural disaster in this region
+     * @param intensity
      */
-    public void naturalDisaster(int intensity) {
-        String news = "";
-        //TODO generate disaster and impact wealth, maybe population?
-        _news.add(news);
+    public void naturalDisaster() {
+        if(_rand.nextInt(21600) == 0){
+            NaturalDisaster dis = _disasters.get(_disIDs.get(_rand.nextInt(_disIDs.size())));
+            _news.add(dis.getName() + " has hit " + _name + ".");
+            _wealth *= dis.getWealthFactor();
+            _wet += dis.getWetChange();
+            _dry += dis.getDryChange();
+            _heat += dis.getHeatChange();
+            _cold += dis.getColdChange();
+        }
     }
 
     /**
@@ -473,14 +505,9 @@ public class Region implements Serializable{
      * @return _transmissions
      */
     public ArrayList<RegionTransmission> getTransmissions() {
-        return _transmissions;
-    }
-
-    /**
-     * clears the transmissions list
-     */
-    public void clearTransmissions() {
+        ArrayList<RegionTransmission> list = new ArrayList<>(_transmissions);
         _transmissions.clear();
+        return list;
     }
 
     /**
@@ -488,14 +515,9 @@ public class Region implements Serializable{
      * @return
      */
     public ArrayList<String> getNews() {
-        return _news;
-    }
-
-    /**
-     * clears the news
-     */
-    public void clearNews() {
+        ArrayList<String> list = new ArrayList<>(_news);
         _news.clear();
+        return list;
     }
 
     /**
@@ -518,7 +540,7 @@ public class Region implements Serializable{
         _hash.addZero(_population);
         _infDoubleTime = new double[num];
         _lethDoubleTime = new double[num];
-        _awareMax = 140*_population*_INFTIMESCALE;
+        _awareMax = 280 * _population;
     }
 
     /**
@@ -566,7 +588,7 @@ public class Region implements Serializable{
      * @return _infected
      */
     public ArrayList<Long> getInfected() {
-        ArrayList<Long> infected = new ArrayList<Long>();
+        ArrayList<Long> infected = new ArrayList<>();
         for (int i = 0; i < _numDiseases; i++) {
             long num = 0L;
             if (_diseases[i] != null)
@@ -598,7 +620,7 @@ public class Region implements Serializable{
      * @return _dead;
      */
     public ArrayList<Long> getKilled() {
-        ArrayList<Long> dead = new ArrayList<Long>();
+        ArrayList<Long> dead = new ArrayList<>();
         for(int i = 0; i < _numDiseases; i++){
             if(_diseases[i] != null)
                 dead.add(_dead[i]);
@@ -612,7 +634,7 @@ public class Region implements Serializable{
      * @return _cured;
      **/
     public ArrayList<Long> getCured() {
-        ArrayList<Long> list = new ArrayList<Long>();
+        ArrayList<Long> list = new ArrayList<>();
         for (int i = 0; i < _numDiseases; i++) {
             long num = 0L;
             if (_diseases[i] != null) {

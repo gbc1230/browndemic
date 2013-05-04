@@ -10,20 +10,34 @@ import java.util.List;
  * and the ability to sell its perks cumulatively or individually, and
  * LOSE money from that sale
  * 
+ * Viruses start off more infective, more visible and less deadly.
+ * 
  * @author bkoatz
  */
 public class Virus extends Disease{
-
+	private static final long serialVersionUID = -1644028364764513072L;
+	
+	//Maximum infectivity
     final private double MAX_INFECTIVITY = 62;
+    //Maximum lethality
     final private double MAX_LETHALITY = 217;
+    //Maximum visibility
     final private double MAX_VISIBILITY = 281;
+    //Starting infectivity
+    final private double START_INFECTIVITY = 5;
+    //Starting lethality
+    final private double START_LETHALITY = 1;
+    //Starting visibility
+    final private double START_VISIBILITY = 5;
+    //The hardcoded file path for this disease's perks
     final private String FILE_PATH = "Virus.csv";
 
+    //Constructor using built in file path for the virus perks
     public Virus(String tempname){
     
         this._name = tempname;
         try {
-          this._perks = Perks.getPerks(FILE_PATH);
+          this._perks = PerkMaker.getPerks(FILE_PATH);
         } catch (FileNotFoundException ex) {
             System.out.println("Virus file not found!!");
         } catch (IOException ex) {
@@ -33,32 +47,24 @@ public class Virus extends Disease{
             System.out.println("Missing/Unknown filed in the virus file!!");
             ex.printStackTrace();
         }
-        this._perks[0].setAvailability(true);
-        this._perks[1].setAvailability(true);
-        this._perks[2].setAvailability(true);
-        this._perks[3].setAvailability(true);
-        this._perks[4].setAvailability(true);
-        this._perks[7].setAvailability(true);
-        this._perks[20].setAvailability(true);
-        this._perks[23].setAvailability(true);
-        this._perks[26].setAvailability(true);
-        this._perks[29].setAvailability(true);
-        this._perks[32].setAvailability(true);
-        this._perks[35].setAvailability(true);
-        this._perks[38].setAvailability(true);
-        this._perks[41].setAvailability(true);
-        this._perks[44].setAvailability(true);
-        this._infectivity = 5;
-        this._visibility = 3;
-        this._lethality = 1;
+        //these perks are for a virus
+        for(Perk p : this._perks) p.setVirus(true);
+        //Sets the appropriate perks to initially available
+        int[] availablePerks = {0, 1, 2, 3, 4, 7, 20, 23, 26, 29, 32, 35, 38,
+                                41, 44};
+        for(Integer i : availablePerks) this._perks[i].setAvailability(true);
+        this._infectivity = START_INFECTIVITY;
+        this._lethality = START_LETHALITY;
+        this._visibility = START_VISIBILITY;
         
     }
 
+    //Constructor with an inputted filepath
     public Virus(String tempname, String filepath){
 
         this._name = tempname;
         try {
-          this._perks = Perks.getPerks(filepath);
+          this._perks = PerkMaker.getPerks(filepath);
         } catch (FileNotFoundException ex) {
             System.out.println("Virus file not found!!");
         } catch (IOException ex) {
@@ -68,38 +74,37 @@ public class Virus extends Disease{
             System.out.println("Missing/Unknown filed in the virus file!!");
             ex.printStackTrace();
         }
-        this._perks[0].setAvailability(true);
-        this._perks[1].setAvailability(true);
-        this._perks[2].setAvailability(true);
-        this._perks[3].setAvailability(true);
-        this._perks[4].setAvailability(true);
-        this._perks[7].setAvailability(true);
-        this._perks[20].setAvailability(true);
-        this._perks[23].setAvailability(true);
-        this._perks[26].setAvailability(true);
-        this._perks[29].setAvailability(true);
-        this._perks[32].setAvailability(true);
-        this._perks[35].setAvailability(true);
-        this._perks[38].setAvailability(true);
-        this._perks[41].setAvailability(true);
-        this._perks[44].setAvailability(true);
-        this._infectivity = 5;
-        this._visibility = 3;
+        //these perks are for a virus
+        for(Perk p : this._perks) p.setVirus(true);
+        //Sets the appropriate perks to initially available
+        int[] availablePerks = {0, 1, 2, 3, 4, 7, 20, 23, 26, 29, 32, 35, 38,
+                                41, 44};
+        for(Integer i : availablePerks) this._perks[i].setAvailability(true);
+        this._infectivity = START_INFECTIVITY;
+        this._lethality = START_LETHALITY;
+        this._visibility = START_VISIBILITY;
 
     }
 
+    /**
+     * Gets the perks that this virus can afford to sell
+     * @return       the list of perks available to be sold by this virus
+     */
     @Override
     public List<Perk> getSellablePerks(){
 
         List<Perk> ans = new ArrayList<Perk>();
         for (Perk p : _perks){
-            if (p.isOwned() && p.getSellPrice() <= this._points)
+            if (p.isOwned() && p.getCumSellPrice() <= this._points)
                 ans.add(p);
         }
         return ans;
 
     }
 
+    /**
+     * Has a non-zero chance to buy a randomly available perk for this virus
+     */
     @Override
     public void buyRandomPerk(){
         if((int)Math.random()*540 == 432)
@@ -108,21 +113,58 @@ public class Virus extends Disease{
         } catch (IllegalAccessException ex) {}
     }
 
+    //Gets the maximum infectivity for this disease
     @Override
     public double getMaxInfectivity() {
         return this.MAX_INFECTIVITY;
     }
 
+    //Gets the maximum lethality for this disease
     @Override
     public double getMaxLethality() {
         return this.MAX_LETHALITY;
     }
 
+    //Gets the maximum visibility for this disease
     @Override
     public double getMaxVisibility() {
         return this.MAX_VISIBILITY;
     }
 
+    /**
+     * gets the starting infectivity this disease has
+     * @return START_INFECTIVITY
+     */
+    @Override
+    public double getStartInfectivity(){
+        return this.START_INFECTIVITY;
+    }
+
+    /**
+     * gets the starting letahlity this disease has
+     * @return START_LETHALITY
+     */
+    @Override
+    public double getStartLethality(){
+        return this.START_LETHALITY;
+    }
+
+    /**
+     * gets the starting visibility this disease has
+     * @return START_LETHALITY
+     */
+    @Override
+    public double getStartVisibility(){
+        return this.START_VISIBILITY;
+    }
+
+    /**
+     * Sells this perk and all owned perks directly reliant on it
+     * @param perkID                 the id of the first perk to be sold
+     * @throws IllegalAccessException  if this perk isn't owned or
+     *                                 the cost of selling this perk and all reliant
+     *                                 perks is more than you have.
+     */
     @Override
     public void sellCumPerk(int perkID) throws IllegalAccessException {
         if(!this._perks[perkID].isOwned() ||
@@ -156,6 +198,15 @@ public class Virus extends Disease{
         this._points -= soldPerk.getSellPrice();
     }
 
+    /**
+     * Sells this perk
+     * 
+     * @param perkID                  the id of the perk to be sold
+     * @throws IllegalAccessException if this perk isn't owned, if it costs more
+     *                                to sell it than you have, or if perks after
+     *                                this perk are owned and solely reliant on 
+     *                                this perk
+     */
     @Override
     public void sellPerk(int perkID) throws IllegalAccessException {
         if(!this._perks[perkID].isOwned() ||
@@ -166,7 +217,8 @@ public class Virus extends Disease{
        }
        for(Integer p : this._perks[perkID].getNext()){
 
-            if(this._perks[p].isOwned()) throw new IllegalAccessException();
+            if(this._perks[p].isOnlyOwnedPrev(this._perks[perkID]) && 
+                   this._perks[p].isOwned()) throw new IllegalAccessException();
 
        }
        this._perks[perkID].setOwned(false);

@@ -14,8 +14,9 @@ import java.util.ArrayList;
  * @author bkoatz
  */
 public abstract class Disease implements Serializable{
-    
-    //The user-input string name of the disease
+	private static final long serialVersionUID = 2897681652961462017L;
+
+	//The user-input string name of the disease
     protected String _name;
     
     //The unique integer identifier of the disease
@@ -362,6 +363,24 @@ public abstract class Disease implements Serializable{
      * @return MAX_LETHALITY
      */
     public abstract double getMaxVisibility();
+
+    /**
+     * gets the starting infectivity a disease has
+     * @return START_INFECTIVITY
+     */
+    public abstract double getStartInfectivity();
+
+    /**
+     * gets the starting letahlity a disease has
+     * @return START_LETHALITY
+     */
+    public abstract double getStartLethality();
+
+    /**
+     * gets the starting visibility a disease has
+     * @return START_LETHALITY
+     */
+    public abstract double getStartVisibility();
 
     /**
      * The cumulative method that sells every perk that is exlusively relies on
