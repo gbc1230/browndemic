@@ -15,8 +15,9 @@ import java.util.List;
  * @author bkoatz
  */
 public class Bacteria extends Disease{
-
-    //Maximum infectivity
+	private static final long serialVersionUID = 9086224726997457013L;
+	
+	//Maximum infectivity
     final private double MAX_INFECTIVITY = 59;
     //Maximum lethality
     final private double MAX_LETHALITY = 217;
