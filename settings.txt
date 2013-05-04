@@ -1,4 +1,0 @@
-name=Chet
-fps=false
-caching=true
-port=6000
