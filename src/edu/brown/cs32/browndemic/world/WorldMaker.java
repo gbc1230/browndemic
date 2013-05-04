@@ -4,6 +4,8 @@
  */
 package edu.brown.cs32.browndemic.world;
 import edu.brown.cs32.browndemic.region.Region;
+import edu.brown.cs32.browndemic.region.NaturalDisaster;
+
 import java.io.*;
 import java.util.HashMap;
 import java.util.List;
@@ -15,9 +17,43 @@ import java.util.ArrayList;
  */
 public class WorldMaker{
     
-    private static void addRegions(MainWorld w, String filename) throws IOException{
+    public static WorldSP makeNewEarthSP() throws IOException{
+        WorldSP w = new WorldSP();
+        addEarthRegions(w, "EarthRegions.csv");
+        return w;
+    }
+    
+    public static ServerWorld makeNewEarthServer() throws IOException{
+        ServerWorld w = new ServerWorld();
+        addEarthRegions(w, "EarthRegions.csv");
+        return w;
+    }
+    
+    private static List<NaturalDisaster> getNaturalDisasters(String filename) throws IOException{
+    	BufferedReader f = new BufferedReader(new FileReader(filename));
+    	List<NaturalDisaster> ans = new ArrayList<>();
+    	f.readLine();
+    	while (f.ready()){
+    		String l = f.readLine();
+    		String[] line = l.split(",");
+    		String name = line[0];
+    		double wealth, wet, dry, heat, cold;
+    		wealth = Double.parseDouble(line[1]);
+    		wet = Double.parseDouble(line[2]);
+    		dry = Double.parseDouble(line[3]);
+    		heat = Double.parseDouble(line[4]);
+    		cold = Double.parseDouble(line[5]);
+    		NaturalDisaster temp = new NaturalDisaster(name, wealth, wet, dry, heat, cold);
+    		System.out.println(temp);
+    		ans.add(temp);
+    	}
+    	return ans;
+    }
+    
+    private static void addEarthRegions(MainWorld w, String filename) throws IOException{
         BufferedReader f = new BufferedReader(new FileReader(filename));
         HashMap<Integer, Region> regionHash = new HashMap<>();
+        List<NaturalDisaster> disasters = getNaturalDisasters("NaturalDisasters.csv");
         f.readLine();
         while (f.ready()){
             String line = f.readLine();
@@ -47,23 +83,13 @@ public class WorldMaker{
             cold = Integer.parseInt(data[11]);
             medicine = Integer.parseInt(data[12]);
             Region r = new Region(id, name, population, landNeighbors, seaNeighbors, 
-                    regionHash, airports, seaports, wealth, wet, dry, heat, cold, medicine);
+                    regionHash, airports, seaports, wealth, wet, dry, heat, 
+                    cold, medicine, disasters);
             regionHash.put(id, r);
             w.addRegion(r);
         }
     }
     
-    public static WorldSP makeNewEarthSP() throws IOException{
-        WorldSP w = new WorldSP();
-        addRegions(w, "EarthRegions.csv");
-        return w;
-    }
-    
-    public static ServerWorld makeNewEarthServer() throws IOException{
-        ServerWorld w = new ServerWorld();
-        addRegions(w, "EarthRegions.csv");
-        return w;
-    }
     
     /*public static void main (String [] args) throws IOException{
         //making sure we don't have any errors by just parsing the file

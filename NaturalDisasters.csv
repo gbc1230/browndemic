@@ -1,0 +1,8 @@
+name,wealth,wet,dry,heat,cold
+Earthquake,0.7,0,0,0,0
+Flood,0.8,1,-1,0,0
+Blizzard,0.8,1,0,-1,1
+Drought,0.8,-1,1,1,0
+Hurricane,0.7,1,-1,0,0
+Tornado,0.8,0,0,0,0
+Alien Attack,0.5,0,0,0,0
