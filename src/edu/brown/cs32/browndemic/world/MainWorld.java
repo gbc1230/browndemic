@@ -171,6 +171,16 @@ public abstract class MainWorld implements Serializable, World, Runnable{
     }
     
     @Override
+    public long getInfected(int d){
+        return _infects.get(d);
+    }
+    
+    @Override
+    public long getDead(int d){
+        return _kills.get(d);
+    }
+    
+    @Override
     public List<Region> getRegions(){
         return _regions;
     }
