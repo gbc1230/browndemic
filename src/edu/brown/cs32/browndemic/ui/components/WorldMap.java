@@ -29,7 +29,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
-import java.util.concurrent.ConcurrentHashMap;
 
 import javax.imageio.ImageIO;
 import javax.swing.JComponent;
@@ -49,7 +48,6 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 
 	private static final long serialVersionUID = -4481136165457141240L;
 	
-	private static final int TICKS_FOR_UPDATE = 10;
 	private static final int MAX_FPS = 60;
 	
 	private World _world;
@@ -68,7 +66,6 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 	private long lastUpdate = 0;
 	private BufferedImage _regionCache;
 	private BufferedImage _regionCache2;
-	private int _ticksSinceUpdate = TICKS_FOR_UPDATE;
 	private MarqueeLabel _ml;
 	private Timer _timer;
 	private OverlayWorker _ow;

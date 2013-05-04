@@ -12,6 +12,7 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -147,13 +148,6 @@ public class UpgradePanel extends BrowndemicPanel {
 		if (!_disease.getAvailablePerks().equals(_availCopy) || !_disease.getOwnedPerks().equals(_ownedCopy)) {
 			_availCopy = new ArrayList<>(_disease.getAvailablePerks());
 			_ownedCopy = new ArrayList<>(_disease.getOwnedPerks());
-//			_perks.clear();
-//			for (Perk p : _ownedCopy) {
-//				_perks.addElement(p);
-//			}
-//			for (Perk p : _availCopy) {
-//				_perks.addElement(p);
-//			}
 			_owned.setList(_ownedCopy);
 			List<Perk> _tempList = new ArrayList<>();
 			for (Perk p : _availCopy) {
@@ -203,7 +197,10 @@ public class UpgradePanel extends BrowndemicPanel {
 						_disease.buyPerk(_selected.getID());
 						setPerk(null);
 					} catch (IllegalAccessException e1) {
-						// Don't buy it!
+						JOptionPane.showMessageDialog(Utils.getParentFrame(this), 
+								String.format("Could not buy perk '%s' because %d points are required and you currently have %d points.", 
+										_selected.getName(), _selected.getCost(), _disease.getPoints()), 
+								"Not Enough Points!", JOptionPane.PLAIN_MESSAGE);
 					}
 				}
 			}
