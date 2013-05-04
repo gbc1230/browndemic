@@ -27,6 +27,7 @@ import edu.brown.cs32.browndemic.ui.interfaces.ChatServer;
 import edu.brown.cs32.browndemic.ui.panels.UIPanel;
 import edu.brown.cs32.browndemic.ui.panels.subpanels.ChatPanel;
 import edu.brown.cs32.browndemic.ui.panels.subpanels.InformationBar;
+import edu.brown.cs32.browndemic.ui.panels.subpanels.Leaderboard;
 import edu.brown.cs32.browndemic.ui.panels.subpanels.NewsPanel;
 import edu.brown.cs32.browndemic.ui.panels.subpanels.RegionPanel;
 import edu.brown.cs32.browndemic.ui.panels.subpanels.StatPanel;
@@ -49,6 +50,7 @@ public class GameMenu extends UIPanel {
 	private StatPanel _stats;
 	private UpgradePanel _upgrade;
 	private MarqueeLabel _ml;
+	private Leaderboard _lb;
 	
 	public GameMenu(World w, int disease, boolean multiplayer) {
 		super();
@@ -116,9 +118,9 @@ public class GameMenu extends UIPanel {
 		
 		
 		JTabbedPane botRight = new JTabbedPane();
-		botRight.setMaximumSize(new Dimension((int)(UI.WIDTH/3), UI.CONTENT_HEIGHT));
-		botRight.setMinimumSize(new Dimension((int)(UI.WIDTH/3), 0));
-		botRight.setPreferredSize(new Dimension((int)(UI.WIDTH/3), 0));
+		botRight.setMaximumSize(new Dimension((int)(UI.WIDTH/2.52), UI.CONTENT_HEIGHT));
+		botRight.setMinimumSize(new Dimension((int)(UI.WIDTH/2.52), 0));
+		botRight.setPreferredSize(new Dimension((int)(UI.WIDTH/2.52), 0));
 		Utils.setDefaultLook(botRight);
 		
 		botRight.setForeground(Colors.RED_TEXT);
@@ -127,6 +129,7 @@ public class GameMenu extends UIPanel {
 		if (_multiplayer) {
 			if (_world instanceof ChatServer)
 				botRight.addTab("Chat", _chat = new ChatPanel((ChatServer)_world));
+			botRight.addTab("Players", _lb = new Leaderboard(_world));
 		}
 		botRight.addTab("News", _news = new NewsPanel(_world, _ml));
 		botRight.addTab("Regions", _regions =  new RegionPanel(_world));
