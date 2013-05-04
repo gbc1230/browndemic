@@ -220,8 +220,7 @@ public class Region implements Serializable{
                 number++;
                 _remDead--;
             }
-            System.out.println("Kill" + number);
-            if(disease.getLethality() / disease.getMaxLethality() > .1)
+            if(disease.getLethality() / disease.getMaxLethality() > .05)
                 _remDead += number % 1;
             number = Math.floor(number);
             if (inf.getInf() < number) {
@@ -324,6 +323,7 @@ public class Region implements Serializable{
             notifyNeighbors(d);
         }
         else if(_awareness[index] < _awareMax/3 && tot > _awareMax/3){
+            _news.add(_name + " has begun work on a cure for " + d.getName());
             _awareness[index] = tot;
             notifyNeighbors(d);
         }
