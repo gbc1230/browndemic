@@ -29,6 +29,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.imageio.ImageIO;
 import javax.swing.JComponent;
@@ -48,7 +49,7 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 
 	private static final long serialVersionUID = -4481136165457141240L;
 	
-	private static final int TICKS_FOR_UPDATE = 0;
+	private static final int TICKS_FOR_UPDATE = 10;
 	private static final int MAX_FPS = 60;
 	
 	private World _world;
@@ -66,9 +67,11 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 	private double fps = 0.0f;
 	private long lastUpdate = 0;
 	private BufferedImage _regionCache;
+	private BufferedImage _regionCache2;
 	private int _ticksSinceUpdate = TICKS_FOR_UPDATE;
 	private MarqueeLabel _ml;
 	private Timer _timer;
+	private OverlayWorker _ow;
 	
 	private static final double AIRPLANE_SPEED = 6.0;
 	
@@ -87,12 +90,66 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 		setMinimumSize(new Dimension(map.getWidth(), map.getHeight()));
 		setDoubleBuffered(true);
 		_regionCache = gc.createCompatibleImage(map.getWidth(), map.getHeight(), Transparency.TRANSLUCENT);
+		_regionCache2 = gc.createCompatibleImage(map.getWidth(), map.getHeight(), Transparency.TRANSLUCENT);
+		_ow = new OverlayWorker();
 		_timer = new Timer(1000/MAX_FPS, new RepaintListener());
 		_timer.start();
 	}
 	
 	public void setChooseMode(boolean chooseMode) {
 		_chooseMode = chooseMode;
+	}
+	
+	private class OverlayWorker implements Runnable {
+		boolean running = true;
+		
+		public void cancel() {
+			running = false;
+		}
+
+		@Override
+		public void run() {
+			while (running) {
+				Graphics2D cacheg2 = (Graphics2D) _regionCache2.getGraphics();
+				
+				cacheg2.setComposite(AlphaComposite.Clear);
+				cacheg2.fillRect(0, 0, _regionCache2.getWidth(), _regionCache2.getHeight());
+				for (Map.Entry<Integer, BufferedImage> e : _diseaseOverlays.entrySet()) {
+				
+					Region r = _world.getRegion(e.getKey());
+					float percentInfected = 0f;
+					if (r != null) {
+						try {
+							percentInfected = ((float)r.getInfected().get(_disease) + (float)r.getKilled().get(_disease)) / (float)r.getPopulation();
+						} catch (IndexOutOfBoundsException e1) {
+							percentInfected = 0f;
+						}
+						if (percentInfected > 0f && percentInfected < .2f) percentInfected = .2f;
+					}
+					if (percentInfected != _infected.get(e.getKey())) {
+						_composites.put(e.getKey(), AlphaComposite.getInstance(AlphaComposite.SRC_OVER, percentInfected/2.0f));
+						_infected.put(e.getKey(), percentInfected);
+					}
+					if (percentInfected > 0) {
+						cacheg2.setComposite(_composites.get(e.getKey()));
+						cacheg2.drawImage(e.getValue(), 0, 0, null);
+					}
+				}
+				synchronized(_regionCache) {
+					cacheg2 = (Graphics2D) _regionCache.getGraphics();
+					cacheg2.setComposite(AlphaComposite.Clear);
+					cacheg2.fillRect(0, 0, _regionCache.getWidth(), _regionCache.getHeight());
+					cacheg2.setComposite(AlphaComposite.SrcOver);
+					cacheg2.drawImage(_regionCache2, 0, 0, null);
+				}
+				try {
+					Thread.sleep(200);
+				} catch (InterruptedException e1) {
+					break;
+				}
+			}
+		}
+		
 	}
 	
 	public class Loader extends SwingWorker<Void, Void> {
@@ -150,6 +207,7 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 		@Override
 		protected void done() {
 			_done.doAction();
+			new Thread(_ow).start();
 		}
 	}
 	
@@ -264,38 +322,7 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 		
 		g.drawImage(_map, 0, 0, null);
 		
-		if (_ticksSinceUpdate >= TICKS_FOR_UPDATE) {
-			Graphics2D cacheg2 = (Graphics2D) _regionCache.getGraphics();
-			cacheg2.setComposite(AlphaComposite.Clear);
-			cacheg2.fillRect(0, 0, _regionCache.getWidth(), _regionCache.getHeight());
-		}
-		
 		for (Map.Entry<Integer, BufferedImage> e : _diseaseOverlays.entrySet()) {
-			
-			if (_ticksSinceUpdate >= TICKS_FOR_UPDATE) {
-				
-				Graphics2D cacheg2 = (Graphics2D) _regionCache.getGraphics();
-			
-				Region r = _world.getRegion(e.getKey());
-				float percentInfected = 0f;
-				if (r != null) {
-					try {
-						percentInfected = ((float)r.getInfected().get(_disease) + (float)r.getKilled().get(_disease)) / (float)r.getPopulation();
-					} catch (IndexOutOfBoundsException e1) {
-						percentInfected = 0f;
-					}
-					if (percentInfected > 0f && percentInfected < .2f) percentInfected = .2f;
-				}
-				if (percentInfected != _infected.get(e.getKey())) {
-					_composites.put(e.getKey(), AlphaComposite.getInstance(AlphaComposite.SRC_OVER, percentInfected/2.0f));
-					_infected.put(e.getKey(), percentInfected);
-				}
-				if (percentInfected > 0) {
-					cacheg2.setComposite(_composites.get(e.getKey()));
-					cacheg2.drawImage(e.getValue(), 0, 0, null);
-				}
-			
-			}
 			
 			float highlight = _highlights.get(e.getKey());
 			if (highlight > 0) {
@@ -308,9 +335,11 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 				_highlights.put(e.getKey(), Math.max(0, highlight - 0.015f));
 		}
 		
-		g2.setComposite(AlphaComposite.SrcOver);
-		g2.drawImage(_regionCache, 0, 0, null);
-			
+		synchronized (_regionCache) {
+			g2.setComposite(AlphaComposite.SrcOver);
+			g2.drawImage(_regionCache, 0, 0, null);
+		}
+		
 		if (_chooseMode) {
 			drawChoosePanel(g2);
 		}
@@ -332,14 +361,13 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 		for (MovingObject m : _objects) {
 			m.draw(g);
 		}
-		
 		_ml.paintComponent(g);
 		
-		if (_ticksSinceUpdate >= TICKS_FOR_UPDATE) {
-			_ticksSinceUpdate = 0;
-		} else {
-			_ticksSinceUpdate++;
-		}
+//		if (_ticksSinceUpdate >= TICKS_FOR_UPDATE) {
+//			_ticksSinceUpdate = 0;
+//		} else {
+//			_ticksSinceUpdate++;
+//		}
 	}
 	
 	public void addRandomPlane() {
@@ -476,5 +504,6 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 	
 	public void stop() {
 		_timer.stop();
+		_ow.cancel();
 	}
 }

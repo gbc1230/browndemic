@@ -95,7 +95,7 @@ public class InformationBar extends BrowndemicPanel {
 		dead.setText(Strings.INFO_DEAD + NumberFormat.getInstance().format(_world.getDead()));
 		total.setText(Strings.INFO_POPULATION + NumberFormat.getInstance().format(_world.getPopulation()));
 		try {
-			cureProgress.setText(String.format("%s%.2f", Strings.INFO_CURED, _world.getCurePercentage(_disease)));
+			cureProgress.setText(String.format("%s%.2f%%", Strings.INFO_CURED, _world.getCurePercentage(_disease)));
 		} catch (IndexOutOfBoundsException e) {
 			cureProgress.setText(Strings.INFO_CURED);
 		}
