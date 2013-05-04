@@ -215,7 +215,7 @@ public class Region implements Serializable{
         int index = disease.getID();
         for (InfWrapper inf : _hash.getAllOfType(index,1)) {
             double rate = disease.getLethality()/disease.getMaxLethality()*_LETHSCALE;
-            double number = (1 - Math.pow(rate, _lethDoubleTicks[disease.getID()]/_LETHTIMESCALE)) * inf.getInf();
+            double number = (Math.pow(rate, _lethDoubleTicks[disease.getID()]/_LETHTIMESCALE)) * inf.getInf();
             if(_remDead >= 1){
                 number++;
                 _remDead--;
@@ -281,7 +281,7 @@ public class Region implements Serializable{
             }
         }
         for(int j = 0; j < _numDiseases; j++){
-            if(_awareness[j] > _awareMax/3)
+            if(_awareness[j] > _awareMax/4)
                 _cureProgress[j] = _cureProgress[j] + (long) (_wealth*weightedPop*_med/_diseases[j].getMedRes());
         }
     }
@@ -319,11 +319,11 @@ public class Region implements Serializable{
     public void updateAwareness(Disease d, double aware) {
         int index = d.getID();
         double tot = _awareness[index] + aware;
-        if(_awareness[index] < _awareMax/4 && tot > _awareMax/4){
+        if(_awareness[index] < _awareMax/6 && tot > _awareMax/6){
             _awareness[index] = tot;
             notifyNeighbors(d);
         }
-        else if(_awareness[index] < _awareMax/3 && tot > _awareMax/3){
+        else if(_awareness[index] < _awareMax/4 && tot > _awareMax/4){
             _news.add(_name + " has begun work on a cure for " + d.getName());
             _awareness[index] = tot;
             notifyNeighbors(d);
@@ -398,7 +398,9 @@ public class Region implements Serializable{
      */
     public void transmitSeaAndAir(Disease d) {
         //TODO revise this calc
-        for (Region region : _regions.values()) {
+        for (int j = 0; j < 10; j++) {
+            int ind = _rand.nextInt(_regions.size()) + 1;
+            Region region = _regions.get(ind);
             if (region.hasDisease(d)) {
                 continue;
             }
@@ -542,7 +544,7 @@ public class Region implements Serializable{
         _hash.addZero(_population);
         _infDoubleTicks = new double[num];
         _lethDoubleTicks = new double[num];
-        _awareMax = 140 * _population;
+        _awareMax = 70 * _population;
     }
 
     /**
