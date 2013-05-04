@@ -16,17 +16,19 @@ import java.util.List;
 public class Parasite extends Disease{
 
     //Maximum infectivity
-    final private double MAX_INFECTIVITY = 59;
+    final private double MAX_INFECTIVITY = 169;
     //Maximum lethality
-    final private double MAX_LETHALITY = 217;
+    final private double MAX_LETHALITY = 243;
     //Maximum visibility
-    final private double MAX_VISIBILITY = 279;
+    final private double MAX_VISIBILITY = 322;
     //Starting infectivity
     final private double START_INFECTIVITY = 1;
     //Starting lethality
     final private double START_LETHALITY = 5;
     //Starting visibility
     final private double START_VISIBILITY = 1;
+    //the size of this disease's perk array
+    final private int PERK_ARRAY_SIZE = 50;
     //The hardcoded file path for this disease's perks
     final private String FILE_PATH = "Parasite.csv";
 
@@ -35,7 +37,7 @@ public class Parasite extends Disease{
 
         this._name = tempname;
         try {
-          this._perks = PerkMaker.getPerks(FILE_PATH);
+          this._perks = PerkMaker.getPerks(FILE_PATH, PERK_ARRAY_SIZE);
         } catch (FileNotFoundException ex) {
             System.out.println("Parasite file not found!");
         } catch (IOException ex) {
@@ -60,7 +62,7 @@ public class Parasite extends Disease{
 
         this._name = tempname;
         try {
-          this._perks = PerkMaker.getPerks(filepath);
+          this._perks = PerkMaker.getPerks(filepath, PERK_ARRAY_SIZE);
         } catch (FileNotFoundException ex) {
             System.out.println("Parasite file not found!");
         } catch (IOException ex) {
@@ -80,9 +82,15 @@ public class Parasite extends Disease{
 
     }
 
-    //Parasites don't engage in such random events!!!
+    //Slight chance that this parasite gets random points
     @Override
-    public void buyRandomPerk() {}
+    public void randomPerkEvents() {
+        if((int)Math.random()*1500 == 432){
+
+            this.addPoints(5);
+
+        }
+    }
 
     //Gets the max infectivity this disease can have
     @Override

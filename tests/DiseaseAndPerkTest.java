@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 import edu.brown.cs32.browndemic.disease.*;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -11,7 +6,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- *
+ * Tests disease and perk functionality
  * @author bkoatz
  */
 public class DiseaseAndPerkTest {
@@ -36,7 +31,7 @@ public class DiseaseAndPerkTest {
     }
 
     @Test
-    public void perkTests(){
+    public void virusPerkTests(){
 
         Virus v = new Virus("Swag");
         assert(v.getAvailablePerks().size() == 15);

@@ -1,6 +1,7 @@
 package edu.brown.cs32.browndemic.disease;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This is the class for a perk. Has all the necessary attributes of a perk,
@@ -66,16 +67,13 @@ public class Perk implements Serializable{
   private boolean _owned = false;
 
   //the ArrayList of perk ids that this perk's purchase makes available
-  private ArrayList<Integer> _nextPerks = new ArrayList<Integer>();
+  private List<Integer> _nextPerks = new ArrayList<Integer>();
 
   //the ArrayList of perk ids whose purchase makes this perk available
-  private ArrayList<Integer> _prevPerks = new ArrayList<Integer>();
+  private List<Integer> _prevPerks = new ArrayList<Integer>();
 
   //Array of all other perks
   private Perk[] _perks;
-  
-  //says whether this perk belongs to a virus
-  private boolean _isVirus = false;
 
   //constuctor: sets cost, change in infectivity/lethality/visibility and
   //the perks that, when this perk is bought, become available for purchase
@@ -145,22 +143,11 @@ public class Perk implements Serializable{
   }
   
   /**
-   * sets this perk's isVirus parameter to isVirus
-   * @param isvirus       whether this perk is a virus
+   * sets this perk's sell price to negative because it is for a virus
    */
-  public void setVirus(boolean isvirus){
+  public void makeVirusPerk(){
       
-      this._isVirus = isvirus;
-      
-  }
-  
-  /**
-   * returns whether this perk is for a virus or not
-   * @return _isVirus
-   */
-  public boolean isVirus(){
-      
-      return this._isVirus;
+      this._sellPrice = this._sellPrice*-1;
       
   }
   
@@ -198,9 +185,7 @@ public class Perk implements Serializable{
           if(this._perks[p].isOwned() && this._perks[p].isOnlyOwnedPrev(this))
               returnPrice += this._perks[p].getCumSellPrice();
       }
-      if(_isVirus)
-      return returnPrice*-1;
-      else return returnPrice;
+      return returnPrice;
   }
 
   /**
@@ -209,9 +194,7 @@ public class Perk implements Serializable{
    */
   public int getSellPrice(){
 
-      if(_isVirus)
-      return this._sellPrice*-1;
-      else return this._sellPrice;
+      return this._sellPrice;
 
   }
   
@@ -509,7 +492,7 @@ public class Perk implements Serializable{
    * gets the ArrayList of Perks that make this perk available
    * @return _prevPerks
    */
-  public ArrayList<Integer> getPrev(){
+  public List<Integer> getPrev(){
 
       return this._prevPerks;
 
@@ -519,7 +502,7 @@ public class Perk implements Serializable{
    * gets the ArrayList of Perks that make this perk available
    * @return _prevPerks
    */
-  public ArrayList<Integer> getNext(){
+  public List<Integer> getNext(){
 
       return this._nextPerks;
 
@@ -535,6 +518,34 @@ public class Perk implements Serializable{
 
   }
 
+  /**
+   * gets all the perks that will be sold if this perk is sold
+   * @return    a List<Perk> of every perk that will be sold if this is sold
+   */
+  public List<Perk> getWillBeSold(){
+      List<Perk> ans = new ArrayList<Perk>();
+      for(Integer i : this._nextPerks)
+          if(this._perks[i].isOwned() && this._perks[i].isOnlyOwnedPrev(this)){
+              ans.add(this._perks[i]);
+              ans.addAll(this._perks[i].getWillBeSold());
+          }
+      return ans;
+  }
+
+  /**
+   * gets all the perks that will be made available if this perk is bought
+   * @return    a List<Perk> of every perk that will be available if this perk is
+   *            bought
+   */
+  public List<Perk> getWillBeAvailable(){
+      List<Perk> ans = new ArrayList<Perk>();
+      for(Integer i : this._nextPerks)
+          if(!this._perks[i].isOwned() && !this._perks[i].isAvail()){
+              ans.add(this._perks[i]);
+              ans.addAll(this._perks[i].getWillBeSold());
+          }
+      return ans;
+  }
 
   /**
    * returns true if the perk's only owned predecessor is parent

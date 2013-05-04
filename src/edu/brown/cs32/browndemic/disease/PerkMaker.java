@@ -24,10 +24,10 @@ public class PerkMaker{
      * @throws NoSuchFieldException      if there is an unrecognized field in 
      *                                   the file
      */
-    public static Perk[] getPerks(String filePath) throws FileNotFoundException, 
+    public static Perk[] getPerks(String filePath, int arraySize) throws FileNotFoundException,
                                               IOException, NoSuchFieldException{
 
-        Perk[] toReturn = new Perk[47];
+        Perk[] toReturn = new Perk[arraySize];
         File f = new File(filePath);
         BufferedReader reader = new BufferedReader(new FileReader(f));
         String line = reader.readLine();

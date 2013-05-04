@@ -17,7 +17,7 @@ import java.util.List;
 public class Bacteria extends Disease{
 
     //Maximum infectivity
-    final private double MAX_INFECTIVITY = 59;
+    final private double MAX_INFECTIVITY = 111;
     //Maximum lethality
     final private double MAX_LETHALITY = 217;
     //Maxium visibility
@@ -28,6 +28,8 @@ public class Bacteria extends Disease{
     final private double START_LETHALITY = 1;
     //Starting visibility
     final private double START_VISIBILITY = 3;
+    //the size of this disease's perk array
+    final private int PERK_ARRAY_SIZE = 47;
     //The path to the file with perks for the bacteria
     final private String FILE_PATH = "Bacteria.csv";
 
@@ -36,7 +38,7 @@ public class Bacteria extends Disease{
     
         this._name = tempname;
         try {
-          this._perks = PerkMaker.getPerks(FILE_PATH);
+          this._perks = PerkMaker.getPerks(FILE_PATH, PERK_ARRAY_SIZE);
         } catch (FileNotFoundException ex) {
             System.out.println("Bacteria file not found!");
         } catch (IOException ex) {
@@ -61,7 +63,7 @@ public class Bacteria extends Disease{
 
         this._name = tempname;
         try {
-          this._perks = PerkMaker.getPerks(filepath);
+          this._perks = PerkMaker.getPerks(filepath, PERK_ARRAY_SIZE);
         } catch (FileNotFoundException ex) {
             System.out.println("Bacteria file not found!");
         } catch (IOException ex) {
@@ -97,9 +99,17 @@ public class Bacteria extends Disease{
 
     }
 
-    //Bacterias don't engage in such random events!!!
+    //Mild chance of getting a random point
     @Override
-    public void buyRandomPerk() {}
+    public void randomPerkEvents() {
+
+        if((int)Math.random()*800 == 432){
+
+            this.addPoints(3);
+
+        }
+        
+    }
 
     //Gets the max infectivity this disease can have
     @Override

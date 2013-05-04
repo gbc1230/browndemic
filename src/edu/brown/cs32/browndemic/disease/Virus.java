@@ -17,17 +17,19 @@ import java.util.List;
 public class Virus extends Disease{
 
     //Maximum infectivity
-    final private double MAX_INFECTIVITY = 62;
+    final private double MAX_INFECTIVITY = 114;
     //Maximum lethality
-    final private double MAX_LETHALITY = 217;
+    final private double MAX_LETHALITY = 218;
     //Maximum visibility
-    final private double MAX_VISIBILITY = 281;
+    final private double MAX_VISIBILITY = 283;
     //Starting infectivity
     final private double START_INFECTIVITY = 5;
     //Starting lethality
     final private double START_LETHALITY = 1;
     //Starting visibility
     final private double START_VISIBILITY = 5;
+    //the size of this disease's perk array
+    final private int PERK_ARRAY_SIZE = 47;
     //The hardcoded file path for this disease's perks
     final private String FILE_PATH = "Virus.csv";
 
@@ -36,7 +38,7 @@ public class Virus extends Disease{
     
         this._name = tempname;
         try {
-          this._perks = PerkMaker.getPerks(FILE_PATH);
+          this._perks = PerkMaker.getPerks(FILE_PATH, PERK_ARRAY_SIZE);
         } catch (FileNotFoundException ex) {
             System.out.println("Virus file not found!!");
         } catch (IOException ex) {
@@ -47,7 +49,7 @@ public class Virus extends Disease{
             ex.printStackTrace();
         }
         //these perks are for a virus
-        for(Perk p : this._perks) p.setVirus(true);
+        for(Perk p : this._perks) p.makeVirusPerk();
         //Sets the appropriate perks to initially available
         int[] availablePerks = {0, 1, 2, 3, 4, 7, 20, 23, 26, 29, 32, 35, 38,
                                 41, 44};
@@ -63,7 +65,7 @@ public class Virus extends Disease{
 
         this._name = tempname;
         try {
-          this._perks = PerkMaker.getPerks(filepath);
+          this._perks = PerkMaker.getPerks(filepath, PERK_ARRAY_SIZE);
         } catch (FileNotFoundException ex) {
             System.out.println("Virus file not found!!");
         } catch (IOException ex) {
@@ -74,7 +76,7 @@ public class Virus extends Disease{
             ex.printStackTrace();
         }
         //these perks are for a virus
-        for(Perk p : this._perks) p.setVirus(true);
+        for(Perk p : this._perks) p.makeVirusPerk();
         //Sets the appropriate perks to initially available
         int[] availablePerks = {0, 1, 2, 3, 4, 7, 20, 23, 26, 29, 32, 35, 38,
                                 41, 44};
@@ -103,13 +105,16 @@ public class Virus extends Disease{
 
     /**
      * Has a non-zero chance to buy a randomly available perk for this virus
+     * and give it points.
      */
     @Override
-    public void buyRandomPerk(){
+    public void randomPerkEvents(){
         if((int)Math.random()*540 == 432)
             try {
-            this.buyPerkWithoutPay(this.getAvailablePerks().get(0).getID());
-        } catch (IllegalAccessException ex) {}
+                this.buyPerkWithoutPay(this.getAvailablePerks().get(0).getID());
+            } catch (IllegalAccessException ex) {}
+        if((int)Math.random()*540 == 432)
+            this.addPoints(3);
     }
 
     //Gets the maximum infectivity for this disease

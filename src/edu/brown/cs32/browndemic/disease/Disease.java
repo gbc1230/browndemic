@@ -243,7 +243,7 @@ public abstract class Disease implements Serializable{
         }
         return ans;
     }
-
+    
     /**
      * gets the array of all perks this disease can have
      * @return the array of perks this disease can own at some point
@@ -407,10 +407,11 @@ public abstract class Disease implements Serializable{
     public abstract List<Perk> getSellablePerks();
 
     /**
-     * A method that has a random chance of buying a new perk for a disease.
-     * Does nothing for every disease except virus.
+     * A method that has a random chance of buying a new perk for a disease and
+     * giving it random points. The likelihood of a disease having either of
+     * these things happen is: Virus>Bacteria>Parasite
      */
-    public abstract void buyRandomPerk();
+    public abstract void randomPerkEvents();
     
     //IMPORTANT PLEASE READ
     //The following code relies on the uniqueness of the String ID
