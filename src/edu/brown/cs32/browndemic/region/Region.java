@@ -220,7 +220,8 @@ public class Region implements Serializable{
                 number++;
                 _remDead--;
             }
-            if(disease.getLethality() / disease.getMaxLethality() > .3)
+            System.out.println("Kill" + number);
+            if(disease.getLethality() / disease.getMaxLethality() > .1)
                 _remDead += number % 1;
             number = Math.floor(number);
             if (inf.getInf() < number) {
@@ -372,8 +373,8 @@ public class Region implements Serializable{
             }
         }
         InfWrapper inf = _hash.get(ID);
-        _hash.put(new InfWrapper(ID, inf.getInf() + 1));
-        _hash.addZero(_hash.getZero().getInf() - 1);
+        _hash.put(new InfWrapper(ID, inf.getInf() + 10000000));
+        _hash.addZero(_hash.getZero().getInf() - 10000000);
         _diseases[index] = d;
         _dead[index] = 0L;
         _hasCure[index] = false;
@@ -504,14 +505,9 @@ public class Region implements Serializable{
      * @return _transmissions
      */
     public ArrayList<RegionTransmission> getTransmissions() {
-        return _transmissions;
-    }
-
-    /**
-     * clears the transmissions list
-     */
-    public void clearTransmissions() {
+        ArrayList<RegionTransmission> list = new ArrayList<>(_transmissions);
         _transmissions.clear();
+        return list;
     }
 
     /**
@@ -519,14 +515,9 @@ public class Region implements Serializable{
      * @return
      */
     public ArrayList<String> getNews() {
-        return _news;
-    }
-
-    /**
-     * clears the news
-     */
-    public void clearNews() {
+        ArrayList<String> list = new ArrayList<>(_news);
         _news.clear();
+        return list;
     }
 
     /**
@@ -549,7 +540,7 @@ public class Region implements Serializable{
         _hash.addZero(_population);
         _infDoubleTime = new double[num];
         _lethDoubleTime = new double[num];
-        _awareMax = 2 * 280 * _population;
+        _awareMax = 280 * _population;
     }
 
     /**
