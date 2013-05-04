@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package edu.brown.cs32.browndemic.disease;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -10,7 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * Extends Disease and has all the perks a Parasite can get and the
+ * ability to sell its perks cumulatively or individual and GAIN money
+ * from those sales
+ * 
+ * Parasite start off about not visible and infective, but lethal.
+ * 
  * @author bkoatz
  */
 public class Parasite extends Disease{
@@ -24,7 +24,7 @@ public class Parasite extends Disease{
 
         this._name = tempname;
         try {
-          this._perks = Perks.getPerks(FILE_PATH);
+          this._perks = PerkMaker.getPerks(FILE_PATH);
         } catch (FileNotFoundException ex) {
             System.out.println("Parasite file not found!");
         } catch (IOException ex) {
@@ -34,24 +34,12 @@ public class Parasite extends Disease{
             System.out.println("Missing/Unknown filed in the parasite file!!");
             ex.printStackTrace();
         }
-        this._perks[0].setAvailability(true);
-        this._perks[1].setAvailability(true);
-        this._perks[2].setAvailability(true);
-        this._perks[3].setAvailability(true);
-        this._perks[4].setAvailability(true);
-        this._perks[7].setAvailability(true);
-        this._perks[20].setAvailability(true);
-        this._perks[23].setAvailability(true);
-        this._perks[26].setAvailability(true);
-        this._perks[29].setAvailability(true);
-        this._perks[32].setAvailability(true);
-        this._perks[35].setAvailability(true);
-        this._perks[38].setAvailability(true);
-        this._perks[41].setAvailability(true);
-        this._perks[44].setAvailability(true);
-        this._infectivity = 2;
+        int[] availablePerks = {0, 1, 2, 3, 4, 7, 20, 23, 26, 29, 32, 35, 38,
+                                41, 44};
+        for(Integer i : availablePerks) this._perks[i].setAvailability(true);
+        this._infectivity = 1;
         this._visibility = 1;
-        this._lethality = 3;
+        this._lethality = 5;
 
     }
 
@@ -59,7 +47,7 @@ public class Parasite extends Disease{
 
         this._name = tempname;
         try {
-          this._perks = Perks.getPerks(filepath);
+          this._perks = PerkMaker.getPerks(filepath);
         } catch (FileNotFoundException ex) {
             System.out.println("Parasite file not found!");
         } catch (IOException ex) {
@@ -69,23 +57,12 @@ public class Parasite extends Disease{
             System.out.println("Missing/Unknown filed in the parasite file!!");
             ex.printStackTrace();
         }
-        this._perks[0].setAvailability(true);
-        this._perks[1].setAvailability(true);
-        this._perks[2].setAvailability(true);
-        this._perks[3].setAvailability(true);
-        this._perks[4].setAvailability(true);
-        this._perks[7].setAvailability(true);
-        this._perks[20].setAvailability(true);
-        this._perks[23].setAvailability(true);
-        this._perks[26].setAvailability(true);
-        this._perks[29].setAvailability(true);
-        this._perks[32].setAvailability(true);
-        this._perks[35].setAvailability(true);
-        this._perks[38].setAvailability(true);
-        this._perks[41].setAvailability(true);
-        this._perks[44].setAvailability(true);
-        this._infectivity = 2;
+        int[] availablePerks = {0, 1, 2, 3, 4, 7, 20, 23, 26, 29, 32, 35, 38,
+                                41, 44};
+        for(Integer i : availablePerks) this._perks[i].setAvailability(true);
+        this._infectivity = 1;
         this._visibility = 1;
+        this._lethality = 5;
 
     }
 
@@ -148,7 +125,8 @@ public class Parasite extends Disease{
        }
        for(Integer p : this._perks[perkID].getNext()){
 
-            if(this._perks[p].isOwned()) throw new IllegalAccessException();
+            if(this._perks[p].isOnlyOwnedPrev(this._perks[perkID]) &&
+                   this._perks[p].isOwned()) throw new IllegalAccessException();
 
        }
        this._perks[perkID].setOwned(false);

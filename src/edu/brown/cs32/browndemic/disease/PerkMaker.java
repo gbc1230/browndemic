@@ -7,11 +7,23 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * The interface containing all the perks that diseases can get
+ * The static class which can take in a file and parse out the perks in that
+ * file.
+ * 
  *@author bkoatz 
  */
-public class Perks{
+public class PerkMaker{
 
+    /**
+     * Takes in a file and produces an array of perks from that file.
+     * 
+     * @param filePath the path to the file 
+     * @return         an array of perks with characteristics defined by the file
+     * @throws FileNotFoundException     if filepath does not lead to a file
+     * @throws IOException               if the file has an error in it
+     * @throws NoSuchFieldException      if there is an unrecognized field in 
+     *                                   the file
+     */
     public static Perk[] getPerks(String filePath) throws FileNotFoundException, 
                                               IOException, NoSuchFieldException{
 
