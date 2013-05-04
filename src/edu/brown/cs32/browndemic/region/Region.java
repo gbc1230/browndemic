@@ -86,6 +86,8 @@ public class Region implements Serializable{
     private ArrayList<RegionTransmission> _transmissions;
     private ArrayList<String> _news;
     
+    private ArrayList<NaturalDisaster> _disasters;
+    
     private double _remInf, _remDead;
 
     /**
@@ -99,7 +101,7 @@ public class Region implements Serializable{
     public Region(int ID, String name, long population, List<Integer> landNeighbors,
             List<Integer> waterNeighbors, HashMap<Integer, Region> hash,
             int airports, int seaports, double wealth, double wet, double dry,
-            double heat, double cold, double med) {
+            double heat, double cold, double med, ArrayList<NaturalDisaster> disasters) {
         _name = name;
         _ID = ID;
         _population = population;
@@ -119,6 +121,7 @@ public class Region implements Serializable{
         _rand = new Random();
         _remInf = 0;
         _remDead = 0;
+        _disasters = disasters;
     }
 
     /**
@@ -208,7 +211,7 @@ public class Region implements Serializable{
     public void kill(Disease disease) {
         int index = disease.getID();
         for (InfWrapper inf : _hash.getAllOfType(index,1)) {
-            double rate = 1 - disease.getLethality()/disease.getMaxLethality()*_LETHSCALE;
+            double rate = disease.getLethality()/disease.getMaxLethality()*_LETHSCALE;
             double number = (1 - Math.pow(rate, _lethDoubleTime[disease.getID()]/_LETHTIMESCALE)) * inf.getInf();
             if(_remDead >= 1){
                 number++;
@@ -459,12 +462,12 @@ public class Region implements Serializable{
     }
 
     /**
-     * prompts a natural disaster with the given intensity in this region
-     * @param intensity on a scale of 1-10
+     * prompts a natural disaster in this region
+     * @param intensity
      */
-    public void naturalDisaster(int intensity) {
+    public void naturalDisaster() {
         String news = "";
-        //TODO generate disaster and impact wealth, maybe population?
+        
         _news.add(news);
     }
 
