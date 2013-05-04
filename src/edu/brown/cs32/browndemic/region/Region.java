@@ -214,7 +214,7 @@ public class Region implements Serializable{
     public void kill(Disease disease) {
         int index = disease.getID();
         for (InfWrapper inf : _hash.getAllOfType(index,1)) {
-            double rate = disease.getLethality()/disease.getMaxLethality()*_LETHSCALE;
+            double rate = disease.getLethality()/disease.getMaxLethality();
             double number = (1 - Math.pow(1 - rate, _lethDoubleTime[disease.getID()]/_LETHTIMESCALE)) * inf.getInf();
             if(_remDead >= 1){
                 number++;
@@ -318,16 +318,20 @@ public class Region implements Serializable{
     public void updateAwareness(Disease d, double aware) {
         int index = d.getID();
         double tot = _awareness[index] + aware;
-        if(_awareness[index] < _awareMax/4 && tot > _awareMax/4)
+        if(_awareness[index] < _awareMax/4 && tot > _awareMax/4){
+            _awareness[index] = tot;
             notifyNeighbors(d);
-        else if(_awareness[index] < _awareMax/2 && tot > _awareMax/2)
+        }
+        else if(_awareness[index] < _awareMax/2 && tot > _awareMax/2){
+            _awareness[index] = tot;
             notifyNeighbors(d);
+        }
         else if(_awareness[index] < _awareMax && tot > _awareMax){
+            _awareness[index] = tot;
             notifyNeighbors(d);
             if(_air != 0 || _sea != 0)
                 _news.add(_name + " has closed its sea and airports.");
         }
-        _awareness[index] = tot;
     }
     
     public void notifyNeighbors(Disease d) {
