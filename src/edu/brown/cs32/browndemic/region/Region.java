@@ -34,8 +34,8 @@ public class Region implements Serializable{
     private double _awareMax;
     
     private double[] _infDoubleTicks;
-    private static final int _INFTIMESCALE = 180;
-    private static final double _INFSCALE = 1.0/360;
+    private static final int _INFTIMESCALE = 120;
+    private static final double _INFSCALE = 1.0/180;
     
     private double[] _lethDoubleTicks;
     private static final int _LETHTIMESCALE = 360;
