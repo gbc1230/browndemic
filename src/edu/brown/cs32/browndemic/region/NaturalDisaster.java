@@ -31,4 +31,10 @@ public class NaturalDisaster {
     public double getDryChange(){return _dry;}
     public double getHeatChange(){return _heat;}
     public double getColdChange(){return _cold;}
+    
+    @Override
+    public String toString(){
+    	return _name + "," + _wealth + "," + _wet + "," + _dry + "," + 
+    			_heat + "," + _cold;
+    }
 }

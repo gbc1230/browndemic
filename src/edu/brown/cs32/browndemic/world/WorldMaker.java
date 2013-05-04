@@ -31,7 +31,7 @@ public class WorldMaker{
     
     private static List<NaturalDisaster> getNaturalDisasters(String filename) throws IOException{
     	BufferedReader f = new BufferedReader(new FileReader(filename));
-    	List<NaturalDisaster> ans = new ArrayList<>();
+    	ArrayList<NaturalDisaster> ans = new ArrayList<>();
     	f.readLine();
     	while (f.ready()){
     		String l = f.readLine();
@@ -44,7 +44,6 @@ public class WorldMaker{
     		heat = Double.parseDouble(line[4]);
     		cold = Double.parseDouble(line[5]);
     		NaturalDisaster temp = new NaturalDisaster(name, wealth, wet, dry, heat, cold);
-    		System.out.println(temp);
     		ans.add(temp);
     	}
     	return ans;
@@ -91,9 +90,9 @@ public class WorldMaker{
     }
     
     
-    /*public static void main (String [] args) throws IOException{
+    public static void main (String [] args) throws IOException{
         //making sure we don't have any errors by just parsing the file
         makeNewEarthSP();
-    }*/
+    }
    
 }
