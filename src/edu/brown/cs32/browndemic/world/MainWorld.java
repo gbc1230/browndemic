@@ -309,14 +309,12 @@ public abstract class MainWorld implements Serializable, World, Runnable{
     public void updateNews(){
         for (Region r : _regions){
             _news.addAll(r.getNews());
-            r.clearNews();
         }
     }
     
     public void updateTransmissions(){
         for (Region r : _regions){
             _transmissions.addAll(r.getTransmissions());
-            r.clearTransmissions();
         }
     }
     
