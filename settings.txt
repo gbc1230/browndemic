@@ -1,4 +1,4 @@
-caching=true
-name=Player
-port=6000
+name=Chet
 fps=false
+caching=true
+port=6000
