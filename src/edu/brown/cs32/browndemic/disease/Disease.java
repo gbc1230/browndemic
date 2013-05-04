@@ -364,6 +364,24 @@ public abstract class Disease implements Serializable{
     public abstract double getMaxVisibility();
 
     /**
+     * gets the starting infectivity a disease has
+     * @return START_INFECTIVITY
+     */
+    public abstract double getStartInfectivity();
+
+    /**
+     * gets the starting letahlity a disease has
+     * @return START_LETHALITY
+     */
+    public abstract double getStartLethality();
+
+    /**
+     * gets the starting visibility a disease has
+     * @return START_LETHALITY
+     */
+    public abstract double getStartVisibility();
+
+    /**
      * The cumulative method that sells every perk that is exlusively relies on
      * perkID to be owned at the time of selling.
      * @param perkID                           the ID of the root perk being sold

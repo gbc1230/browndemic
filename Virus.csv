@@ -22,18 +22,18 @@ ID,Name,Description,Cost,Sell,Infectivity,Lethality,Visibility,Heat Resistance,C
 20,Heat Resistance I,Resistance to low heat.,10,10,0,0,0,1,0,0,0,0,0,0,,21
 21,Heat Resistance II,Resistance to medium heat.,15,15,0,0,0,1,0,0,0,0,0,0,20,22
 22,Heat Resistance III,Resistance to high heat.,20,20,0,0,0,1,0,0,0,0,0,0,21,
-23,Cold Resistance I,Resistance to low cold.,10,10,0,0,0,1,0,0,0,0,0,0,,24
-24,Cold Resistance II,Resistance to medium cold.,15,15,0,0,0,1,0,0,0,0,0,0,23,25
-25,Cold Resistance III,Resistance to high cold.,20,20,0,0,0,1,0,0,0,0,0,0,24,
-26,Wet Resistance I,Resistance to low wetness.,10,10,0,0,0,1,0,0,0,0,0,0,,27
-27,Wet Resistance II,Resistance to medium wetness.,15,15,0,0,0,1,0,0,0,0,0,0,26,28
-28,Wet Resistance III,Resistance to high wetness.,20,20,0,0,0,1,0,0,0,0,0,0,27,
-29,Dry Resistance I,Resistance to low dryness.,10,10,0,0,0,1,0,0,0,0,0,0,,30
-30,Dry Resistance II,Resistance to medium dryness.,15,15,0,0,0,1,0,0,0,0,0,0,29,31
-31,Dry Resistance III,Resistance to high dryness.,20,20,0,0,0,1,0,0,0,0,0,0,30,
-32,Medicinal Resistance I,Resistance to low levels of medicine.,10,10,0,0,0,1,0,0,0,0,0,0,,33
-33,Medicinal Resistance II,Resistance to medium levels of medicine.,15,15,0,0,0,1,0,0,0,0,0,0,32,34
-34,Medicinal Resistance III,Resistance to high levels of medicine.,20,20,0,0,0,1,0,0,0,0,0,0,33,
+23,Cold Resistance I,Resistance to low cold.,10,10,0,0,0,0,1,0,0,0,0,0,,24
+24,Cold Resistance II,Resistance to medium cold.,15,15,0,0,0,0,1,0,0,0,0,0,23,25
+25,Cold Resistance III,Resistance to high cold.,20,20,0,0,0,0,1,0,0,0,0,0,24,
+26,Wet Resistance I,Resistance to low wetness.,10,10,0,0,0,0,0,1,0,0,0,0,,27
+27,Wet Resistance II,Resistance to medium wetness.,15,15,0,0,0,0,0,1,0,0,0,0,26,28
+28,Wet Resistance III,Resistance to high wetness.,20,20,0,0,0,0,0,1,0,0,0,0,27,
+29,Dry Resistance I,Resistance to low dryness.,10,10,0,0,0,0,0,0,1,0,0,0,,30
+30,Dry Resistance II,Resistance to medium dryness.,15,15,0,0,0,0,0,0,1,0,0,0,29,31
+31,Dry Resistance III,Resistance to high dryness.,20,20,0,0,0,0,0,0,1,0,0,0,30,
+32,Medicinal Resistance I,Resistance to low levels of medicine.,10,10,0,0,0,0,0,0,0,1,0,0,,33
+33,Medicinal Resistance II,Resistance to medium levels of medicine.,15,15,0,0,0,0,0,0,0,1,0,0,32,34
+34,Medicinal Resistance III,Resistance to high levels of medicine.,20,20,0,0,0,0,0,0,0,1,0,0,33,
 35,Water Transmission I,Low ability to be transmitted through water.,10,10,0,0,0,0,0,0,0,0,9,0,,36
 36,Water Transmission II,Medium ability to be transmitted through water.,15,15,0,0,0,0,0,0,0,0,15,0,35,37
 37,Water Transmission III,High ability to be transmitted through water.,25,25,0,0,0,0,0,0,0,0,25,0,36,
