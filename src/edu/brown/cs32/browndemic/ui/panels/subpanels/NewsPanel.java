@@ -15,6 +15,7 @@ import javax.swing.Timer;
 
 import edu.brown.cs32.browndemic.ui.UIConstants.Colors;
 import edu.brown.cs32.browndemic.ui.UIConstants.Fonts;
+import edu.brown.cs32.browndemic.ui.components.MarqueeLabel;
 import edu.brown.cs32.browndemic.ui.panels.BrowndemicPanel;
 import edu.brown.cs32.browndemic.world.World;
 
@@ -26,10 +27,12 @@ public class NewsPanel extends BrowndemicPanel {
 	private List<String> _localCopy;
 	private Timer _timer;
 	private JPanel _news;
+	private MarqueeLabel _ml;
 	
-	public NewsPanel(World world) {
+	public NewsPanel(World world, MarqueeLabel ml) {
 		super();
 		_world = world;
+		_ml = ml;
 		makeUI();
 		_timer = new Timer(1000/3, new ActionListener() {
 			@Override
@@ -78,6 +81,11 @@ public class NewsPanel extends BrowndemicPanel {
 	
 	private void update() {
 		if (_world.getNews() != null && !_localCopy.equals(_world.getNews())) {
+			for (String s : _world.getNews()) {
+				if (!_localCopy.contains(s)) {
+					_ml.addString(s);
+				}
+			}
 			_localCopy = new ArrayList<>(_world.getNews());
 			updateNews();
 		}

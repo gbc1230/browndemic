@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.text.NumberFormat;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -24,14 +25,14 @@ public class InformationBar extends BrowndemicPanel {
 	private int _disease;
 	private Timer _timer;
 	
-	private JLabel infected, dead, total; 
+	private JLabel infected, dead, total, healthy; 
 
 	public InformationBar(World w, int disease) {
 		super();
 		_world = w;
 		makeUI();
 		_disease = disease;
-		_timer = new Timer(1000/3, new ActionListener() {
+		_timer = new Timer(1000/10, new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				updateInfo();
@@ -56,12 +57,19 @@ public class InformationBar extends BrowndemicPanel {
 		dead.setForeground(Colors.RED_TEXT);
 		dead.setBackground(Colors.MENU_BACKGROUND);
 		dead.setFont(Fonts.NORMAL_TEXT);
-		
+
 		total = new JLabel();
 		total.setForeground(Colors.RED_TEXT);
 		total.setBackground(Colors.MENU_BACKGROUND);
 		total.setFont(Fonts.NORMAL_TEXT);
 		
+		healthy = new JLabel();
+		healthy.setForeground(Colors.RED_TEXT);
+		healthy.setBackground(Colors.MENU_BACKGROUND);
+		healthy.setFont(Fonts.NORMAL_TEXT);
+		
+		add(Box.createGlue());
+		add(healthy);
 		add(Box.createGlue());
 		add(infected);
 		add(Box.createGlue());
@@ -74,9 +82,10 @@ public class InformationBar extends BrowndemicPanel {
 	}
 	
 	private void updateInfo() {
-		infected.setText(Strings.INFO_INFECTED + _world.getInfected());
-		dead.setText(Strings.INFO_DEAD + _world.getDead());
-		total.setText(Strings.INFO_POPULATION + _world.getPopulation());
+		healthy.setText(Strings.INFO_HEALTHY + NumberFormat.getInstance().format(_world.getHealthy()));
+		infected.setText(Strings.INFO_INFECTED + NumberFormat.getInstance().format(_world.getInfected()));
+		dead.setText(Strings.INFO_DEAD + NumberFormat.getInstance().format(_world.getDead()));
+		total.setText(Strings.INFO_POPULATION + NumberFormat.getInstance().format(_world.getPopulation()));
 	}
 	
 	

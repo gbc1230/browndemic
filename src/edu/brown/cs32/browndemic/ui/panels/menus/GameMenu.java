@@ -1,5 +1,6 @@
 package edu.brown.cs32.browndemic.ui.panels.menus;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
@@ -20,6 +21,7 @@ import edu.brown.cs32.browndemic.ui.UIConstants.Strings;
 import edu.brown.cs32.browndemic.ui.UIConstants.UI;
 import edu.brown.cs32.browndemic.ui.Utils;
 import edu.brown.cs32.browndemic.ui.actions.Action;
+import edu.brown.cs32.browndemic.ui.components.MarqueeLabel;
 import edu.brown.cs32.browndemic.ui.components.WorldMap;
 import edu.brown.cs32.browndemic.ui.interfaces.ChatServer;
 import edu.brown.cs32.browndemic.ui.panels.UIPanel;
@@ -46,12 +48,17 @@ public class GameMenu extends UIPanel {
 	private RegionPanel _regions;
 	private StatPanel _stats;
 	private UpgradePanel _upgrade;
+	private MarqueeLabel _ml;
 	
 	public GameMenu(World w, int disease, boolean multiplayer) {
 		super();
 		_world = w;
 		_disease = disease;
 		_multiplayer = multiplayer;
+		_ml = new MarqueeLabel(0, 0, UI.WIDTH);
+		_ml.setFont(Fonts.NORMAL_TEXT);
+		_ml.setForeground(Colors.RED_TEXT);
+		_ml.setBackground(new Color(0, 0, 0, 100));
 	}
 	
 	private class ImagesDoneLoadingAction implements Action {
@@ -61,7 +68,7 @@ public class GameMenu extends UIPanel {
 		}
 		@Override
 		public void doAction() {
-			_map = new WorldMap(_world, Resources.getImage(Images.MAP), Resources.getImage(Images.REGIONS), _disease);
+			_map = new WorldMap(_world, Resources.getImage(Images.MAP), Resources.getImage(Images.REGIONS), _disease, _ml);
 			_parent.setPanel(new Loading(true, _map.new Loader(new RegionsDoneLoadingAction(_parent))));
 		}
 	}
@@ -107,6 +114,7 @@ public class GameMenu extends UIPanel {
 		UIManager.put("TabbedPane.contentBorderInsets", new Insets(0, 0, 0, 0));
 		
 		
+		
 		JTabbedPane botRight = new JTabbedPane();
 		botRight.setMaximumSize(new Dimension((int)(UI.WIDTH/3), UI.CONTENT_HEIGHT));
 		botRight.setMinimumSize(new Dimension((int)(UI.WIDTH/3), 0));
@@ -115,12 +123,12 @@ public class GameMenu extends UIPanel {
 		
 		botRight.setForeground(Colors.RED_TEXT);
 		botRight.setFont(Fonts.TITLE_BAR);
+		botRight.addTab("Stats", _stats = new StatPanel(_world.getDiseases().get(_disease)));
 		if (_multiplayer) {
 			if (_world instanceof ChatServer)
 				botRight.addTab("Chat", _chat = new ChatPanel((ChatServer)_world));
 		}
-		botRight.addTab("News", _news = new NewsPanel(_world));
-		botRight.addTab("Stats", _stats = new StatPanel(_world.getDiseases().get(_disease)));
+		botRight.addTab("News", _news = new NewsPanel(_world, _ml));
 		botRight.addTab("Regions", _regions =  new RegionPanel(_world));
 		for (int i = 0; i < botRight.getTabCount(); i++) {
 			botRight.setBackgroundAt(i, Colors.MENU_BACKGROUND);

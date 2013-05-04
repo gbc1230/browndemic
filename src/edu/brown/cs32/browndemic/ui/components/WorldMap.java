@@ -21,6 +21,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ConvolveOp;
 import java.awt.image.Kernel;
 import java.io.File;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -59,16 +60,20 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 	private int _selected, _disease, _hover;
 	private boolean _chooseMode;
 	private static GraphicsConfiguration gc = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
+	private double fps = 0.0f;
+	private long lastUpdate = 0;
+	private MarqueeLabel _ml;
 	
 	private static final double AIRPLANE_SPEED = 6.0;
 	
-	public WorldMap(World _world2, BufferedImage map, BufferedImage regions, int disease) {
+	public WorldMap(World _world2, BufferedImage map, BufferedImage regions, int disease, MarqueeLabel ml) {
 		super();
 		_world = _world2;
 		_map = map;
 		_regions = regions;
 		_selected = 0;
 		_disease = disease;
+		_ml = ml;
 		addMouseListener(this);
 		addMouseMotionListener(this);
 		setPreferredSize(new Dimension(map.getWidth(), map.getHeight()));
@@ -109,7 +114,7 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 							BufferedImage highlightFromFile = ImageIO.read(highlight);
 							BufferedImage convertedDisease = gc.createCompatibleImage(diseaseFromFile.getWidth(), diseaseFromFile.getHeight(), Transparency.TRANSLUCENT);//new BufferedImage(diseaseFromFile.getWidth(), diseaseFromFile.getHeight(), BufferedImage.TYPE_INT_ARGB);
 							BufferedImage convertedHighlight = gc.createCompatibleImage(diseaseFromFile.getWidth(), diseaseFromFile.getHeight(), Transparency.TRANSLUCENT);//new BufferedImage(diseaseFromFile.getWidth(), diseaseFromFile.getHeight(), BufferedImage.TYPE_INT_ARGB);
-
+							
 							convertedDisease.getGraphics().drawImage(diseaseFromFile, 0, 0, null);
 							convertedHighlight.getGraphics().drawImage(highlightFromFile, 0, 0, null);
 							
@@ -239,40 +244,47 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 	
 	@Override
 	public void paintComponent(Graphics g) {
+		if (lastUpdate != 0) {
+			fps = (fps * 20 + 1.0 / ((System.nanoTime() - lastUpdate)/1000000000.0))/21.0;
+		}
+		lastUpdate = System.nanoTime();
+		
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		
 		g.drawImage(_map, 0, 0, null);
 		
-		//if (!_chooseMode) {
-			for (Map.Entry<Integer, BufferedImage> e : _diseaseOverlays.entrySet()) {
-				Region r = _world.getRegion(e.getKey());
-				float percentInfected = 0f;
-				if (r != null) {
-					try {
-						percentInfected = ((float)r.getInfected().get(_disease) + (float)r.getKilled().get(_disease)) / (float)r.getPopulation();
-					} catch (IndexOutOfBoundsException e1) {
-						percentInfected = 0f;
-					}
-					if (percentInfected > 0f && percentInfected < .2f) percentInfected = .2f;
+		for (Map.Entry<Integer, BufferedImage> e : _diseaseOverlays.entrySet()) {
+			Region r = _world.getRegion(e.getKey());
+			float percentInfected = 0f;
+			if (r != null) {
+				try {
+					percentInfected = ((float)r.getInfected().get(_disease) + (float)r.getKilled().get(_disease)) / (float)r.getPopulation();
+				} catch (IndexOutOfBoundsException e1) {
+					percentInfected = 0f;
 				}
-				if (percentInfected != _infected.get(e.getKey())) {
-					_composites.put(e.getKey(), AlphaComposite.getInstance(AlphaComposite.SRC_OVER, percentInfected/2.0f));
-					_infected.put(e.getKey(), percentInfected);
-				}
+				if (percentInfected > 0f && percentInfected < .2f) percentInfected = .2f;
+			}
+			if (percentInfected != _infected.get(e.getKey())) {
+				_composites.put(e.getKey(), AlphaComposite.getInstance(AlphaComposite.SRC_OVER, percentInfected/2.0f));
+				_infected.put(e.getKey(), percentInfected);
+			}
+			if (percentInfected > 0) {
 				g2.setComposite(_composites.get(e.getKey()));
 				g2.drawImage(e.getValue(), 0, 0, null);
-	
-				float highlight = _highlights.get(e.getKey());
+			}
+			
+			float highlight = _highlights.get(e.getKey());
+			if (highlight > 0) {
 				g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, highlight));
 				g2.drawImage(_highlightOverlays.get(e.getKey()), 0, 0, null);
-				if (e.getKey() == _hover)
-					_highlights.put(e.getKey(), Math.min(0.5f, highlight + 0.035f));
-				else
-					_highlights.put(e.getKey(), Math.max(0, highlight - 0.015f));
 			}
-		//}
+			if (e.getKey() == _hover)
+				_highlights.put(e.getKey(), Math.min(0.5f, highlight + 0.035f));
+			else
+				_highlights.put(e.getKey(), Math.max(0, highlight - 0.015f));
+		}
 			
 		if (_chooseMode) {
 			drawChoosePanel(g2);
@@ -284,16 +296,19 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 			drawInfoPanel(g2);
 		}
 		
-//		if (isValid(_hover)) {
-//			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .5f));
-//			g2.drawImage(_highlightOverlays.get(_hover), 0, 0, null);
-//		}
-		
 		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
+		
+		if (Settings.getBoolean(Settings.FPS)) {
+			g.setFont(Fonts.NORMAL_TEXT);
+			g.setColor(Colors.RED_TEXT);
+			g.drawString(String.format("FPS: %.0f", fps), 20, 40);
+		}
 		
 		for (MovingObject m : _objects) {
 			m.draw(g);
 		}
+		
+		_ml.paintComponent(g);
 	}
 	
 	public void addRandomPlane() {
@@ -342,9 +357,9 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 		}
 		g2.drawString(name, 5, getHeight() - 80);
 
-		g2.drawString(String.format("Infected: %d (%.2f%%)", infected, 100*(double)infected/(double)total), 15, getHeight() - 55);
-		g2.drawString(String.format("Dead: %d (%.2f%%)", dead, 100*(double)dead/(double)total), 15, getHeight() - 35);
-		g2.drawString(String.format("Total: %d", total), 15, getHeight() - 15);
+		g2.drawString(String.format("Infected: %s (%.2f%%)", NumberFormat.getInstance().format(infected), 100*(double)infected/(double)total), 15, getHeight() - 55);
+		g2.drawString(String.format("Dead: %s (%.2f%%)", NumberFormat.getInstance().format(dead), 100*(double)dead/(double)total), 15, getHeight() - 35);
+		g2.drawString(String.format("Total: %s", NumberFormat.getInstance().format(total)), 15, getHeight() - 15);
 		
 		if (airports > 0) {
 			g2.drawImage(Resources.getImage(Images.AIRPORT_OPEN_BIG), 220, getHeight() - 85, null);

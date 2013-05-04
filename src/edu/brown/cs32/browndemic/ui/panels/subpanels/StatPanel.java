@@ -75,6 +75,7 @@ public class StatPanel extends BrowndemicPanel {
 		_medicine = new JProgressBar(0,4);
 		JPanel medicine = createPanel("Medicine Resistance: ", _medicine);
 		
+		
 		Utils.setDefaultLook(_infectivity, _lethality, _visibility, _heat, _cold, _wet, _dry, _medicine);
 		
 		add(Box.createGlue());
