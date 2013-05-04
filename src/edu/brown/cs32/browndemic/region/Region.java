@@ -101,7 +101,7 @@ public class Region implements Serializable{
     public Region(int ID, String name, long population, List<Integer> landNeighbors,
             List<Integer> waterNeighbors, HashMap<Integer, Region> hash,
             int airports, int seaports, double wealth, double wet, double dry,
-            double heat, double cold, double med, ArrayList<NaturalDisaster> disasters) {
+            double heat, double cold, double med, List<NaturalDisaster> disasters) {
         _name = name;
         _ID = ID;
         _population = population;
@@ -121,7 +121,7 @@ public class Region implements Serializable{
         _rand = new Random();
         _remInf = 0;
         _remDead = 0;
-        _disasters = disasters;
+        _disasters = new ArrayList<NaturalDisaster>(disasters);
     }
 
     /**
@@ -465,11 +465,17 @@ public class Region implements Serializable{
      * prompts a natural disaster in this region
      * @param intensity
      */
-    public void naturalDisaster() {
-        String news = "";
-        
-        _news.add(news);
-    }
+//    public void naturalDisaster() {
+//        NaturalDisaster dis;
+//        if(_rand.nextInt(_disasters.size()*2) == 0){
+//            dis = _disasters.get(_disasters.size() - 1);
+//            String news = "A " + dis.getName() + " has hit " + _name + ".";
+//            _news.add(news);
+//            
+//        }
+//        
+//        _news.add(news);
+//    }
 
     /**
      * gets the ArrayList of all air/sea transmissions
