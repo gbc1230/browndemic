@@ -11,6 +11,7 @@ import edu.brown.cs32.browndemic.world.ServerWorld;
  * @author Graham
  */
 public class CollectDiseases implements GameData{
+	private static final long serialVersionUID = 4428289060200550669L;
 	
 	//the id in the game of this disease
 	private int _id;

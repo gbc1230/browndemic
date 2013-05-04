@@ -3,15 +3,15 @@
  * and open the template in the editor.
  */
 package edu.brown.cs32.browndemic.network;
-import java.io.Serializable;
 
 /**
  *
  * @author Graham
  */
 public class PerkInput implements GameData{
-    
-    //which disease this perk is for and the perk id to deal with
+	private static final long serialVersionUID = -419869967897788650L;
+	
+	//which disease this perk is for and the perk id to deal with
     private int _diseaseID, _perkID;
     //whether this is a buy or sell
     private boolean _buy;

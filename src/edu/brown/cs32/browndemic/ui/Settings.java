@@ -15,6 +15,7 @@ public class Settings {
 	public static final String CACHING = "caching";
 	public static final String NAME = "name";
 	public static final String PORT = "port";
+	public static final String FPS = "fps";
 	
 	private static final int DEFAULT_PORT = 6000;
 
@@ -33,6 +34,10 @@ public class Settings {
 
 		if (!_booleans.containsKey(CACHING)) {
 			bw.write(String.format("%s=%s", CACHING, "true"));
+			bw.newLine();
+		}
+		if (!_booleans.containsKey(FPS)) {
+			bw.write(String.format("%s=%s", FPS, "false"));
 			bw.newLine();
 		}
 		if (!_settings.containsKey(NAME)) {
@@ -54,7 +59,7 @@ public class Settings {
 		while ((line = br.readLine()) != null) {
 			String[] split = line.split("=");
 			if (split.length != 2) continue;
-			if (split[0].equals(CACHING) && (split[1].toLowerCase().equals("true") || split[1].toLowerCase().equals("false"))) {
+			if ((split[0].equals(CACHING) || split[0].equals(FPS)) && (split[1].toLowerCase().equals("true") || split[1].toLowerCase().equals("false"))) {
 				_booleans.put(split[0], Boolean.parseBoolean(split[1]));
 			} else if (split[0].equals(PORT)) {
 				int val;

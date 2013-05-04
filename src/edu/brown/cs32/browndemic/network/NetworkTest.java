@@ -4,15 +4,15 @@
  */
 
 package edu.brown.cs32.browndemic.network;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 import edu.brown.cs32.browndemic.disease.Bacteria;
+import edu.brown.cs32.browndemic.disease.Virus;
 import edu.brown.cs32.browndemic.world.ClientWorld;
 import edu.brown.cs32.browndemic.world.ServerWorld;
 import edu.brown.cs32.browndemic.world.WorldMaker;
-import edu.brown.cs32.browndemic.disease.Virus;
-import edu.brown.cs32.browndemic.region.Region;
-import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Test class for my object sending 

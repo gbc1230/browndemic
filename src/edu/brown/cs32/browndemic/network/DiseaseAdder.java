@@ -10,8 +10,9 @@ import edu.brown.cs32.browndemic.disease.Disease;
  * @author Graham
  */
 public class DiseaseAdder implements GameData{
-    
-    private Disease _disease;
+	private static final long serialVersionUID = 8688855284835580572L;
+	
+	private Disease _disease;
     
     public DiseaseAdder(Disease d){
         _disease = d;

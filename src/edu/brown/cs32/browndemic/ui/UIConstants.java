@@ -81,7 +81,9 @@ public class UIConstants {
 		public static final String CHAT_TOOLTIP = "Press enter to send chat message";
 		public static final String SETTINGS = "Settings";
 		public static final String SETTINGS_CACHING = "Caching Enabled";
+		public static final String SETTINGS_FPS = "Show FPS";
 		public static final String INFO_INFECTED = "Infected: ";
+		public static final String INFO_HEALTHY = "Healthy: ";
 		public static final String INFO_DEAD = "Dead: ";
 		public static final String INFO_POPULATION = "Population: ";
 		public static final String MULTIPLAYER_LOBBY = "Multiplayer Lobby";
@@ -140,6 +142,8 @@ public class UIConstants {
 		public static final String SEAPORT_CLOSED = IMAGE_PATH + "seaport_closed.png";
 		public static final String SEAPORT_OPEN_BIG = IMAGE_PATH + "seaport_open_big.png";
 		public static final String SEAPORT_CLOSED_BIG = IMAGE_PATH + "seaport_closed_big.png";
+		public static final String DISEASE = IMAGE_PATH + "disease_placeholder.png";
+		public static final String DISEASE_SELECTED = IMAGE_PATH + "disease_placeholder_selected.png";
 		
 		/*
 		 * Images that should be loaded when the program starts.
@@ -182,6 +186,8 @@ public class UIConstants {
 			SEAPORT_CLOSED,
 			SEAPORT_OPEN_BIG,
 			SEAPORT_CLOSED_BIG,
+			DISEASE,
+			DISEASE_SELECTED
 		};
 		
 	}

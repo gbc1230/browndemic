@@ -71,9 +71,9 @@ public abstract class Disease implements Serializable{
     /**
      * addPoint() gives this Disease another point
      */
-    public void addPoint(){
+    public void addPoints(int points){
      
-      this._points++;
+      this._points+= points;
       
     }
     

@@ -27,7 +27,7 @@ public class SettingsMenu extends UIPanel implements ItemListener, DocumentListe
 
 	private static final long serialVersionUID = 5953169089564273910L;
 	
-	private JCheckBox _caching;
+	private JCheckBox _caching, _fps;
 	private JTextField _name, _port;
 	
 	public SettingsMenu() {
@@ -38,7 +38,7 @@ public class SettingsMenu extends UIPanel implements ItemListener, DocumentListe
 	@Override
 	protected void makeUI() {
 		super.makeUI();
-		
+
 		_caching = new JCheckBox(Strings.SETTINGS_CACHING, Settings.getBoolean(Settings.CACHING));
 		_caching.setBackground(Colors.TRANSPARENT);
 		_caching.setForeground(Colors.RED_TEXT);
@@ -46,6 +46,14 @@ public class SettingsMenu extends UIPanel implements ItemListener, DocumentListe
 		_caching.setAlignmentX(Component.CENTER_ALIGNMENT);
 		_caching.addItemListener(this);
 		_caching.setOpaque(false);
+		
+		_fps = new JCheckBox(Strings.SETTINGS_FPS, Settings.getBoolean(Settings.FPS));
+		_fps.setBackground(Colors.TRANSPARENT);
+		_fps.setForeground(Colors.RED_TEXT);
+		_fps.setFont(Fonts.BIG_TEXT);
+		_fps.setAlignmentX(Component.CENTER_ALIGNMENT);
+		_fps.addItemListener(this);
+		_fps.setOpaque(false);
 		
 		JPanel name = new JPanel();
 		name.setLayout(new BoxLayout(name, BoxLayout.X_AXIS));
@@ -98,6 +106,7 @@ public class SettingsMenu extends UIPanel implements ItemListener, DocumentListe
 
 		add(Box.createGlue());
 		add(_caching);
+		add(_fps);
 		add(name);
 		add(port);
 		add(Box.createGlue());
@@ -118,6 +127,8 @@ public class SettingsMenu extends UIPanel implements ItemListener, DocumentListe
 		boolean selected = e.getStateChange() == ItemEvent.SELECTED;
 		if (e.getItemSelectable() == _caching) {
 			Settings.set(Settings.CACHING, selected);
+		} else if (e.getItemSelectable() == _fps) {
+			Settings.set(Settings.FPS, selected);
 		}
 	}
 

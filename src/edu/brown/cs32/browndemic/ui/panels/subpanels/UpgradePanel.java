@@ -1,42 +1,41 @@
 package edu.brown.cs32.browndemic.ui.panels.subpanels;
 
 import java.awt.Dimension;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.DefaultListModel;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.ListSelectionModel;
+import javax.swing.JTabbedPane;
 import javax.swing.Timer;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
+import javax.swing.UIManager;
 
 import edu.brown.cs32.browndemic.disease.Disease;
 import edu.brown.cs32.browndemic.disease.Perk;
 import edu.brown.cs32.browndemic.ui.UIConstants.Colors;
 import edu.brown.cs32.browndemic.ui.UIConstants.Fonts;
 import edu.brown.cs32.browndemic.ui.UIConstants.UI;
+import edu.brown.cs32.browndemic.ui.Utils;
 import edu.brown.cs32.browndemic.ui.components.HoverLabel;
 import edu.brown.cs32.browndemic.ui.panels.BrowndemicPanel;
 
-public class UpgradePanel extends BrowndemicPanel implements ListSelectionListener {
+public class UpgradePanel extends BrowndemicPanel {
 
 	private static final long serialVersionUID = 687716354790239279L;
 	private Disease _disease;
-	private DefaultListModel<Perk> _perks = new DefaultListModel<>();
-	private JList<Perk> _perkList;
 	private List<Perk> _availCopy;
 	private List<Perk> _ownedCopy;
 	private JLabel _perkName, _perkInfo, _points, _buysell, _addPoint;
 	private Timer _timer;
+	private PerkList _owned, _available;
+	private Perk _selected;
 	
 	public UpgradePanel(Disease d) {
 		super();
@@ -54,21 +53,45 @@ public class UpgradePanel extends BrowndemicPanel implements ListSelectionListen
 	
 	private void makeUI() {
 		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-		setBackground(Colors.MENU_BACKGROUND);
-		//setPreferredSize(new Dimension((int)(UI.WIDTH/1.5), UI.CONTENT_HEIGHT));
-		//setMinimumSize(new Dimension((int)(UI.WIDTH/1.5), 0));
-		//setMaximumSize(new Dimension((int)(UI.WIDTH/1.5), UI.CONTENT_HEIGHT));
+		setBackground(Colors.TRANSPARENT);
+		setOpaque(false);
 		
-		_perkList = new JList<>(_perks);
-		_perkList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		_perkList.setLayoutOrientation(JList.VERTICAL);
-		_perkList.addListSelectionListener(this);
-		_perkList.setBackground(Colors.MENU_BACKGROUND);
-		_perkList.setForeground(Colors.RED_TEXT);
-		_perkList.setFont(Fonts.NORMAL_TEXT);
+//		_perkList = new JList<>(_perks);
+//		_perkList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+//		_perkList.setLayoutOrientation(JList.VERTICAL);
+//		_perkList.addListSelectionListener(this);
+//		_perkList.setBackground(Colors.MENU_BACKGROUND);
+//		_perkList.setForeground(Colors.RED_TEXT);
+//		_perkList.setFont(Fonts.NORMAL_TEXT);
+
+		_owned = new PerkList(new ArrayList<Perk>(), this);
+		_owned.setBorder(BorderFactory.createLineBorder(Colors.RED_TEXT, 2));
+		_available = new PerkList(new ArrayList<Perk>(), this);
+		_available.setBorder(BorderFactory.createLineBorder(Colors.RED_TEXT, 2));
 		
-		JScrollPane list = new JScrollPane(_perkList);
-		add(list);
+		UIManager.put("TabbedPane.selected", Colors.MENU_BACKGROUND);
+		UIManager.put("TabbedPane.focus", Colors.MENU_BACKGROUND);
+		UIManager.put("TabbedPane.selectHighlight", Colors.MENU_BACKGROUND);
+		UIManager.put("TabbedPane.shadow", Colors.MENU_BACKGROUND);
+		UIManager.put("TabbedPane.darkShadow", Colors.MENU_BACKGROUND);
+		UIManager.put("TabbedPane.selected", Colors.MENU_BACKGROUND);
+		UIManager.put("TabbedPane.borderHighlightColor", Colors.MENU_BACKGROUND);
+		UIManager.put("TabbedPane.background", Colors.MENU_BACKGROUND);
+		UIManager.put("TabbedPane.unselectedBackground", Colors.MENU_BACKGROUND);
+		UIManager.put("TabbedPane.light", Colors.RED_TEXT);
+		UIManager.put("TabbedPane.contentBorderInsets", new Insets(0, 0, 0, 0));
+		
+		JTabbedPane perks = new JTabbedPane();
+		perks.setFont(Fonts.TITLE_BAR);
+		perks.setForeground(Colors.RED_TEXT);
+		perks.addTab("Owned", _owned);
+		perks.addTab("Available", _available);
+		Utils.setDefaultLook(perks);
+		
+		add(perks);
+		
+		//JScrollPane list = new JScrollPane(_perkList);
+		//add(list);
 		
 		JPanel info = new JPanel();
 		info.setLayout(new BoxLayout(info, BoxLayout.Y_AXIS));
@@ -112,56 +135,54 @@ public class UpgradePanel extends BrowndemicPanel implements ListSelectionListen
 		if (!_disease.getAvailablePerks().equals(_availCopy) || !_disease.getOwnedPerks().equals(_ownedCopy)) {
 			_availCopy = new ArrayList<>(_disease.getAvailablePerks());
 			_ownedCopy = new ArrayList<>(_disease.getOwnedPerks());
-			_perks.clear();
-			for (Perk p : _ownedCopy) {
-				_perks.addElement(p);
-			}
+//			_perks.clear();
+//			for (Perk p : _ownedCopy) {
+//				_perks.addElement(p);
+//			}
+//			for (Perk p : _availCopy) {
+//				_perks.addElement(p);
+//			}
+			_owned.setList(_ownedCopy);
+			List<Perk> _tempList = new ArrayList<>();
 			for (Perk p : _availCopy) {
 				if (!_ownedCopy.contains(p))
-					_perks.addElement(p);
+					_tempList.add(p);
 			}
+			_available.setList(_tempList);
 		}
 	}
 	
 	private void setDescription(String description) {
 		_perkInfo.setText(String.format("<html><body style='width: %dpx'><font size=%dpt family='%s'>%s</font></body></html>", 200, Fonts.NORMAL_TEXT.getSize(), Fonts.NORMAL_TEXT.getFamily(),description));
 	}
-
-	@Override
-	public void valueChanged(ListSelectionEvent e) {
-		if (e.getValueIsAdjusting()) return;
-		try {
-			Perk selected = _perks.get(_perkList.getSelectedIndex());
-			_perkName.setText(selected.getName());
-			setDescription(selected.getDescription());
-			if (selected.isOwned()) {
-				_buysell.setText("SELL (" + selected.getSellPrice() + ")");
-			} else if (selected.isAvail()) {
-				_buysell.setText("BUY (" + selected.getCost() + ")");
-			} else {
-				_buysell.setText("");
-			}
-		} catch (IndexOutOfBoundsException e1) {
-			_perkName.setText("");
-			_perkInfo.setText("");
+	
+	public void setPerk(Perk p) {
+		_perkName.setText(p.getName());
+		setDescription(p.getDescription());
+		_selected = p;
+		if (p.isOwned()) {
+			_buysell.setText("SELL (" + p.getCumSellPrice() + ")");
+		} else if (p.isAvail()) {
+			_buysell.setText("BUY (" + p.getCost() + ")");
+		} else {
+			_buysell.setText("");
 		}
 	}
 	
 	@Override
 	public void mouseReleasedInside(MouseEvent e) {
 		if (e.getSource() == _buysell) {
-			if (_perkList.getSelectedIndex() >= 0) {
-				Perk selected = _perks.get(_perkList.getSelectedIndex());
-				if (selected.isOwned()) {
+			if (_selected != null) {
+				if (_selected.isOwned()) {
 					try {
-						_disease.sellPerk(selected.getID());
+						_disease.sellCumPerk(_selected.getID());
 						_buysell.setText("");
 					} catch (IllegalAccessException e1) {
 						// Don't sell it!
 					}
-				} else if (selected.isAvail()) {
+				} else if (_selected.isAvail()) {
 					try {
-						_disease.buyPerk(selected.getID());
+						_disease.buyPerk(_selected.getID());
 						_buysell.setText("");
 					} catch (IllegalAccessException e1) {
 						// Don't buy it!
@@ -170,7 +191,7 @@ public class UpgradePanel extends BrowndemicPanel implements ListSelectionListen
 			}
 		}
 		if (e.getSource() == _addPoint) {
-			_disease.addPoint();
+			_disease.addPoints(10);
 		}
 	}
 	

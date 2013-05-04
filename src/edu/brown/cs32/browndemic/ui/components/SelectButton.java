@@ -1,9 +1,9 @@
 package edu.brown.cs32.browndemic.ui.components;
 
 import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
@@ -14,23 +14,24 @@ import edu.brown.cs32.browndemic.ui.actions.Action;
 
 public class SelectButton extends JLabel implements MouseListener {
 	private static final long serialVersionUID = -413064734900079598L;
-	private ImageIcon _normal, _selected;
-	private boolean _isSelected;
+	protected ImageIcon _normal, _selected;
+	protected boolean _isSelected;
 	
 	private ArrayList<Action> _selectActions = new ArrayList<>();
 	
-	public SelectButton(BufferedImage normal, BufferedImage selected) {
+	public SelectButton(Image normal, Image selected) {
 		super();
 		_normal = new ImageIcon(normal);
 		_selected = new ImageIcon(selected);
 		_isSelected = false;
 		setIcon(_normal);
-		setPreferredSize(new Dimension(normal.getWidth(), normal.getHeight()));
+		setPreferredSize(new Dimension(normal.getWidth(null), normal.getHeight(null)));
 		addMouseListener(this);
 	}
 	
-	public void addOnSelectAction(Action a) {
+	public SelectButton addOnSelectAction(Action a) {
 		_selectActions.add(a);
+		return this;
 	}
 	
 	public void setSelected(boolean b) {

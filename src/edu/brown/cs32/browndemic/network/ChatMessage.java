@@ -10,8 +10,9 @@ package edu.brown.cs32.browndemic.network;
  * @author Graham
  */
 public class ChatMessage implements GameData{
-    
-    //the message that this object carries
+	private static final long serialVersionUID = -5719873045901402495L;
+	
+	//the message that this object carries
     private String _message;
     
     public ChatMessage(String m){

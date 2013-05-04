@@ -9,9 +9,9 @@ package edu.brown.cs32.browndemic.network;
  * @author Graham
  */
 public class LobbyRemoval implements GameData{
+	private static final long serialVersionUID = -6020080518063992152L;
 
-    
-    public LobbyRemoval(){
+	public LobbyRemoval(){
     }
     
     @Override

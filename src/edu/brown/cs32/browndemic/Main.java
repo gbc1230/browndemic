@@ -17,7 +17,13 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args){
-        new BrowndemicFrame();
+		if (!System.getProperty("os.name").startsWith("Windows"))
+			System.setProperty("sun.java2d.opengl", "true");
+		System.setProperty("sun.java2d.ddscale", "true");
+		System.setProperty("sun.java2d.translaccel", "true");
+		System.setProperty("sun.java2d.ddforcevram", "true");
+		System.setProperty("sun.java2d.accthreshold", "0");
+		new BrowndemicFrame();
     }
 
 }

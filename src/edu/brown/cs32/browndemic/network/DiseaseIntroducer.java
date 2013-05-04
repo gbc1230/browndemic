@@ -9,8 +9,10 @@ package edu.brown.cs32.browndemic.network;
  * @author Graham
  */
 public class DiseaseIntroducer implements GameData{
-    
-    private int _region;
+	
+	private static final long serialVersionUID = 502899820749208547L;
+	
+	private int _region;
     private int _disease;
     
     public DiseaseIntroducer(int r, int d){

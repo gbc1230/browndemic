@@ -161,7 +161,12 @@ public class BrowndemicFrame extends JFrame {
 	}
 	
 	public static void main(String[] args) {
-		System.setProperty("sun.java2d.opengl", "true");
+		if (!System.getProperty("os.name").startsWith("Windows"))
+			System.setProperty("sun.java2d.opengl", "true");
+		System.setProperty("sun.java2d.ddscale", "true");
+		System.setProperty("sun.java2d.translaccel", "true");
+		System.setProperty("sun.java2d.ddforcevram", "true");
+		System.setProperty("sun.java2d.accthreshold", "0");
 		new BrowndemicFrame();
 	}
 }

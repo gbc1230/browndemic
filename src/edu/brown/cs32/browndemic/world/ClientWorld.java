@@ -89,8 +89,8 @@ public class ClientWorld implements ChatServer, World{
         _handler.addMessage(msg);
     }
     
-    public void getDisconnect(int id){
-    	String dc = "Player " + id + " has disconnected.";
+    public void getDisconnect(String name, int id){
+    	String dc = name + " has disconnected.";
     	_handler.addMessage(dc);
     	if (id < _diseaseID)
     		_diseaseID--;

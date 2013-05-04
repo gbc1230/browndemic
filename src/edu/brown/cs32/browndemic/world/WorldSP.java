@@ -16,6 +16,7 @@ public class WorldSP extends MainWorld{
         super();
     }
         
+    //when the user picks a disease
     @Override
     public void changeDiseasesPicked(int change){
         _numDiseasesPicked += change;
@@ -32,13 +33,7 @@ public class WorldSP extends MainWorld{
     }
     
     public void start(){
-        for (int i = 0; i < _diseases.size(); i++){
-            _cures.add(0L);
-            _kills.add(0L);
-            _infects.add(0L);
-            _sent.add(false);
-            _cured.add(false);
-        }
+    	setupDiseases();
         for (Region r : _regions){
             _population += r.getPopulation();
             r.setNumDiseases(_diseases.size());
@@ -47,5 +42,51 @@ public class WorldSP extends MainWorld{
         _paused = false;
         _started = true;
         new Thread(this).start();
+    }
+    
+
+    /**
+     * Runs the game
+     */
+    @Override
+    public void run(){
+        System.out.println("begin the loop");
+        int i = 0;
+        while(_numRegionsPicked < _diseases.size()){
+            try{
+                Thread.sleep(1);
+            }
+            catch(Exception e){
+                
+            }
+        }
+        System.out.println("starting game");
+        while (!_gameOver){
+            if (!_paused){
+                long start = System.currentTimeMillis();
+                update();
+                if (allCured()){
+                    _gameOver = true;
+                    break;
+                }
+                else if (allKilled()){
+                    crownWinners();
+                    _gameOver = true;
+                    break;
+                }
+                long end = System.currentTimeMillis();
+                long offset = end - start;
+                try{
+                	if (offset < _waitTime)
+                		Thread.sleep(_waitTime - offset);
+                	else
+                		System.out.println("Offset of " + offset + " was higher than " +
+                				"waitTime of " + _waitTime);
+                }
+                catch(InterruptedException e){
+                    System.out.println("Couldn't sleep...");
+                }
+            }
+        }
     }
 }

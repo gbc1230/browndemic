@@ -30,6 +30,7 @@ public class GameClient implements Runnable{
     public GameClient(String host, int port, ClientWorld w) throws IOException {
         _socket = new Socket(host, port);
         _output = new ObjectOutputStream(_socket.getOutputStream());
+        _output.flush();
         _client = new GameClientThread(this, _socket);
         _world = w;
         _thread = new Thread(this);
@@ -54,6 +55,8 @@ public class GameClient implements Runnable{
                 }
             }
             catch(IOException e){
+            	System.out.println("Client side problem:");
+            	e.printStackTrace();
                 stop();
                 break;
             }
@@ -76,7 +79,7 @@ public class GameClient implements Runnable{
         }
         else if (id.equals("DC")){
         	DCMessage dc = (DCMessage)msg;
-        	_world.getDisconnect(dc.getPlayerID());
+        	_world.getDisconnect(dc.getName(), dc.getPlayerID());
         }
         else if (id.equals("LS")){
             LobbySender ls = (LobbySender)msg;
@@ -88,6 +91,7 @@ public class GameClient implements Runnable{
             _world.sendDisease(cd.getDiseaseID(), cd.getWorld());
         }
         else if (id.equals("H")){
+        	System.out.println("got an H");
         	stop();
         }
     }
