@@ -48,7 +48,7 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 
 	private static final long serialVersionUID = -4481136165457141240L;
 	
-	private static final int TICKS_FOR_UPDATE = 10;
+	private static final int TICKS_FOR_UPDATE = 0;
 	private static final int MAX_FPS = 60;
 	
 	private World _world;
@@ -85,6 +85,7 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 		setPreferredSize(new Dimension(map.getWidth(), map.getHeight()));
 		setMaximumSize(new Dimension(map.getWidth(), map.getHeight()));
 		setMinimumSize(new Dimension(map.getWidth(), map.getHeight()));
+		setDoubleBuffered(true);
 		_regionCache = gc.createCompatibleImage(map.getWidth(), map.getHeight(), Transparency.TRANSLUCENT);
 		_timer = new Timer(1000/MAX_FPS, new RepaintListener());
 		_timer.start();
@@ -365,14 +366,14 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 	private void drawInfoPanel(Graphics2D g2) {
 		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .8f));
 		g2.setColor(Color.BLACK);
-		g2.fillRect(0, getHeight() - 100, 275, 100);
+		g2.fillRect(0, getHeight() - 140, 295, 140);
 
 		g2.setColor(Colors.RED_TEXT);
 		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
 		g2.setFont(Fonts.NORMAL_TEXT);
 		Region r = _world.getRegion(_selected);
 		String name = "";
-		long infected = 0, dead = 0, total = 1;
+		long infected = 0, dead = 0, total = 1, healthy = 0, cured = 0;
 		long airports = 0, seaports = 0;
 		
 		if (r != null) {
@@ -381,25 +382,30 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 				infected += l;
 			for (long l : r.getKilled())
 				dead += l;
+			for (long l : r.getCured())
+				cured += l;
+			healthy = r.getHealthy();
 			total = r.getPopulation();
 			airports = r.getAir();
 			seaports = r.getSea();
 		}
-		g2.drawString(name, 5, getHeight() - 80);
-
-		g2.drawString(String.format("Infected: %s (%.2f%%)", NumberFormat.getInstance().format(infected), 100*(double)infected/(double)total), 15, getHeight() - 55);
-		g2.drawString(String.format("Dead: %s (%.2f%%)", NumberFormat.getInstance().format(dead), 100*(double)dead/(double)total), 15, getHeight() - 35);
+		g2.drawString(name, 5, getHeight() - 120);
+		
+		g2.drawString(String.format("Healthy: %s (%.2f%%)", NumberFormat.getInstance().format(healthy), 100*(double)healthy/(double)total), 15, getHeight() - 95);
+		g2.drawString(String.format("Infected: %s (%.2f%%)", NumberFormat.getInstance().format(infected), 100*(double)infected/(double)total), 15, getHeight() - 75);
+		g2.drawString(String.format("Dead: %s (%.2f%%)", NumberFormat.getInstance().format(dead), 100*(double)dead/(double)total), 15, getHeight() - 55);
+		g2.drawString(String.format("Cured: %s (%.2f%%)", NumberFormat.getInstance().format(cured), 100*(double)cured/(double)total), 15, getHeight() - 35);
 		g2.drawString(String.format("Total: %s", NumberFormat.getInstance().format(total)), 15, getHeight() - 15);
 		
 		if (airports > 0) {
-			g2.drawImage(Resources.getImage(Images.AIRPORT_OPEN_BIG), 220, getHeight() - 85, null);
+			g2.drawImage(Resources.getImage(Images.AIRPORT_OPEN_BIG), 260, getHeight() - 85, null);
 		} else {
-			g2.drawImage(Resources.getImage(Images.AIRPORT_CLOSED_BIG), 220, getHeight() - 85, null);
+			g2.drawImage(Resources.getImage(Images.AIRPORT_CLOSED_BIG), 260, getHeight() - 85, null);
 		}
 		if (seaports > 0) {
-			g2.drawImage(Resources.getImage(Images.SEAPORT_OPEN_BIG), 220, getHeight() - 45, null);
+			g2.drawImage(Resources.getImage(Images.SEAPORT_OPEN_BIG), 260, getHeight() - 45, null);
 		} else {
-			g2.drawImage(Resources.getImage(Images.SEAPORT_CLOSED_BIG), 220, getHeight() - 45, null);
+			g2.drawImage(Resources.getImage(Images.SEAPORT_CLOSED_BIG), 260, getHeight() - 45, null);
 		}
 	}
 	

@@ -31,6 +31,14 @@ public class MarqueeLabel extends JComponent {
 			if (_current == null) return;
 			_currentWidth = fm.stringWidth(_current);
 			_currentX = _x + _width;
+		} else if (!_queue.isEmpty()) {
+			int right = _width -  (_currentX + _currentWidth);
+			String spaces = "        ";
+			while (fm.stringWidth(spaces) < right) {
+				spaces += " ";
+			}
+			_current += spaces + _queue.poll();
+			_currentWidth = fm.stringWidth(_current);
 		}
 		_currentX -= SPEED;
 		if (_currentX < _x - _currentWidth) {

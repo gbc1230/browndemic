@@ -142,6 +142,7 @@ public class RegionPanel extends BrowndemicPanel implements ListSelectionListene
 		tables.add(dead);
 		
 		JScrollPane scroll = new JScrollPane(tables, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scroll.getVerticalScrollBar().setUnitIncrement(16);
 		
 		add(scroll);
 	}

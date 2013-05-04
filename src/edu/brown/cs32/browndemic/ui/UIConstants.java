@@ -86,6 +86,7 @@ public class UIConstants {
 		public static final String INFO_HEALTHY = "Healthy: ";
 		public static final String INFO_DEAD = "Dead: ";
 		public static final String INFO_POPULATION = "Population: ";
+		public static final String INFO_CURED = "Cure Progress: ";
 		public static final String MULTIPLAYER_LOBBY = "Multiplayer Lobby";
 		public static final String SETTINGS_MULTIPLAYER_NAME = "Multiplayer Name: ";
 	}

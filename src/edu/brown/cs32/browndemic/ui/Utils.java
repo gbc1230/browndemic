@@ -41,4 +41,14 @@ public class Utils {
 				| IllegalAccessException | UnsupportedLookAndFeelException e1) {
 		}
 	}
+	
+	public static void setOSLook(Component... components) {
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+			for (Component c : components)
+				SwingUtilities.updateComponentTreeUI(c);
+		} catch (ClassNotFoundException | InstantiationException
+				| IllegalAccessException | UnsupportedLookAndFeelException e) {
+		}
+	}
 }

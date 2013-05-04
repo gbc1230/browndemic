@@ -25,7 +25,7 @@ public class InformationBar extends BrowndemicPanel {
 	private int _disease;
 	private Timer _timer;
 	
-	private JLabel infected, dead, total, healthy; 
+	private JLabel infected, dead, total, healthy, cureProgress; 
 
 	public InformationBar(World w, int disease) {
 		super();
@@ -68,6 +68,12 @@ public class InformationBar extends BrowndemicPanel {
 		healthy.setBackground(Colors.MENU_BACKGROUND);
 		healthy.setFont(Fonts.NORMAL_TEXT);
 		
+		cureProgress = new JLabel();
+		cureProgress.setForeground(Colors.RED_TEXT);
+		cureProgress.setBackground(Colors.MENU_BACKGROUND);
+		cureProgress.setFont(Fonts.NORMAL_TEXT);
+		
+		
 		add(Box.createGlue());
 		add(healthy);
 		add(Box.createGlue());
@@ -76,6 +82,8 @@ public class InformationBar extends BrowndemicPanel {
 		add(dead);
 		add(Box.createGlue());
 		add(total);
+		add(Box.createGlue());
+		add(cureProgress);
 		add(Box.createGlue());
 		
 		updateInfo();
@@ -86,6 +94,11 @@ public class InformationBar extends BrowndemicPanel {
 		infected.setText(Strings.INFO_INFECTED + NumberFormat.getInstance().format(_world.getInfected()));
 		dead.setText(Strings.INFO_DEAD + NumberFormat.getInstance().format(_world.getDead()));
 		total.setText(Strings.INFO_POPULATION + NumberFormat.getInstance().format(_world.getPopulation()));
+		try {
+			cureProgress.setText(String.format("%s%.2f", Strings.INFO_CURED, _world.getCurePercentage(_disease)));
+		} catch (IndexOutOfBoundsException e) {
+			cureProgress.setText(Strings.INFO_CURED);
+		}
 	}
 	
 	
