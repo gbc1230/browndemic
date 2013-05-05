@@ -113,10 +113,15 @@ public class ServerWorld extends MainWorld{
         _outData.add(new LobbySender(_lobby));
     }
     
-    public void removeLobbyMember(int r){
-        _lobby.remove(r);
-        _outData.add(new LobbySender(_lobby, r));
-        System.out.println("Lobby ready? " + allReady());
+    public void removePlayer(int r){
+    	if (_started){
+    		
+    	}
+    	else{
+	        _lobby.remove(r);
+	        _outData.add(new LobbySender(_lobby, r));
+	        System.out.println("Lobby ready? " + allReady());
+    	}
     }
     
     public void collectDiseases(){

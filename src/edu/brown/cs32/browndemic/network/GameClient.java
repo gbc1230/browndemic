@@ -69,28 +69,34 @@ public class GameClient implements Runnable{
      */
     public void handle(GameData msg){
         String id = msg.getID();
+        //received a new world
         if (id.equals("W")){
             WorldOutput wo = (WorldOutput)msg;
             ServerWorld w = wo.getWorld();
             _world.setWorld(w);
         }
+        //new chat message
         else if (id.equals("M")){
             ChatMessage m = (ChatMessage)msg;
             _world.acceptMessage(m.getMessage());
         }
+        //another player has disconnected
         else if (id.equals("DC")){
         	DCMessage dc = (DCMessage)msg;
         	_world.getDisconnect(dc.getName(), dc.getPlayerID());
         }
+        //new lobby update
         else if (id.equals("LS")){
             LobbySender ls = (LobbySender)msg;
             List<LobbyMember> lobby = ls.getLobby();
             _world.setLobby(lobby);
         }
+        //message from server to add diseases
         else if (id.equals("CD")){
         	CollectDiseases cd = (CollectDiseases)msg;
             _world.sendDisease(cd.getDiseaseID(), cd.getWorld());
         }
+        //host disconnect
         else if (id.equals("H")){
         	System.out.println("got an H");
         	stop();
