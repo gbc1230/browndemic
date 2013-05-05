@@ -348,6 +348,12 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 		}
 		
 		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
+
+		BufferedImage airportOpen = Resources.getImage(Images.AIRPORT_OPEN);
+		BufferedImage airportClosed = Resources.getImage(Images.AIRPORT_CLOSED);
+		for (Location l : _airports) {
+			g2.drawImage(airportOpen, (int)(l.x - airportOpen.getWidth()/2), (int)(l.y - airportOpen.getHeight()/2), null);
+		}
 		
 		if (Settings.getBoolean(Settings.FPS)) {
 			g.setFont(Fonts.NORMAL_TEXT);
@@ -359,12 +365,6 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 			m.draw(g);
 		}
 		_ml.paintComponent(g);
-		
-//		if (_ticksSinceUpdate >= TICKS_FOR_UPDATE) {
-//			_ticksSinceUpdate = 0;
-//		} else {
-//			_ticksSinceUpdate++;
-//		}
 	}
 	
 	public void addRandomPlane() {

@@ -50,6 +50,7 @@ public class UpgradePanel extends BrowndemicPanel {
 			}
 			
 		});
+		_timer.setInitialDelay(0);
 		_timer.start();
 	}
 	
@@ -57,14 +58,6 @@ public class UpgradePanel extends BrowndemicPanel {
 		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		setBackground(Colors.TRANSPARENT);
 		setOpaque(false);
-		
-//		_perkList = new JList<>(_perks);
-//		_perkList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-//		_perkList.setLayoutOrientation(JList.VERTICAL);
-//		_perkList.addListSelectionListener(this);
-//		_perkList.setBackground(Colors.MENU_BACKGROUND);
-//		_perkList.setForeground(Colors.RED_TEXT);
-//		_perkList.setFont(Fonts.NORMAL_TEXT);
 
 		_owned = new PerkList(new ArrayList<Perk>(), this);
 		JScrollPane owned = new JScrollPane(_owned, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -103,8 +96,15 @@ public class UpgradePanel extends BrowndemicPanel {
 		
 		add(perks);
 		
-		//JScrollPane list = new JScrollPane(_perkList);
-		//add(list);
+		JPanel infoContainer = new JPanel();
+		infoContainer.setLayout(new BoxLayout(infoContainer, BoxLayout.Y_AXIS));
+		infoContainer.setBackground(Colors.TRANSPARENT);
+		infoContainer.setOpaque(false);
+		infoContainer.setPreferredSize(new Dimension(250, 0));
+		infoContainer.setMinimumSize(new Dimension(250, 0));
+		infoContainer.setMaximumSize(new Dimension(250, UI.CONTENT_HEIGHT));
+		
+		infoContainer.add(Box.createRigidArea(new Dimension(0, 28)));
 		
 		JPanel info = new JPanel();
 		info.setLayout(new BoxLayout(info, BoxLayout.Y_AXIS));
@@ -112,6 +112,7 @@ public class UpgradePanel extends BrowndemicPanel {
 		info.setPreferredSize(new Dimension(250, 0));
 		info.setMinimumSize(new Dimension(250, 0));
 		info.setMaximumSize(new Dimension(250, UI.CONTENT_HEIGHT));
+		info.setBorder(BorderFactory.createMatteBorder(2, 0, 2, 0, Colors.RED_TEXT));
 		
 		_perkName = new JLabel();
 		_perkName.setFont(Fonts.TITLE_BAR);
@@ -140,7 +141,9 @@ public class UpgradePanel extends BrowndemicPanel {
 		info.add(_points);
 		info.add(_addPoint);
 		
-		add(info);
+		infoContainer.add(info);
+		
+		add(infoContainer);
 	}
 	
 	private void update() {
@@ -173,7 +176,7 @@ public class UpgradePanel extends BrowndemicPanel {
 		setDescription(p.getDescription());
 		_selected = p;
 		if (p.isOwned()) {
-			_buysell.setText("SELL (" + p.getCumSellPrice() + ")");
+			_buysell.setText("SELL");
 		} else if (p.isAvail()) {
 			_buysell.setText("BUY (" + p.getCost() + ")");
 		} else {
@@ -187,10 +190,36 @@ public class UpgradePanel extends BrowndemicPanel {
 			if (_selected != null) {
 				if (_selected.isOwned()) {
 					try {
-						_disease.sellCumPerk(_selected.getID());
-						setPerk(null);
+						List<Perk> soldPerks = _selected.getWillBeSold();
+						int val;
+						String losegain = (_selected.getCumSellPrice() > 0 ? "gain" : "lose");
+						if (soldPerks.isEmpty()) {
+							val = JOptionPane.showConfirmDialog(Utils.getParentFrame(this), 
+									String.format("Are you sure you want to sell '%s'?  You will %s %d points for selling this perk.",
+											_selected.getName(), losegain, Math.abs(_selected.getCumSellPrice())), 
+									"Confirm Sell", JOptionPane.YES_NO_OPTION);
+						} else {
+							String sell = "";
+							for (Perk p : soldPerks) {
+								sell += "\n" + p.getName();
+							}
+							sell.replaceFirst("\n", "");
+							val = JOptionPane.showConfirmDialog(Utils.getParentFrame(this), 
+									String.format("Are you sure you want to sell '%s'?" +
+											" The following perks that depend on '%s' will also be sold: \n" +
+											"%s\nYou will %s %d points for selling these perks.",
+											_selected.getName(), _selected.getName(), sell, losegain, Math.abs(_selected.getCumSellPrice())), 
+									"Confirm Sell", JOptionPane.YES_NO_OPTION);
+						}
+						if (val == JOptionPane.YES_OPTION) {
+							_disease.sellCumPerk(_selected.getID());
+							setPerk(null);
+						}
 					} catch (IllegalAccessException e1) {
-						// Don't sell it!
+						JOptionPane.showMessageDialog(Utils.getParentFrame(this), 
+								String.format("Could not buy perk '%s' because %d points are required and you currently have %d points.", 
+										_selected.getName(), _selected.getCumSellPrice(), _disease.getPoints()), 
+								"Not Enough Points!", JOptionPane.PLAIN_MESSAGE);
 					}
 				} else if (_selected.isAvail()) {
 					try {
