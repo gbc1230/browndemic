@@ -136,6 +136,10 @@ public class GameServer implements Runnable{
         	if (client != -1)
         		_world.removePlayer(client);
         }
+        else if (id.equals("NC")){
+        	NameChange nc = (NameChange)gd;
+        	_world.updateName(nc.getName(), client);
+        }
     }
 
     /**

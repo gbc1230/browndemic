@@ -56,7 +56,7 @@ public class PerkMaker{
             else if(fields[i].equals("Air Transmission")) airInd = i;
             else if(fields[i].equals("Previous")) prevInd = i;
             else if(fields[i].equals("Next")) nextInd = i;
-            else if(fields[i].equals("Image")) nextInd = i;
+            else if(fields[i].equals("Image")) imageInd = i;
             else throw new NoSuchFieldException();
 
         }

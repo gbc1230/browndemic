@@ -43,6 +43,10 @@ public class LobbyMember implements GameData{
         _ready = b;
     }
     
+    public void setName(String n){
+    	_name = n;
+    }
+    
     @Override
     public String toString(){
         return _name + ", " + _IP;

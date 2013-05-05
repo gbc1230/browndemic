@@ -124,6 +124,12 @@ public class ServerWorld extends MainWorld{
     	}
     }
     
+    public void updateName(String name, int client){
+    	LobbyMember lm = _lobby.get(client);
+    	lm.setName(name);
+    	_outData.add(new LobbySender(_lobby));
+    }
+    
     public void collectDiseases(){
     	for (int i = 0; i < _lobby.size(); i++){
     		_diseases.add(null);

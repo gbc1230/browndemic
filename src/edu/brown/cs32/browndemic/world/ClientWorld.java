@@ -58,7 +58,6 @@ public class ClientWorld implements ChatServer, World{
     }
     
     public void setLobby(List<LobbyMember> lobby){
-        System.out.println(_name + ": Got a new lobby: " + lobby);
         _lobby = lobby;
     }
     
@@ -262,6 +261,8 @@ public class ClientWorld implements ChatServer, World{
     
     public void setName(String name){
     	_name = name;
+    	NameChange nc = new NameChange(name);
+    	_output.add(nc);
     }
     
     //not used in multiplayer
