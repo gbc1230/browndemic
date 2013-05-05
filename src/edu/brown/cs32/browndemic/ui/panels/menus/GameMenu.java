@@ -100,7 +100,7 @@ public class GameMenu extends UIPanel {
 		bottom.setOpaque(false);
 		bottom.setLayout(new BoxLayout(bottom, BoxLayout.X_AXIS));
 		
-		bottom.add(_upgrade = new UpgradePanel(_world.getDiseases().get(_disease)));
+		bottom.add(_upgrade = new UpgradePanel(_world, _disease));
 
 		UIManager.put("TabbedPane.selected", Colors.MENU_BACKGROUND);
 		UIManager.put("TabbedPane.focus", Colors.MENU_BACKGROUND);

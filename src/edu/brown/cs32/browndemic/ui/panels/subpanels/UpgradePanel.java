@@ -19,7 +19,6 @@ import javax.swing.JTabbedPane;
 import javax.swing.Timer;
 import javax.swing.UIManager;
 
-import edu.brown.cs32.browndemic.disease.Disease;
 import edu.brown.cs32.browndemic.disease.Perk;
 import edu.brown.cs32.browndemic.ui.UIConstants.Colors;
 import edu.brown.cs32.browndemic.ui.UIConstants.Fonts;
@@ -27,21 +26,24 @@ import edu.brown.cs32.browndemic.ui.UIConstants.UI;
 import edu.brown.cs32.browndemic.ui.Utils;
 import edu.brown.cs32.browndemic.ui.components.HoverLabel;
 import edu.brown.cs32.browndemic.ui.panels.BrowndemicPanel;
+import edu.brown.cs32.browndemic.world.World;
 
 public class UpgradePanel extends BrowndemicPanel {
 
 	private static final long serialVersionUID = 687716354790239279L;
-	private Disease _disease;
+	private int _disease;
 	private List<Perk> _availCopy;
 	private List<Perk> _ownedCopy;
 	private JLabel _perkName, _perkInfo, _points, _buysell, _addPoint;
 	private Timer _timer;
 	private PerkList _owned, _available;
 	private Perk _selected;
+	private World _world;
 	
-	public UpgradePanel(Disease d) {
+	public UpgradePanel(World world, int disease) {
 		super();
-		_disease = d;
+		_disease = disease;
+		_world = world;
 		makeUI();
 		_timer = new Timer(1000/5, new ActionListener() {
 			@Override
@@ -130,7 +132,7 @@ public class UpgradePanel extends BrowndemicPanel {
 		_points = new JLabel();
 		_points.setFont(Fonts.TITLE_BAR);
 		_points.setForeground(Colors.RED_TEXT);
-		_points.setText("Points: " + _disease.getPoints());
+		_points.setText("Points: " + _world.getDisease(_disease).getPoints());
 		
 		info.add(_perkName);
 		info.add(Box.createRigidArea(new Dimension(0, 20)));
@@ -147,10 +149,10 @@ public class UpgradePanel extends BrowndemicPanel {
 	}
 	
 	private void update() {
-		_points.setText("Points: " + _disease.getPoints());
-		if (!_disease.getAvailablePerks().equals(_availCopy) || !_disease.getOwnedPerks().equals(_ownedCopy)) {
-			_availCopy = new ArrayList<>(_disease.getAvailablePerks());
-			_ownedCopy = new ArrayList<>(_disease.getOwnedPerks());
+		_points.setText("Points: " + _world.getDisease(_disease).getPoints());
+		if (!_world.getDisease(_disease).getAvailablePerks().equals(_availCopy) || !_world.getDisease(_disease).getOwnedPerks().equals(_ownedCopy)) {
+			_availCopy = new ArrayList<>(_world.getDisease(_disease).getAvailablePerks());
+			_ownedCopy = new ArrayList<>(_world.getDisease(_disease).getOwnedPerks());
 			_owned.setList(_ownedCopy);
 			List<Perk> _tempList = new ArrayList<>();
 			for (Perk p : _availCopy) {
@@ -212,30 +214,30 @@ public class UpgradePanel extends BrowndemicPanel {
 									"Confirm Sell", JOptionPane.YES_NO_OPTION);
 						}
 						if (val == JOptionPane.YES_OPTION) {
-							_disease.sellCumPerk(_selected.getID());
+							_world.getDisease(_disease).sellCumPerk(_selected.getID());
 							setPerk(null);
 						}
 					} catch (IllegalAccessException e1) {
 						JOptionPane.showMessageDialog(Utils.getParentFrame(this), 
 								String.format("Could not buy perk '%s' because %d points are required and you currently have %d points.", 
-										_selected.getName(), _selected.getCumSellPrice(), _disease.getPoints()), 
+										_selected.getName(), _selected.getCumSellPrice(), _world.getDisease(_disease).getPoints()), 
 								"Not Enough Points!", JOptionPane.PLAIN_MESSAGE);
 					}
 				} else if (_selected.isAvail()) {
 					try {
-						_disease.buyPerk(_selected.getID());
+						_world.getDisease(_disease).buyPerk(_selected.getID());
 						setPerk(null);
 					} catch (IllegalAccessException e1) {
 						JOptionPane.showMessageDialog(Utils.getParentFrame(this), 
 								String.format("Could not buy perk '%s' because %d points are required and you currently have %d points.", 
-										_selected.getName(), _selected.getCost(), _disease.getPoints()), 
+										_selected.getName(), _selected.getCost(), _world.getDisease(_disease).getPoints()), 
 								"Not Enough Points!", JOptionPane.PLAIN_MESSAGE);
 					}
 				}
 			}
 		}
 		if (e.getSource() == _addPoint) {
-			_disease.addPoints(10);
+			_world.getDisease(_disease).addPoints(10);
 		}
 	}
 	
