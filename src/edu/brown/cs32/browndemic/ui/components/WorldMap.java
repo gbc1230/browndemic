@@ -69,8 +69,13 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 	private MarqueeLabel _ml;
 	private Timer _timer;
 	private OverlayWorker _ow;
+	private Layer _layer = Layer.INFECTED;
 	
 	private static final double AIRPLANE_SPEED = 6.0;
+	
+	public enum Layer {
+		INFECTED, POPULATION
+	}
 	
 	public WorldMap(World _world2, BufferedImage map, BufferedImage regions, int disease, MarqueeLabel ml) {
 		super();
@@ -97,6 +102,28 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 		_chooseMode = chooseMode;
 	}
 	
+	public void setLayer(Layer l) {
+		_layer = l;
+	}
+	
+	private double getInfectedPercent(int id) {
+		Region r = _world.getRegion(id);
+		float percentInfected = 0f;
+		if (r != null) {
+			try {
+				percentInfected = ((float)r.getInfected().get(_disease) + (float)r.getKilled().get(_disease)) / (float)r.getPopulation();
+			} catch (IndexOutOfBoundsException e1) {
+				percentInfected = 0f;
+			}
+			if (percentInfected > 0f && percentInfected < .2f) percentInfected = .2f;
+		}
+		return 0;
+//		if (percentInfected != _infected.get(e.getKey())) {
+//			_composites.put(e.getKey(), AlphaComposite.getInstance(AlphaComposite.SRC_OVER, percentInfected/2.0f));
+//			_infected.put(e.getKey(), percentInfected);
+//		}
+	}
+	
 	private class OverlayWorker implements Runnable {
 		boolean running = true;
 		
@@ -112,7 +139,6 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 				cacheg2.setComposite(AlphaComposite.Clear);
 				cacheg2.fillRect(0, 0, _regionCache2.getWidth(), _regionCache2.getHeight());
 				for (Map.Entry<Integer, BufferedImage> e : _diseaseOverlays.entrySet()) {
-				
 					Region r = _world.getRegion(e.getKey());
 					float percentInfected = 0f;
 					if (r != null) {

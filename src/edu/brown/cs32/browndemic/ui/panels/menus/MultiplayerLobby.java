@@ -168,7 +168,7 @@ public class MultiplayerLobby extends UIPanel {
 	private class SelectAction implements Action {
 		
 		private SelectButton[] other;
-                private int id;
+        private int id;
 		
 		public SelectAction(int id, SelectButton... other) {
 			this.other = other;
