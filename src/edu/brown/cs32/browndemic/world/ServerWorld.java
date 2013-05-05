@@ -3,6 +3,7 @@
  * and open the template in the editor.
  */
 package edu.brown.cs32.browndemic.world;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
@@ -20,7 +21,7 @@ import edu.brown.cs32.browndemic.region.Region;
  *
  * @author Graham
  */
-public class ServerWorld extends MainWorld{
+public class ServerWorld extends MainWorld implements Serializable{
 	private static final long serialVersionUID = 1774845179387841713L;
 
 	//for sending copies of this world out
@@ -30,6 +31,9 @@ public class ServerWorld extends MainWorld{
     //the queue for sending out lobbies
     transient private Queue<GameData> _outData;
     
+    /**
+     * Basic constructor
+     */
     public ServerWorld(){
         super();
         _outWorlds = new ConcurrentLinkedQueue<>();
@@ -37,6 +41,9 @@ public class ServerWorld extends MainWorld{
         _outData = new ConcurrentLinkedQueue<>();
     }
     
+    /**
+     * One of the lobby members changes which disease they picked
+     */
     @Override
     public void changeDiseasesPicked(int picked){
         if (!_lobby.get(picked).isReady()){
@@ -46,6 +53,10 @@ public class ServerWorld extends MainWorld{
         System.out.println("Ready now? " + allReady());
     }
     
+    /**
+     * Tells me if everyone in the lobby has picked their disease
+     * @return boolean, ready or not
+     */
     public boolean allReady(){
         boolean ready = true;
         for (LobbyMember lm : _lobby){
@@ -65,7 +76,11 @@ public class ServerWorld extends MainWorld{
         return _outWorlds.poll();
     }
     
-    public GameData getNextLobby(){
+    /**
+     * Gives off data to send to clients
+     * @return GameData
+     */
+    public GameData getNextData(){
         return _outData.poll();
     }
     
@@ -199,4 +214,5 @@ public class ServerWorld extends MainWorld{
             }
         }
     }
+
 }

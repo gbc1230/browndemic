@@ -5,7 +5,6 @@
 
 package edu.brown.cs32.browndemic.world;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,7 +17,7 @@ import edu.brown.cs32.browndemic.region.RegionTransmission;
  *
  * @author gcarling
  */
-public abstract class MainWorld implements Serializable, World, Runnable{
+public abstract class MainWorld implements World, Runnable{
 
     //ArrayList of Regions
     protected List<Region> _regions;
@@ -63,12 +62,17 @@ public abstract class MainWorld implements Serializable, World, Runnable{
     //how many disease / starting regions have been picked
     protected int _numDiseasesPicked, _numRegionsPicked;
     
+    //finals for setting varios speeds
+    protected final long _SPEED1 = 333L;
+    protected final long _SPEED2 = 200L;
+    protected final long _SPEED3 = 100L;
+    
     //NOTE: each index of diseases, killed, cures refers to the same disease:
     //i.e. index 2 of each refers to the disease object, how many it has killed,
     //and how far its cure is, respectively
     
  
-    
+    //set everything up
     public MainWorld(){
         _regions = new ArrayList<>();
         _regIndex = new HashMap<>();
@@ -86,7 +90,7 @@ public abstract class MainWorld implements Serializable, World, Runnable{
         _dead = 0;
         _infected = 0;
         _gameOver = false;
-        _waitTime = 333L;
+        _waitTime = _SPEED1;
         _paused = true;
         _started = false;
         _cureTotal = 0L;
@@ -170,6 +174,8 @@ public abstract class MainWorld implements Serializable, World, Runnable{
         return _dead;
     }
     
+    //various accessors
+    
     @Override
     public long getInfected(int d){
         return _infects.get(d);
@@ -183,6 +189,11 @@ public abstract class MainWorld implements Serializable, World, Runnable{
     @Override
     public List<Region> getRegions(){
         return _regions;
+    }
+    
+    @Override
+    public Disease getDisease(int d){
+    	return _diseases.get(d);
     }
     
     @Override
@@ -205,6 +216,9 @@ public abstract class MainWorld implements Serializable, World, Runnable{
         return _cured;
     }
     
+    /**
+     * Current percentage to a cure
+     */
     @Override
     public double getCurePercentage(int d){
     	return ((double)_cures.get(d) / (double)_cureTotal) * 100.0;
@@ -215,15 +229,17 @@ public abstract class MainWorld implements Serializable, World, Runnable{
         return _news;
     }
     
+    //set the speed of the game (wait time between updates)
     public void setSpeed(int time){
         if (time == 1)
-            _waitTime = 333L;
+            _waitTime = _SPEED1;
         else if (time == 2)
-            _waitTime = 200L;
+            _waitTime = _SPEED2;
         else if (time == 3)
-            _waitTime = 100L;
+            _waitTime = _SPEED3;
     }
     
+    //tells me is all diseases have chosen (before the game starts)
     @Override
     public boolean allDiseasesPicked(){
         return _allDiseasesPicked;
@@ -241,6 +257,9 @@ public abstract class MainWorld implements Serializable, World, Runnable{
         _paused = false;
     }
     
+    /**
+     * For airplanes and stuff
+     */
     @Override
     public List<RegionTransmission> getTransmissions(){
         List<RegionTransmission> temp = new ArrayList<>();
@@ -249,11 +268,13 @@ public abstract class MainWorld implements Serializable, World, Runnable{
         return temp;
     }
     
+    //list of winner(s) (probably only one but list just in case)
     @Override
     public List<Integer> getWinners(){
         return _winners;
     }
     
+    //game over?
     @Override
     public boolean isGameOver(){
         return _gameOver;
@@ -320,12 +341,18 @@ public abstract class MainWorld implements Serializable, World, Runnable{
         _cures = cures;
     }
     
+    /**
+     * Update news events from regions
+     */
     public void updateNews(){
         for (Region r : _regions){
             _news.addAll(r.getNews());
         }
     }
     
+    /**
+     * Update transmissions from regions (planes and boats)
+     */
     public void updateTransmissions(){
         for (Region r : _regions){
             _transmissions.addAll(r.getTransmissions());
@@ -418,7 +445,9 @@ public abstract class MainWorld implements Serializable, World, Runnable{
         _winners = ans;
     }
     
-    //gives out points to each disease
+    /**
+     * gives out points to each disease
+     */
     private void givePoints(){
     	for (int i = 0; i < _diseases.size(); i++){
     		Disease d = _diseases.get(i);
@@ -430,21 +459,26 @@ public abstract class MainWorld implements Serializable, World, Runnable{
     			_benchMarks.set(i, bench*10);
     			bench = _benchMarks.get(i);
     		}
-    		if (change > bench){
+//    		System.out.println(newInf + " " + oldInf + " " + bench);
+    		if (change >= bench){
 	    		long val = change / bench;
 	    		for (int c = 0; c < val; c++){
-	    			int rand = (int)(Math.random() * 2);
-	    			if (rand == 0)
-                                    d.addPoints(1);
-	    			else 
-                                    d.addPoints(2);
+//	    			System.out.println("adding");
+//	    			int rand = (int)(Math.random() * 2);
+//	    			if (rand == 0)
+	    			d.addPoints(1);
+//	    			else 
+//                    	d.addPoints(2);
+//	    			System.out.println(d.getPoints());
 	    		}
 	    		_oldInf.set(i, oldInf + val * bench);
     		}
     	}
     }
     
-    //sets up disease related lists
+    /**
+     * Sets up disease related lists
+     */
     protected void setupDiseases(){
         for (int i = 0; i < _diseases.size(); i++){
             _cures.add(0L);
@@ -473,6 +507,9 @@ public abstract class MainWorld implements Serializable, World, Runnable{
         updateCured();
     }
     
+    /**
+     * Basic toString
+     */
     @Override
     public String toString(){
         StringBuilder ans = new StringBuilder();

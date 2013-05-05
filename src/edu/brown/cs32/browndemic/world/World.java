@@ -89,6 +89,9 @@ public interface World {
     //add a new disease 
     public void addDisease(Disease d);
     
+    //get a disease by id
+    public Disease getDisease(int d);
+    
     //tell this world that a user has picked or unpicked a disease when
     //choosing diseases 
     public void changeDiseasesPicked(int change);

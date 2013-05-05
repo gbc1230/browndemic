@@ -125,7 +125,8 @@ public class GameServer implements Runnable{
             _world.addLobbyMember(lm);
         }
         else if (id.equals("LR")){
-            _world.removeLobbyMember(client);
+        	if (client != -1)
+        		_world.removeLobbyMember(client);
         }
     }
 
@@ -167,7 +168,7 @@ public class GameServer implements Runnable{
         _clients.add(temp);
     }
     
-    public void stop(){
+    public synchronized void stop(){
     	try{
     		_server.close();
     		for (GameServerThread toKill : _clients){

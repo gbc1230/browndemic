@@ -152,6 +152,11 @@ public class ClientWorld implements ChatServer, World{
     }
     
     @Override
+    public Disease getDisease(int d){
+    	return _world.getDisease(d);
+    }
+    
+    @Override
     public List<Region> getRegions(){
         return _world.getRegions();
     }

@@ -117,6 +117,7 @@ public class MultiplayerMenu extends UIPanel implements MouseListener {
 	            new GameServer(sw, port);
 	            ClientWorld world = new ClientWorld(name);
 	            new GameClient("localhost", port, world);
+	            System.out.println(world);
             	Utils.getParentFrame(this).setPanel(new MultiplayerLobby(true, world, sw));
 	        } catch (BindException ex) {
 	            JOptionPane.showMessageDialog(this, "Could not listen on port " + port + ".  The port can be changed in the settings menu.", "Error", JOptionPane.ERROR_MESSAGE);

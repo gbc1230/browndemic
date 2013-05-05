@@ -47,6 +47,7 @@ public class MultiplayerLobby extends UIPanel {
 	
 	public MultiplayerLobby(boolean isHost, ClientWorld cli, ServerWorld ser) {
 		super();
+		System.out.println("constructing lobby");
 		_isHost = isHost;
         _thisWorld = cli;
         _serverWorld = ser;
@@ -132,7 +133,7 @@ public class MultiplayerLobby extends UIPanel {
 	
 	private void update() {
 		try{
-			if (!_lobby.equals(_thisWorld.getLobby())) {
+			if (_lobby == null || !_lobby.equals(_thisWorld.getLobby())) {
 				System.out.println("UPDATING LOBBY");
 				_lobby = _thisWorld.getLobby();
 				_players.removeAll();

@@ -32,7 +32,7 @@ public class InfoSender extends Thread{
     @Override
     public void run(){
         while (!_gameStarted){
-            GameData data = _world.getNextLobby();
+            GameData data = _world.getNextData();
             if (data == null)
                 continue;
             if (data.getID().equals("LS")){
