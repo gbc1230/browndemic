@@ -162,6 +162,8 @@ public class GameServer implements Runnable{
 	            }
             }
         }
+        if (_clients.size() == 0)
+        	stop();
     }
 
     /**

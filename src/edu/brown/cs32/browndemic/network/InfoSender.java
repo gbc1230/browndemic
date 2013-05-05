@@ -20,6 +20,7 @@ public class InfoSender extends Thread{
     //whether the game has started and I should send worlds or just info about
     //the lobby, whether the game is over
     private boolean _gameStarted, _gameOver;
+    //the server for this sender
     private GameServer _server;
     
     public InfoSender(List<GameServerThread> clients, ServerWorld w, GameServer s){
@@ -63,7 +64,6 @@ public class InfoSender extends Thread{
             ServerWorld w = _world.getNextCommand();
             if (w == null)
                 continue;
-        	System.out.println(w.getDiseases());
             WorldOutput wo = new WorldOutput(w);
             for (GameServerThread thread : _clients){
                 thread.sendMessage(wo);

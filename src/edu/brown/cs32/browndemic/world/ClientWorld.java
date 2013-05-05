@@ -66,6 +66,7 @@ public class ClientWorld implements ChatServer, World{
         return _lobby;
     }
     
+    @Override
     public void leaveGame(){
         GameLeave lr = new GameLeave();
         _output.add(lr);

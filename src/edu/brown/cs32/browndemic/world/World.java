@@ -105,6 +105,11 @@ public interface World {
     public boolean allCured();
     
     /**
+     * Used in ClientWorld, won't have to do anything extra in other versions
+     */
+    public void leaveGame();
+    
+    /**
      * Lets me know if all the people in the world are dead
      * @return boolean
      */
