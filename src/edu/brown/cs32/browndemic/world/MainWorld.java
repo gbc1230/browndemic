@@ -130,6 +130,15 @@ public abstract class MainWorld implements World, Runnable, Serializable{
         _regions.add(r);
         _regIndex.put(r.getName(), r);
     }
+    
+    /**
+     * Set up initial population
+     */
+    public void setPopulation(){
+    	for (Region r : _regions){
+            _population += r.getPopulation();
+    	}
+    }
 
     /**
      * addDisease() adds the given Disease to _diseases
@@ -226,7 +235,10 @@ public abstract class MainWorld implements World, Runnable, Serializable{
      */
     @Override
     public double getCurePercentage(int d){
-    	return ((double)_cures.get(d) / (double)_cureTotal) * 100.0;
+    	double cure = ((double)_cures.get(d) / (double)_cureTotal) * 100.0;
+    	if (cure > 100.0)
+    		return 100.0;
+    	return cure;
     }
     
     @Override

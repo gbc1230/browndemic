@@ -89,7 +89,7 @@ public class Region implements Serializable{
     private ArrayList<Integer> _disIDs;
     private ArrayList<NaturalDisaster> _disasters;
     
-    private double _remInf;
+    private double _remInf, _remDead;
 
     /**
      * constructs a new Region with the given info

@@ -134,9 +134,6 @@ public class ServerWorld extends MainWorld{
     	for (int i = 0; i < _lobby.size(); i++){
     		_diseases.add(null);
     	}
-    	for (Region r : _regions){
-            _population += r.getPopulation();
-    	}
         _outData.add(new CollectDiseases(-1, this));
     }
     

@@ -20,12 +20,14 @@ public class WorldMaker{
     public static WorldSP makeNewEarthSP() throws IOException{
         WorldSP w = new WorldSP();
         addEarthRegions(w, "EarthRegions.csv");
+        w.setPopulation();
         return w;
     }
     
     public static ServerWorld makeNewEarthServer() throws IOException{
         ServerWorld w = new ServerWorld();
         addEarthRegions(w, "EarthRegions.csv");
+        w.setPopulation();
         return w;
     }
     

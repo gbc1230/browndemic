@@ -35,7 +35,6 @@ public class WorldSP extends MainWorld{
     public void start(){
     	setupDiseases();
         for (Region r : _regions){
-            _population += r.getPopulation();
             r.setNumDiseases(_diseases.size());
             _cureTotal += r.getWealth() * r.getPopulation() * _MINCURETICKS;
         }
