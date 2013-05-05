@@ -191,7 +191,7 @@ public class UpgradePanel extends BrowndemicPanel {
 		if (e.getSource() == _buysell) {
 			if (_selected != null) {
 				if (_selected.isOwned()) {
-					try {
+//					try {
 						List<Perk> soldPerks = _selected.getWillBeSold();
 						int val;
 						String losegain = (_selected.getCumSellPrice() > 0 ? "gain" : "lose");
@@ -214,25 +214,26 @@ public class UpgradePanel extends BrowndemicPanel {
 									"Confirm Sell", JOptionPane.YES_NO_OPTION);
 						}
 						if (val == JOptionPane.YES_OPTION) {
-							_world.getDisease(_disease).sellCumPerk(_selected.getID());
+							_world.addPerk(_disease, _selected.getID(), false);
+							//_world.getDisease(_disease).sellCumPerk(_selected.getID());
 							setPerk(null);
 						}
-					} catch (IllegalAccessException e1) {
-						JOptionPane.showMessageDialog(Utils.getParentFrame(this), 
-								String.format("Could not buy perk '%s' because %d points are required and you currently have %d points.", 
-										_selected.getName(), _selected.getCumSellPrice(), _world.getDisease(_disease).getPoints()), 
-								"Not Enough Points!", JOptionPane.PLAIN_MESSAGE);
-					}
+//					} catch (IllegalAccessException e1) {
+//						JOptionPane.showMessageDialog(Utils.getParentFrame(this), 
+//								String.format("Could not buy perk '%s' because %d points are required and you currently have %d points.", 
+//										_selected.getName(), _selected.getCumSellPrice(), _world.getDisease(_disease).getPoints()), 
+//								"Not Enough Points!", JOptionPane.PLAIN_MESSAGE);
+//					}
 				} else if (_selected.isAvail()) {
-					try {
-						_world.getDisease(_disease).buyPerk(_selected.getID());
+//					try {
+						_world.addPerk(_disease, _selected.getID(), true);
 						setPerk(null);
-					} catch (IllegalAccessException e1) {
-						JOptionPane.showMessageDialog(Utils.getParentFrame(this), 
-								String.format("Could not buy perk '%s' because %d points are required and you currently have %d points.", 
-										_selected.getName(), _selected.getCost(), _world.getDisease(_disease).getPoints()), 
-								"Not Enough Points!", JOptionPane.PLAIN_MESSAGE);
-					}
+//					} catch (IllegalAccessException e1) {
+//						JOptionPane.showMessageDialog(Utils.getParentFrame(this), 
+//								String.format("Could not buy perk '%s' because %d points are required and you currently have %d points.", 
+//										_selected.getName(), _selected.getCost(), _world.getDisease(_disease).getPoints()), 
+//								"Not Enough Points!", JOptionPane.PLAIN_MESSAGE);
+//					}
 				}
 			}
 		}

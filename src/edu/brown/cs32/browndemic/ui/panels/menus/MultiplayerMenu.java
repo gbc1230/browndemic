@@ -79,7 +79,6 @@ public class MultiplayerMenu extends UIPanel implements MouseListener {
 		joinGame.setAlignmentX(CENTER_ALIGNMENT);
 		
 		add(Box.createGlue());
-		//add(joinGame);
 		add(host);
 		add(_join);
 		add(Box.createGlue());
@@ -89,7 +88,7 @@ public class MultiplayerMenu extends UIPanel implements MouseListener {
 
 	@Override
 	public void setupForDisplay() {
-		Utils.getParentFrame(this).setTitle(new BackTitleBar(new MainMenu()));
+		Utils.getParentFrame(this).setTitle(new BackTitleBar(this, new MainMenu()));
 	}
 
 	@Override
