@@ -161,7 +161,7 @@ public class MultiplayerLobby extends UIPanel {
 		}
 		if (!_name.equals(Settings.get(Settings.NAME))) {
 			_name = Settings.get(Settings.NAME);
-			
+			_thisWorld.setName(_name);
 		}
 	}
 	

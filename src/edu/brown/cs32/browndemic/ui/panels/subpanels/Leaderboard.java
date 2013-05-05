@@ -2,13 +2,16 @@ package edu.brown.cs32.browndemic.ui.panels.subpanels;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.RowSorter.SortKey;
 import javax.swing.Timer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 import edu.brown.cs32.browndemic.disease.Disease;
 import edu.brown.cs32.browndemic.ui.UIConstants.Colors;
@@ -25,6 +28,7 @@ public class Leaderboard extends BrowndemicPanel {
 	private JTable _table;
 	private Timer _timer;
 	private static final String cols[] = { "Name", "Infected", "Killed" };
+	private TableRowSorter<DefaultTableModel> _sorter;
 	
 	public Leaderboard(World w) {
 		super();
@@ -51,7 +55,6 @@ public class Leaderboard extends BrowndemicPanel {
 			}
 		};
 		_table = new JTable(_data);
-		_table.setAutoCreateRowSorter(true);
 		_table.setFillsViewportHeight(true);
 		_table.setBackground(Colors.MENU_BACKGROUND);
 		_table.setFont(Fonts.NORMAL_TEXT);
@@ -60,6 +63,8 @@ public class Leaderboard extends BrowndemicPanel {
 		_table.getTableHeader().setReorderingAllowed(false);
 		_table.getTableHeader().setResizingAllowed(false);
 		_table.setRowSelectionAllowed(false);;
+		_sorter = new TableRowSorter<>(_data);
+		_table.setRowSorter(_sorter);
 		
 		JScrollPane scroll = new JScrollPane(_table, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
@@ -72,7 +77,12 @@ public class Leaderboard extends BrowndemicPanel {
 			Disease d = _world.getDiseases().get(i);
 			data[i] = new Object[] { d.getName(), _world.getInfected(d.getID()), _world.getDead(d.getID())};
 		}
+		
+		List<? extends SortKey> keys = _sorter.getSortKeys();
 		_data.setDataVector(data, cols);
+		_sorter = new TableRowSorter<>(_data);
+		_sorter.setSortKeys(keys);
+		_table.setRowSorter(_sorter);
 	}
 	
 	public void stop() {
