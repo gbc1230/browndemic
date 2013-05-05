@@ -115,7 +115,7 @@ public class ServerWorld extends MainWorld{
     
     public void removePlayer(int r){
     	if (_started){
-    		
+    		removeDisease(r);
     	}
     	else{
 	        _lobby.remove(r);

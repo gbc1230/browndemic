@@ -131,6 +131,8 @@ public class GameServer implements Runnable{
         }
         //someone has left the game
         else if (id.equals("GL")){
+        	if (client == 0)
+        		stop();
         	if (client != -1)
         		_world.removePlayer(client);
         }
