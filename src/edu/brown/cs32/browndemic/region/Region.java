@@ -35,15 +35,15 @@ public class Region implements Serializable{
     
     private double[] _infDoubleTicks;
     private static final int _INFTIMESCALE = 60;
-    private static final double _INFSCALE = 1.0/60;
+    private static final double _INFSCALE = 1.0/90;
     
     private double[] _lethDoubleTicks;
-    private static final int _LETHTIMESCALE = 120;
-    private static final double _LETHSCALE = 1.0/120;
+    private static final int _LETHTIMESCALE = 60;
+    private static final double _LETHSCALE = 1.0/60;
 
     private static final int _PLANEFREQ = 240;
     private static final int _SHIPFREQ = 240;
-    private static final int _LANDFREQ = 60;
+    private static final int _LANDFREQ = 40;
 
     //number of diseases in game
     private int _numDiseases;
@@ -170,7 +170,7 @@ public class Region implements Serializable{
             medResFactor = _diseases[d].getMedRes()/_med;
         double maxInf = _diseases[d].getMaxInfectivity();
         double inf = getInfected().get(d);
-        double growthFactor = (_diseases[d].getInfectivity() + maxInf/5) / (maxInf/5) * _INFSCALE *
+        double growthFactor = (_diseases[d].getInfectivity() + maxInf/10) / (maxInf/10) * _INFSCALE *
                 ( wetResFactor + dryResFactor + heatResFactor + coldResFactor + medResFactor)/5;
         double number = inf*Math.pow(growthFactor,_infDoubleTicks[d]/_INFTIMESCALE);
         if(_remInf >= 1){
@@ -213,14 +213,16 @@ public class Region implements Serializable{
      **/
     public void kill(Disease disease) {
         int index = disease.getID();
+        double leth = disease.getLethality();
+        double max = disease.getMaxLethality();
         for (InfWrapper inf : _hash.getAllOfType(index,1)) {
-            double rate = disease.getLethality()/disease.getMaxLethality()*_LETHSCALE;
+            double rate = (leth + max/5)/(max/5)*_LETHSCALE;
             double number = (Math.pow(rate, _lethDoubleTicks[disease.getID()]/_LETHTIMESCALE)) * inf.getInf();
             if(_remDead >= 1){
                 number++;
                 _remDead--;
             }
-            if(disease.getLethality() / disease.getMaxLethality() > .1)
+            if(disease.getLethality() / disease.getMaxLethality() > .05)
                 _remDead += number % 1;
             else number = 0;
             number = Math.floor(number);
@@ -320,15 +322,18 @@ public class Region implements Serializable{
         int index = d.getID();
         double tot = _awareness[index] + aware;
         if(_awareness[index] < _awareMax/6 && tot > _awareMax/6){
+            System.out.println(_name + " aware mark 1");
             _awareness[index] = tot;
             notifyNeighbors(d);
         }
         else if(_awareness[index] < _awareMax/4 && tot > _awareMax/4){
+            System.out.println(_name + " aware mark 2");
             _news.add(_name + " has begun work on a cure for " + d.getName());
             _awareness[index] = tot;
             notifyNeighbors(d);
         }
         else if(_awareness[index] < _awareMax && tot > _awareMax){
+            System.out.println(_name + " aware mark 3");
             _awareness[index] = tot;
             notifyNeighbors(d);
             if(_air != 0 || _sea != 0)
@@ -544,7 +549,7 @@ public class Region implements Serializable{
         _hash.addZero(_population);
         _infDoubleTicks = new double[num];
         _lethDoubleTicks = new double[num];
-        _awareMax = 70 * _population;
+        _awareMax = 10 * _population;
     }
 
     /**
