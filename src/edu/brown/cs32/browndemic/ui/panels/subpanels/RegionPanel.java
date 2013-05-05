@@ -155,12 +155,15 @@ public class RegionPanel extends BrowndemicPanel implements ListSelectionListene
 		
 		try {
 			for (Region r : _world.getRegions()) {
-				if (r.getHealthy() == r.getPopulation()) {
-					healthy.add(r.getName());
+				long killed = 0;
+				for (Long l : r.getKilled())
+					killed += l;
+				if (killed == r.getPopulation()) {
+					dead.add(r.getName());
 				} else if (r.getTotalInfected() > 0) {
 					infected.add(r.getName());
 				} else {
-					dead.add(r.getName());
+					healthy.add(r.getName());
 				}
 			}
 		} catch (NullPointerException e) {

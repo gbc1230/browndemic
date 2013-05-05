@@ -32,6 +32,7 @@ import java.util.Queue;
 
 import javax.imageio.ImageIO;
 import javax.swing.JComponent;
+import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
 import javax.swing.Timer;
 
@@ -41,7 +42,9 @@ import edu.brown.cs32.browndemic.ui.Settings;
 import edu.brown.cs32.browndemic.ui.UIConstants.Colors;
 import edu.brown.cs32.browndemic.ui.UIConstants.Fonts;
 import edu.brown.cs32.browndemic.ui.UIConstants.Images;
+import edu.brown.cs32.browndemic.ui.Utils;
 import edu.brown.cs32.browndemic.ui.actions.Action;
+import edu.brown.cs32.browndemic.ui.panels.menus.MainMenu;
 import edu.brown.cs32.browndemic.world.World;
 
 public class WorldMap extends JComponent implements MouseListener, MouseMotionListener {
@@ -71,11 +74,12 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 	private OverlayWorker _ow;
 	private Layer _layer = Layer.INFECTED;
 	private long _largestCountry = -1;
+	private double _largestWealth = -1;
 	
 	private static final double AIRPLANE_SPEED = 6.0;
 	
 	public enum Layer {
-		INFECTED, POPULATION
+		INFECTED, POPULATION, INFECTED_OTHER, WEALTH
 	}
 	
 	public WorldMap(World _world2, BufferedImage map, BufferedImage regions, int disease, MarqueeLabel ml) {
@@ -121,6 +125,25 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 		return percentInfected/2.0f;
 	}
 	
+	private float getInfectedOtherPercent(int id) {
+		Region r = _world.getRegion(id);
+		float percentInfected = 0f;
+		if (r != null) {
+			try {
+				long infected = 0;
+				for (int i = 0; i < r.getInfected().size(); i++) {
+					if (i == _disease) continue;
+					infected += r.getInfected().get(i) + r.getKilled().get(i);
+				}
+				percentInfected = (float)infected / (float)r.getPopulation();
+			} catch (IndexOutOfBoundsException e1) {
+				percentInfected = 0f;
+			}
+			if (percentInfected > 0f && percentInfected < .2f) percentInfected = .2f;
+		}
+		return percentInfected/2.0f;
+	}
+	
 	private float getPopulationPercent(int id) {
 		if (_largestCountry < 0) {
 			for (Region r : _world.getRegions()) {
@@ -128,7 +151,17 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 			}
 		}
 		Region r = _world.getRegion(id);
-		return (float)(Math.sqrt((double)r.getPopulation()/(double)_largestCountry)/2.0f);
+		return (float)(Math.sqrt((double)r.getPopulation()/(double)_largestCountry)/1.5f);
+	}
+	
+	private float getWealthPercent(int id) {
+		if (_largestWealth < 0) {
+			for (Region r : _world.getRegions()) {
+				_largestWealth = Math.max(_largestWealth, r.getWealth());
+			}
+		}
+		Region r = _world.getRegion(id);
+		return (float)(r.getWealth()/_largestWealth)/1.5f;
 	}
 	
 	private class OverlayWorker implements Runnable {
@@ -153,6 +186,12 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 							break;
 						case POPULATION:
 							percent = getPopulationPercent(e.getKey());
+							break;
+						case INFECTED_OTHER:
+							percent = getInfectedOtherPercent(e.getKey());
+							break;
+						case WEALTH:
+							percent = getWealthPercent(e.getKey());
 							break;
 					}
 					if (percent > 0) {
@@ -327,6 +366,10 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 	}
 	
 	private void update() {
+		if (_world.hostDisconnected()) {
+			JOptionPane.showMessageDialog(this, "The host has disconnected.  Returning to Main Menu");
+			Utils.getParentFrame(this).setPanel(new MainMenu());
+		}
 		for (Iterator<MovingObject> it = _objects.iterator(); it.hasNext();) {
 			if (it.next().update().done) {
 				it.remove();

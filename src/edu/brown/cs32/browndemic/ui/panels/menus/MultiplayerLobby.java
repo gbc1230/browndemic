@@ -11,6 +11,7 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.Timer;
@@ -135,6 +136,10 @@ public class MultiplayerLobby extends UIPanel {
 	}
 	
 	private void update() {
+		if (_thisWorld.hostDisconnected()) {
+			JOptionPane.showMessageDialog(this, "The host has disconnected.  Returning to Main Menu");
+			Utils.getParentFrame(this).setPanel(new MainMenu());
+		}
 		try{
 			if (_lobby == null || !_lobby.equals(_thisWorld.getLobby())) {
 				_lobby = _thisWorld.getLobby();

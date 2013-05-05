@@ -91,7 +91,7 @@ public class GameMenu extends UIPanel {
 	protected void makeUI() {
 		super.makeUI();
 		
-		add(_info = new InformationBar(_world, _disease, _map));
+		add(_info = new InformationBar(_world, _disease, _map, _multiplayer));
 		
 		add(_map);
 		
@@ -143,6 +143,9 @@ public class GameMenu extends UIPanel {
 	@Override
 	public void setupForDisplay() {
 		if (_loaded) {
+			if (_world.hostDisconnected()) {
+				Utils.getParentFrame(this).setPanel(new MainMenu());
+			}
 			Utils.getParentFrame(this).setTitle(new InGameTitleBar(_world, !_multiplayer));
 			new Timer(3000, new ActionListener() {
 				@Override

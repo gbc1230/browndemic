@@ -33,16 +33,18 @@ public class InformationBar extends BrowndemicPanel implements ActionListener {
 	private int _disease;
 	private Timer _timer;
 	private WorldMap _wm;
-	private JRadioButtonMenuItem _inf, _pop;
+	private JRadioButtonMenuItem _inf, _pop, _infother, _wealth;
+	private boolean _multi;
 	
 	private JLabel infected, dead, total, healthy, cureProgress; 
 
-	public InformationBar(World w, int disease, WorldMap wm) {
+	public InformationBar(World w, int disease, WorldMap wm, boolean multi) {
 		super();
 		_world = w;
-		makeUI();
 		_disease = disease;
 		_wm = wm;
+		_multi = multi;
+		makeUI();
 		_timer = new Timer(1000/10, new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -72,7 +74,11 @@ public class InformationBar extends BrowndemicPanel implements ActionListener {
 		
 		ButtonGroup group = new ButtonGroup();
 
-		_inf = new JRadioButtonMenuItem("Infected");
+		if (_multi) {
+			_inf = new JRadioButtonMenuItem("Infected (Your Disease)");
+		} else {
+			_inf = new JRadioButtonMenuItem("Infected");
+		}
 		_inf.addActionListener(this);
 		_inf.setSelected(true);
 		_inf.setFont(Fonts.NORMAL_TEXT);
@@ -81,6 +87,16 @@ public class InformationBar extends BrowndemicPanel implements ActionListener {
 		group.add(_inf);
 		layers.add(_inf);
 		
+		if (_multi) {
+			_infother = new JRadioButtonMenuItem("Infected (Other Diseases)");
+			_infother.addActionListener(this);
+			_infother.setFont(Fonts.NORMAL_TEXT);
+			_infother.setBackground(Colors.MENU_BACKGROUND);
+			_infother.setForeground(Colors.RED_TEXT);
+			group.add(_infother);
+			layers.add(_infother);
+		}
+
 		_pop = new JRadioButtonMenuItem("Population");
 		_pop.addActionListener(this);
 		_pop.setFont(Fonts.NORMAL_TEXT);
@@ -89,7 +105,18 @@ public class InformationBar extends BrowndemicPanel implements ActionListener {
 		group.add(_pop);
 		layers.add(_pop);
 		
+		_wealth = new JRadioButtonMenuItem("Wealth");
+		_wealth.addActionListener(this);
+		_wealth.setFont(Fonts.NORMAL_TEXT);
+		_wealth.setBackground(Colors.MENU_BACKGROUND);
+		_wealth.setForeground(Colors.RED_TEXT);
+		group.add(_wealth);
+		layers.add(_wealth);
+		
 		Utils.setDefaultLook(mb, layers, _inf, _pop);
+		if (_multi) {
+			Utils.setDefaultLook(_infother);
+		}
 
 		infected = new JLabel();
 		infected.setForeground(Colors.RED_TEXT);
@@ -160,6 +187,10 @@ public class InformationBar extends BrowndemicPanel implements ActionListener {
 			_wm.setLayer(Layer.INFECTED);
 		} else if (e.getSource() == _pop) {
 			_wm.setLayer(Layer.POPULATION);
+		} else if (e.getSource() == _infother) {
+			_wm.setLayer(Layer.INFECTED_OTHER);
+		} else if (e.getSource() == _wealth) {
+			_wm.setLayer(Layer.WEALTH);
 		}
 	}
 }
