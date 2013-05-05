@@ -5,6 +5,7 @@
 
 package edu.brown.cs32.browndemic.world;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,7 +18,8 @@ import edu.brown.cs32.browndemic.region.RegionTransmission;
  *
  * @author gcarling
  */
-public abstract class MainWorld implements World, Runnable{
+public abstract class MainWorld implements World, Runnable, Serializable{
+	private static final long serialVersionUID = 1774845179387841713L;
 
     //ArrayList of Regions
     protected List<Region> _regions;
