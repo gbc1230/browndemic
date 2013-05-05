@@ -132,7 +132,7 @@ public class UpgradePanel extends BrowndemicPanel {
 		_points = new JLabel();
 		_points.setFont(Fonts.TITLE_BAR);
 		_points.setForeground(Colors.RED_TEXT);
-		_points.setText("Points: " + _world.getDisease(_disease).getPoints());
+		//_points.setText("Points: " + _world.getDisease(_disease).getPoints());
 		
 		info.add(_perkName);
 		info.add(Box.createRigidArea(new Dimension(0, 20)));
