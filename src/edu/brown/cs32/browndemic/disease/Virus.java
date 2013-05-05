@@ -201,7 +201,7 @@ public class Virus extends Disease{
         this._wetResistance -= soldPerk.getWetRes();
         this._dryResistance -= soldPerk.getDryRes();
         this._medResistance -= soldPerk.getMedRes();
-        this._points -= soldPerk.getSellPrice();
+        this._points += soldPerk.getSellPrice();
     }
 
     /**
@@ -244,6 +244,6 @@ public class Virus extends Disease{
         this._wetResistance -= soldPerk.getWetRes();
         this._dryResistance -= soldPerk.getDryRes();
         this._medResistance -= soldPerk.getMedRes();
-        this._points -= soldPerk.getSellPrice();
+        this._points += soldPerk.getSellPrice();
     }
 }

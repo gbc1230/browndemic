@@ -51,7 +51,7 @@ public class Bacteria extends Disease{
             ex.printStackTrace();
         }
         //Sets the appropriate perks to initially available
-        int[] availablePerks = {0, 1, 2, 3, 4, 7, 20, 23, 26, 29, 32, 35, 38,
+        int[] availablePerks = {0, 1, 2, 3, 4, 5, 20, 23, 26, 29, 32, 35, 38,
                                 41, 44};
         for(Integer i : availablePerks) this._perks[i].setAvailability(true);
         this._infectivity = this.START_INFECTIVITY;
