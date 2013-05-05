@@ -55,7 +55,6 @@ public class ClientWorld implements ChatServer, World{
     
     public void setWorld(ServerWorld w){
         _world = w;
-        System.out.println(_world.getDiseases());
     }
     
     public void setLobby(List<LobbyMember> lobby){

@@ -63,11 +63,9 @@ public class InfoSender extends Thread{
             ServerWorld w = _world.getNextCommand();
             if (w == null)
                 continue;
-        	System.out.println("sending world");
         	System.out.println(w.getDiseases());
             WorldOutput wo = new WorldOutput(w);
             for (GameServerThread thread : _clients){
-//                System.out.println("Sending a world...");
                 thread.sendMessage(wo);
             }
         }
