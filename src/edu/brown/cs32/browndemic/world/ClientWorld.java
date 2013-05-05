@@ -82,6 +82,7 @@ public class ClientWorld implements ChatServer, World{
         msg = _name + ": " + msg;
         ChatMessage cm = new ChatMessage(msg);
         _output.add(cm);
+        acceptMessage(msg);
     }
     
     public void acceptMessage(String msg){

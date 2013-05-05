@@ -101,9 +101,12 @@ public class GameServer implements Runnable{
             PerkInput pi = (PerkInput)gd;
             _world.addPerk(pi.getDiseaseID(), pi.getPerkID(), pi.isBuying());
         }
-        else if(id.equals("M")){
-            for (GameServerThread c : _clients){
-                c.sendMessage(gd);
+        else if (id.equals("M")){
+            for (int i = 0; i < _clients.size(); i++){
+                if (i != client){
+                    GameServerThread c = _clients.get(i);
+                    c.sendMessage(gd);
+                }
             }
         }
         else if (id.equals("DA")){
@@ -167,8 +170,8 @@ public class GameServer implements Runnable{
     public void stop(){
     	try{
     		_server.close();
-    		for (GameServerThread kill : _clients){
-    			kill.close();
+    		for (GameServerThread toKill : _clients){
+    			toKill.close();
     		}
     		_clients.clear();
     		_thread = null;

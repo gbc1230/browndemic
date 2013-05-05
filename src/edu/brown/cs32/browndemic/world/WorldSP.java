@@ -62,6 +62,12 @@ public class WorldSP extends MainWorld{
         }
         System.out.println("starting game");
         while (!_gameOver){
+            try{
+                Thread.sleep(1);
+            }
+            catch(Exception e){
+                
+            }
             if (!_paused){
                 long start = System.currentTimeMillis();
                 update();
@@ -88,5 +94,6 @@ public class WorldSP extends MainWorld{
                 }
             }
         }
+        System.out.println("Game Over!");
     }
 }

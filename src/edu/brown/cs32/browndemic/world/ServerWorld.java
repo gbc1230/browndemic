@@ -120,7 +120,7 @@ public class ServerWorld extends MainWorld{
     	d.setID(ind);
     	_diseases.set(ind, d);
     	if (diseasesFull())
-    		start();
+            start();
     }
     
     @Override
@@ -130,8 +130,8 @@ public class ServerWorld extends MainWorld{
     
     private boolean diseasesFull(){
     	for (Disease d : _diseases){
-    		if (d == null)
-    			return false;
+            if (d == null)
+                return false;
     	}
     	return true;
     }
@@ -173,29 +173,30 @@ public class ServerWorld extends MainWorld{
         }
         System.out.println("starting game");
         while (!_gameOver){
-            if (!_paused){
-                long start = System.currentTimeMillis();
-                update();
-                if (allCured()){
-                    _gameOver = true;
-                    break;
-                }
-                else if (allKilled()){
-                    crownWinners();
-                    _gameOver = true;
-                    break;
-                }
-                addCommand();
-                long end = System.currentTimeMillis();
-                long offset = end - start;
-                try{
+            long start = System.currentTimeMillis();
+            update();
+            if (allCured()){
+                _gameOver = true;
+                break;
+            }
+            else if (allKilled()){
+                crownWinners();
+                _gameOver = true;
+                break;
+            }
+            addCommand();
+            long end = System.currentTimeMillis();
+            long offset = end - start;
+            try{
+                if (offset < _waitTime)
                     Thread.sleep(_waitTime - offset);
+                else
+                    System.out.println("Offset of " + offset + " was higher than " +
+                	"waitTime of " + _waitTime);
                 }
-                catch(InterruptedException e){
-                    System.out.println("Couldn't sleep...");
-                }
+            catch(InterruptedException e){
+                System.out.println("Couldn't sleep...");
             }
         }
     }
-    
 }

@@ -229,10 +229,14 @@ public abstract class MainWorld implements Serializable, World, Runnable{
         return _allDiseasesPicked;
     }
     
+    //pause the game
+    @Override
     public void pause(){
         _paused = true;
     }
     
+    //unpause the game
+    @Override
     public void unpause(){
         _paused = false;
     }
@@ -431,9 +435,9 @@ public abstract class MainWorld implements Serializable, World, Runnable{
 	    		for (int c = 0; c < val; c++){
 	    			int rand = (int)(Math.random() * 2);
 	    			if (rand == 0)
-	    				d.addPoints(2);
+                                    d.addPoints(1);
 	    			else 
-						d.addPoints(3);
+                                    d.addPoints(2);
 	    		}
 	    		_oldInf.set(i, oldInf + val * bench);
     		}
