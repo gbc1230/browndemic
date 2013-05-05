@@ -110,6 +110,11 @@ public interface World {
     public void leaveGame();
     
     /**
+     * Used in ClientWorld, won't have anything extra to do in other versions
+     */
+    public boolean hostDisconnected();
+    
+    /**
      * Lets me know if all the people in the world are dead
      * @return boolean
      */

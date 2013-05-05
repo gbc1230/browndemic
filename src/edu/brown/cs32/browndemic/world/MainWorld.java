@@ -499,6 +499,13 @@ public abstract class MainWorld implements World, Runnable, Serializable{
     }
     
     /**
+     * Doesn't have to do anything here
+     */
+    public boolean hostDisconnected(){
+    	return false;
+    }
+    
+    /**
      * Sets up disease related lists
      */
     protected void setupDiseases(){

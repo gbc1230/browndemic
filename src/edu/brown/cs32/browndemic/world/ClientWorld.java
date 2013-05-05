@@ -102,6 +102,7 @@ public class ClientWorld implements ChatServer, World{
     	_hostDisconnected = true;
     }
     
+    @Override
     public boolean hostDisconnected(){
     	return _hostDisconnected;
     }
