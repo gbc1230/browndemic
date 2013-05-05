@@ -54,8 +54,8 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 	private BufferedImage _map, _regions;
 	private Map<Integer, BufferedImage> _diseaseOverlays = new HashMap<>();
 	private Map<Integer, BufferedImage> _highlightOverlays = new HashMap<>();
-	private Map<Integer, Float> _infected = new HashMap<>();
-	private Map<Integer, AlphaComposite> _composites = new HashMap<>();
+	//private Map<Integer, Float> _infected = new HashMap<>();
+	//private Map<Integer, AlphaComposite> _composites = new HashMap<>();
 	private ArrayList<Location> _airports = new ArrayList<>();
 	private List<MovingObject> _objects = new ArrayList<>();
 	private Map<Integer, Float> _highlights = new HashMap<>();
@@ -70,6 +70,7 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 	private Timer _timer;
 	private OverlayWorker _ow;
 	private Layer _layer = Layer.INFECTED;
+	private long _largestCountry = -1;
 	
 	private static final double AIRPLANE_SPEED = 6.0;
 	
@@ -106,7 +107,7 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 		_layer = l;
 	}
 	
-	private double getInfectedPercent(int id) {
+	private float getInfectedPercent(int id) {
 		Region r = _world.getRegion(id);
 		float percentInfected = 0f;
 		if (r != null) {
@@ -117,11 +118,17 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 			}
 			if (percentInfected > 0f && percentInfected < .2f) percentInfected = .2f;
 		}
-		return 0;
-//		if (percentInfected != _infected.get(e.getKey())) {
-//			_composites.put(e.getKey(), AlphaComposite.getInstance(AlphaComposite.SRC_OVER, percentInfected/2.0f));
-//			_infected.put(e.getKey(), percentInfected);
-//		}
+		return percentInfected/2.0f;
+	}
+	
+	private float getPopulationPercent(int id) {
+		if (_largestCountry < 0) {
+			for (Region r : _world.getRegions()) {
+				_largestCountry = Math.max(_largestCountry, r.getPopulation());
+			}
+		}
+		Region r = _world.getRegion(id);
+		return (float)(Math.sqrt((double)r.getPopulation()/(double)_largestCountry)/2.0f);
 	}
 	
 	private class OverlayWorker implements Runnable {
@@ -139,22 +146,17 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 				cacheg2.setComposite(AlphaComposite.Clear);
 				cacheg2.fillRect(0, 0, _regionCache2.getWidth(), _regionCache2.getHeight());
 				for (Map.Entry<Integer, BufferedImage> e : _diseaseOverlays.entrySet()) {
-					Region r = _world.getRegion(e.getKey());
-					float percentInfected = 0f;
-					if (r != null) {
-						try {
-							percentInfected = ((float)r.getInfected().get(_disease) + (float)r.getKilled().get(_disease)) / (float)r.getPopulation();
-						} catch (IndexOutOfBoundsException e1) {
-							percentInfected = 0f;
-						}
-						if (percentInfected > 0f && percentInfected < .2f) percentInfected = .2f;
+					float percent = 0.0f;
+					switch (_layer) {
+						case INFECTED:
+							percent = getInfectedPercent(e.getKey());
+							break;
+						case POPULATION:
+							percent = getPopulationPercent(e.getKey());
+							break;
 					}
-					if (percentInfected != _infected.get(e.getKey())) {
-						_composites.put(e.getKey(), AlphaComposite.getInstance(AlphaComposite.SRC_OVER, percentInfected/2.0f));
-						_infected.put(e.getKey(), percentInfected);
-					}
-					if (percentInfected > 0) {
-						cacheg2.setComposite(_composites.get(e.getKey()));
+					if (percent > 0) {
+						cacheg2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, percent));
 						cacheg2.drawImage(e.getValue(), 0, 0, null);
 					}
 				}
@@ -218,8 +220,8 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 								ImageIO.write(overlays[1], "png", highlight);
 							}
 						}
-						_infected.put(id, 0f);
-						_composites.put(id, AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.0f));
+						//_infected.put(id, 0f);
+						//_composites.put(id, AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.0f));
 					}
 				}
 				setProgress(x * 100 / (_regions.getWidth()-1));

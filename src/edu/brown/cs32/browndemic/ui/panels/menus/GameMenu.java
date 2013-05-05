@@ -91,7 +91,7 @@ public class GameMenu extends UIPanel {
 	protected void makeUI() {
 		super.makeUI();
 		
-		add(_info = new InformationBar(_world, _disease));
+		add(_info = new InformationBar(_world, _disease, _map));
 		
 		add(_map);
 		

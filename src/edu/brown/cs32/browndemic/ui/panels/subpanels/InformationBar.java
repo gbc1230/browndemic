@@ -6,32 +6,43 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.text.NumberFormat;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JRadioButtonMenuItem;
 import javax.swing.Timer;
 
+import edu.brown.cs32.browndemic.ui.Utils;
 import edu.brown.cs32.browndemic.ui.UIConstants.Colors;
 import edu.brown.cs32.browndemic.ui.UIConstants.Fonts;
 import edu.brown.cs32.browndemic.ui.UIConstants.Strings;
 import edu.brown.cs32.browndemic.ui.UIConstants.UI;
+import edu.brown.cs32.browndemic.ui.components.WorldMap;
+import edu.brown.cs32.browndemic.ui.components.WorldMap.Layer;
 import edu.brown.cs32.browndemic.ui.panels.BrowndemicPanel;
 import edu.brown.cs32.browndemic.world.World;
 
-public class InformationBar extends BrowndemicPanel {
+public class InformationBar extends BrowndemicPanel implements ActionListener {
 	
 	private static final long serialVersionUID = 5751262776229759464L;
 	private World _world;
 	private int _disease;
 	private Timer _timer;
+	private WorldMap _wm;
+	private JRadioButtonMenuItem _inf, _pop;
 	
 	private JLabel infected, dead, total, healthy, cureProgress; 
 
-	public InformationBar(World w, int disease) {
+	public InformationBar(World w, int disease, WorldMap wm) {
 		super();
 		_world = w;
 		makeUI();
 		_disease = disease;
+		_wm = wm;
 		_timer = new Timer(1000/10, new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -47,6 +58,38 @@ public class InformationBar extends BrowndemicPanel {
 		setPreferredSize(new Dimension(UI.WIDTH, UI.TITLE_HEIGHT));
 		setMaximumSize(new Dimension(UI.WIDTH, UI.TITLE_HEIGHT));
 		setMinimumSize(new Dimension(UI.WIDTH, UI.TITLE_HEIGHT));
+		
+		JMenuBar mb = new JMenuBar();
+		mb.setBackground(Colors.MENU_BACKGROUND);
+		mb.setBorder(BorderFactory.createEmptyBorder());
+		mb.setAlignmentY(CENTER_ALIGNMENT);
+		
+		JMenu layers = new JMenu("Layers");
+		layers.setFont(Fonts.NORMAL_TEXT);
+		layers.setBackground(Colors.MENU_BACKGROUND);
+		layers.setForeground(Colors.RED_TEXT);
+		mb.add(layers);
+		
+		ButtonGroup group = new ButtonGroup();
+
+		_inf = new JRadioButtonMenuItem("Infected");
+		_inf.addActionListener(this);
+		_inf.setSelected(true);
+		_inf.setFont(Fonts.NORMAL_TEXT);
+		_inf.setBackground(Colors.MENU_BACKGROUND);
+		_inf.setForeground(Colors.RED_TEXT);
+		group.add(_inf);
+		layers.add(_inf);
+		
+		_pop = new JRadioButtonMenuItem("Population");
+		_pop.addActionListener(this);
+		_pop.setFont(Fonts.NORMAL_TEXT);
+		_pop.setBackground(Colors.MENU_BACKGROUND);
+		_pop.setForeground(Colors.RED_TEXT);
+		group.add(_pop);
+		layers.add(_pop);
+		
+		Utils.setDefaultLook(mb, layers, _inf, _pop);
 
 		infected = new JLabel();
 		infected.setForeground(Colors.RED_TEXT);
@@ -73,7 +116,7 @@ public class InformationBar extends BrowndemicPanel {
 		cureProgress.setBackground(Colors.MENU_BACKGROUND);
 		cureProgress.setFont(Fonts.NORMAL_TEXT);
 		
-		
+		add(mb);
 		add(Box.createGlue());
 		add(healthy);
 		add(Box.createGlue());
@@ -109,5 +152,14 @@ public class InformationBar extends BrowndemicPanel {
 	
 	public void stop() {
 		_timer.stop();
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == _inf) {
+			_wm.setLayer(Layer.INFECTED);
+		} else if (e.getSource() == _pop) {
+			_wm.setLayer(Layer.POPULATION);
+		}
 	}
 }

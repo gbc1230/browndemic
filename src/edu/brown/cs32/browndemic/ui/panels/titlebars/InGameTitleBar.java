@@ -86,7 +86,7 @@ public class InGameTitleBar extends TitleBar {
 		exit.setForeground(Colors.RED_TEXT);
 		menu.add(exit);
 		
-		Utils.setDefaultLook(menuBar, quit, exit);
+		Utils.setDefaultLook(menu, menuBar, quit, exit);
 		
 		menuBar.add(menu);
 		add(menuBar);
