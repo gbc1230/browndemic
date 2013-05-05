@@ -93,4 +93,79 @@ public class DiseaseAndPerkTest {
 
     }
 
+    @Test
+    public void parasitePerkTests(){
+
+        Parasite p = new Parasite("Swag");
+        assert(p.getAvailablePerks().size() == 14);
+        assert(p.getPoints() == 0);
+        p.addPoints(1000);
+        assert(p.getPoints() == 1000);
+        try {
+            p.buyPerk(8);
+            assert(false);
+        } catch (IllegalAccessException ex) {
+            assert(true);
+        }
+        try {
+            p.buyPerk(1);
+            assert(true);
+        } catch (IllegalAccessException ex) {
+            assert(false);
+        }
+        assert(p.getPoints() == 1000 - p.getPerks()[1].getCost());
+        assert(p.getAvailablePerks().size() == 15);
+        assert(p.getOwnedPerks().size() == 1);
+        try {
+            p.buyPerk(0);
+            assert(true);
+        } catch (IllegalAccessException ex) {
+            assert(false);
+        }
+        assert(p.getPoints() == 1000 - p.getPerks()[1].getCost() -
+                p.getPerks()[0].getCost());
+        assert(p.getAvailablePerks().size() == 15);
+        assert(p.getOwnedPerks().size() == 2);
+        assert(p.getPerks()[0].getCumSellPrice() == p.getPerks()[0].getSellPrice());
+        try {
+            p.buyPerk(4);
+            assert(true);
+        } catch (IllegalAccessException ex) {
+            assert(false);
+        }
+        assert(p.getPerks()[0].getCumSellPrice() != p.getPerks()[0].getSellPrice());
+        double saveSellPrice = p.getPerks()[0].getCumSellPrice();
+        try {
+            p.buyPerk(2);
+            assert(true);
+        } catch (IllegalAccessException ex) {
+            assert(false);
+        }
+        assert(p.getPerks()[0].getCumSellPrice() != saveSellPrice);
+        assert(p.getPoints() == 1000 - p.getPerks()[2].getCost() -
+                p.getPerks()[4].getCost() - p.getPerks()[0].getCost()
+                - p.getPerks()[1].getCost());
+        try {
+            p.sellPerk(0);
+            assert(true);
+        } catch (IllegalAccessException ex) {
+            assert(false);
+        }
+        try {
+            p.sellPerk(2);
+            assert(false);
+        } catch (IllegalAccessException ex) {
+            assert(true);
+        }
+        try {
+            p.sellCumPerk(2);
+            assert(true);
+        } catch (IllegalAccessException ex) {
+            assert(false);
+        }
+        assert(p.getAvailablePerks().size() == 15);
+        assert(p.getOwnedPerks().size() == 1);
+
+    }
+
 }

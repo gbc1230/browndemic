@@ -171,19 +171,20 @@ public class Bacteria extends Disease{
 
         }
 
-        this._perks[perkID].setOwned(false);
+        
         Perk soldPerk = this._perks[perkID];
 
-        for(Integer p: soldPerk.getNext()){
+        for(Integer i: soldPerk.getNext()){
 
-            if(this._perks[p].isOnlyOwnedPrev(this._perks[perkID])){
-                this._perks[p].setAvailability(false);
-                if(this._perks[p].isOwned())
-                    this.sellCumPerk(p);
+            if(this._perks[i].isOnlyOwnedPrev(this._perks[perkID])){
+                this._perks[i].setAvailability(false);
+                if(this._perks[i].isOwned())
+                    this.sellCumPerk(i);
             }
 
         }
 
+        this._perks[perkID].setOwned(false);
         this._infectivity -= soldPerk.getInf();
         this._lethality -= soldPerk.getLeth();
         this._visibility -= soldPerk.getVis();
@@ -209,21 +210,22 @@ public class Bacteria extends Disease{
             throw new IllegalAccessException();
 
        }
-       for(Integer p : this._perks[perkID].getNext()){
+       for(Integer i : this._perks[perkID].getNext()){
 
-            if(this._perks[p].isOnlyOwnedPrev(this._perks[perkID]) &&
-                   this._perks[p].isOwned()) throw new IllegalAccessException();
+            if(this._perks[i].isOnlyOwnedPrev(this._perks[perkID]) &&
+                   this._perks[i].isOwned()) throw new IllegalAccessException();
 
        }
-       this._perks[perkID].setOwned(false);
+       
        Perk soldPerk = this._perks[perkID];
-       for(Integer p: soldPerk.getNext()){
+       for(Integer i: soldPerk.getNext()){
 
-            if(this._perks[p].isOnlyOwnedPrev(this._perks[perkID])){
-                this._perks[p].setAvailability(false);
+            if(this._perks[i].isOnlyOwnedPrev(this._perks[perkID])){
+                this._perks[i].setAvailability(false);
             }
 
         }
+       this._perks[perkID].setOwned(false);
         this._infectivity -= soldPerk.getInf();
         this._lethality -= soldPerk.getLeth();
         this._visibility -= soldPerk.getVis();

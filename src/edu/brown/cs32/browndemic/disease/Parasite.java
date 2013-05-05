@@ -50,9 +50,9 @@ public class Parasite extends Disease{
             ex.printStackTrace();
         }
         //Sets the appropriate perks to initially available
-        int[] availablePerks = {0, 1, 2, 3, 4, 7, 20, 23, 26, 29, 32, 35, 38,
-                                41, 44};
-        for(Integer i : availablePerks) this._perks[i].setAvailability(true);
+       int[] availablePerks = {0, 1, 2, 3, 5, 23, 26, 29, 32, 35, 38, 41, 44,
+                                47};
+        for(int i : availablePerks) this._perks[i].setAvailability(true);
         this._infectivity = 1;
         this._visibility = 1;
         this._lethality = 5;
@@ -75,8 +75,8 @@ public class Parasite extends Disease{
             ex.printStackTrace();
         }
         //Sets the appropriate perks to initially available
-        int[] availablePerks = {0, 1, 2, 3, 4, 7, 20, 23, 26, 29, 32, 35, 38,
-                                41, 44};
+        int[] availablePerks = {0, 1, 2, 3, 5, 23, 26, 29, 32, 35, 38, 41, 44,
+                                47};
         for(Integer i : availablePerks) this._perks[i].setAvailability(true);
         this._infectivity = 1;
         this._visibility = 1;
@@ -152,19 +152,18 @@ public class Parasite extends Disease{
 
         }
 
-        this._perks[perkID].setOwned(false);
         Perk soldPerk = this._perks[perkID];
+        for(Integer i: soldPerk.getNext()){
 
-        for(Integer p: soldPerk.getNext()){
-
-            if(this._perks[p].isOnlyOwnedPrev(this._perks[perkID])){
-                this._perks[p].setAvailability(false);
-                if(this._perks[p].isOwned())
-                    this.sellCumPerk(p);
+            if(this._perks[i].isOnlyOwnedPrev(this._perks[perkID])){
+                this._perks[i].setAvailability(false);
+                if(this._perks[i].isOwned())
+                    this.sellCumPerk(i);
             }
 
         }
 
+        this._perks[perkID].setOwned(false);
         this._infectivity -= soldPerk.getInf();
         this._lethality -= soldPerk.getLeth();
         this._visibility -= soldPerk.getVis();
@@ -190,21 +189,22 @@ public class Parasite extends Disease{
             throw new IllegalAccessException();
 
        }
-       for(Integer p : this._perks[perkID].getNext()){
+       for(Integer i : this._perks[perkID].getNext()){
 
-            if(this._perks[p].isOnlyOwnedPrev(this._perks[perkID]) &&
-                   this._perks[p].isOwned()) throw new IllegalAccessException();
+            if(this._perks[i].isOnlyOwnedPrev(this._perks[perkID]) &&
+                   this._perks[i].isOwned()) throw new IllegalAccessException();
 
        }
-       this._perks[perkID].setOwned(false);
+    
        Perk soldPerk = this._perks[perkID];
-       for(Integer p: soldPerk.getNext()){
+       for(Integer i: soldPerk.getNext()){
 
-            if(this._perks[p].isOnlyOwnedPrev(this._perks[perkID])){
-                this._perks[p].setAvailability(false);
+            if(this._perks[i].isOnlyOwnedPrev(this._perks[perkID])){
+                this._perks[i].setAvailability(false);
             }
 
         }
+        this._perks[perkID].setOwned(false);
         this._infectivity -= soldPerk.getInf();
         this._lethality -= soldPerk.getLeth();
         this._visibility -= soldPerk.getVis();
