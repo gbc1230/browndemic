@@ -17,6 +17,7 @@ import javax.swing.Timer;
 
 import edu.brown.cs32.browndemic.network.LobbyMember;
 import edu.brown.cs32.browndemic.ui.Resources;
+import edu.brown.cs32.browndemic.ui.Settings;
 import edu.brown.cs32.browndemic.ui.UIConstants.Colors;
 import edu.brown.cs32.browndemic.ui.UIConstants.Fonts;
 import edu.brown.cs32.browndemic.ui.UIConstants.Images;
@@ -44,6 +45,7 @@ public class MultiplayerLobby extends UIPanel {
     private ServerWorld _serverWorld;
     private List<LobbyMember> _lobby;
     private Timer _timer;
+    private String _name;
 	
 	public MultiplayerLobby(boolean isHost, ClientWorld cli, ServerWorld ser) {
 		super();
@@ -52,6 +54,7 @@ public class MultiplayerLobby extends UIPanel {
         _thisWorld = cli;
         _serverWorld = ser;
         _lobby = new ArrayList<>();
+        _name = Settings.get(Settings.NAME);
 		makeUI();
 	}
 	
@@ -134,7 +137,6 @@ public class MultiplayerLobby extends UIPanel {
 	private void update() {
 		try{
 			if (_lobby == null || !_lobby.equals(_thisWorld.getLobby())) {
-				System.out.println("UPDATING LOBBY");
 				_lobby = _thisWorld.getLobby();
 				_players.removeAll();
 				if (_lobby == null)
@@ -156,6 +158,10 @@ public class MultiplayerLobby extends UIPanel {
 		}
 		catch(NullPointerException e){
 			System.out.println("Null pointer on: " + _lobby + ", " + _thisWorld);
+		}
+		if (!_name.equals(Settings.get(Settings.NAME))) {
+			_name = Settings.get(Settings.NAME);
+			_thisWorld.setName(_name);
 		}
 	}
 	
@@ -190,7 +196,7 @@ public class MultiplayerLobby extends UIPanel {
 		});
 		_timer.start();
 		_chat.requestFocusInWindow();
-		Utils.getParentFrame(this).setTitle(new BackTitleBar(new MultiplayerMenu()));
+		Utils.getParentFrame(this).setTitle(new BackTitleBar(this, new MultiplayerMenu()));
 	}
 
 	@Override
@@ -209,7 +215,7 @@ public class MultiplayerLobby extends UIPanel {
     public void stopPanel() {
         _timer.stop();
         if (!_started) {
-	        _thisWorld.leaveLobby();
+	        _thisWorld.leaveGame();
 	        if (_isHost) {
 	        	_serverWorld.killServer();
 	        }

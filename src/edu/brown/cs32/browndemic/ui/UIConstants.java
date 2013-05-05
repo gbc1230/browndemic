@@ -123,14 +123,8 @@ public class UIConstants {
 		public static final String DISEASE3_SELECTED = IMAGE_PATH + "disease_placeholder_selected.png";
 		public static final String STARTGAME = IMAGE_PATH + "startgame.png";
 		public static final String STARTGAME_HOVER = IMAGE_PATH + "startgame_hover.png";
-		public static final String PLAY1 = IMAGE_PATH + "play.png";
-		public static final String PLAY1_HOVER = IMAGE_PATH + "play_hover.png";
-		public static final String PLAY2 = IMAGE_PATH + "play2.png";
-		public static final String PLAY2_HOVER = IMAGE_PATH + "play2_hover.png";
-		public static final String PLAY3 = IMAGE_PATH + "play3.png";
-		public static final String PLAY3_HOVER = IMAGE_PATH + "play3_hover.png";
-		public static final String PAUSE = IMAGE_PATH + "pause.png";
-		public static final String PAUSE_HOVER = IMAGE_PATH + "pause_hover.png";
+		public static final String SETTINGS = IMAGE_PATH + "settings.png";
+		public static final String SETTINGS_HOVER = IMAGE_PATH + "settings_hover.png";
 		
 		public static final String MAP = IMAGE_PATH + "earth_large.png";
 		public static final String REGIONS = IMAGE_PATH + "earth_large_regions.png";
@@ -145,6 +139,14 @@ public class UIConstants {
 		public static final String SEAPORT_CLOSED_BIG = IMAGE_PATH + "seaport_closed_big.png";
 		public static final String DISEASE = IMAGE_PATH + "disease_placeholder.png";
 		public static final String DISEASE_SELECTED = IMAGE_PATH + "disease_placeholder_selected.png";
+		public static final String PLAY1 = IMAGE_PATH + "play.png";
+		public static final String PLAY1_HOVER = IMAGE_PATH + "play_hover.png";
+		public static final String PLAY2 = IMAGE_PATH + "play2.png";
+		public static final String PLAY2_HOVER = IMAGE_PATH + "play2_hover.png";
+		public static final String PLAY3 = IMAGE_PATH + "play3.png";
+		public static final String PLAY3_HOVER = IMAGE_PATH + "play3_hover.png";
+		public static final String PAUSE = IMAGE_PATH + "pause.png";
+		public static final String PAUSE_HOVER = IMAGE_PATH + "pause_hover.png";
 		
 		/*
 		 * Images that should be loaded when the program starts.
@@ -165,14 +167,8 @@ public class UIConstants {
 			DISEASE2_SELECTED,
 			DISEASE3,
 			DISEASE3_SELECTED,
-			PLAY1,
-			PLAY1_HOVER,
-			PLAY2,
-			PLAY2_HOVER,
-			PLAY3,
-			PLAY3_HOVER,
-			PAUSE,
-			PAUSE_HOVER,
+			SETTINGS,
+			SETTINGS_HOVER,
 		};
 		
 		public static final String[] GAME_IMAGES = {
@@ -188,7 +184,15 @@ public class UIConstants {
 			SEAPORT_OPEN_BIG,
 			SEAPORT_CLOSED_BIG,
 			DISEASE,
-			DISEASE_SELECTED
+			DISEASE_SELECTED,
+			PLAY1,
+			PLAY1_HOVER,
+			PLAY2,
+			PLAY2_HOVER,
+			PLAY3,
+			PLAY3_HOVER,
+			PAUSE,
+			PAUSE_HOVER,
 		};
 		
 	}

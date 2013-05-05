@@ -66,8 +66,9 @@ public class ClientWorld implements ChatServer, World{
         return _lobby;
     }
     
-    public void leaveLobby(){
-        LobbyRemoval lr = new LobbyRemoval();
+    @Override
+    public void leaveGame(){
+        GameLeave lr = new GameLeave();
         _output.add(lr);
     }
     
@@ -98,7 +99,7 @@ public class ClientWorld implements ChatServer, World{
     }
     
     public void disconnectHost(){
-    	System.out.println(_name + " disconnected.");
+    	System.out.println(_name + " disconnected because the host left.");
     	_hostDisconnected = true;
     }
     
@@ -226,11 +227,11 @@ public class ClientWorld implements ChatServer, World{
     }
     
     public void sendDisease(int id, ServerWorld world){
-        if (_picked == 0)
+        if (_picked == 1)
             addDisease(new Bacteria(_name));
-        else if (_picked == 1)
-            addDisease(new Virus(_name));
         else if (_picked == 2)
+            addDisease(new Virus(_name));
+        else if (_picked == 3)
             addDisease(new Parasite(_name));
         if (_picked >= 0 && _picked <= 2){
         	_diseaseID = id;
@@ -257,6 +258,10 @@ public class ClientWorld implements ChatServer, World{
     
     public String getName(){
         return _name;
+    }
+    
+    public void setName(String name){
+    	_name = name;
     }
     
     //not used in multiplayer

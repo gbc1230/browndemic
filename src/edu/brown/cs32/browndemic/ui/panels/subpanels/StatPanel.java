@@ -11,35 +11,37 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.Timer;
 
-import edu.brown.cs32.browndemic.disease.Disease;
 import edu.brown.cs32.browndemic.ui.UIConstants.Colors;
 import edu.brown.cs32.browndemic.ui.UIConstants.Fonts;
 import edu.brown.cs32.browndemic.ui.Utils;
 import edu.brown.cs32.browndemic.ui.panels.BrowndemicPanel;
+import edu.brown.cs32.browndemic.world.World;
 
 public class StatPanel extends BrowndemicPanel {
 	
 	private static final long serialVersionUID = -1147093041368550992L;
 	
-	private Disease _disease;
+	private int _disease;
+	private World _world;
 	private JProgressBar _infectivity, _lethality, _visibility, _heat, _cold, _wet, _dry, _medicine;
 	private Timer _timer;
 
-	public StatPanel(Disease d) {
+	public StatPanel(World world, int disease) {
 		super();
-		_disease = d;
+		_world = world;
+		_disease = disease;
 		makeUI();
 		_timer = new Timer(1000/5, new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				_infectivity.setValue((int)_disease.getInfectivity());
-				_lethality.setValue((int)_disease.getLethality());
-				_visibility.setValue((int)_disease.getVisibility());
-				_heat.setValue((int)_disease.getHeatRes());
-				_cold.setValue((int)_disease.getColdRes());
-				_wet.setValue((int)_disease.getWetRes());
-				_dry.setValue((int)_disease.getDryRes());
-				_medicine.setValue((int)_disease.getMedRes());
+				_infectivity.setValue((int)_world.getDisease(_disease).getInfectivity());
+				_lethality.setValue((int)_world.getDisease(_disease).getLethality());
+				_visibility.setValue((int)_world.getDisease(_disease).getVisibility());
+				_heat.setValue((int)_world.getDisease(_disease).getHeatRes());
+				_cold.setValue((int)_world.getDisease(_disease).getColdRes());
+				_wet.setValue((int)_world.getDisease(_disease).getWetRes());
+				_dry.setValue((int)_world.getDisease(_disease).getDryRes());
+				_medicine.setValue((int)_world.getDisease(_disease).getMedRes());
 			}
 		});
 		_timer.setInitialDelay(0);
@@ -52,13 +54,13 @@ public class StatPanel extends BrowndemicPanel {
 		setBorder(BorderFactory.createLineBorder(Colors.RED_TEXT, 2));
 		
 		
-		_infectivity = new JProgressBar(0, (int)_disease.getMaxInfectivity());
+		_infectivity = new JProgressBar(0, (int)_world.getDisease(_disease).getMaxInfectivity());
 		JPanel infectivity = createPanel("Infectivity: ", _infectivity);
 		
-		_lethality = new JProgressBar(0, (int)_disease.getMaxLethality());
+		_lethality = new JProgressBar(0, (int)_world.getDisease(_disease).getMaxLethality());
 		JPanel lethality = createPanel("Lethality: ", _lethality);
 		
-		_visibility = new JProgressBar(0, (int)_disease.getMaxVisibility());
+		_visibility = new JProgressBar(0, (int)_world.getDisease(_disease).getMaxVisibility());
 		JPanel visibility = createPanel("Visibility: ", _visibility);
 		
 		_heat = new JProgressBar(0, 4);

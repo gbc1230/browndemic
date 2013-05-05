@@ -5,6 +5,7 @@
 
 package edu.brown.cs32.browndemic.world;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,7 +18,8 @@ import edu.brown.cs32.browndemic.region.RegionTransmission;
  *
  * @author gcarling
  */
-public abstract class MainWorld implements World, Runnable{
+public abstract class MainWorld implements World, Runnable, Serializable{
+	private static final long serialVersionUID = 1774845179387841713L;
 
     //ArrayList of Regions
     protected List<Region> _regions;
@@ -34,13 +36,14 @@ public abstract class MainWorld implements World, Runnable{
     
     //ArrayLists keeping track of how many people each disease has killed / has infected currently
     //also the progress towards the cure
-    //oldInf helps me with 
-    protected List<Long> _kills, _infects, _cures, _oldInf;
+    //oldInf helps me with giving out points by tracking gains in infection
+    //oldKills helps me give out points by tracking gains in kills
+    protected List<Long> _kills, _infects, _cures, _oldInfects, _oldKills;
     
     //winners takes care of the winners: if empty at the end of the game,
     //it signifies that all diseases were erradicated
     //benchMarks is for giving out points, tells me how far along they are
-    protected List<Integer> _winners, _benchMarks;
+    protected List<Integer> _winners, _infectBenchMarks, _killBenchMarks;
     
     //which cures have been sent out already
     //NOTE: a cure is the progress towards distributing the cure; a disease
@@ -80,9 +83,11 @@ public abstract class MainWorld implements World, Runnable{
         _kills = new ArrayList<>();
         _infects = new ArrayList<>();
         _winners = new ArrayList<>();
-        _benchMarks = new ArrayList<>();
+        _infectBenchMarks = new ArrayList<>();
+        _killBenchMarks = new ArrayList<>();
         _cures = new ArrayList<>();
-        _oldInf = new ArrayList<>();
+        _oldInfects = new ArrayList<>();
+        _oldKills = new ArrayList<>();
         _sent = new ArrayList<>();
         _cured = new ArrayList<>();
         _news = new ArrayList<>();
@@ -226,7 +231,7 @@ public abstract class MainWorld implements World, Runnable{
     
     @Override
     public List<String> getNews(){
-        return _news;
+    	return new ArrayList<>(_news);
     }
     
     //set the speed of the game (wait time between updates)
@@ -451,29 +456,46 @@ public abstract class MainWorld implements World, Runnable{
     private void givePoints(){
     	for (int i = 0; i < _diseases.size(); i++){
     		Disease d = _diseases.get(i);
+    		//points based on infections
     		long newInf = _infects.get(i);
-    		long oldInf = _oldInf.get(i);
-    		long change = newInf - oldInf;
-    		int bench = _benchMarks.get(i);
-    		if (bench * 10L <= newInf){
-    			_benchMarks.set(i, bench*10);
-    			bench = _benchMarks.get(i);
+    		long oldInf = _oldInfects.get(i);
+    		long infChange = newInf - oldInf;
+    		int infBench = _infectBenchMarks.get(i);
+    		if (infBench * 10L <= newInf){
+    			_infectBenchMarks.set(i, infBench*10);
+    			infBench = _infectBenchMarks.get(i);
     		}
-//    		System.out.println(newInf + " " + oldInf + " " + bench);
-    		if (change >= bench){
-	    		long val = change / bench;
+    		if (infChange >= infBench){
+	    		long val = infChange / infBench;
 	    		for (int c = 0; c < val; c++){
-//	    			System.out.println("adding");
-//	    			int rand = (int)(Math.random() * 2);
-//	    			if (rand == 0)
 	    			d.addPoints(1);
-//	    			else 
-//                    	d.addPoints(2);
-//	    			System.out.println(d.getPoints());
 	    		}
-	    		_oldInf.set(i, oldInf + val * bench);
+	    		_oldInfects.set(i, oldInf + val * infBench);
+    		}
+    		//points based on kills
+    		long newKill = _kills.get(i);
+    		long oldKill = _oldKills.get(i);
+    		long killChange = newKill - oldKill;
+    		int killBench = _killBenchMarks.get(i);
+    		if (killBench * 10L <= newKill){
+    			_killBenchMarks.set(i, killBench*10);
+    			killBench = _killBenchMarks.get(i);
+    		}
+    		if (killChange >= killBench){
+	    		long val = killChange / killBench;
+	    		for (int c = 0; c < val; c++){
+	    			d.addPoints(1);
+	    		}
+	    		_oldKills.set(i, oldKill + val * killBench);
     		}
     	}
+    }
+    
+    /**
+     * Has no extra requirement here
+     */
+    public void leaveGame(){
+    	
     }
     
     /**
@@ -482,8 +504,10 @@ public abstract class MainWorld implements World, Runnable{
     protected void setupDiseases(){
         for (int i = 0; i < _diseases.size(); i++){
             _cures.add(0L);
-            _oldInf.add(0L);
-            _benchMarks.add(10);
+            _oldInfects.add(0L);
+            _infectBenchMarks.add(10);
+            _oldKills.add(0L);
+            _killBenchMarks.add(10);
             _kills.add(0L);
             _infects.add(0L);
             _sent.add(false);

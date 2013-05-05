@@ -117,7 +117,7 @@ public class BrowndemicFrame extends JFrame {
 	 * Sets the Title Bar to the default.
 	 */
 	public void defaultTitle() {
-		setTitle(new DefaultTitleBar());
+		setTitle(new DefaultTitleBar(new MainMenu()));
 	}
 	
 	/**
@@ -148,17 +148,16 @@ public class BrowndemicFrame extends JFrame {
 		setVisible(true);
 	}
 	
-	public void setPanel(UIPanel p, boolean doSetup) {
+	public void setPanel(UIPanel p, boolean stopPrev) {
 		_content.removeAll();
-		if (_current != null) {
+		if (_current != null && stopPrev) {
 			_current.stopPanel();
 		}
 		revalidate();
 		repaint();
 		_content.add(p);
 		_current = p;
-		if (doSetup)
-			p.setupForDisplay();
+		p.setupForDisplay();
 		setVisible(true);
 	}
 	

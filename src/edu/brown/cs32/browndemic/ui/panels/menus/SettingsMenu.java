@@ -29,10 +29,18 @@ public class SettingsMenu extends UIPanel implements ItemListener, DocumentListe
 	
 	private JCheckBox _caching, _fps;
 	private JTextField _name, _port;
+	private UIPanel _back;
 	
 	public SettingsMenu() {
 		super();
 		makeUI();
+		_back = new MainMenu();
+	}
+	
+	public SettingsMenu(UIPanel back) {
+		super();
+		makeUI();
+		_back = back;
 	}
 	
 	@Override
@@ -114,7 +122,7 @@ public class SettingsMenu extends UIPanel implements ItemListener, DocumentListe
 
 	@Override
 	public void setupForDisplay() {
-		Utils.getParentFrame(this).setTitle(new BackTitleBar(new MainMenu()));
+		Utils.getParentFrame(this).setTitle(new BackTitleBar(_back, _back));
 	}
 
 	@Override

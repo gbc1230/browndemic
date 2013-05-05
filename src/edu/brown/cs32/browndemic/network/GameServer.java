@@ -101,6 +101,7 @@ public class GameServer implements Runnable{
             PerkInput pi = (PerkInput)gd;
             _world.addPerk(pi.getDiseaseID(), pi.getPerkID(), pi.isBuying());
         }
+        //chat message
         else if (id.equals("M")){
             for (int i = 0; i < _clients.size(); i++){
                 if (i != client){
@@ -109,24 +110,31 @@ public class GameServer implements Runnable{
                 }
             }
         }
+        //add a new disease
         else if (id.equals("DA")){
             DiseaseAdder da = (DiseaseAdder)gd;
             _world.addDisease(da.getDisease(), client);
         }
+        //introduce a new disease to a region
         else if (id.equals("DI")){
             DiseaseIntroducer di = (DiseaseIntroducer)gd;
             _world.introduceDisease(di.getRegion(), di.getDisease());
         }
+        //user  has picked a new disease at the start screen
         else if (id.equals("DP")){
             _world.changeDiseasesPicked(client);
         }
+        //new lobby member
         else if (id.equals("LM")){
             LobbyMember lm = (LobbyMember)gd;
             _world.addLobbyMember(lm);
         }
-        else if (id.equals("LR")){
+        //someone has left the game
+        else if (id.equals("GL")){
+        	if (client == 0)
+        		stop();
         	if (client != -1)
-        		_world.removeLobbyMember(client);
+        		_world.removePlayer(client);
         }
     }
 
@@ -154,6 +162,8 @@ public class GameServer implements Runnable{
 	            }
             }
         }
+        if (_clients.size() == 0)
+        	stop();
     }
 
     /**
