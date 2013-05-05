@@ -38,8 +38,8 @@ public class Region implements Serializable{
     private static final double _INFSCALE = 1.0/90;
     
     private double[] _lethDoubleTicks;
-    private static final int _LETHTIMESCALE = 60;
-    private static final double _LETHSCALE = 1.0/60;
+    private static final int _LETHTIMESCALE = 720;
+    private static final double _LETHSCALE = 1.0/720;
 
     private static final int _PLANEFREQ = 240;
     private static final int _SHIPFREQ = 240;
@@ -89,7 +89,7 @@ public class Region implements Serializable{
     private ArrayList<Integer> _disIDs;
     private ArrayList<NaturalDisaster> _disasters;
     
-    private double _remInf, _remDead;
+    private double _remInf;
 
     /**
      * constructs a new Region with the given info
@@ -216,16 +216,12 @@ public class Region implements Serializable{
         double leth = disease.getLethality();
         double max = disease.getMaxLethality();
         for (InfWrapper inf : _hash.getAllOfType(index,1)) {
-            double rate = (leth + max/5)/(max/5)*_LETHSCALE;
+            double rate = (leth + max/5)/(max)*5*_LETHSCALE;
             double number = (Math.pow(rate, _lethDoubleTicks[disease.getID()]/_LETHTIMESCALE)) * inf.getInf();
-            if(_remDead >= 1){
-                number++;
-                _remDead--;
-            }
-            if(disease.getLethality() / disease.getMaxLethality() > .05)
-                _remDead += number % 1;
+            number = number/4;
+            if(leth / max > .1)
+                number = Math.ceil(number);
             else number = 0;
-            number = Math.floor(number);
             if (inf.getInf() < number) {
                 _dead[index] = _dead[index] + inf.getInf();
                 _hash.put(new InfWrapper(inf.getID(), 0L));
@@ -283,7 +279,7 @@ public class Region implements Serializable{
             }
         }
         for(int j = 0; j < _numDiseases; j++){
-            if(_awareness[j] > _awareMax/4)
+            if(_awareness[j] > _awareMax/4 && _diseases[j] != null)
                 _cureProgress[j] = _cureProgress[j] + (long) (_wealth*weightedPop*_med/_diseases[j].getMedRes());
         }
     }
@@ -322,6 +318,8 @@ public class Region implements Serializable{
         int index = d.getID();
         double tot = _awareness[index] + aware;
         if(_awareness[index] < _awareMax/6 && tot > _awareMax/6){
+            if(this.hasDisease(d))
+                _news.add("A mysterious infection has been spotted in " + _name);
             System.out.println(_name + " aware mark 1");
             _awareness[index] = tot;
             notifyNeighbors(d);
@@ -392,7 +390,8 @@ public class Region implements Serializable{
         _infDoubleTicks[index] = Math.log(2.0)/Math.log( 1 + (maxInf + minInf)/(maxInf)*_INFSCALE);
         double maxLeth = d.getMaxLethality();
         double minLeth = d.getStartLethality();
-        _lethDoubleTicks[index] = Math.log(0.5)/Math.log(1 - minLeth/maxLeth*_LETHSCALE);
+        _lethDoubleTicks[index] = Math.log(0.5)/Math.log(1 - (minLeth + maxLeth/5)/maxLeth*5*_LETHSCALE);
+        System.out.println("Leth Double: " + _lethDoubleTicks[index]);
         _news.add(d.getName() + " has infected " + _name + ".");
     }
 
@@ -549,7 +548,7 @@ public class Region implements Serializable{
         _hash.addZero(_population);
         _infDoubleTicks = new double[num];
         _lethDoubleTicks = new double[num];
-        _awareMax = 10 * _population;
+        _awareMax = _population;
     }
 
     /**
