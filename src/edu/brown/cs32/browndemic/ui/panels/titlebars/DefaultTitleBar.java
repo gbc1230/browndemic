@@ -18,14 +18,18 @@ import edu.brown.cs32.browndemic.ui.UIConstants.UI;
 import edu.brown.cs32.browndemic.ui.Utils;
 import edu.brown.cs32.browndemic.ui.components.HoverLabel;
 import edu.brown.cs32.browndemic.ui.panels.DragWindow;
+import edu.brown.cs32.browndemic.ui.panels.UIPanel;
+import edu.brown.cs32.browndemic.ui.panels.menus.SettingsMenu;
 
 public class DefaultTitleBar extends TitleBar implements MouseListener {
 	private static final long serialVersionUID = -8406477447630443105L;
 	
-	JLabel close, minimize, title;
+	protected JLabel close, minimize, title, settings;
+	protected UIPanel _parent;
 	
-	public DefaultTitleBar() {
+	public DefaultTitleBar(UIPanel parent) {
 		super();
+		_parent = parent;
 		makeUI();
 	}
 	
@@ -33,6 +37,12 @@ public class DefaultTitleBar extends TitleBar implements MouseListener {
 		setBackground(Colors.MENU_BACKGROUND);
 		setPreferredSize(new Dimension(UI.WIDTH, UI.TITLE_HEIGHT));
 		new DragWindow(this);
+		
+		settings = new HoverLabel(Resources.getImage(Images.SETTINGS), Resources.getImage(Images.SETTINGS_HOVER));
+		settings.addMouseListener(this);
+		settings.setToolTipText(Strings.SETTINGS);
+		
+		add(settings);
 		
 		add(Box.createHorizontalGlue());
 		
@@ -63,6 +73,8 @@ public class DefaultTitleBar extends TitleBar implements MouseListener {
 			System.exit(0);
 		} else if (e.getSource() == minimize) {
 			Utils.getParentFrame(this).setState(JFrame.ICONIFIED);
+		} else if (e.getSource() == settings) {
+			Utils.getParentFrame(this).setPanel(new SettingsMenu(_parent), false);
 		}
 	}
 }

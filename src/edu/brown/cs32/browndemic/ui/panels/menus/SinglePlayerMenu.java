@@ -47,7 +47,7 @@ public class SinglePlayerMenu extends UIPanel {
 	
 	@Override
 	public void setupForDisplay() {
-		Utils.getParentFrame(this).setTitle(new BackTitleBar(new MainMenu()));
+		Utils.getParentFrame(this).setTitle(new BackTitleBar(this, new MainMenu()));
 	}
 	
 	@Override
