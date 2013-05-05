@@ -73,17 +73,21 @@ public class Perk implements Serializable{
   //the ArrayList of perk ids whose purchase makes this perk available
   private List<Integer> _prevPerks = new ArrayList<Integer>();
 
+  //the string path to the image connected to this perk
+  private String _image;
+
   //Array of all other perks
   private Perk[] _perks;
 
   //constuctor: sets cost, change in infectivity/lethality/visibility and
   //the perks that, when this perk is bought, become available for purchase
-  public Perk(int ID, String tempname, String tempdesc, int tempcost, int tempsell,
+  public Perk(int tempid, String tempname, String tempdesc, int tempcost, int tempsell,
 		      double tempinf, double templeth, double tempvis, double tempheat,
 		      double tempcold, double tempwet, double tempdry, double tempmed,
-		      double tempwater, double tempair, ArrayList<Integer> prev, ArrayList<Integer> next){
+		      double tempwater, double tempair, ArrayList<Integer> tempprev,
+              ArrayList<Integer> tempnext, String tempimage){
 
-    this._id = ID;
+    this._id = tempid;
 	this._name = tempname;
 	this._description = tempdesc;
     this._cost = tempcost;
@@ -98,9 +102,10 @@ public class Perk implements Serializable{
     this._medResChange = tempmed;
     this._waterTransChange = tempwater;
     this._airTransChange = tempair;
-    this._prevPerks = prev;
-    this._nextPerks = next;
-
+    this._prevPerks = tempprev;
+    this._nextPerks = tempnext;
+    this._image = tempimage;
+ 
   }
   
   /**
@@ -506,6 +511,16 @@ public class Perk implements Serializable{
   public List<Integer> getNext(){
 
       return this._nextPerks;
+
+  }
+
+  /**
+   * The string path to the image connected to this perk.
+   * @return _image
+   */
+  public String getImage(){
+
+      return this._image;
 
   }
 
