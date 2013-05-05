@@ -42,6 +42,7 @@ public class StatPanel extends BrowndemicPanel {
 				_medicine.setValue((int)_disease.getMedRes());
 			}
 		});
+		_timer.setInitialDelay(0);
 		_timer.start();
 	}
 	

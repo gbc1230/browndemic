@@ -44,7 +44,6 @@ public class GameMenu extends UIPanel {
 	private boolean _loaded = false, _multiplayer;
 	private int _disease;
 	private InformationBar _info;
-	private ChatPanel _chat;
 	private NewsPanel _news;
 	private RegionPanel _regions;
 	private StatPanel _stats;
@@ -128,7 +127,7 @@ public class GameMenu extends UIPanel {
 		botRight.addTab("Stats", _stats = new StatPanel(_world.getDiseases().get(_disease)));
 		if (_multiplayer) {
 			if (_world instanceof ChatServer)
-				botRight.addTab("Chat", _chat = new ChatPanel((ChatServer)_world));
+				botRight.addTab("Chat", new ChatPanel((ChatServer)_world));
 			botRight.addTab("Players", _lb = new Leaderboard(_world));
 		}
 		botRight.addTab("News", _news = new NewsPanel(_world, _ml));
@@ -162,7 +161,8 @@ public class GameMenu extends UIPanel {
 		return Strings.SINGLEPLAYER_GAME;
 	}
 	
-	private void stop() {
+    @Override
+    public void stopPanel() {
 		if (_loaded) {
 			_news.stop();
 			_info.stop();
@@ -170,12 +170,9 @@ public class GameMenu extends UIPanel {
 			_stats.stop();
 			_upgrade.stop();
 			_map.stop();
+			if (_lb != null)
+				_lb.stop();
 		}
-	}
-        
-    @Override
-    public void stopPanel() {
-        stop();
     }
 	
 }
