@@ -1,4 +1,7 @@
+package edu.brown.cs32.browndemic.tests;
+
 import edu.brown.cs32.browndemic.disease.*;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -33,7 +36,7 @@ public class DiseaseAndPerkTest {
     @Test
     public void virusPerkTests(){
 
-        Virus v = new Virus("Swag");
+        Virus v = new Virus("Test");
         assert(v.getAvailablePerks().size() == 15);
         assert(v.getPoints() == 0);
         v.addPoints(1000);
@@ -96,7 +99,7 @@ public class DiseaseAndPerkTest {
     @Test
     public void parasitePerkTests(){
 
-        Parasite p = new Parasite("Swag");
+        Parasite p = new Parasite("Test");
         assert(p.getAvailablePerks().size() == 14);
         assert(p.getPoints() == 0);
         p.addPoints(1000);
