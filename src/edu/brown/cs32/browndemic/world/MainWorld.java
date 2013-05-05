@@ -362,7 +362,7 @@ public abstract class MainWorld implements Serializable, World, Runnable{
      */
     public void mutateDiseases(){
         for (Disease d : _diseases){
-            d.buyRandomPerk();
+            d.randomPerkEvents();
         }
     }
 

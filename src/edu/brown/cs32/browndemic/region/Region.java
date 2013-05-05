@@ -34,12 +34,12 @@ public class Region implements Serializable{
     private double _awareMax;
     
     private double[] _infDoubleTicks;
-    private static final int _INFTIMESCALE = 120;
-    private static final double _INFSCALE = 1.0/180;
+    private static final int _INFTIMESCALE = 60;
+    private static final double _INFSCALE = 1.0/60;
     
     private double[] _lethDoubleTicks;
-    private static final int _LETHTIMESCALE = 360;
-    private static final double _LETHSCALE = 1.0/360;
+    private static final int _LETHTIMESCALE = 120;
+    private static final double _LETHSCALE = 1.0/120;
 
     private static final int _PLANEFREQ = 240;
     private static final int _SHIPFREQ = 240;
@@ -132,9 +132,9 @@ public class Region implements Serializable{
      */
     public void update() {
         updateCures();
+        naturalDisaster();
         for (Disease d : _diseases) {
             if (null != d) {
-                naturalDisaster();
                 updateAwareness(d,getAwareIncrement(d));
                 cure(d);
                 kill(d);
@@ -170,7 +170,7 @@ public class Region implements Serializable{
             medResFactor = _diseases[d].getMedRes()/_med;
         double maxInf = _diseases[d].getMaxInfectivity();
         double inf = getInfected().get(d);
-        double growthFactor = (_diseases[d].getInfectivity() + maxInf/3) / (maxInf/3) * _INFSCALE *
+        double growthFactor = (_diseases[d].getInfectivity() + maxInf/5) / (maxInf/5) * _INFSCALE *
                 ( wetResFactor + dryResFactor + heatResFactor + coldResFactor + medResFactor)/5;
         double number = inf*Math.pow(growthFactor,_infDoubleTicks[d]/_INFTIMESCALE);
         if(_remInf >= 1){

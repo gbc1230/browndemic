@@ -131,25 +131,30 @@ public class MultiplayerLobby extends UIPanel {
 	}
 	
 	private void update() {
-		if (!_lobby.equals(_thisWorld.getLobby())) {
-			System.out.println("UPDATING LOBBY");
-			_lobby = _thisWorld.getLobby();
-			_players.removeAll();
-			if (_lobby == null)
-				return;
-			for (LobbyMember l : _lobby) {
-		        _players.add(new MultiplayerLobbyPanel(l.getName(), l.getIP(), _isHost, null, l.isReady()));
+		try{
+			if (!_lobby.equals(_thisWorld.getLobby())) {
+				System.out.println("UPDATING LOBBY");
+				_lobby = _thisWorld.getLobby();
+				_players.removeAll();
+				if (_lobby == null)
+					return;
+				for (LobbyMember l : _lobby) {
+			        _players.add(new MultiplayerLobbyPanel(l.getName(), l.getIP(), _isHost, null, l.isReady()));
+				}
+		        _players.add(Box.createGlue());
+				_players.revalidate();
 			}
-	        _players.add(Box.createGlue());
-			_players.revalidate();
+			if (_serverWorld != null) {
+				_start.setEnabled(_serverWorld.allReady());
+			}
+			if (_thisWorld.isGameReady()) {
+				_started = true;
+				Utils.getParentFrame(this).setPanel(new GameMenu(_thisWorld, _thisWorld.getDiseaseID(), true));
+				_timer.stop();
+			}
 		}
-		if (_serverWorld != null) {
-			_start.setEnabled(_serverWorld.allReady());
-		}
-		if (_thisWorld.isGameReady()) {
-			_started = true;
-			Utils.getParentFrame(this).setPanel(new GameMenu(_thisWorld, _thisWorld.getDiseaseID(), true));
-			_timer.stop();
+		catch(NullPointerException e){
+			System.out.println("Null pointer on: " + _lobby + ", " + _thisWorld);
 		}
 	}
 	
