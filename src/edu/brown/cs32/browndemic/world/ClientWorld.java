@@ -227,11 +227,11 @@ public class ClientWorld implements ChatServer, World{
     }
     
     public void sendDisease(int id, ServerWorld world){
-        if (_picked == 0)
+        if (_picked == 1)
             addDisease(new Bacteria(_name));
-        else if (_picked == 1)
-            addDisease(new Virus(_name));
         else if (_picked == 2)
+            addDisease(new Virus(_name));
+        else if (_picked == 3)
             addDisease(new Parasite(_name));
         if (_picked >= 0 && _picked <= 2){
         	_diseaseID = id;
