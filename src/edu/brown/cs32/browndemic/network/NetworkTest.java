@@ -93,7 +93,7 @@ public class NetworkTest implements Runnable{
                     _clientWorld2.changeDiseasesPicked(1);
                 }
                 else if (line.startsWith("LR")){
-                    _clientWorld2.leaveLobby();
+                    _clientWorld2.leaveGame();
                 }
                 else if (line.startsWith("S")){
                     _serverWorld.start();

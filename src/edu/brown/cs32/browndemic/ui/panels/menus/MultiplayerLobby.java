@@ -137,7 +137,6 @@ public class MultiplayerLobby extends UIPanel {
 	private void update() {
 		try{
 			if (_lobby == null || !_lobby.equals(_thisWorld.getLobby())) {
-				System.out.println("UPDATING LOBBY");
 				_lobby = _thisWorld.getLobby();
 				_players.removeAll();
 				if (_lobby == null)
@@ -216,7 +215,7 @@ public class MultiplayerLobby extends UIPanel {
     public void stopPanel() {
         _timer.stop();
         if (!_started) {
-	        _thisWorld.leaveLobby();
+	        _thisWorld.leaveGame();
 	        if (_isHost) {
 	        	_serverWorld.killServer();
 	        }

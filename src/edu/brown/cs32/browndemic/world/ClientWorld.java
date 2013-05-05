@@ -55,7 +55,6 @@ public class ClientWorld implements ChatServer, World{
     
     public void setWorld(ServerWorld w){
         _world = w;
-        System.out.println(_world.getDiseases());
     }
     
     public void setLobby(List<LobbyMember> lobby){
@@ -67,8 +66,8 @@ public class ClientWorld implements ChatServer, World{
         return _lobby;
     }
     
-    public void leaveLobby(){
-        LobbyRemoval lr = new LobbyRemoval();
+    public void leaveGame(){
+        GameLeave lr = new GameLeave();
         _output.add(lr);
     }
     
@@ -99,7 +98,7 @@ public class ClientWorld implements ChatServer, World{
     }
     
     public void disconnectHost(){
-    	System.out.println(_name + " disconnected.");
+    	System.out.println(_name + " disconnected because the host left.");
     	_hostDisconnected = true;
     }
     
@@ -258,6 +257,10 @@ public class ClientWorld implements ChatServer, World{
     
     public String getName(){
         return _name;
+    }
+    
+    public void setName(String name){
+    	_name = name;
     }
     
     //not used in multiplayer
