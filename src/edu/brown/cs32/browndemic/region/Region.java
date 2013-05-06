@@ -223,6 +223,8 @@ public class Region implements Serializable{
             if(leth / max > .1)
                 number = Math.ceil(number);
             else number = 0;
+            if(number < 1)
+                number = 0;
             if (inf.getInf() < number) {
                 _dead[index] = _dead[index] + inf.getInf();
                 _hash.put(new InfWrapper(inf.getID(), 0L));
@@ -239,9 +241,9 @@ public class Region implements Serializable{
      * @param pop
      * @return
      */
-    public int getNumCured(int d, long pop) {
+    public long getTotNumCured(int d) {
         //TODO right now cured just cures 5% of total pop per tick
-        int number = (int) (0.05 * _population);
+        long number = (long) Math.ceil(0.05 * _population);
         return number;
     }
 
@@ -253,9 +255,11 @@ public class Region implements Serializable{
         int index = d.getID();
         _hasCure[index] = true;
         ArrayList<InfWrapper> infected = _hash.getAllOfType(index, 1);
+        long totCured = getTotNumCured(index);
         for (InfWrapper inf : infected) {
+            double popRatio = inf.getInf()/_population;
             String cureID = inf.getID().substring(0, index) + "2" + inf.getID().substring(index + 1);
-            long number = getNumCured(index, inf.getInf());
+            long number = (long) Math.ceil(totCured * popRatio);
             if (inf.getInf() < number) {
                 _hash.put(new InfWrapper(cureID, _hash.get(cureID).getInf() + inf.getInf()));
                 _hash.put(new InfWrapper(inf.getID(), 0L));
@@ -319,19 +323,16 @@ public class Region implements Serializable{
         double tot = _awareness[index] + aware;
         if(_awareness[index] < _awareMax/6 && tot > _awareMax/6){
             if(this.hasDisease(d))
-                _news.add("A mysterious infection has been spotted in " + _name);
-            System.out.println(_name + " aware mark 1");
+                _news.add("An infection has been spotted in " + _name + "!");
             _awareness[index] = tot;
             notifyNeighbors(d);
         }
         else if(_awareness[index] < _awareMax/4 && tot > _awareMax/4){
-            System.out.println(_name + " aware mark 2");
-            _news.add(_name + " has begun work on a cure for " + d.getName());
+            _news.add(_name + " has begun work on a cure for " + d.getName() + ".");
             _awareness[index] = tot;
             notifyNeighbors(d);
         }
         else if(_awareness[index] < _awareMax && tot > _awareMax){
-            System.out.println(_name + " aware mark 3");
             _awareness[index] = tot;
             notifyNeighbors(d);
             if(_air != 0 || _sea != 0)
@@ -348,14 +349,6 @@ public class Region implements Serializable{
             Region r = _regions.get(ind);
             r.updateAwareness(d, _awareness[d.getID()] / 5);
         }
-    }
-
-    /**
-     * setCure(int) sets the boolean cured for the disease at int to true
-     * int d the index of the disease to cure
-     */
-    public void setCure(int d) {
-        _hasCure[d] = true;
     }
 
     /**
@@ -391,7 +384,6 @@ public class Region implements Serializable{
         double maxLeth = d.getMaxLethality();
         double minLeth = d.getStartLethality();
         _lethDoubleTicks[index] = Math.log(0.5)/Math.log(1 - (minLeth + maxLeth/5)/maxLeth*5*_LETHSCALE);
-        System.out.println("Leth Double: " + _lethDoubleTicks[index]);
         _news.add(d.getName() + " has infected " + _name + ".");
     }
 
