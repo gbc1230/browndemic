@@ -37,8 +37,9 @@ public class ClientWorld implements ChatServer, World{
     //the index/diseaseID of this disease
     private int _picked, _diseaseID;
     //is this world ready to start the game
-    //has the host disconnected?
-    private boolean _isGameReady, _hostDisconnected;
+    //has the host disconnected
+    //have I been kicked out of the lobby
+    private boolean _isGameReady, _hostDisconnected, _kicked;
     
     public ClientWorld(String name){
         super();
@@ -47,6 +48,7 @@ public class ClientWorld implements ChatServer, World{
         _isGameReady = false;
         _diseaseID = -1;
         _hostDisconnected = false;
+        _kicked = false;
     }
     
     public GameData getNextData(){
@@ -121,9 +123,17 @@ public class ClientWorld implements ChatServer, World{
     	_hostDisconnected = true;
     }
     
+    public void getKicked(){
+    	_kicked = true;
+    }
+    
     @Override
     public boolean hostDisconnected(){
     	return _hostDisconnected;
+    }
+
+    public boolean wasKicked(){
+    	return _kicked;
     }
     
     @Override
