@@ -34,7 +34,7 @@ public class Region implements Serializable{
     private double _awareMax;
     
     private static final int _INFTIMESCALE = 120;
-    private static final double _INFSCALE = 1.0/150;
+    private static final double _INFSCALE = 1.0/15;
     
     private static final int _LETHTIMESCALE = 720;
     private static final double _LETHSCALE = 1.0/1440;
@@ -167,16 +167,17 @@ public class Region implements Serializable{
         if(_diseases[d].getMedRes() < _med)
             medResFactor = _diseases[d].getMedRes()/_med;
         double maxInf = _diseases[d].getMaxInfectivity();
+        double infectivity = _diseases[d].getInfectivity();
         double inf = getInfected().get(d);
-        double growthFactor =  1 + (_diseases[d].getInfectivity() + maxInf/10) / (maxInf/10) * _INFSCALE *
+        double growthFactor =  1 + (infectivity + maxInf/3) / (maxInf/3) *
                 ( wetResFactor + dryResFactor + heatResFactor + coldResFactor + medResFactor)/5;
-//        System.out.println("Inf growth factor: " + growthFactor);
+        System.out.println("Inf growth factor: " + growthFactor);
         double doubleTime = Math.log(2.0)/Math.log(growthFactor);
-//        System.out.println("Inf double time: " + doubleTime);
-        double timeFactor = _INFTIMESCALE * (maxInf)/(inf + maxInf);
-        double number = inf*(Math.pow(growthFactor,doubleTime/timeFactor) - 1);
-        System.out.println("rate: " + Math.pow(growthFactor,doubleTime/_INFTIMESCALE));
-//        System.out.println("infect: " + number);
+        System.out.println("Inf double time: " + doubleTime);
+        double timeFactor = _INFTIMESCALE * (maxInf)/(infectivity + maxInf);
+        double number = inf*(Math.pow(growthFactor,doubleTime/timeFactor) - 1)* _INFSCALE;
+        System.out.println("rate: " + Math.pow(growthFactor,doubleTime/timeFactor));
+        System.out.println("infect total: " + number);
         if(_remInf >= 1){
             number++;
             _remInf--;
@@ -196,10 +197,14 @@ public class Region implements Serializable{
      **/
     public void infect(Disease disease) {
         int index = disease.getID();
-        long totNumber = getTotNumInfected(index);
+        double totNumber = getTotNumInfected(index);
+        double uninf = 0;
+        for(InfWrapper inf : _hash.getAllOfType(index,0))
+            uninf += inf.getInf();
         for(InfWrapper inf : _hash.getAllOfType(index,0)){
-            double ratio = (double)inf.getInf()/_population;
+            double ratio = inf.getInf()/uninf;
             long number = (long) Math.ceil(totNumber*ratio);
+            System.out.println("infect: " + number);
             String infID = inf.getID().substring(0,index) + "1" + inf.getID().substring(index + 1);
             if (inf.getInf() < number){
                 _hash.put(new InfWrapper(inf.getID(), 0L));
@@ -220,13 +225,14 @@ public class Region implements Serializable{
         double leth = disease.getLethality();
         double max = disease.getMaxLethality();
         for (InfWrapper inf : _hash.getAllOfType(index,1)) {
-            double rate = 1 - (leth + max/10)/(max)*10*_LETHSCALE;
+            double rate = 1 - (leth + max/3)/(max)*3*_LETHSCALE;
 //            System.out.println("Kill growth factor: " + rate);
             double doubleTime = Math.log(0.5)/Math.log(rate);
 //            System.out.println("Kill double time: " + doubleTime);
             double number = (1 - Math.pow(rate, doubleTime/_LETHTIMESCALE)) * inf.getInf();
 //            System.out.println("Kill: " + number);
             number = number/4;
+            number -= 10000;
             if(leth / max > .1)
                 number = Math.ceil(number);
             else number = 0;
