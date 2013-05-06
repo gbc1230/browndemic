@@ -252,6 +252,8 @@ public class ServerWorld extends MainWorld{
     	if (winner > -1)
     		_winners.add(winner);
     	_gameOver = true;
+    	System.out.println(isGameOver());
+    	addCommand();
     }
 
 }
