@@ -33,8 +33,8 @@ public class Region implements Serializable{
 
     private double _awareMax;
     
-    private static final int _INFTIMESCALE = 60;
-    private static final double _INFSCALE = 1.0/90;
+    private static final int _INFTIMESCALE = 180;
+    private static final double _INFSCALE = 1.0/150;
     
     private static final int _LETHTIMESCALE = 720;
     private static final double _LETHSCALE = 1.0/1440;
@@ -168,12 +168,13 @@ public class Region implements Serializable{
             medResFactor = _diseases[d].getMedRes()/_med;
         double maxInf = _diseases[d].getMaxInfectivity();
         double inf = getInfected().get(d);
-        double growthFactor =  (_diseases[d].getInfectivity() + maxInf/10) / (maxInf/10) * _INFSCALE *
+        double growthFactor =  1 + (_diseases[d].getInfectivity() + maxInf/10) / (maxInf/10) * _INFSCALE *
                 ( wetResFactor + dryResFactor + heatResFactor + coldResFactor + medResFactor)/5;
-//        System.out.println("Inf growth factor: " + growthFactor);
-        double doubleTime = Math.log(2.0)/Math.log(1 + growthFactor);
-//        System.out.println("Inf double time: " + doubleTime);
-        double number = inf*Math.pow(growthFactor,doubleTime/_INFTIMESCALE);
+        System.out.println("Inf growth factor: " + growthFactor);
+        double doubleTime = Math.log(2.0)/Math.log(growthFactor);
+        System.out.println("Inf double time: " + doubleTime);
+        double number = inf*(Math.pow(growthFactor,doubleTime/_INFTIMESCALE) - 1);
+        System.out.println("rate: " + Math.pow(growthFactor,doubleTime/_INFTIMESCALE));
 //        System.out.println("infect: " + number);
         if(_remInf >= 1){
             number++;
