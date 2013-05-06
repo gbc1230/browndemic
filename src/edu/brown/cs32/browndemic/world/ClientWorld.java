@@ -246,13 +246,15 @@ public class ClientWorld implements ChatServer, World{
     }
     
     public void sendDisease(int id, ServerWorld world){
+    	System.out.println("Got to this point with " + _picked);
         if (_picked == 1)
             addDisease(new Bacteria(_name));
         else if (_picked == 2)
             addDisease(new Virus(_name));
         else if (_picked == 3)
             addDisease(new Parasite(_name));
-        if (_picked >= 0 && _picked <= 2){
+        if (_picked >= 1 && _picked <= 3){
+        	System.out.println("Disease added, game ready.");
         	_diseaseID = id;
         	_isGameReady = true;
         	setWorld(world);
