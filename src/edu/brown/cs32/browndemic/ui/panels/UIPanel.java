@@ -26,6 +26,7 @@ public abstract class UIPanel extends BrowndemicPanel {
 	protected void makeUI() {
 		setBackground(Colors.TRANSPARENT);
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		setOpaque(false);
 		setPreferredSize(new Dimension(UI.WIDTH, UI.CONTENT_HEIGHT));
 	}
 	

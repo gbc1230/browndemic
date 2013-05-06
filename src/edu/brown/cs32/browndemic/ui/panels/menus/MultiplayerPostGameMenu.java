@@ -12,6 +12,7 @@ import edu.brown.cs32.browndemic.disease.Disease;
 import edu.brown.cs32.browndemic.ui.UIConstants.Colors;
 import edu.brown.cs32.browndemic.ui.UIConstants.Fonts;
 import edu.brown.cs32.browndemic.ui.UIConstants.Strings;
+import edu.brown.cs32.browndemic.ui.UIConstants.UI;
 import edu.brown.cs32.browndemic.ui.Utils;
 import edu.brown.cs32.browndemic.ui.interfaces.ChatServer;
 import edu.brown.cs32.browndemic.ui.panels.UIPanel;
@@ -35,14 +36,19 @@ public class MultiplayerPostGameMenu extends UIPanel {
 	@Override
 	public void makeUI() {
 		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+		setOpaque(false);
 		
 		JPanel left = new JPanel();
 		left.setLayout(new BoxLayout(left, BoxLayout.Y_AXIS));
+		left.setMaximumSize(new Dimension(UI.WIDTH/3, UI.CONTENT_HEIGHT));
 		if (_world instanceof ChatServer)
 			left.add(new ChatPanel((ChatServer)_world));
 		left.add(_lb = new Leaderboard(_world));
 		
 		JPanel right = new JPanel();
+		right.setBackground(Colors.TRANSPARENT);
+		right.setOpaque(false);
+		right.setLayout(new BoxLayout(right, BoxLayout.Y_AXIS));
 		JLabel vicdefeat = new JLabel();
 		vicdefeat.setFont(Fonts.HUGE_TEXT);
 		vicdefeat.setForeground(Colors.RED_TEXT);
@@ -54,6 +60,7 @@ public class MultiplayerPostGameMenu extends UIPanel {
 		right.add(vicdefeat);
 		
 		JTabbedPane stats = new JTabbedPane();
+		right.add(stats);
 		
 		for (Disease d : _world.getDiseases()) {
 			stats.addTab(d.getName(), generateStatsPanel(d.getID()));
@@ -67,7 +74,8 @@ public class MultiplayerPostGameMenu extends UIPanel {
 	private JPanel generateStatsPanel(int disease) {
 		Disease d = _world.getDisease(disease);
 		JPanel out = new JPanel();
-		
+		out.setBackground(Colors.TRANSPARENT);
+		out.setOpaque(false);
 		out.setLayout(new BoxLayout(out, BoxLayout.Y_AXIS));
 		
 		long dead = _world.getDead(disease);
