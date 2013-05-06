@@ -59,6 +59,8 @@ public class MultiplayerPostGameMenu extends UIPanel {
 			stats.addTab(d.getName(), generateStatsPanel(d.getID()));
 		}
 		
+		add(left);
+		add(right);
 		
 	}
 	
