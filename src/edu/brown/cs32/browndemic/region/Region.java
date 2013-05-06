@@ -347,7 +347,7 @@ public class Region implements Serializable{
             _awareness[index] = tot;
             notifyNeighbors(d);
         }
-        else if(_awareness[index] < _awareMax/_CUREFRAC && tot > _awareMax/_CUREFAC){
+        else if(_awareness[index] < _awareMax/_CUREFRAC && tot > _awareMax/_CUREFRAC){
             _news.add(_name + " has begun work on a cure for " + d.getName() + ".");
             _awareness[index] = tot;
             notifyNeighbors(d);
