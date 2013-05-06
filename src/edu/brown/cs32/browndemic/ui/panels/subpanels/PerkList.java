@@ -40,7 +40,7 @@ public class PerkList extends JPanel implements MouseListener {
 		removeAll();
 		_buttons.clear();
 		for (Perk p : perks) {
-			PerkPanel pp = new PerkPanel().setImage(Resources.getImage(Images.DISEASE).getScaledInstance(50, 50, Image.SCALE_FAST))
+			PerkPanel pp = new PerkPanel().setImage(Resources.getImage(Images.PERK_LUNGS))
 					.setText(p.getName()).setTextFont(Fonts.TITLE_BAR).setTextColor(Colors.RED_TEXT);
 			pp.setBackground(Colors.MENU_BACKGROUND);
 			//pp.setOpaque(false);

@@ -89,6 +89,10 @@ public class UIConstants {
 		public static final String INFO_CURED = "Cure Progress: ";
 		public static final String MULTIPLAYER_LOBBY = "Multiplayer Lobby";
 		public static final String SETTINGS_MULTIPLAYER_NAME = "Multiplayer Name: ";
+		public static final String POST_GAME_MENU = "Postgame Menu";
+		public static final String VICTORY = "VICTORY";
+		public static final String DEFEAT = "DEFEAT";
+		public static final String PEOPLE_KILLED = "People Killed";
 	}
 	
 	/**
@@ -99,6 +103,7 @@ public class UIConstants {
 	 */
 	public static class Images {
 		public static final String IMAGE_PATH = RESOURCE_PATH + "images/";
+		public static final String PERKS_PATH = IMAGE_PATH + "perks/";
 		
 		public static final String DEFAULT = IMAGE_PATH + "placeholder.jpg";
 		public static final String SINGLE_PLAYER = IMAGE_PATH + "singleplayer.png";
@@ -119,8 +124,8 @@ public class UIConstants {
 		public static final String DISEASE1_SELECTED = IMAGE_PATH + "bacteria_selected.png";
 		public static final String DISEASE2 = IMAGE_PATH + "virus.png";
 		public static final String DISEASE2_SELECTED = IMAGE_PATH + "virus_selected.png";
-		public static final String DISEASE3 = IMAGE_PATH + "disease_placeholder.png";
-		public static final String DISEASE3_SELECTED = IMAGE_PATH + "disease_placeholder_selected.png";
+		public static final String DISEASE3 = IMAGE_PATH + "parasite.png";
+		public static final String DISEASE3_SELECTED = IMAGE_PATH + "parasite_selected.png";
 		public static final String STARTGAME = IMAGE_PATH + "startgame.png";
 		public static final String STARTGAME_HOVER = IMAGE_PATH + "startgame_hover.png";
 		public static final String SETTINGS = IMAGE_PATH + "settings.png";
@@ -147,6 +152,7 @@ public class UIConstants {
 		public static final String PLAY3_HOVER = IMAGE_PATH + "play3_hover.png";
 		public static final String PAUSE = IMAGE_PATH + "pause.png";
 		public static final String PAUSE_HOVER = IMAGE_PATH + "pause_hover.png";
+		public static final String PERK_LUNGS = PERKS_PATH + "lung.png";
 		
 		/*
 		 * Images that should be loaded when the program starts.
@@ -193,6 +199,7 @@ public class UIConstants {
 			PLAY3_HOVER,
 			PAUSE,
 			PAUSE_HOVER,
+			PERK_LUNGS,
 		};
 		
 	}
@@ -224,6 +231,7 @@ public class UIConstants {
 		public static Font BIG_TEXT;
 		public static Font NORMAL_TEXT;
 		public static Font BUTTON_TEXT;
+		public static Font HUGE_TEXT;
 		
 		public static void init() throws FileNotFoundException, FontFormatException, IOException {
 			TITLE_BAR = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream(new File(RESOURCE_PATH + "fonts/GhostWriter.ttf"))).deriveFont(22f);
@@ -232,6 +240,7 @@ public class UIConstants {
 			BIG_TEXT = TITLE_BAR.deriveFont(38f);
 			NORMAL_TEXT = TITLE_BAR.deriveFont(16f);
 			BUTTON_TEXT = TITLE_BAR.deriveFont(46f);
+			HUGE_TEXT = TITLE_BAR.deriveFont(68f);
 		}
 	}
 }

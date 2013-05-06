@@ -40,6 +40,7 @@ public class Leaderboard extends BrowndemicPanel {
 				update();
 			}
 		});
+		_timer.setInitialDelay(0);
 		_timer.start();
 	}
 	
