@@ -126,7 +126,7 @@ public class UpgradePanel extends BrowndemicPanel {
 		_buysell = new HoverLabel("", Fonts.TITLE_BAR, Colors.RED_TEXT, Colors.HOVER_TEXT);
 		_buysell.addMouseListener(this);
 		
-		_addPoint = new HoverLabel("FREE POINTS!", Fonts.TITLE_BAR, Colors.RED_TEXT, Colors.HOVER_TEXT);
+		_addPoint = new HoverLabel("END GAME", Fonts.TITLE_BAR, Colors.RED_TEXT, Colors.HOVER_TEXT);
 		_addPoint.addMouseListener(this);
 		
 		_points = new JLabel();

@@ -2,8 +2,13 @@ package edu.brown.cs32.browndemic.ui.panels.menus;
 
 import java.awt.Dimension;
 import java.awt.event.MouseEvent;
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInput;
+import java.io.ObjectInputStream;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -30,6 +35,7 @@ import edu.brown.cs32.browndemic.ui.panels.UIPanel;
 import edu.brown.cs32.browndemic.ui.panels.titlebars.BackTitleBar;
 import edu.brown.cs32.browndemic.world.World;
 import edu.brown.cs32.browndemic.world.WorldMaker;
+import edu.brown.cs32.browndemic.world.WorldSP;
 
 public class SinglePlayerMenu extends UIPanel {
 
@@ -176,9 +182,31 @@ public class SinglePlayerMenu extends UIPanel {
 			fc.setCurrentDirectory(saves);
 			
 			if (fc.showOpenDialog(Utils.getParentFrame(this)) == JFileChooser.APPROVE_OPTION) {
-				System.out.println("LOAD FROM: " + fc.getSelectedFile());
-				// TODO: Load file
-				Utils.getParentFrame(this).setPanel(new GameMenu(null, 0, false));
+				File f = fc.getSelectedFile();
+				System.out.println("LOAD FROM: " + f.getName());
+				//load the file
+				WorldSP world = null;
+				try{
+					InputStream file = new FileInputStream(f);
+				    InputStream buffer = new BufferedInputStream(file);
+				    ObjectInput input = new ObjectInputStream (buffer);
+				    try{
+				        world = (WorldSP)input.readObject();
+				    }
+				    finally{
+				    	input.close();
+				    }
+				}
+				catch(ClassNotFoundException ex){
+					System.out.println("ClassNotFound in loading");
+				}
+			    catch(IOException ex){
+			    	System.out.println("Couldn't load file.");
+				}
+				if (world != null){
+					world.startFromLoad();
+					Utils.getParentFrame(this).setPanel(new GameMenu(world, 0, false));
+				}
 			}
 		}
 	}
