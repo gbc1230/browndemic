@@ -173,10 +173,10 @@ public class Region implements Serializable{
         double inf = getInfected().get(d);
         double growthFactor =  1 + (infectivity + maxInf/_INFSCALE) / (maxInf/_INFSCALE) *
                 ( wetResFactor + dryResFactor + heatResFactor + coldResFactor + medResFactor)/5;
-        System.out.println("Inf growth factor: " + growthFactor);
+//        System.out.println("Inf growth factor: " + growthFactor);
         double number = inf*(Math.pow(growthFactor,_infDoubleTime[d]/_INFTIMESCALE) - 1);
-        System.out.println("rate: " + (Math.pow(growthFactor,_infDoubleTime[d]/_INFTIMESCALE) - 1));
-        System.out.println("infect total: " + number);
+//        System.out.println("rate: " + (Math.pow(growthFactor,_infDoubleTime[d]/_INFTIMESCALE) - 1));
+//        System.out.println("infect total: " + number);
         if(_remInf >= 1){
             number++;
             _remInf--;
@@ -203,7 +203,7 @@ public class Region implements Serializable{
         for(InfWrapper inf : _hash.getAllOfType(index,0)){
             double ratio = inf.getInf()/uninf;
             long number = (long) Math.ceil(totNumber*ratio);
-            System.out.println("infect: " + number);
+//            System.out.println("infect: " + number);
             String infID = inf.getID().substring(0,index) + "1" + inf.getID().substring(index + 1);
             if (inf.getInf() < number){
                 _hash.put(new InfWrapper(inf.getID(), 0L));
