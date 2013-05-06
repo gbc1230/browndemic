@@ -79,7 +79,8 @@ public class Loading extends UIPanel implements PropertyChangeListener {
 	@Override
 	public void setupForDisplay() {
 		if (_useResources) {
-			Utils.getParentFrame(this).defaultTitle();
+			Utils.getParentFrame(this).setTitle(new ResourcelessTitleBar());
+			//Utils.getParentFrame(this).defaultTitle();
 		} else {
 			Utils.getParentFrame(this).setTitle(new ResourcelessTitleBar());
 		}

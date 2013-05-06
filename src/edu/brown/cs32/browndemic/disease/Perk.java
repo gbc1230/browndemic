@@ -588,4 +588,11 @@ public class Perk implements Serializable{
   public String toString() {
 	  return _name;
   }
+  
+  @Override
+  public boolean equals(Object o) {
+	  if (!(o instanceof Perk)) return false;
+	  Perk that = (Perk) o;
+	  return this._name.equals(that._name) && this._cost == that._cost && this._owned == that._owned && this._availability == that._availability;
+  }
 }

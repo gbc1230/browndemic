@@ -2,6 +2,7 @@ package edu.brown.cs32.browndemic.ui.panels.subpanels;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.NumberFormat;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -76,7 +77,7 @@ public class Leaderboard extends BrowndemicPanel {
 		Object[][] data = new Object[_world.getDiseases().size()][cols.length];
 		for (int i = 0; i < data.length; i++) {
 			Disease d = _world.getDiseases().get(i);
-			data[i] = new Object[] { d.getName(), _world.getInfected(d.getID()), _world.getDead(d.getID())};
+			data[i] = new Object[] { d.getName(), NumberFormat.getInstance().format(_world.getInfected(d.getID())), NumberFormat.getInstance().format(_world.getDead(d.getID()))};
 		}
 		
 		List<? extends SortKey> keys = _sorter.getSortKeys();

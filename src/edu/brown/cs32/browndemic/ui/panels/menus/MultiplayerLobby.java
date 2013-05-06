@@ -139,6 +139,7 @@ public class MultiplayerLobby extends UIPanel {
 		if (_thisWorld.hostDisconnected()) {
 			JOptionPane.showMessageDialog(this, "The host has disconnected.  Returning to Main Menu");
 			Utils.getParentFrame(this).setPanel(new MainMenu());
+			_timer.stop();
 		}
 		if (_lobby == null || !_lobby.equals(_thisWorld.getLobby())) {
 			_lobby = _thisWorld.getLobby();
@@ -188,13 +189,16 @@ public class MultiplayerLobby extends UIPanel {
 	@Override
 	public void setupForDisplay() {
 		update();
-		_timer = new Timer(1000/4, new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				update();
-			}
-		});
-		_timer.start();
+		System.out.println("TEST");
+		if (_timer == null) {
+			_timer = new Timer(1000/4, new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					update();
+				}
+			});
+			_timer.start();
+		}
 		_chat.requestFocusInWindow();
 		Utils.getParentFrame(this).setTitle(new BackTitleBar(this, new MultiplayerMenu()));
 	}
