@@ -141,6 +141,7 @@ public class GameServer implements Runnable{
         	_world.updateName(nc.getName(), client);
         }
         else if (id.equals("EG")){
+        	System.out.println("got a gameover");
         	EndGame eg = (EndGame)gd;
         	boolean w = eg.isWinner();
         	if (w)

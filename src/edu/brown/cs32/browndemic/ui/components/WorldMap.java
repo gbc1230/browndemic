@@ -368,7 +368,7 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 	
 	private void update() {
 		if (_world.isGameOver()) {
-			System.out.println(_world.isGameOver());
+			System.out.println("GAME OVER");
 			Utils.getParentFrame(this).setPanel(new MultiplayerPostGameMenu(_world, _disease));
 		}
 		if (_world.hostDisconnected()) {
