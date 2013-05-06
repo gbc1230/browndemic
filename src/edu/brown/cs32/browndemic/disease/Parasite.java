@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class Parasite extends Disease{
 
-    //SerialVersionUID for this perk
+    //SerialVersionUID for this disease
 	private static final long serialVersionUID = -6836486974707322172L;
     //Maximum infectivity
     final private double MAX_INFECTIVITY = 169;
@@ -46,7 +46,7 @@ public class Parasite extends Disease{
             System.out.println("Problem with parasite file!");
             ex.printStackTrace();
         } catch (NoSuchFieldException ex) {
-            System.out.println("Missing/Unknown filed in the parasite file!!");
+            System.out.println("Missing/Unknown field in the parasite file!!");
             ex.printStackTrace();
         }
         //Sets the appropriate perks to initially available

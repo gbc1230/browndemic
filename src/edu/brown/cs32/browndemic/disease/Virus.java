@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class Virus extends Disease{
 
-    //SerialVersionUID for this perk
+    //SerialVersionUID for this disease
 	private static final long serialVersionUID = -1644028364764513072L;
     //Maximum infectivity
     final private double MAX_INFECTIVITY = 114;
@@ -47,7 +47,7 @@ public class Virus extends Disease{
             System.out.println("Problem with virus file!!");
             ex.printStackTrace();
         }catch (NoSuchFieldException ex) {
-            System.out.println("Missing/Unknown filed in the virus file!!");
+            System.out.println("Missing/Unknown field in the virus file!!");
             ex.printStackTrace();
         }
         //these perks are for a virus
@@ -174,7 +174,7 @@ public class Virus extends Disease{
     @Override
     public void sellCumPerk(int perkID) throws IllegalAccessException {
         if(!this._perks[perkID].isOwned() ||
-                this._perks[perkID].getCumSellPrice() > this._points){
+                this._perks[perkID].getCumSellPrice()*-1 > this._points){
 
             throw new IllegalAccessException();
 
@@ -216,7 +216,7 @@ public class Virus extends Disease{
     @Override
     public void sellPerk(int perkID) throws IllegalAccessException {
         if(!this._perks[perkID].isOwned() ||
-                this._perks[perkID].getSellPrice() > this._points){
+                this._perks[perkID].getSellPrice()*-1 > this._points){
 
             throw new IllegalAccessException();
 

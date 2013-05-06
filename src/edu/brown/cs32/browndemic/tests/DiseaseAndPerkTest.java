@@ -14,8 +14,7 @@ import org.junit.Test;
  */
 public class DiseaseAndPerkTest {
 
-    public DiseaseAndPerkTest() {
-    }
+    public DiseaseAndPerkTest() {}
 
     @BeforeClass
     public static void setUpClass() throws Exception {
