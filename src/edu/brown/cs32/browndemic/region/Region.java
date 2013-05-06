@@ -33,8 +33,8 @@ public class Region implements Serializable{
 
     private double _awareMax;
     
-    private static final int _INFTIMESCALE = 60;
-    private static final double _INFSCALE = 1.0/90;
+    private static final int _INFTIMESCALE = 120;
+    private static final double _INFSCALE = 1.0/150;
     
     private static final int _LETHTIMESCALE = 720;
     private static final double _LETHSCALE = 1.0/1440;
@@ -168,12 +168,14 @@ public class Region implements Serializable{
             medResFactor = _diseases[d].getMedRes()/_med;
         double maxInf = _diseases[d].getMaxInfectivity();
         double inf = getInfected().get(d);
-        double growthFactor =  (_diseases[d].getInfectivity() + maxInf/10) / (maxInf/10) * _INFSCALE *
+        double growthFactor =  1 + (_diseases[d].getInfectivity() + maxInf/10) / (maxInf/10) * _INFSCALE *
                 ( wetResFactor + dryResFactor + heatResFactor + coldResFactor + medResFactor)/5;
 //        System.out.println("Inf growth factor: " + growthFactor);
-        double doubleTime = Math.log(2.0)/Math.log(1 + growthFactor);
+        double doubleTime = Math.log(2.0)/Math.log(growthFactor);
 //        System.out.println("Inf double time: " + doubleTime);
-        double number = inf*Math.pow(growthFactor,doubleTime/_INFTIMESCALE);
+        double timeFactor = _INFTIMESCALE * (maxInf)/(inf + maxInf);
+        double number = inf*(Math.pow(growthFactor,doubleTime/timeFactor) - 1);
+        System.out.println("rate: " + Math.pow(growthFactor,doubleTime/_INFTIMESCALE));
 //        System.out.println("infect: " + number);
         if(_remInf >= 1){
             number++;
@@ -218,11 +220,11 @@ public class Region implements Serializable{
         double leth = disease.getLethality();
         double max = disease.getMaxLethality();
         for (InfWrapper inf : _hash.getAllOfType(index,1)) {
-            double rate = (leth + max/10)/(max)*10*_LETHSCALE;
+            double rate = 1 - (leth + max/10)/(max)*10*_LETHSCALE;
 //            System.out.println("Kill growth factor: " + rate);
-            double doubleTime = Math.log(0.5)/Math.log(1 - rate);
+            double doubleTime = Math.log(0.5)/Math.log(rate);
 //            System.out.println("Kill double time: " + doubleTime);
-            double number = (Math.pow(rate, doubleTime/_LETHTIMESCALE)) * inf.getInf();
+            double number = (1 - Math.pow(rate, doubleTime/_LETHTIMESCALE)) * inf.getInf();
 //            System.out.println("Kill: " + number);
             number = number/4;
             if(leth / max > .1)
