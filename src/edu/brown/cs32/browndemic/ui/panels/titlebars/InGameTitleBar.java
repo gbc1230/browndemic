@@ -2,7 +2,13 @@ package edu.brown.cs32.browndemic.ui.panels.titlebars;
 
 import java.awt.Dimension;
 import java.awt.event.MouseEvent;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -28,6 +34,7 @@ import edu.brown.cs32.browndemic.ui.components.SelectButton;
 import edu.brown.cs32.browndemic.ui.panels.DragWindow;
 import edu.brown.cs32.browndemic.ui.panels.menus.MainMenu;
 import edu.brown.cs32.browndemic.world.World;
+import edu.brown.cs32.browndemic.world.WorldSP;
 
 public class InGameTitleBar extends TitleBar {
 
@@ -168,14 +175,31 @@ public class InGameTitleBar extends TitleBar {
 				Utils.getParentFrame(this).setPanel(new MainMenu());
 			}
 		} else if (e.getSource() == save) {
+			_world.pause();
 			File saves = new File("saves");
 			saves.mkdir();
 			JFileChooser fc = new JFileChooser();
 			fc.setCurrentDirectory(saves);
 			
 			if (fc.showSaveDialog(Utils.getParentFrame(this)) == JFileChooser.APPROVE_OPTION) {
-				System.out.println("SAVE TO: " + fc.getSelectedFile());
-				// TODO: Save file
+				File f = fc.getSelectedFile();
+				System.out.println("SAVE TO: " + f.getName());
+				WorldSP world = (WorldSP)_world;
+				//save the world to a file
+				try{
+					OutputStream file = new FileOutputStream(f.getName());
+				    OutputStream buffer = new BufferedOutputStream(file);
+				    ObjectOutput output = new ObjectOutputStream(buffer);
+				    try{
+				    	output.writeObject(world);
+				    }
+				    finally{
+				    	output.close();
+				    }
+				}  
+				catch(IOException ex){
+					System.out.println("Couldn't save");
+				}
 			}
 		} else if (e.getSource() == exit) {
 			int choice = JOptionPane.showOptionDialog(Utils.getParentFrame(this), 

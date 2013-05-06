@@ -10,9 +10,10 @@ import edu.brown.cs32.browndemic.region.Region;
  * Single player world
  * @author Graham
  */
-@SuppressWarnings("serial")
+
 public class WorldSP extends MainWorld{
-    
+	private static final long serialVersionUID = -8695489680338623284L;
+
 	/**
 	 * Basic constructor, only calls super()
 	 */
@@ -70,7 +71,6 @@ public class WorldSP extends MainWorld{
     @Override
     public void run(){
         System.out.println("begin the loop");
-        int i = 0;
         while(_numRegionsPicked < _diseases.size()){
             try{
                 Thread.sleep(1);
