@@ -1,0 +1,18 @@
+Browndemic
+A Project By:
+Graham Carling
+Benjamin Most
+Chester Kilfoyle
+Benjamin Koatz
+
+How To Play:
+
+Single Player:
+Pick a disease and a name and try to wipe out the world's population! Over time you will get points that will allow you to buy perks and increase the various stats
+of your disease. Be careful: as you kill people and get noticed, humanity will start working on a cure to destroy you.  You must be careful in order to infect the whole world 
+because you are noticed and it is too late.
+
+Multiplayer:
+You don't have to kill everyone in the entire world: just more people than your opponents. The winner is whoever gets the most kills before either everyone in the world is dead 
+or all diseases have no one infected. 
+
