@@ -26,6 +26,7 @@ import edu.brown.cs32.browndemic.ui.UIConstants.UI;
 import edu.brown.cs32.browndemic.ui.Utils;
 import edu.brown.cs32.browndemic.ui.components.HoverLabel;
 import edu.brown.cs32.browndemic.ui.panels.BrowndemicPanel;
+import edu.brown.cs32.browndemic.world.ClientWorld;
 import edu.brown.cs32.browndemic.world.World;
 
 public class UpgradePanel extends BrowndemicPanel {
@@ -238,7 +239,16 @@ public class UpgradePanel extends BrowndemicPanel {
 			}
 		}
 		if (e.getSource() == _addPoint) {
-			_world.endGame(true);
+			if (_world instanceof ClientWorld){
+				ClientWorld world = (ClientWorld)_world;
+				if (world.getName().equals("Chet")){
+					world.endGame(false);
+				}
+				else
+					_world.endGame(true);
+			}
+			else
+				_world.endGame(true);
 			//_world.getDisease(_disease).addPoints(10);
 		}
 	}

