@@ -103,6 +103,11 @@ public class GameClient implements Runnable{
         	System.out.println("got an H");
         	stop();
         }
+        //got kicked
+        else if (id.equals("LK")){
+        	_world.getKicked();
+        	stop();
+        }
     }
 
     /**

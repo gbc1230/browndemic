@@ -146,7 +146,8 @@ public class MultiplayerLobby extends UIPanel {
 			_players.removeAll();
 			if (_lobby == null)
 				return;
-			for (LobbyMember l : _lobby) {
+			for (int i = 0; i < _lobby.size(); i++) {
+				LobbyMember l = _lobby.get(i);
 			    _players.add(new MultiplayerLobbyPanel(l.getName(), l.getIP(), _isHost, null, l.isReady()));
 			}
 		    _players.add(Box.createGlue());
