@@ -65,17 +65,26 @@ public class ClientWorld implements ChatServer, World{
         return _lobby;
     }
     
+    /**
+     * Quits the game and alerts the server that this is happening
+     */
     @Override
     public void leaveGame(){
-        GameLeave lr = new GameLeave();
-        _output.add(lr);
+        GameLeave lg = new GameLeave();
+        _output.add(lg);
     }
     
+    /**
+     * For use with the GUI to make sending messages easier
+     */
     @Override
     public void addChatHandler(ChatHandler ch){
         _handler = ch;
     }
     
+    /**
+     * Send out a chat message
+     */
     @Override
     public void sendMessage(String msg){
         System.out.println("Sending: " + msg);
@@ -85,16 +94,26 @@ public class ClientWorld implements ChatServer, World{
         acceptMessage(msg);
     }
     
+    /**
+     * Accept a chat message from another player
+     * @param msg The message to accept
+     */
     public void acceptMessage(String msg){
         System.out.println(_name + ": Accepting message: " + msg);
         _handler.addMessage(msg);
     }
     
+    /**
+     * Handle a disconnect
+     * @param name The DCing player's name
+     * @param id The DCing player's id
+     */
     public void getDisconnect(String name, int id){
     	String dc = name + " has disconnected.";
     	_handler.addMessage(dc);
-    	if (id < _diseaseID)
-    		_diseaseID--;
+    	System.out.println("handled DC");
+//    	if (id < _diseaseID)
+//    		_diseaseID--;
     }
     
     public void disconnectHost(){
@@ -277,5 +296,11 @@ public class ClientWorld implements ChatServer, World{
     
     @Override
     public void setSpeed(int t){
+    }
+    
+    @Override
+    public void endGame(boolean win){
+    	EndGame eg = new EndGame(win);
+    	_output.add(eg);
     }
 }

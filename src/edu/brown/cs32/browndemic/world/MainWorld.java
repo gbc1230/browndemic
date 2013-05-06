@@ -390,6 +390,7 @@ public abstract class MainWorld implements World, Runnable, Serializable{
     public void checkCures(){
         for (int i = 0; i < _cures.size(); i++){
             if (_cures.get(i) >= _cureTotal && !_sent.get(i)){
+            	System.out.println("Sending cures to " + i);
                 sendCures(i);
                 _sent.set(i, true);
             }
@@ -567,6 +568,12 @@ public abstract class MainWorld implements World, Runnable, Serializable{
             ans.append(r.getName()).append(", ");
         }
         return ans.toString();
+    }
+    
+    @Override
+    public void endGame(boolean w){
+    	_gameOver = true;
+    	_winners.add(0);
     }
     
 }

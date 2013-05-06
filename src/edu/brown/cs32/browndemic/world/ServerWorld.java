@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 package edu.brown.cs32.browndemic.world;
-import java.io.Serializable;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
@@ -29,6 +29,8 @@ public class ServerWorld extends MainWorld{
     private List<LobbyMember> _lobby;
     //the queue for sending out lobbies
     transient private Queue<GameData> _outData;
+    //which users have picked their starting region
+    transient private List<Boolean> _regionsPicked;
     
     /**
      * Basic constructor
@@ -38,6 +40,7 @@ public class ServerWorld extends MainWorld{
         _outWorlds = new ConcurrentLinkedQueue<>();
         _lobby = new ArrayList<>();
         _outData = new ConcurrentLinkedQueue<>();
+        _regionsPicked = new ArrayList<>();
     }
     
     /**
@@ -104,8 +107,11 @@ public class ServerWorld extends MainWorld{
      * @param id The id of the disease to remove
      */
     public void removeDisease(int id){
-        if (_started && !_gameOver)
+        if (_started && !_gameOver){
             _diseases.get(id).die();
+//            _diseases.remove(id);
+            _regionsPicked.remove(id);
+        }
     }
     
     public void addLobbyMember(LobbyMember lm){
@@ -134,6 +140,7 @@ public class ServerWorld extends MainWorld{
     	for (int i = 0; i < _lobby.size(); i++){
     		_diseases.add(null);
     	}
+    	System.out.println("Collecting diseases: " + _lobby);
         _outData.add(new CollectDiseases(-1, this));
     }
     
@@ -168,11 +175,15 @@ public class ServerWorld extends MainWorld{
     public void introduceDisease(int d, int r){
         System.out.println("Introducing " + d + " to " + r);
         _regions.get(r).introduceDisease(_diseases.get(d));
-        _numRegionsPicked++;
+        _regionsPicked.set(d, true);
+        System.out.println(allRegionsPicked());
     }
     
     public void start(){
     	setupDiseases();
+    	for (Disease d : _diseases){
+    		_regionsPicked.add(false);
+    	}
         for (Region r : _regions){
             r.setNumDiseases(_diseases.size());
             _cureTotal += r.getWealth() * r.getPopulation() * _MINCURETICKS;
@@ -183,11 +194,19 @@ public class ServerWorld extends MainWorld{
         new Thread(this).start();
     }
     
+    public boolean allRegionsPicked(){
+    	for (boolean b : _regionsPicked){
+    		if (!b)
+    			return false;
+    	}
+    	return true;
+    }
+    
     @Override
     public void run(){
         System.out.println("begin the loop");
         int i = 0;
-        while(_numRegionsPicked < _diseases.size()){
+        while(!allRegionsPicked()){
             try{
                 Thread.sleep(1);
             }
@@ -222,6 +241,17 @@ public class ServerWorld extends MainWorld{
                 System.out.println("Couldn't sleep...");
             }
         }
+    }
+    
+    @Override
+    public void endGame(boolean b){
+    	//not used
+    }
+    
+    public void endGame(int winner){
+    	if (winner > -1)
+    		_winners.add(winner);
+    	_gameOver = true;
     }
 
 }
