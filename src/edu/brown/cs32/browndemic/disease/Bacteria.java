@@ -105,8 +105,13 @@ public class Bacteria extends Disease{
     @Override
     public void randomPerkEvents() {
 
+    	if((int)Math.random()*1500 == 432)
+            try {
+                this.buyPerkWithoutPay(this.getAvailablePerks().get(0).getID());
+            } catch (IllegalAccessException ex) {}
         if((int)Math.random()*800 == 432){
 
+        	this._numRandomPointsGot+=3;
             this.addPoints(3);
 
         }
@@ -171,7 +176,7 @@ public class Bacteria extends Disease{
 
         }
 
-        
+        this._numPerksSold++;
         Perk soldPerk = this._perks[perkID];
 
         for(Integer i: soldPerk.getNext()){
@@ -216,7 +221,8 @@ public class Bacteria extends Disease{
                    this._perks[i].isOwned()) throw new IllegalAccessException();
 
        }
-       
+   
+       this._numPerksSold++;
        Perk soldPerk = this._perks[perkID];
        for(Integer i: soldPerk.getNext()){
 

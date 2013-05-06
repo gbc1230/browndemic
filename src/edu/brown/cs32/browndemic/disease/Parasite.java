@@ -87,8 +87,14 @@ public class Parasite extends Disease{
     //Slight chance that this parasite gets random points
     @Override
     public void randomPerkEvents() {
+    	
+    	if((int)Math.random()*2500 == 432)
+            try {
+                this.buyPerkWithoutPay(this.getAvailablePerks().get(0).getID());
+            } catch (IllegalAccessException ex) {}
         if((int)Math.random()*1500 == 432){
 
+        	this._numRandomPointsGot+=5;
             this.addPoints(5);
 
         }
@@ -152,6 +158,7 @@ public class Parasite extends Disease{
 
         }
 
+        this._numPerksSold++;
         Perk soldPerk = this._perks[perkID];
         for(Integer i: soldPerk.getNext()){
 
@@ -196,6 +203,7 @@ public class Parasite extends Disease{
 
        }
     
+       this._numPerksSold++;
        Perk soldPerk = this._perks[perkID];
        for(Integer i: soldPerk.getNext()){
 

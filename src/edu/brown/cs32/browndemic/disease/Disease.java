@@ -62,6 +62,15 @@ public abstract class Disease implements Serializable{
     //An Array of Perks available to this disease
     protected Perk[] _perks;
     
+    //These are stats about the disease that will be useful to display
+    //at the end of the game
+    protected int _numPerksBought;
+    protected int _numPerksSold;
+    protected int _numPointsEarned;
+    protected int _numPointsUsed;
+    protected int _numRandomPointsGot;
+    protected int _numRandomPerksGot;
+    
     /**
      * setID(int newID) sets the _id of this Disease to newID
      */
@@ -77,6 +86,7 @@ public abstract class Disease implements Serializable{
     public void addPoints(int points){
      
       this._points+= points;
+      this._numPointsEarned += points;
       
     }
     
@@ -270,7 +280,7 @@ public abstract class Disease implements Serializable{
             throw new IllegalAccessException();
 
         }
-
+        
         this._perks[perkID].setOwned(true);
         Perk boughtPerk = this._perks[perkID];
 
@@ -289,6 +299,8 @@ public abstract class Disease implements Serializable{
         this._dryResistance += boughtPerk.getDryRes();
         this._medResistance += boughtPerk.getMedRes();
         this._points -= boughtPerk.getCost();
+        this._numPointsUsed+=boughtPerk.getCost();
+        this._numPerksBought++;
     }
 
     /**
@@ -297,7 +309,7 @@ public abstract class Disease implements Serializable{
      * qualities of this disease to match
      */
     public void buyPerkWithoutPay(int perkID) throws IllegalAccessException{
-
+    	
         if(!this._perks[perkID].isAvail()
                 || this._perks[perkID].getCost() > this._points){
 
@@ -324,6 +336,8 @@ public abstract class Disease implements Serializable{
         this._medResistance += boughtPerk.getMedRes();
         this._waterTrans += boughtPerk.getWaterTrans();
         this._airTrans += boughtPerk.getAirTrans();
+        this._numRandomPerksGot++;
+        
     }
 
     /**
@@ -341,7 +355,59 @@ public abstract class Disease implements Serializable{
     	this._wetResistance = 0;
     	this._dryResistance = 0;
     	this._medResistance = 0;
+    	this._waterTrans = 0;
+    	this._airTrans = 0;
     	
+    }
+    
+    /**
+     * gets the number of perks bought over this disease's lifespan
+     * @return _numPerksBought
+     */
+    public int getNumPerksBought(){
+    	return this._numPerksBought;
+    }
+    
+    /**
+     * gets the number of perks sold over this disease's lifespan
+     * @return _numPerksSold
+     */
+    public int getNumPerksSold(){
+    	return this._numPerksSold;
+    }
+    
+    /**
+     * gets the number of points earned over this disease's lifespan
+     * @return _numPointsEarned
+     */
+    public int getNumPointsEarned(){
+    	return this._numPointsEarned;
+    }
+    
+    /**
+     * gets the number of points used over this disease's lifespan
+     * @return _numPointsUsed
+     */
+    public int getNumPointsUsed(){
+    	return this._numPointsUsed;
+    }
+    
+    /**
+     * gets the number of random points accrued over this disease's 
+     * lifespan
+     * @return _numRandomPointsGot
+     */
+    public int getNumRandomPointsGot(){
+    	return this._numRandomPointsGot;
+    }
+    
+    /**
+     * gets the number of random perks accrued over this disease's 
+     * lifespan
+     * @return _numRandomPerksGot
+     */
+    public int getNumRandomPerksGot(){
+    	return this._numRandomPerksGot;
     }
 
 

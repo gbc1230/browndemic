@@ -23,13 +23,13 @@ public class Virus extends Disease{
     //Maximum lethality
     final private double MAX_LETHALITY = 218;
     //Maximum visibility
-    final private double MAX_VISIBILITY = 283;
+    final private double MAX_VISIBILITY = 288;
     //Starting infectivity
     final private double START_INFECTIVITY = 5;
     //Starting lethality
     final private double START_LETHALITY = 1;
     //Starting visibility
-    final private double START_VISIBILITY = 5;
+    final private double START_VISIBILITY = 10;
     //the size of this disease's perk array
     final private int PERK_ARRAY_SIZE = 47;
     //The hardcoded file path for this disease's perks
@@ -115,8 +115,10 @@ public class Virus extends Disease{
             try {
                 this.buyPerkWithoutPay(this.getAvailablePerks().get(0).getID());
             } catch (IllegalAccessException ex) {}
-        if((int)Math.random()*540 == 432)
+        if((int)Math.random()*540 == 432){
+        	this._numRandomPointsGot+=3;
             this.addPoints(3);
+        }
     }
 
     //Gets the maximum infectivity for this disease
@@ -173,15 +175,16 @@ public class Virus extends Disease{
      */
     @Override
     public void sellCumPerk(int perkID) throws IllegalAccessException {
-        if(!this._perks[perkID].isOwned() ||
+        
+    	if(!this._perks[perkID].isOwned() ||
                 this._perks[perkID].getCumSellPrice()*-1 > this._points){
 
             throw new IllegalAccessException();
 
         }
-
+    	
         Perk soldPerk = this._perks[perkID];
-
+        
         for(Integer p: soldPerk.getNext()){
 
             if(this._perks[p].isOnlyOwnedPrev(this._perks[perkID])){
@@ -202,6 +205,8 @@ public class Virus extends Disease{
         this._dryResistance -= soldPerk.getDryRes();
         this._medResistance -= soldPerk.getMedRes();
         this._points += soldPerk.getSellPrice();
+        this._numPointsUsed+=-1*soldPerk.getSellPrice();
+        this._numPerksSold++;
     }
 
     /**
@@ -227,6 +232,7 @@ public class Virus extends Disease{
                    this._perks[p].isOwned()) throw new IllegalAccessException();
 
        }
+       this._numPerksSold++;
        this._perks[perkID].setOwned(false);
        Perk soldPerk = this._perks[perkID];
        for(Integer p: soldPerk.getNext()){
@@ -245,5 +251,6 @@ public class Virus extends Disease{
         this._dryResistance -= soldPerk.getDryRes();
         this._medResistance -= soldPerk.getMedRes();
         this._points += soldPerk.getSellPrice();
+        this._numPointsUsed+=-1*soldPerk.getSellPrice();
     }
 }
