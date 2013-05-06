@@ -30,21 +30,26 @@ public class Region implements Serializable{
 
     //ArrayList of diseases in this Region
     private Disease[] _diseases;
-
-    private double _awareMax;
     
     private double[] _infDoubleTime;
-    private static final int _INFTIMESCALE = 120;
-    private static final double _INFSCALE = 3;
+    private static final int _INFTIMESCALE = 120; //~~ticks to double infection in a region
+    private static final double _INFSCALE = 3; //how much infection scales with infectivity
     
     private double[] _lethDoubleTime;
-    private static final int _LETHTIMESCALE = 720;
-    private static final double _LETHSCALE = 3;
+    private static final int _LETHTIMESCALE = 180; //~~ticks to half infected die
+    private static final double _LETHSCALE = 3; //how much death scales with lethality
+    private static final double _CRITICALLETHRATIO = .1; //Lethaliy/max before deaths occur
 
-    private static final int _PLANEFREQ = 240;
-    private static final int _SHIPFREQ = 240;
-    private static final int _LANDFREQ = 40;
+    private static final int _PLANEFREQ = 240; //ticks between flights
+    private static final int _SHIPFREQ = 240; //ticks between shipping
+    private static final int _LANDFREQ = 40; //ticks between land border crossing
+    
+    private static final double _CUREPERCENT = .005; //Fraction of population to cure per tick
+    private static double _AWAREMAXSCALE = 5; //multiplier on max awareness before close ports
+    private static final double _CUREFRAC = 2; //at _CUREFRAC/awareMax, begin curing
+    private static final double _NOTIFYFRAC = 5; //Increase neighbors awareness by this.awareness/_NOTIFYFRAC
 
+    private double _awareMax;
     //number of diseases in game
     private int _numDiseases;
     
@@ -228,9 +233,7 @@ public class Region implements Serializable{
 //            System.out.println("Kill growth factor: " + rate);
             double number = (1 - Math.pow(rate, _lethDoubleTime[disease.getID()]/_LETHTIMESCALE)) * inf.getInf();
 //            System.out.println("Kill: " + number);
-            number = number/4;
-            number -= 10000;
-            if(leth / max > .1)
+            if(leth / max > _CRITICALLETHRATIO)
                 number = Math.ceil(number);
             else number = 0;
             if(number < 1)
@@ -253,7 +256,7 @@ public class Region implements Serializable{
      */
     public double getTotNumCured(int d) {
         //TODO right now cured just cures 5% of total pop per tick
-        double number = Math.ceil(0.005 * _population);
+        double number = Math.ceil(_CUREPERCENT * _population);
         return number;
     }
 
@@ -296,7 +299,7 @@ public class Region implements Serializable{
             }
         }
         for(int j = 0; j < _numDiseases; j++){
-            if(_awareness[j] > _awareMax/4 && _diseases[j] != null){
+            if(_awareness[j] > _awareMax/_CUREFRAC && _diseases[j] != null){
                 double medFactor = _med/_diseases[j].getMedRes();
                 if(medFactor > 1)
                     medFactor = 1;
@@ -344,7 +347,7 @@ public class Region implements Serializable{
             _awareness[index] = tot;
             notifyNeighbors(d);
         }
-        else if(_awareness[index] < _awareMax/4 && tot > _awareMax/4){
+        else if(_awareness[index] < _awareMax/_CUREFRAC && tot > _awareMax/_CUREFAC){
             _news.add(_name + " has begun work on a cure for " + d.getName() + ".");
             _awareness[index] = tot;
             notifyNeighbors(d);
@@ -360,11 +363,11 @@ public class Region implements Serializable{
     public void notifyNeighbors(Disease d) {
         for (Integer ind : _waterNeighbors) {
             Region r = _regions.get(ind);
-            r.updateAwareness(d, _awareness[d.getID()] / 5);
+            r.updateAwareness(d, _awareness[d.getID()] / _NOTIFYFRAC);
         }
         for (Integer ind : _landNeighbors) {
             Region r = _regions.get(ind);
-            r.updateAwareness(d, _awareness[d.getID()] / 5);
+            r.updateAwareness(d, _awareness[d.getID()] / _NOTIFYFRAC);
         }
     }
 
@@ -555,7 +558,7 @@ public class Region implements Serializable{
         _cureProgress = new long[num];
         _hash = new PopHash(num);
         _hash.addZero(_population);
-        _awareMax = 10 * _population;
+        _awareMax = _AWAREMAXSCALE * _population;
         _infDoubleTime = new double[num];
         _lethDoubleTime = new double[num];
     }
