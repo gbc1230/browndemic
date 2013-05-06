@@ -92,7 +92,7 @@ public class UIConstants {
 		public static final String POST_GAME_MENU = "Postgame Menu";
 		public static final String VICTORY = "VICTORY";
 		public static final String DEFEAT = "DEFEAT";
-		public static final String PEOPLE_KILLED = "People Killed";
+		public static final String PEOPLE_KILLED = "People Killed:";
 	}
 	
 	/**

@@ -1,0 +1,35 @@
+Browndemic
+A Project By:
+Graham Carling
+Benjamin Most
+Chester Kilfoyle
+Benjamin Koatz
+
+How To Play:
+
+Single Player:
+Pick a disease and a name and try to wipe out the world's population! Over time you will get points that will allow you to buy perks and increase the various stats
+of your disease. Be careful: as you kill people and get noticed, humanity will start working on a cure to destroy you.  You must be careful in order to infect the whole world 
+because you are noticed and it is too late. You can adjust the speed of the game or pause if you like. You can also save the game and continue later. 
+
+Multiplayer:
+You don't have to kill everyone in the entire world: just more people than your opponents. The winner is whoever gets the most kills before either everyone in the world is dead 
+or all diseases have no one infected. 
+
+Information In-Game:
+
+Healthy: Total number of non-infected living people.
+Infected: Total number of currently living people who have been infected by your disease.
+Dead: Total number of people who have been killed by your disease.
+Population: Total number of living people.
+Cured: Total number of people who were infected by your disease and then cured.
+Cure progress: How close humanity has gotten to finding a cure to your disease: once this hits 100% the cure will be distributed.
+
+Tabs:
+Available: Perks available for you to buy.
+Owned: Perks you currently have.
+Stats: Various stats about your disease.
+News: A news feed of events happening around the world.
+Regions: A list of all regions sorted by which have not been infected, which have been infected, and which have populations which are entirely dead.
+Chat (Multiplayer): The chat window between players.
+Players (Multiplayer): A list of all players in the game and their infection / kill counts.

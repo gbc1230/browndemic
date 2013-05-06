@@ -10,13 +10,20 @@ import edu.brown.cs32.browndemic.region.Region;
  * Single player world
  * @author Graham
  */
+
 public class WorldSP extends MainWorld{
-    
+	private static final long serialVersionUID = -8695489680338623284L;
+
+	/**
+	 * Basic constructor, only calls super()
+	 */
     public WorldSP(){
         super();
     }
         
-    //when the user picks a disease
+    /**
+     * For use when the user picks a disease at the menu
+     */
     @Override
     public void changeDiseasesPicked(int change){
         _numDiseasesPicked += change;
@@ -24,6 +31,9 @@ public class WorldSP extends MainWorld{
             _allDiseasesPicked = true;
     }
     
+    /**
+     * Introduce a disease to a region
+     */
     @Override
     public void introduceDisease(int d, int r){
         start();
@@ -32,6 +42,9 @@ public class WorldSP extends MainWorld{
         _numRegionsPicked++;
     }
     
+    /**
+     * Starts the game and sets up important information
+     */
     public void start(){
     	setupDiseases();
         for (Region r : _regions){
@@ -43,6 +56,15 @@ public class WorldSP extends MainWorld{
         new Thread(this).start();
     }
     
+    /**
+     * For use after the game has been loaded 
+     */
+    public void startFromLoad(){
+    	_waitTime = _SPEED1;
+    	_paused = false;
+    	new Thread(this).start();
+    }
+    
 
     /**
      * Runs the game
@@ -50,7 +72,6 @@ public class WorldSP extends MainWorld{
     @Override
     public void run(){
         System.out.println("begin the loop");
-        int i = 0;
         while(_numRegionsPicked < _diseases.size()){
             try{
                 Thread.sleep(1);
