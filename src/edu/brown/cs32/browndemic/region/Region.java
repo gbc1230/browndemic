@@ -136,7 +136,8 @@ public class Region implements Serializable{
         for (Disease d : _diseases) {
             if (null != d) {
                 updateAwareness(d,getAwareIncrement(d));
-                cure(d);
+                if(_hasCure[d.getID()])
+                    cure(d);
                 kill(d);
                 infect(d);
                 transmitSeaAndAir(d);
@@ -250,18 +251,17 @@ public class Region implements Serializable{
      */
     public void cure(Disease d) {
         int index = d.getID();
-        if (_hasCure[index] == true) {
-            ArrayList<InfWrapper> infected = _hash.getAllOfType(index,1);
-            for (InfWrapper inf : infected) {
-                String cureID = inf.getID().substring(0,index) + "2" + inf.getID().substring(index +1);
-                long number = getNumCured(index, inf.getInf());
-                if (inf.getInf() < number) {
-                    _hash.put(new InfWrapper(cureID, _hash.get(cureID).getInf() + inf.getInf()));
-                    _hash.put(new InfWrapper(inf.getID(), 0L));
-                } else {
-                    _hash.put(new InfWrapper(inf.getID(), inf.getInf() - number));
-                    _hash.put(new InfWrapper(cureID, _hash.get(cureID).getInf() + number));
-                }
+        _hasCure[index] = true;
+        ArrayList<InfWrapper> infected = _hash.getAllOfType(index, 1);
+        for (InfWrapper inf : infected) {
+            String cureID = inf.getID().substring(0, index) + "2" + inf.getID().substring(index + 1);
+            long number = getNumCured(index, inf.getInf());
+            if (inf.getInf() < number) {
+                _hash.put(new InfWrapper(cureID, _hash.get(cureID).getInf() + inf.getInf()));
+                _hash.put(new InfWrapper(inf.getID(), 0L));
+            } else {
+                _hash.put(new InfWrapper(inf.getID(), inf.getInf() - number));
+                _hash.put(new InfWrapper(cureID, _hash.get(cureID).getInf() + number));
             }
         }
     }
