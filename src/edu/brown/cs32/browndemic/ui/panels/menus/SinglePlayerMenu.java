@@ -187,7 +187,7 @@ public class SinglePlayerMenu extends UIPanel {
 				//load the file
 				WorldSP world = null;
 				try{
-					InputStream file = new FileInputStream(f.getName());
+					InputStream file = new FileInputStream(f);
 				    InputStream buffer = new BufferedInputStream(file);
 				    ObjectInput input = new ObjectInputStream (buffer);
 				    try{

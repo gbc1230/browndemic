@@ -60,6 +60,7 @@ public class WorldSP extends MainWorld{
      * For use after the game has been loaded 
      */
     public void startFromLoad(){
+    	_waitTime = _SPEED1;
     	_paused = false;
     	new Thread(this).start();
     }

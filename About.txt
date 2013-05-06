@@ -15,3 +15,6 @@ because you are noticed and it is too late. You can adjust the speed of the game
 Multiplayer:
 You don't have to kill everyone in the entire world: just more people than your opponents. The winner is whoever gets the most kills before either everyone in the world is dead 
 or all diseases have no one infected. 
+
+General gameplay:
+There are various 

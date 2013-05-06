@@ -187,7 +187,7 @@ public class InGameTitleBar extends TitleBar {
 				WorldSP world = (WorldSP)_world;
 				//save the world to a file
 				try{
-					OutputStream file = new FileOutputStream(f.getName());
+					OutputStream file = new FileOutputStream(f);
 				    OutputStream buffer = new BufferedOutputStream(file);
 				    ObjectOutput output = new ObjectOutputStream(buffer);
 				    try{

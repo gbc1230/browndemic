@@ -65,7 +65,7 @@ public abstract class MainWorld implements World, Runnable, Serializable{
     //how many disease / starting regions have been picked
     protected int _numDiseasesPicked, _numRegionsPicked;
     
-    //finals for setting varios speeds
+    //finals for setting various speeds
     protected final long _SPEED1 = 333L;
     protected final long _SPEED2 = 200L;
     protected final long _SPEED3 = 100L;
