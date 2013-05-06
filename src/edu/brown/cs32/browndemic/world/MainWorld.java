@@ -473,9 +473,16 @@ public abstract class MainWorld implements World, Runnable, Serializable{
     		long oldInf = _oldInfects.get(i);
     		long infChange = newInf - oldInf;
     		int infBench = _infectBenchMarks.get(i);
-    		if (infBench * 10L <= newInf){
+    		int times = 0;
+    		while (infBench * 10L <= newInf){
+    			times++;
     			_infectBenchMarks.set(i, infBench*10);
     			infBench = _infectBenchMarks.get(i);
+    		}
+    		times--;
+    		while (times > 0){
+    			d.addPoints(10);
+    			times--;
     		}
     		if (infChange >= infBench){
 	    		long val = infChange / infBench;
@@ -489,9 +496,15 @@ public abstract class MainWorld implements World, Runnable, Serializable{
     		long oldKill = _oldKills.get(i);
     		long killChange = newKill - oldKill;
     		int killBench = _killBenchMarks.get(i);
-    		if (killBench * 10L <= newKill){
+    		times = 0;
+    		while (killBench * 10L <= newKill){
     			_killBenchMarks.set(i, killBench*10);
     			killBench = _killBenchMarks.get(i);
+    		}
+    		times--;
+    		while (times > 0){
+    			d.addPoints(10);
+    			times--;
     		}
     		if (killChange >= killBench){
 	    		long val = killChange / killBench;
