@@ -109,13 +109,12 @@ public abstract class MainWorld implements World, Runnable, Serializable{
      */
     @Override
     public void addPerk(int dis, int perk, boolean buy){
-        System.out.println("Adding perk: " + dis + " , " + perk +  ", " + buy);
         Disease d = _diseases.get(dis);
         try{
             if (buy)
                 d.buyPerk(perk);
             else
-                d.sellPerk(perk);
+                d.sellCumPerk(perk);
         }
         catch(IllegalAccessException e){
             
@@ -390,7 +389,7 @@ public abstract class MainWorld implements World, Runnable, Serializable{
      */
     public void checkCures(){
         for (int i = 0; i < _cures.size(); i++){
-            if (_cures.get(i) >= _cureTotal && _sent.get(i)){
+            if (_cures.get(i) >= _cureTotal && !_sent.get(i)){
                 sendCures(i);
                 _sent.set(i, true);
             }
