@@ -65,8 +65,7 @@ public class GameServerThread extends Thread{
                 break;
             }
             catch(ClassNotFoundException e){
-                _server.remove(_ID);
-                break;
+                continue;
             }
         }
     }

@@ -175,7 +175,8 @@ public class GameMenu extends UIPanel {
 			_map.stop();
 			if (_lb != null)
 				_lb.stop();
-			_world.leaveGame();
+			if (!_world.isGameOver())
+				_world.leaveGame();
 		}
     }
 	

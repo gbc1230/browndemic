@@ -45,6 +45,7 @@ import edu.brown.cs32.browndemic.ui.UIConstants.Images;
 import edu.brown.cs32.browndemic.ui.Utils;
 import edu.brown.cs32.browndemic.ui.actions.Action;
 import edu.brown.cs32.browndemic.ui.panels.menus.MainMenu;
+import edu.brown.cs32.browndemic.ui.panels.menus.MultiplayerPostGameMenu;
 import edu.brown.cs32.browndemic.world.World;
 
 public class WorldMap extends JComponent implements MouseListener, MouseMotionListener {
@@ -366,6 +367,9 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 	}
 	
 	private void update() {
+		if (_world.isGameOver()) {
+			Utils.getParentFrame(this).setPanel(new MultiplayerPostGameMenu(_world, _disease));
+		}
 		if (_world.hostDisconnected()) {
 			JOptionPane.showMessageDialog(this, "The host has disconnected.  Returning to Main Menu");
 			Utils.getParentFrame(this).setPanel(new MainMenu());

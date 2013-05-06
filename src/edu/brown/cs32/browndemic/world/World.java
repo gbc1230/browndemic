@@ -129,6 +129,7 @@ public interface World {
     //change speed: only works in MP
     public void setSpeed(int t);
     
-
+    //testing purposes ONLY: ends the game on command
+    public void endGame(boolean win);
     
 }

@@ -55,6 +55,7 @@ public class InfoSender extends Thread{
                 startGame();
                 _server.stopAccepting();
                 for (int i = 0; i < _clients.size(); i++){
+                	System.out.println("Sending a collect...");
                 	CollectDiseases temp = new CollectDiseases(i, world);
                 	_clients.get(i).sendMessage(temp);
                 }

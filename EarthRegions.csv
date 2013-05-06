@@ -1,5 +1,5 @@
 id,name,population,airports,seaports,land neighbors,water neighbors,wealth,wet,dry,heat,cold,medicine,disasters
-1,United States of America,315749000,2,1,2 4,6,50000,2,2,2,2,4,0 1 2 3 4 6 7
+1,The United States of America,315749000,2,1,2 4,6,50000,2,2,2,2,4,0 1 2 3 4 6 7
 2,Canada,33476688,2,1,1,3,42734,2,2,2,4,4,0 2 6 7
 3,Greenland,56370,1,1,,13,37400,2,2,1,4,3,1 2 7
 4,Mexico,112336538,1,1,1 5,6,15312,2,3,3,1,2,0 1 3 4 7
@@ -33,7 +33,7 @@ id,name,population,airports,seaports,land neighbors,water neighbors,wealth,wet,d
 32,Korea,74558441,0,1,42 28,31,32272,3,1,3,3,2,0 1 7
 33,Mongolia,3179997,0,0,28 42,,4743,1,4,2,3,2,0 3 5 6 7
 34,Kazakhstan,22411900,0,0,28 42 39,,13892,2,3,2,3,2,0 3 5 6 7
-35,Middle East,123983936,1,0,29 36 46,47,31275,1,4,3,1,2,0 3 5 7
+35,The Middle East,123983936,1,0,29 36 46,47,31275,1,4,3,1,2,0 3 5 7
 36,Iran,77356669,0,0,39 38 37 35 29,,13053,1,3,3,1,2,0 3 5 7
 37,Pakistan,180440005,0,0,40 42 38 36,,2960,2,3,3,2,1,0 3 5 7
 38,Afghanistan,37419928,0,0,36 39 42,,1000,2,3,3,2,1,0 3 5 7

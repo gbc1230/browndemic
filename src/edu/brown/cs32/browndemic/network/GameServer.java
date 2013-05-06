@@ -140,6 +140,15 @@ public class GameServer implements Runnable{
         	NameChange nc = (NameChange)gd;
         	_world.updateName(nc.getName(), client);
         }
+        else if (id.equals("EG")){
+        	System.out.println("got a gameover");
+        	EndGame eg = (EndGame)gd;
+        	boolean w = eg.isWinner();
+        	if (w)
+        		_world.endGame(client);
+        	else
+        		_world.endGame(-1);
+        }
     }
 
     /**
@@ -153,13 +162,15 @@ public class GameServer implements Runnable{
     		pos = findClient(ID);
     	else 
     		pos = ID;
+    	System.out.println("Removing: " + pos);
         if (pos != -1 && pos < _clients.size()){
             GameServerThread toKill = _clients.get(pos);
             _clients.remove(toKill);
+            String name = _world.getDiseases().get(pos).getName();
             _world.removeDisease(pos);
             toKill.close();
             if (_world.hasStarted()){
-	            String name = _world.getDiseases().get(pos).getName();
+	            System.out.println("Sending out DC message");
 	            DCMessage msg = new DCMessage(name, pos);
 	            for (GameServerThread gst : _clients){
 	                gst.sendMessage(msg);

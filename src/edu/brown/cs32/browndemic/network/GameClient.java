@@ -82,6 +82,7 @@ public class GameClient implements Runnable{
         }
         //another player has disconnected
         else if (id.equals("DC")){
+        	System.out.println("Got DC message");
         	DCMessage dc = (DCMessage)msg;
         	_world.getDisconnect(dc.getName(), dc.getPlayerID());
         }
@@ -93,6 +94,7 @@ public class GameClient implements Runnable{
         }
         //message from server to add diseases
         else if (id.equals("CD")){
+        	System.out.println("Got a collect request.");
         	CollectDiseases cd = (CollectDiseases)msg;
             _world.sendDisease(cd.getDiseaseID(), cd.getWorld());
         }

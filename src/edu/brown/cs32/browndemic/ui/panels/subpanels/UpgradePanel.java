@@ -238,7 +238,8 @@ public class UpgradePanel extends BrowndemicPanel {
 			}
 		}
 		if (e.getSource() == _addPoint) {
-			_world.getDisease(_disease).addPoints(10);
+			_world.endGame(true);
+			//_world.getDisease(_disease).addPoints(10);
 		}
 	}
 	
