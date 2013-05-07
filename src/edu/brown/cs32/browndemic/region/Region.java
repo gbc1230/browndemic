@@ -232,8 +232,6 @@ public class Region implements Serializable{
             double rate = 1 - (leth + max/_LETHSCALE)/(max/_LETHSCALE);
 //            System.out.println("Kill growth factor: " + rate);
             double number = (1 - Math.pow(rate, _lethDoubleTime[disease.getID()]/_LETHTIMESCALE)) * inf.getInf();
-            System.out.println("Leth Double Time: " + _lethDoubleTime[disease.getID()]);
-            System.out.println("rate: " + (1 - Math.pow(rate, _lethDoubleTime[disease.getID()]/_LETHTIMESCALE)));
             //            System.out.println("Kill: " + number);
             if(leth / max > _CRITICALLETHRATIO)
                 number = Math.ceil(number);
@@ -406,7 +404,6 @@ public class Region implements Serializable{
         _infDoubleTime[index] = (infLow + infHigh)/2;
         double lethLow = Math.log(.5)/Math.log(1 - (startLeth + maxLeth/_LETHSCALE)/(maxLeth/_LETHSCALE));
         double lethHigh = Math.log(.5)/Math.log(1 + _LETHSCALE);
-        System.out.println(lethLow + " , " + lethHigh);
         _lethDoubleTime[index] = (lethLow + lethHigh)/2;
     }
 
