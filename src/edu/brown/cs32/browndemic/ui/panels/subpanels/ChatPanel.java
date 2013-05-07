@@ -81,5 +81,10 @@ public class ChatPanel extends BrowndemicPanel implements KeyListener, ChatHandl
 		_chat.setText((_chat.getText() + "\n" + message).trim());
 		_chat.setCaretPosition(_chat.getDocument().getLength());
 	}
+	
+	@Override
+	public boolean requestFocusInWindow() {
+		return _input.requestFocusInWindow();
+	}
 
 }

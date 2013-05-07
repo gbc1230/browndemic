@@ -61,6 +61,8 @@ public class MultiplayerMenu extends UIPanel implements MouseListener {
 		_host.setForeground(Colors.RED_TEXT);
 		_host.setBackground(Colors.MENU_BACKGROUND);
 		
+		Utils.setDefaultLook(_host);
+		
 		host.add(Box.createGlue());
 		host.add(hostLabel);
 		host.add(_host);
@@ -89,6 +91,7 @@ public class MultiplayerMenu extends UIPanel implements MouseListener {
 	@Override
 	public void setupForDisplay() {
 		Utils.getParentFrame(this).setTitle(new BackTitleBar(this, new MainMenu()));
+		_host.requestFocusInWindow();
 	}
 
 	@Override
