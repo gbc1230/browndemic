@@ -36,18 +36,18 @@ public class Region implements Serializable{
     private static final double _INFSCALE = 3; //DEFAULT: 3//how much infection scales with infectivity
     
     private double[] _lethDoubleTime;
-    private static final int _LETHTIMESCALE = 180; //DEFAULT: 3//~~ticks to half infected die
+    private static final int _LETHTIMESCALE = 90; //DEFAULT: 3//~~ticks to half infected die
     private static final double _LETHSCALE = 3; //DEFAULT: 3//how much death scales with lethality
     private static final double _CRITICALLETHRATIO = .1; //DEFAULT: .1//Lethaliy/max before deaths occur
 
-    private static final int _PLANEFREQ = 240; //DEFAULT: 240//ticks between flights
-    private static final int _SHIPFREQ = 240; //DEFAULT: 240//ticks between shipping
-    private static final int _LANDFREQ = 40; //DEFAULT: 40//ticks between land border crossing
+    private static final int _PLANEFREQ = 200; //DEFAULT: 240//ticks between flights
+    private static final int _SHIPFREQ = 200; //DEFAULT: 240//ticks between shipping
+    private static final int _LANDFREQ = 50; //DEFAULT: 40//ticks between land border crossing
     
-    private static final double _CUREPERCENT = .005; //DEFAULT: .005//Fraction of population to cure per tick
+    private static final double _CUREPERCENT = .0005; //DEFAULT: .005//Fraction of population to cure per tick
     private static double _AWAREMAXSCALE = 5; //DEFAULT: 5//multiplier on max awareness before close ports
     private static final double _CUREFRAC = 2; //DEFAULT: 2//at _CUREFRAC/awareMax, begin curing
-    private static final double _NOTIFYFRAC = 5; //DEFAULT: 5//Increase neighbors awareness by this.awareness/_NOTIFYFRAC
+    private static final double _NOTIFYFRAC = 4; //DEFAULT: 5//Increase neighbors awareness by this.awareness/_NOTIFYFRAC
 
     private double _awareMax;
     //number of diseases in game
@@ -232,7 +232,9 @@ public class Region implements Serializable{
             double rate = 1 - (leth + max/_LETHSCALE)/(max/_LETHSCALE);
 //            System.out.println("Kill growth factor: " + rate);
             double number = (1 - Math.pow(rate, _lethDoubleTime[disease.getID()]/_LETHTIMESCALE)) * inf.getInf();
-//            System.out.println("Kill: " + number);
+            System.out.println("Leth Double Time: " + _lethDoubleTime[disease.getID()]);
+            System.out.println("rate: " + (1 - Math.pow(rate, _lethDoubleTime[disease.getID()]/_LETHTIMESCALE)));
+            //            System.out.println("Kill: " + number);
             if(leth / max > _CRITICALLETHRATIO)
                 number = Math.ceil(number);
             else number = 0;
@@ -404,6 +406,7 @@ public class Region implements Serializable{
         _infDoubleTime[index] = (infLow + infHigh)/2;
         double lethLow = Math.log(.5)/Math.log(1 - (startLeth + maxLeth/_LETHSCALE)/(maxLeth/_LETHSCALE));
         double lethHigh = Math.log(.5)/Math.log(1 + _LETHSCALE);
+        System.out.println(lethLow + " , " + lethHigh);
         _lethDoubleTime[index] = (lethLow + lethHigh)/2;
     }
 
