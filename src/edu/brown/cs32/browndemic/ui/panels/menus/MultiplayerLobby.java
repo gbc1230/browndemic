@@ -137,8 +137,13 @@ public class MultiplayerLobby extends UIPanel {
 	
 	private void update() {
 		if (_thisWorld.hostDisconnected()) {
-			JOptionPane.showMessageDialog(this, "The host has disconnected.  Returning to Main Menu");
-			Utils.getParentFrame(this).setPanel(new MainMenu());
+			if (_thisWorld.wasKicked()){
+				JOptionPane.showMessageDialog(this, "The host has kicked you from the lobby.  Returning to Main Menu");
+			}
+			else{
+				JOptionPane.showMessageDialog(this, "The host has disconnected.  Returning to Main Menu");
+			}
+				Utils.getParentFrame(this).setPanel(new MainMenu());
 			_timer.stop();
 		}
 		if (_lobby == null || !_lobby.equals(_thisWorld.getLobby())) {
