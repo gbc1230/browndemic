@@ -32,22 +32,22 @@ public class Region implements Serializable{
     private Disease[] _diseases;
     
     private double[] _infDoubleTime;
-    private static final int _INFTIMESCALE = 120; //~~ticks to double infection in a region
-    private static final double _INFSCALE = 3; //how much infection scales with infectivity
+    private static final int _INFTIMESCALE = 120; //DEFAULT: 120//~~ticks to double infection in a region
+    private static final double _INFSCALE = 3; //DEFAULT: 3//how much infection scales with infectivity
     
     private double[] _lethDoubleTime;
-    private static final int _LETHTIMESCALE = 180; //~~ticks to half infected die
-    private static final double _LETHSCALE = 3; //how much death scales with lethality
-    private static final double _CRITICALLETHRATIO = .1; //Lethaliy/max before deaths occur
+    private static final int _LETHTIMESCALE = 180; //DEFAULT: 3//~~ticks to half infected die
+    private static final double _LETHSCALE = 3; //DEFAULT: 3//how much death scales with lethality
+    private static final double _CRITICALLETHRATIO = .1; //DEFAULT: .1//Lethaliy/max before deaths occur
 
-    private static final int _PLANEFREQ = 240; //ticks between flights
-    private static final int _SHIPFREQ = 240; //ticks between shipping
-    private static final int _LANDFREQ = 40; //ticks between land border crossing
+    private static final int _PLANEFREQ = 240; //DEFAULT: 240//ticks between flights
+    private static final int _SHIPFREQ = 240; //DEFAULT: 240//ticks between shipping
+    private static final int _LANDFREQ = 40; //DEFAULT: 40//ticks between land border crossing
     
-    private static final double _CUREPERCENT = .005; //Fraction of population to cure per tick
-    private static double _AWAREMAXSCALE = 5; //multiplier on max awareness before close ports
-    private static final double _CUREFRAC = 2; //at _CUREFRAC/awareMax, begin curing
-    private static final double _NOTIFYFRAC = 5; //Increase neighbors awareness by this.awareness/_NOTIFYFRAC
+    private static final double _CUREPERCENT = .005; //DEFAULT: .005//Fraction of population to cure per tick
+    private static double _AWAREMAXSCALE = 5; //DEFAULT: 5//multiplier on max awareness before close ports
+    private static final double _CUREFRAC = 2; //DEFAULT: 2//at _CUREFRAC/awareMax, begin curing
+    private static final double _NOTIFYFRAC = 5; //DEFAULT: 5//Increase neighbors awareness by this.awareness/_NOTIFYFRAC
 
     private double _awareMax;
     //number of diseases in game
