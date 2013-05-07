@@ -54,6 +54,7 @@ public class SinglePlayerMenu extends UIPanel {
 	@Override
 	public void setupForDisplay() {
 		Utils.getParentFrame(this).setTitle(new BackTitleBar(this, new MainMenu()));
+		_diseaseName.requestFocusInWindow();
 	}
 	
 	@Override
