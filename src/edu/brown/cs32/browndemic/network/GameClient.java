@@ -106,7 +106,7 @@ public class GameClient implements Runnable{
         //got kicked
         else if (id.equals("LK")){
         	_world.getKicked();
-        	stop();
+//        	stop();
         }
     }
 

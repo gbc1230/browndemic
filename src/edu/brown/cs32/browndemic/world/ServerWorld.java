@@ -180,6 +180,7 @@ public class ServerWorld extends MainWorld{
     public void kickLobbyMember(int client){
     	LobbyKick lk = new LobbyKick(client);
     	_outData.add(lk);
+    	removePlayer(client);
     }
     
     @Override
