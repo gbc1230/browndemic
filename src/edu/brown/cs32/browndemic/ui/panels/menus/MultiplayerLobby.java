@@ -153,7 +153,7 @@ public class MultiplayerLobby extends UIPanel {
 				return;
 			for (int i = 0; i < _lobby.size(); i++) {
 				LobbyMember l = _lobby.get(i);
-			    _players.add(new MultiplayerLobbyPanel(l.getName(), l.getIP(), _isHost, new KickAction(i), l.isReady()));
+			    _players.add(new MultiplayerLobbyPanel(l.getName(), l.getIP(), _isHost && i != 0, new KickAction(i), l.isReady()));
 			}
 		    _players.add(Box.createGlue());
 		    _players.revalidate();
