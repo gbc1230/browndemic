@@ -160,7 +160,10 @@ public class GameMenu extends UIPanel implements ChangeListener {
 			}).start();
 			if (_chat != null)
 				_chat.requestFocusInWindow();
-			_map.setChooseMode(true);
+			if (_world.getHealthy() == _world.getPopulation())
+				_map.setChooseMode(true);
+			else
+				_map.setChooseMode(false);
 		} else {
 			Utils.getParentFrame(this).setPanel(new Loading(true, new Loading.LoadImageWorker(new ImagesDoneLoadingAction(Utils.getParentFrame(this)), Images.GAME_IMAGES)));
 		}
