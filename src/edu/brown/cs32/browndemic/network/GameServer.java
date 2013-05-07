@@ -50,12 +50,15 @@ public class GameServer implements Runnable{
     public void run(){
         while (!_world.isGameOver()){
             try{
+                Socket temp = _server.accept();
                 if (_accepting){
-                    Socket temp = _server.accept();
                     if (temp != null){
                         addThread(temp);
                         System.out.println("Got new client.");
                     }
+                }
+                else{
+                	temp.close();
                 }
             }
             catch(SocketTimeoutException e){
