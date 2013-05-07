@@ -31,7 +31,7 @@ public class InfoSender extends Thread{
     }
     
     @Override
-    public void run(){
+    public synchronized void run(){
         while (!_gameStarted){
             GameData data = _world.getNextData();
             if (data == null)

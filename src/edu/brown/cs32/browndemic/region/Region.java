@@ -62,16 +62,16 @@ public class Region implements Serializable{
     //Total Region Population
     private long _population;
 
-    //ArrayList of dead, order corresponds to the diseases in _disease
+    //Array of dead, order corresponds to the diseases in _disease
     private long[] _dead;
 
-    //ArrayList of boolean isCure, order corresponds to diseases in _disease
+    //Array of boolean isCure, order corresponds to diseases in _disease
     private boolean[] _hasCure;
 
-    //ArrayList of double awaresness for each disease
+    //Array of double awareness for each disease
     private double[] _awareness;
 
-    //ArrayList of double cure progress for each disease
+    //Array of double cure progress for each disease
     private long[] _cureProgress;
 
     //Unique Region name

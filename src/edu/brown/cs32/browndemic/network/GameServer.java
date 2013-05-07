@@ -166,12 +166,15 @@ public class GameServer implements Runnable{
         if (pos != -1 && pos < _clients.size()){
             GameServerThread toKill = _clients.get(pos);
             _clients.remove(toKill);
-            String name = _world.getDiseases().get(pos).getName();
+            String name = "";
+            if (_world.hasStarted()){
+	            name = _world.getDiseases().get(pos).getName();
+            }
             _world.removeDisease(pos);
             toKill.close();
             if (_world.hasStarted()){
 	            System.out.println("Sending out DC message");
-	            DCMessage msg = new DCMessage(name, pos);
+	            DCMessage msg = new DCMessage(name, pos);            
 	            for (GameServerThread gst : _clients){
 	                gst.sendMessage(msg);
 	            }
