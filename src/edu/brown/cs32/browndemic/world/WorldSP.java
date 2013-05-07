@@ -65,7 +65,6 @@ public class WorldSP extends MainWorld{
     	new Thread(this).start();
     }
     
-
     /**
      * Runs the game
      */

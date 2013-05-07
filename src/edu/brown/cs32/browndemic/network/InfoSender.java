@@ -49,7 +49,13 @@ public class InfoSender extends Thread{
             	}
             	_server.stop();
             }
-            else{
+            else if (data.getID().equals("LK")){
+            	LobbyKick lk = (LobbyKick)data;
+            	int client = lk.getClient();
+            	GameServerThread thread = _clients.get(client);
+            	thread.sendMessage(lk);
+            }
+            else if (data.getID().equals("CD")){
                 CollectDiseases out = (CollectDiseases)data;
                 ServerWorld world = out.getWorld();
                 startGame();

@@ -13,6 +13,7 @@ import edu.brown.cs32.browndemic.disease.Disease;
 import edu.brown.cs32.browndemic.network.CollectDiseases;
 import edu.brown.cs32.browndemic.network.GameData;
 import edu.brown.cs32.browndemic.network.HostDisconnect;
+import edu.brown.cs32.browndemic.network.LobbyKick;
 import edu.brown.cs32.browndemic.network.LobbyMember;
 import edu.brown.cs32.browndemic.network.LobbySender;
 import edu.brown.cs32.browndemic.region.Region;
@@ -169,6 +170,15 @@ public class ServerWorld extends MainWorld{
     
     public List<LobbyMember> getLobby(){
         return _lobby;
+    }
+    
+    /**
+     * Used for kicking someone out of the lobby
+     * @param client The ID of the client to kick
+     */
+    public void kickLobbyMember(int client){
+    	LobbyKick lk = new LobbyKick(client);
+    	_outData.add(lk);
     }
     
     @Override

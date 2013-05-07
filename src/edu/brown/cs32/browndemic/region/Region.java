@@ -30,19 +30,26 @@ public class Region implements Serializable{
 
     //ArrayList of diseases in this Region
     private Disease[] _diseases;
+    
+    private double[] _infDoubleTime;
+    private static final int _INFTIMESCALE = 120; //DEFAULT: 120//~~ticks to double infection in a region
+    private static final double _INFSCALE = 3; //DEFAULT: 3//how much infection scales with infectivity
+    
+    private double[] _lethDoubleTime;
+    private static final int _LETHTIMESCALE = 180; //DEFAULT: 3//~~ticks to half infected die
+    private static final double _LETHSCALE = 3; //DEFAULT: 3//how much death scales with lethality
+    private static final double _CRITICALLETHRATIO = .1; //DEFAULT: .1//Lethaliy/max before deaths occur
+
+    private static final int _PLANEFREQ = 240; //DEFAULT: 240//ticks between flights
+    private static final int _SHIPFREQ = 240; //DEFAULT: 240//ticks between shipping
+    private static final int _LANDFREQ = 40; //DEFAULT: 40//ticks between land border crossing
+    
+    private static final double _CUREPERCENT = .005; //DEFAULT: .005//Fraction of population to cure per tick
+    private static double _AWAREMAXSCALE = 5; //DEFAULT: 5//multiplier on max awareness before close ports
+    private static final double _CUREFRAC = 2; //DEFAULT: 2//at _CUREFRAC/awareMax, begin curing
+    private static final double _NOTIFYFRAC = 5; //DEFAULT: 5//Increase neighbors awareness by this.awareness/_NOTIFYFRAC
 
     private double _awareMax;
-    
-    private static final int _INFTIMESCALE = 120;
-    private static final double _INFSCALE = 1.0/15;
-    
-    private static final int _LETHTIMESCALE = 720;
-    private static final double _LETHSCALE = 1.0/1440;
-
-    private static final int _PLANEFREQ = 240;
-    private static final int _SHIPFREQ = 240;
-    private static final int _LANDFREQ = 40;
-
     //number of diseases in game
     private int _numDiseases;
     
@@ -169,15 +176,12 @@ public class Region implements Serializable{
         double maxInf = _diseases[d].getMaxInfectivity();
         double infectivity = _diseases[d].getInfectivity();
         double inf = getInfected().get(d);
-        double growthFactor =  1 + (infectivity + maxInf/3) / (maxInf/3) *
+        double growthFactor =  1 + (infectivity + maxInf/_INFSCALE) / (maxInf/_INFSCALE) *
                 ( wetResFactor + dryResFactor + heatResFactor + coldResFactor + medResFactor)/5;
-        System.out.println("Inf growth factor: " + growthFactor);
-        double doubleTime = Math.log(2.0)/Math.log(growthFactor);
-        System.out.println("Inf double time: " + doubleTime);
-        double timeFactor = _INFTIMESCALE * (maxInf)/(infectivity + maxInf);
-        double number = inf*(Math.pow(growthFactor,doubleTime/timeFactor) - 1)* _INFSCALE;
-        System.out.println("rate: " + Math.pow(growthFactor,doubleTime/timeFactor));
-        System.out.println("infect total: " + number);
+//        System.out.println("Inf growth factor: " + growthFactor);
+        double number = inf*(Math.pow(growthFactor,_infDoubleTime[d]/_INFTIMESCALE) - 1);
+//        System.out.println("rate: " + (Math.pow(growthFactor,_infDoubleTime[d]/_INFTIMESCALE) - 1));
+//        System.out.println("infect total: " + number);
         if(_remInf >= 1){
             number++;
             _remInf--;
@@ -204,7 +208,7 @@ public class Region implements Serializable{
         for(InfWrapper inf : _hash.getAllOfType(index,0)){
             double ratio = inf.getInf()/uninf;
             long number = (long) Math.ceil(totNumber*ratio);
-            System.out.println("infect: " + number);
+//            System.out.println("infect: " + number);
             String infID = inf.getID().substring(0,index) + "1" + inf.getID().substring(index + 1);
             if (inf.getInf() < number){
                 _hash.put(new InfWrapper(inf.getID(), 0L));
@@ -225,15 +229,11 @@ public class Region implements Serializable{
         double leth = disease.getLethality();
         double max = disease.getMaxLethality();
         for (InfWrapper inf : _hash.getAllOfType(index,1)) {
-            double rate = 1 - (leth + max/3)/(max)*3*_LETHSCALE;
+            double rate = 1 - (leth + max/_LETHSCALE)/(max/_LETHSCALE);
 //            System.out.println("Kill growth factor: " + rate);
-            double doubleTime = Math.log(0.5)/Math.log(rate);
-//            System.out.println("Kill double time: " + doubleTime);
-            double number = (1 - Math.pow(rate, doubleTime/_LETHTIMESCALE)) * inf.getInf();
+            double number = (1 - Math.pow(rate, _lethDoubleTime[disease.getID()]/_LETHTIMESCALE)) * inf.getInf();
 //            System.out.println("Kill: " + number);
-            number = number/4;
-            number -= 10000;
-            if(leth / max > .1)
+            if(leth / max > _CRITICALLETHRATIO)
                 number = Math.ceil(number);
             else number = 0;
             if(number < 1)
@@ -254,9 +254,9 @@ public class Region implements Serializable{
      * @param pop
      * @return
      */
-    public long getTotNumCured(int d) {
+    public double getTotNumCured(int d) {
         //TODO right now cured just cures 5% of total pop per tick
-        long number = (long) Math.ceil(0.05 * _population);
+        double number = Math.ceil(_CUREPERCENT * _population);
         return number;
     }
 
@@ -267,18 +267,21 @@ public class Region implements Serializable{
     public void cure(Disease d) {
         int index = d.getID();
         _hasCure[index] = true;
-        ArrayList<InfWrapper> infected = _hash.getAllOfType(index, 1);
-        long totCured = getTotNumCured(index);
-        for (InfWrapper inf : infected) {
-            double popRatio = inf.getInf()/_population;
-            String cureID = inf.getID().substring(0, index) + "2" + inf.getID().substring(index + 1);
-            long number = (long) Math.ceil(totCured * popRatio);
-            if (inf.getInf() < number) {
-                _hash.put(new InfWrapper(cureID, _hash.get(cureID).getInf() + inf.getInf()));
-                _hash.put(new InfWrapper(inf.getID(), 0L));
-            } else {
-                _hash.put(new InfWrapper(inf.getID(), inf.getInf() - number));
-                _hash.put(new InfWrapper(cureID, _hash.get(cureID).getInf() + number));
+        if (_diseases[index] != null) {
+            ArrayList<InfWrapper> infected = _hash.getAllOfType(index, 1);
+            double totCured = getTotNumCured(index);
+            double numInfected = getInfected().get(index);
+            for (InfWrapper inf : infected) {
+                double popRatio = inf.getInf() / numInfected;
+                String cureID = inf.getID().substring(0, index) + "2" + inf.getID().substring(index + 1);
+                long number = (long) Math.ceil(totCured * popRatio);
+                if (inf.getInf() < number) {
+                    _hash.put(new InfWrapper(cureID, _hash.get(cureID).getInf() + inf.getInf()));
+                    _hash.put(new InfWrapper(inf.getID(), 0L));
+                } else {
+                    _hash.put(new InfWrapper(inf.getID(), inf.getInf() - number));
+                    _hash.put(new InfWrapper(cureID, _hash.get(cureID).getInf() + number));
+                }
             }
         }
     }
@@ -296,8 +299,12 @@ public class Region implements Serializable{
             }
         }
         for(int j = 0; j < _numDiseases; j++){
-            if(_awareness[j] > _awareMax/4 && _diseases[j] != null)
+            if(_awareness[j] > _awareMax/_CUREFRAC && _diseases[j] != null){
+                double medFactor = _med/_diseases[j].getMedRes();
+                if(medFactor > 1)
+                    medFactor = 1;
                 _cureProgress[j] = _cureProgress[j] + (long) (_wealth*weightedPop*_med/_diseases[j].getMedRes());
+            }
         }
     }
 
@@ -340,7 +347,7 @@ public class Region implements Serializable{
             _awareness[index] = tot;
             notifyNeighbors(d);
         }
-        else if(_awareness[index] < _awareMax/4 && tot > _awareMax/4){
+        else if(_awareness[index] < _awareMax/_CUREFRAC && tot > _awareMax/_CUREFRAC){
             _news.add(_name + " has begun work on a cure for " + d.getName() + ".");
             _awareness[index] = tot;
             notifyNeighbors(d);
@@ -356,11 +363,11 @@ public class Region implements Serializable{
     public void notifyNeighbors(Disease d) {
         for (Integer ind : _waterNeighbors) {
             Region r = _regions.get(ind);
-            r.updateAwareness(d, _awareness[d.getID()] / 5);
+            r.updateAwareness(d, _awareness[d.getID()] / _NOTIFYFRAC);
         }
         for (Integer ind : _landNeighbors) {
             Region r = _regions.get(ind);
-            r.updateAwareness(d, _awareness[d.getID()] / 5);
+            r.updateAwareness(d, _awareness[d.getID()] / _NOTIFYFRAC);
         }
     }
 
@@ -387,11 +394,17 @@ public class Region implements Serializable{
         _hash.addZero(_hash.getZero().getInf() - 1);
         d.addPoints(2);
         _diseases[index] = d;
-        _dead[index] = 0L;
-        _hasCure[index] = false;
-        _awareness[index] = 0.0;
-        _cureProgress[index] = 0L;
         _news.add(d.getName() + " has infected " + _name + ".");
+        double startInf = d.getStartInfectivity();
+        double maxInf = d.getMaxInfectivity();
+        double startLeth = d.getStartLethality();
+        double maxLeth = d.getMaxLethality();
+        double infLow = Math.log(2)/Math.log((startInf + maxInf/_INFSCALE)/(maxInf/_INFSCALE));
+        double infHigh = Math.log(2)/Math.log(1 + _INFSCALE);
+        _infDoubleTime[index] = (infLow + infHigh)/2;
+        double lethLow = Math.log(.5)/Math.log(1 - (startLeth + maxLeth/_LETHSCALE)/(maxLeth/_LETHSCALE));
+        double lethHigh = Math.log(.5)/Math.log(1 + _LETHSCALE);
+        _lethDoubleTime[index] = (lethLow + lethHigh)/2;
     }
 
     /**
@@ -545,7 +558,9 @@ public class Region implements Serializable{
         _cureProgress = new long[num];
         _hash = new PopHash(num);
         _hash.addZero(_population);
-        _awareMax = _population;
+        _awareMax = _AWAREMAXSCALE * _population;
+        _infDoubleTime = new double[num];
+        _lethDoubleTime = new double[num];
     }
 
     /**
