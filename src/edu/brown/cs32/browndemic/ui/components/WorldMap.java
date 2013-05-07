@@ -73,14 +73,15 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 	private MarqueeLabel _ml;
 	private Timer _timer;
 	private OverlayWorker _ow;
-	private Layer _layer = Layer.INFECTED;
+	private Layer _layer = Layer.INFECTED_DEAD;
 	private long _largestCountry = -1;
 	private double _largestWealth = -1;
 	
 	private static final double AIRPLANE_SPEED = 6.0;
 	
 	public enum Layer {
-		INFECTED, POPULATION, INFECTED_OTHER, WEALTH
+		INFECTED, POPULATION, INFECTED_OTHER, WEALTH,
+		INFECTED_DEAD, DEAD, INFECTED_DEAD_OTHER, DEAD_OTHER,
 	}
 	
 	public WorldMap(World _world2, BufferedImage map, BufferedImage regions, int disease, MarqueeLabel ml) {
@@ -112,7 +113,7 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 		_layer = l;
 	}
 	
-	private float getInfectedPercent(int id) {
+	private float getInfectedDeadPercent(int id) {
 		Region r = _world.getRegion(id);
 		float percentInfected = 0f;
 		if (r != null) {
@@ -126,7 +127,73 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 		return percentInfected/2.0f;
 	}
 	
+	private float getInfectedPercent(int id) {
+		Region r = _world.getRegion(id);
+		float percentInfected = 0f;
+		if (r != null) {
+			try {
+				percentInfected = (float)r.getInfected().get(_disease) / (float)r.getPopulation();
+			} catch (IndexOutOfBoundsException e1) {
+				percentInfected = 0f;
+			}
+			if (percentInfected > 0f && percentInfected < .2f) percentInfected = .2f;
+		}
+		return percentInfected/2.0f;
+	}
+	
+	private float getDeadPercent(int id) {
+		Region r = _world.getRegion(id);
+		float percentInfected = 0f;
+		if (r != null) {
+			try {
+				percentInfected = (float)r.getKilled().get(_disease) / (float)r.getPopulation();
+			} catch (IndexOutOfBoundsException e1) {
+				percentInfected = 0f;
+			}
+			if (percentInfected > 0f && percentInfected < .2f) percentInfected = .2f;
+		}
+		return percentInfected/2.0f;
+	}
+	
 	private float getInfectedOtherPercent(int id) {
+		Region r = _world.getRegion(id);
+		float percentInfected = 0f;
+		if (r != null) {
+			try {
+				long infected = 0;
+				for (int i = 0; i < r.getInfected().size(); i++) {
+					if (i == _disease) continue;
+					infected += r.getInfected().get(i);
+				}
+				percentInfected = (float)infected / (float)r.getPopulation();
+			} catch (IndexOutOfBoundsException e1) {
+				percentInfected = 0f;
+			}
+			if (percentInfected > 0f && percentInfected < .2f) percentInfected = .2f;
+		}
+		return percentInfected/2.0f;
+	}
+	
+	private float getDeadOtherPercent(int id) {
+		Region r = _world.getRegion(id);
+		float percentInfected = 0f;
+		if (r != null) {
+			try {
+				long infected = 0;
+				for (int i = 0; i < r.getInfected().size(); i++) {
+					if (i == _disease) continue;
+					infected += r.getKilled().get(i);
+				}
+				percentInfected = (float)infected / (float)r.getPopulation();
+			} catch (IndexOutOfBoundsException e1) {
+				percentInfected = 0f;
+			}
+			if (percentInfected > 0f && percentInfected < .2f) percentInfected = .2f;
+		}
+		return percentInfected/2.0f;
+	}
+	
+	private float getInfectedDeadOtherPercent(int id) {
 		Region r = _world.getRegion(id);
 		float percentInfected = 0f;
 		if (r != null) {
@@ -182,17 +249,29 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 				for (Map.Entry<Integer, BufferedImage> e : _diseaseOverlays.entrySet()) {
 					float percent = 0.0f;
 					switch (_layer) {
-						case INFECTED:
-							percent = getInfectedPercent(e.getKey());
+						case INFECTED_DEAD:
+							percent = getInfectedDeadPercent(e.getKey());
 							break;
 						case POPULATION:
 							percent = getPopulationPercent(e.getKey());
 							break;
-						case INFECTED_OTHER:
-							percent = getInfectedOtherPercent(e.getKey());
+						case INFECTED_DEAD_OTHER:
+							percent = getInfectedDeadOtherPercent(e.getKey());
 							break;
 						case WEALTH:
 							percent = getWealthPercent(e.getKey());
+							break;
+						case INFECTED:
+							percent = getInfectedPercent(e.getKey());
+							break;
+						case DEAD:
+							percent = getDeadPercent(e.getKey());
+							break;
+						case INFECTED_OTHER:
+							percent = getInfectedOtherPercent(e.getKey());
+							break;
+						case DEAD_OTHER:
+							percent = getDeadOtherPercent(e.getKey());
 							break;
 					}
 					if (percent > 0) {
@@ -272,7 +351,7 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 		@Override
 		protected void done() {
 			_done.doAction();
-			new Thread(_ow).start();
+			new Thread(_ow, "Overlay Worker").start();
 		}
 	}
 	
