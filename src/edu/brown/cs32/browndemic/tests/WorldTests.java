@@ -1,5 +1,6 @@
 package edu.brown.cs32.browndemic.tests;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -31,10 +32,10 @@ public class WorldTests {
     	WorldSP world = WorldMaker.makeNewEarthSP();
     	HashMap<Integer, Region> hash = new HashMap<>();
     	Region r1 = new Region(0, "Region 1", 20L, Arrays.asList(1), new ArrayList<Integer>(), 
-    			hash, 0, 0, 20.0, 2.0, 2.0, 2.0, 2.0, 2.0, new ArrayList<NaturalDisaster>(),
+    			hash, new ArrayList<Airport>(), 0, 20.0, 2.0, 2.0, 2.0, 2.0, 2.0, new ArrayList<NaturalDisaster>(),
     			new ArrayList<Integer>());
     	Region r2 = new Region(1, "Region 2", 5L, Arrays.asList(0), new ArrayList<Integer>(), 
-    			hash, 0, 0, 20.0, 2.0, 2.0, 2.0, 2.0, 2.0, new ArrayList<NaturalDisaster>(),
+    			hash, new ArrayList<Airport>(), 0, 20.0, 2.0, 2.0, 2.0, 2.0, 2.0, new ArrayList<NaturalDisaster>(),
     			new ArrayList<Integer>());
     	hash.put(0, r1);
     	hash.put(0, r2);
@@ -118,5 +119,14 @@ public class WorldTests {
     		
     	}
     	assert(_world.getWinners().size() == 0);
+    }
+    
+    @Test
+    public void airportSetupTest() throws IOException{
+    	WorldSP w = WorldMaker.makeNewEarthSP();
+    	List<Region> regions = w.getRegions();
+    	assert(regions.get(0).getAirports().size() == 2);
+    	assert(regions.get(39).getAirports().get(0).getDescription().equals("Mumbai"));
+    	assert(regions.get(58).getAirports().isEmpty());
     }
 }

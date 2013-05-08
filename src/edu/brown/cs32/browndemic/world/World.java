@@ -59,6 +59,9 @@ public interface World {
     //get dead for a specific disease
     public long getDead(int d);
     
+    //get all airports
+    public List<Airport> getAirports();
+    
     //get all regions
     public List<Region> getRegions();
     

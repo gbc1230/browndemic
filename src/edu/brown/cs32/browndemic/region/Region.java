@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Random;
 
 import edu.brown.cs32.browndemic.disease.Disease;
+import edu.brown.cs32.browndemic.world.Airport;
 
 /**
  *
@@ -20,10 +21,10 @@ public class Region implements Serializable{
 	private static final long serialVersionUID = 4373669006142652684L;
 
     //ArrayList of all land neighboring Regions by String name
-	private ArrayList<Integer> _landNeighbors;
+	private List<Integer> _landNeighbors;
 
     //ArrayList of all sea neighboring Regions by String name
-    private ArrayList<Integer> _waterNeighbors;
+    private List<Integer> _waterNeighbors;
 
     //Hashmap of all Regions by ID
     private HashMap<Integer, Region> _regions;
@@ -89,11 +90,14 @@ public class Region implements Serializable{
     //wealth of this Region (reflects infrastructure, productivity, actual wealth, etc.)
     private double _wealth,  _wet,  _dry,  _heat,  _cold, _med;
     //Lists of transmissions to other regions and news
-    private ArrayList<RegionTransmission> _transmissions;
-    private ArrayList<String> _news;
+    private List<RegionTransmission> _transmissions;
+    private List<String> _news;
     
-    private ArrayList<Integer> _disIDs;
-    private ArrayList<NaturalDisaster> _disasters;
+    private List<Integer> _disIDs;
+    //airports in this region
+    private List<Airport> _airports;
+    //possible natural disasters for this region
+    private List<NaturalDisaster> _disasters;
     
     private double _remInf;
 
@@ -107,7 +111,7 @@ public class Region implements Serializable{
      */
     public Region(int ID, String name, long population, List<Integer> landNeighbors,
             List<Integer> waterNeighbors, HashMap<Integer, Region> hash,
-            int airports, int seaports, double wealth, double wet, double dry,
+            List<Airport> airports, int seaports, double wealth, double wet, double dry,
             double heat, double cold, double med, List<NaturalDisaster> disasters, 
             List<Integer> disIDs) {
         _name = name;
@@ -117,7 +121,8 @@ public class Region implements Serializable{
         _waterNeighbors = new ArrayList<>(waterNeighbors);
         _regions = hash;
         _sea = seaports;
-        _air = airports;
+        _airports = airports;
+        _air = _airports.size();
         _wealth = wealth;
         _wet = wet;
         _dry = dry;
@@ -372,7 +377,7 @@ public class Region implements Serializable{
 
     /**
      * introduces a disease to this region, initializes necessary lists
-     * @param d hte disease to introduce
+     * @param d the disease to introduce
      */
     public void introduceDisease(Disease d) {
         if(_diseases[d.getID()] != null){
@@ -561,6 +566,14 @@ public class Region implements Serializable{
         _infDoubleTime = new double[num];
         _lethDoubleTime = new double[num];
     }
+    
+    /**
+     * Get the airports in this region
+     * @return A list of airports
+     */
+    public List<Airport> getAirports(){
+    	return _airports;
+    }
 
     /**
      * getAir() gets a the number of open airports in this Region
@@ -590,7 +603,7 @@ public class Region implements Serializable{
      * getNeighbors() gets the ids of all bordering Regions
      * @return _neighbors
      */
-    public ArrayList<Integer> getLandNeighbors() {
+    public List<Integer> getLandNeighbors() {
         return _landNeighbors;
     }
 
@@ -598,7 +611,7 @@ public class Region implements Serializable{
      * getNeighbors() gets the ids of all bordering Regions (by Water)
      * @return _neighbors
      */
-    public ArrayList<Integer> getWaterNeighbors() {
+    public List<Integer> getWaterNeighbors() {
         return _waterNeighbors;
     }
 

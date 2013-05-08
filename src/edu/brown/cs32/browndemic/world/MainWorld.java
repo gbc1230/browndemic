@@ -65,6 +65,9 @@ public abstract class MainWorld implements World, Runnable, Serializable{
     //how many disease / starting regions have been picked
     protected int _numDiseasesPicked, _numRegionsPicked;
     
+    //airports in this world
+    protected List<Airport> _airports;
+    
     //finals for setting various speeds
     protected final long _SPEED1 = (1000L / 3);
     protected final long _SPEED2 = 200L;
@@ -78,6 +81,7 @@ public abstract class MainWorld implements World, Runnable, Serializable{
     //set everything up
     public MainWorld(){
         _regions = new ArrayList<>();
+        _airports = new ArrayList<>();
         _regIndex = new HashMap<>();
         _diseases = new ArrayList<>();
         _kills = new ArrayList<>();
@@ -128,6 +132,10 @@ public abstract class MainWorld implements World, Runnable, Serializable{
     public void addRegion(Region r){
         _regions.add(r);
         _regIndex.put(r.getName(), r);
+    }
+    
+    public void addAirport(Airport a){
+    	_airports.add(a);
     }
     
     /**
@@ -206,6 +214,11 @@ public abstract class MainWorld implements World, Runnable, Serializable{
     @Override
     public long getDead(int d){
         return _kills.get(d);
+    }
+    
+    @Override
+    public List<Airport> getAirports(){
+    	return _airports;
     }
     
     @Override

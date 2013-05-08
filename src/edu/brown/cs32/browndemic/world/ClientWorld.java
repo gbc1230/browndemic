@@ -188,6 +188,11 @@ public class ClientWorld implements ChatServer, World{
     }
     
     @Override
+    public List<Airport> getAirports(){
+    	return _world.getAirports();
+    }
+    
+    @Override
     public List<Region> getRegions(){
         return _world.getRegions();
     }

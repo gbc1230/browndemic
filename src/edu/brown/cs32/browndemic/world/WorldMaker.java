@@ -19,6 +19,7 @@ public class WorldMaker{
     
     public static WorldSP makeNewEarthSP() throws IOException{
         WorldSP w = new WorldSP();
+        addEarthAirports(w, "EarthAirports.csv");
         addEarthRegions(w, "EarthRegions.csv");
         w.setPopulation();
         return w;
@@ -26,6 +27,7 @@ public class WorldMaker{
     
     public static ServerWorld makeNewEarthServer() throws IOException{
         ServerWorld w = new ServerWorld();
+        addEarthAirports(w, "EarthAirports.csv");
         addEarthRegions(w, "EarthRegions.csv");
         w.setPopulation();
         return w;
@@ -50,13 +52,32 @@ public class WorldMaker{
     				dry, heat, cold);
     		ans.add(temp);
     	}
+    	f.close();
     	return ans;
+    }
+    
+    private static void addEarthAirports(MainWorld w, String filename) throws IOException{
+    	BufferedReader f = new BufferedReader(new FileReader(filename));
+    	f.readLine();
+    	while (f.ready()){
+    		String l = f.readLine();
+    		String[] line = l.split(",");
+    		int id = Integer.parseInt(line[0]);
+    		int region = Integer.parseInt(line[1]);
+    		int x = Integer.parseInt(line[2]);
+    		int y = Integer.parseInt(line[3]);
+    		String des = line[4];
+    		Airport a = new Airport(id, region, x, y, des);
+    		w.addAirport(a);
+    	}
+    	f.close();
     }
     
     private static void addEarthRegions(MainWorld w, String filename) throws IOException{
         BufferedReader f = new BufferedReader(new FileReader(filename));
         HashMap<Integer, Region> regionHash = new HashMap<>();
         List<NaturalDisaster> disasters = getNaturalDisasters("NaturalDisasters.csv");
+        List<Airport> worldAirports = w.getAirports();
         f.readLine();
         while (f.ready()){
             String line = f.readLine();
@@ -64,7 +85,14 @@ public class WorldMaker{
             int id = Integer.parseInt(data[0]);
             String name = data[1];
             long population = Long.parseLong(data[2]);
-            int airports = Integer.parseInt(data[3]);
+            String[] ap = data[3].split(" ");
+            List<Airport> airports = new ArrayList<>();
+            for (String s : ap){
+            	if (!s.equals("")){
+            		int pos = Integer.parseInt(s);
+            		airports.add(worldAirports.get(pos));
+            	}
+            }
             int seaports = Integer.parseInt(data[4]);
             List<Integer> landNeighbors = new ArrayList<>();
             if (!data[5].equals("")){
@@ -96,6 +124,7 @@ public class WorldMaker{
             regionHash.put(id, r);
             w.addRegion(r);
         }
+        f.close();
     }
     
     
