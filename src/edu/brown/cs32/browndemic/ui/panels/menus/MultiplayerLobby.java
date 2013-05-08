@@ -137,8 +137,13 @@ public class MultiplayerLobby extends UIPanel {
 	
 	private void update() {
 		if (_thisWorld.hostDisconnected()) {
-			JOptionPane.showMessageDialog(this, "The host has disconnected.  Returning to Main Menu");
-			Utils.getParentFrame(this).setPanel(new MainMenu());
+			if (_thisWorld.wasKicked()){
+				JOptionPane.showMessageDialog(this, "The host has kicked you from the lobby.  Returning to Main Menu");
+			}
+			else{
+				JOptionPane.showMessageDialog(this, "The host has disconnected.  Returning to Main Menu");
+			}
+				Utils.getParentFrame(this).setPanel(new MainMenu());
 			_timer.stop();
 		}
 		if (_lobby == null || !_lobby.equals(_thisWorld.getLobby())) {
@@ -148,7 +153,7 @@ public class MultiplayerLobby extends UIPanel {
 				return;
 			for (int i = 0; i < _lobby.size(); i++) {
 				LobbyMember l = _lobby.get(i);
-			    _players.add(new MultiplayerLobbyPanel(l.getName(), l.getIP(), _isHost, null, l.isReady()));
+			    _players.add(new MultiplayerLobbyPanel(l.getName(), l.getIP(), _isHost && i != 0, new KickAction(i), l.isReady()));
 			}
 		    _players.add(Box.createGlue());
 		    _players.revalidate();
@@ -164,6 +169,19 @@ public class MultiplayerLobby extends UIPanel {
 		if (!_name.equals(Settings.get(Settings.NAME))) {
 			_name = Settings.get(Settings.NAME);
 			_thisWorld.setName(_name);
+		}
+	}
+	
+	private class KickAction implements Action {
+		private int id;
+		public KickAction(int id) {
+			this.id = id;
+		}
+
+		@Override
+		public void doAction() {
+			if (_serverWorld != null)
+				_serverWorld.kickLobbyMember(id);
 		}
 	}
 	

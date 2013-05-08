@@ -203,6 +203,7 @@ public class SinglePlayerMenu extends UIPanel {
 				}
 			    catch(IOException ex){
 			    	System.out.println("Couldn't load file.");
+//			    	ex.printStackTrace();
 				}
 				if (world != null){
 					world.startFromLoad();
