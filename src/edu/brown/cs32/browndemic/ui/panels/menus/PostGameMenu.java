@@ -28,16 +28,18 @@ import edu.brown.cs32.browndemic.ui.panels.subpanels.Leaderboard;
 import edu.brown.cs32.browndemic.ui.panels.titlebars.DefaultTitleBar;
 import edu.brown.cs32.browndemic.world.World;
 
-public class MultiplayerPostGameMenu extends UIPanel {
+public class PostGameMenu extends UIPanel {
 	private static final long serialVersionUID = -6130083033132116734L;
 	private World _world;
 	private int _disease;
 	private Leaderboard _lb;
 	private JLabel menu_, single_, multi_;
+	private boolean _multi;
 
-	public MultiplayerPostGameMenu(World world, int disease) {
+	public PostGameMenu(World world, int disease, boolean multi) {
 		super();
 		_world = world;
+		_multi = multi;
 		_disease = disease;
 		makeUI();
 	}
@@ -50,6 +52,8 @@ public class MultiplayerPostGameMenu extends UIPanel {
 		JPanel left = new JPanel();
 		left.setLayout(new BoxLayout(left, BoxLayout.Y_AXIS));
 		left.setMaximumSize(new Dimension(UI.WIDTH/3, UI.CONTENT_HEIGHT));
+		left.setPreferredSize(new Dimension(UI.WIDTH/3, UI.CONTENT_HEIGHT));
+		left.setMinimumSize(new Dimension(UI.WIDTH/3, UI.CONTENT_HEIGHT));
 		left.setBackground(Colors.TRANSPARENT);
 		left.setOpaque(false);
 		
@@ -63,17 +67,27 @@ public class MultiplayerPostGameMenu extends UIPanel {
 		multi_.setAlignmentX(Component.CENTER_ALIGNMENT);
 		multi_.addMouseListener(this);
 
-		left.add(Box.createRigidArea(new Dimension(0, UI.CONTENT_HEIGHT/8)));
+		if (_multi) {
+			left.add(Box.createRigidArea(new Dimension(0, UI.CONTENT_HEIGHT/8)));
+		} else {
+			left.add(Box.createGlue());
+		}
 		left.add(menu_);
 		left.add(single_);
 		left.add(multi_);
-		left.add(Box.createRigidArea(new Dimension(0, UI.CONTENT_HEIGHT/8)));
+		if (_multi) {
+			left.add(Box.createRigidArea(new Dimension(0, UI.CONTENT_HEIGHT/8)));
+		} else {
+			left.add(Box.createGlue());
+		}
 		
-		if (_world instanceof ChatServer)
-			left.add(new ChatPanel((ChatServer)_world));
-		left.add(_lb = new Leaderboard(_world));
-		_lb.setMaximumSize(new Dimension(UI.WIDTH/2, UI.CONTENT_HEIGHT/4));
-		_lb.setPreferredSize(new Dimension(UI.WIDTH/2, UI.CONTENT_HEIGHT/4));
+		if (_multi) { 
+			if (_world instanceof ChatServer)
+				left.add(new ChatPanel((ChatServer)_world));
+			left.add(_lb = new Leaderboard(_world));
+			_lb.setMaximumSize(new Dimension(UI.WIDTH/2, UI.CONTENT_HEIGHT/4));
+			_lb.setPreferredSize(new Dimension(UI.WIDTH/2, UI.CONTENT_HEIGHT/4));
+		}
 		
 		JPanel right = new JPanel();
 		right.setBackground(Colors.TRANSPARENT);
@@ -90,27 +104,31 @@ public class MultiplayerPostGameMenu extends UIPanel {
 		vicdefeat.setAlignmentX(CENTER_ALIGNMENT);
 		right.add(vicdefeat);
 		
-		UIManager.put("TabbedPane.selected", Colors.MENU_BACKGROUND);
-		UIManager.put("TabbedPane.focus", Colors.MENU_BACKGROUND);
-		UIManager.put("TabbedPane.selectHighlight", Colors.MENU_BACKGROUND);
-		UIManager.put("TabbedPane.shadow", Colors.MENU_BACKGROUND);
-		UIManager.put("TabbedPane.darkShadow", Colors.MENU_BACKGROUND);
-		UIManager.put("TabbedPane.selected", Colors.MENU_BACKGROUND);
-		UIManager.put("TabbedPane.borderHighlightColor", Colors.MENU_BACKGROUND);
-		UIManager.put("TabbedPane.background", Colors.MENU_BACKGROUND);
-		UIManager.put("TabbedPane.unselectedBackground", Colors.MENU_BACKGROUND);
-		UIManager.put("TabbedPane.light", Colors.RED_TEXT);
-		UIManager.put("TabbedPane.contentBorderInsets", new Insets(0, 0, 0, 0));
-		
-		JTabbedPane stats = new JTabbedPane();
-		stats.setForeground(Colors.RED_TEXT);
-		stats.setFont(Fonts.TITLE_BAR);
-		right.add(stats);
-		
-		Utils.setDefaultLook(stats);
-		
-		for (Disease d : _world.getDiseases()) {
-			stats.addTab(d.getName(), generateStatsPanel(d.getID()));
+		if (_multi) {
+			UIManager.put("TabbedPane.selected", Colors.MENU_BACKGROUND);
+			UIManager.put("TabbedPane.focus", Colors.MENU_BACKGROUND);
+			UIManager.put("TabbedPane.selectHighlight", Colors.MENU_BACKGROUND);
+			UIManager.put("TabbedPane.shadow", Colors.MENU_BACKGROUND);
+			UIManager.put("TabbedPane.darkShadow", Colors.MENU_BACKGROUND);
+			UIManager.put("TabbedPane.selected", Colors.MENU_BACKGROUND);
+			UIManager.put("TabbedPane.borderHighlightColor", Colors.MENU_BACKGROUND);
+			UIManager.put("TabbedPane.background", Colors.MENU_BACKGROUND);
+			UIManager.put("TabbedPane.unselectedBackground", Colors.MENU_BACKGROUND);
+			UIManager.put("TabbedPane.light", Colors.RED_TEXT);
+			UIManager.put("TabbedPane.contentBorderInsets", new Insets(0, 0, 0, 0));
+			
+			JTabbedPane stats = new JTabbedPane();
+			stats.setForeground(Colors.RED_TEXT);
+			stats.setFont(Fonts.TITLE_BAR);
+			right.add(stats);
+			
+			Utils.setDefaultLook(stats);
+			
+			for (Disease d : _world.getDiseases()) {
+				stats.addTab(d.getName(), generateStatsPanel(d.getID()));
+			}
+		} else {
+			right.add(generateStatsPanel(0));
 		}
 		
 		add(left);
@@ -179,7 +197,8 @@ public class MultiplayerPostGameMenu extends UIPanel {
 	
 	@Override
 	public void stopPanel() {
-		_lb.stop();
+		if (_lb != null)
+			_lb.stop();
 	}
 
 	@Override

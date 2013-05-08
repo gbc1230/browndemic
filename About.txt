@@ -1,4 +1,7 @@
+<html>
+<body style="width: %d; font-family: GhostWriter">
 Browndemic
+
 A Project By:
 Graham Carling
 Benjamin Most
@@ -23,7 +26,7 @@ Infected: Total number of currently living people who have been infected by your
 Dead: Total number of people who have been killed by your disease.
 Population: Total number of living people.
 Cured: Total number of people who were infected by your disease and then cured.
-Cure progress: How close humanity has gotten to finding a cure to your disease: once this hits 100% the cure will be distributed.
+Cure progress: How close humanity has gotten to finding a cure to your disease: once this hits 100%% the cure will be distributed.
 
 Tabs:
 Available: Perks available for you to buy.
@@ -34,3 +37,5 @@ Regions: A list of all regions sorted by which have not been infected, which hav
 Chat (Multiplayer): The chat window between players.
 Players (Multiplayer): A list of all players in the game and their infection / kill counts.
 Layers (Top Right): Pick which information is highlighted in red on your screen.
+</body>
+</html>

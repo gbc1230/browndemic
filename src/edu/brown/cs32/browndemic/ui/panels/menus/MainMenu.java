@@ -27,7 +27,7 @@ import edu.brown.cs32.browndemic.ui.panels.UIPanel;
 public class MainMenu extends UIPanel {
 
 	private static final long serialVersionUID = -1199792392732674767L;
-	JLabel single_, multi_, settings_;
+	JLabel single_, multi_, settings_, about_;
 	
 	public MainMenu() {
 		super();
@@ -60,17 +60,21 @@ public class MainMenu extends UIPanel {
 		multi_ = new HoverLabel(Strings.MULTI_PLAYER, Fonts.BUTTON_TEXT, Colors.RED_TEXT, Colors.HOVER_TEXT);
 		multi_.setAlignmentX(Component.CENTER_ALIGNMENT);
 		multi_.addMouseListener(this);
-		settings_ = new HoverLabel(Strings.SETTINGS, Fonts.BUTTON_TEXT, Colors.RED_TEXT, Colors.HOVER_TEXT);
+		settings_ = new HoverLabel(Strings.SETTINGS_MENU, Fonts.BUTTON_TEXT, Colors.RED_TEXT, Colors.HOVER_TEXT);
 		settings_.setAlignmentX(Component.CENTER_ALIGNMENT);
 		settings_.addMouseListener(this);
+		about_ = new HoverLabel(Strings.ABOUT_MENU, Fonts.BUTTON_TEXT, Colors.RED_TEXT, Colors.HOVER_TEXT);
+		about_.setAlignmentX(Component.CENTER_ALIGNMENT);
+		about_.addMouseListener(this);
 		
 		add(single_);
 		add(Box.createVerticalGlue());
 		add(multi_);
 		add(Box.createVerticalGlue());
 		add(settings_);
-
 		add(Box.createVerticalGlue());
+		add(about_);
+
 		add(Box.createVerticalGlue());
 		add(Box.createVerticalGlue());
 		add(Box.createVerticalGlue());
@@ -92,6 +96,8 @@ public class MainMenu extends UIPanel {
 			Utils.getParentFrame(this).setPanel(new MultiplayerMenu());
 		} else if (e.getSource() == settings_) {
 			Utils.getParentFrame(this).setPanel(new SettingsMenu());
+		} else if (e.getSource() == about_) {
+			Utils.getParentFrame(this).setPanel(new AboutMenu());
 		}
 	}
 

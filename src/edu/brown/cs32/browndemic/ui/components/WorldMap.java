@@ -36,6 +36,7 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
 import javax.swing.Timer;
 
+import edu.brown.cs32.browndemic.region.AirTransmission;
 import edu.brown.cs32.browndemic.region.Region;
 import edu.brown.cs32.browndemic.ui.Resources;
 import edu.brown.cs32.browndemic.ui.Settings;
@@ -45,7 +46,7 @@ import edu.brown.cs32.browndemic.ui.UIConstants.Images;
 import edu.brown.cs32.browndemic.ui.Utils;
 import edu.brown.cs32.browndemic.ui.actions.Action;
 import edu.brown.cs32.browndemic.ui.panels.menus.MainMenu;
-import edu.brown.cs32.browndemic.ui.panels.menus.MultiplayerPostGameMenu;
+import edu.brown.cs32.browndemic.ui.panels.menus.PostGameMenu;
 import edu.brown.cs32.browndemic.world.Airport;
 import edu.brown.cs32.browndemic.world.World;
 
@@ -59,13 +60,10 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 	private BufferedImage _map, _regions;
 	private Map<Integer, BufferedImage> _diseaseOverlays = new HashMap<>();
 	private Map<Integer, BufferedImage> _highlightOverlays = new HashMap<>();
-	//private Map<Integer, Float> _infected = new HashMap<>();
-	//private Map<Integer, AlphaComposite> _composites = new HashMap<>();
-	private ArrayList<Location> _airports = new ArrayList<>();
 	private List<MovingObject> _objects = new ArrayList<>();
 	private Map<Integer, Float> _highlights = new HashMap<>();
 	private int _selected, _disease, _hover;
-	private boolean _chooseMode, _drawAirports = true, _drawAirplanes = true;
+	private boolean _chooseMode, _drawAirports = true, _drawAirplanes = true, _multi;
 	private static GraphicsConfiguration gc = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
 	private double fps = 0.0f;
 	private long lastUpdate = 0;
@@ -78,14 +76,14 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 	private long _largestCountry = -1;
 	private double _largestWealth = -1;
 	
-	private static final double AIRPLANE_SPEED = 6.0;
+	private static final double AIRPLANE_SPEED = 3.0;
 	
 	public enum Layer {
 		INFECTED, POPULATION, INFECTED_OTHER, WEALTH,
 		INFECTED_DEAD, DEAD, INFECTED_DEAD_OTHER, DEAD_OTHER,
 	}
 	
-	public WorldMap(World _world2, BufferedImage map, BufferedImage regions, int disease, MarqueeLabel ml) {
+	public WorldMap(World _world2, BufferedImage map, BufferedImage regions, int disease, MarqueeLabel ml, boolean multi) {
 		super();
 		_world = _world2;
 		_map = map;
@@ -99,6 +97,7 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 		setMaximumSize(new Dimension(map.getWidth(), map.getHeight()));
 		setMinimumSize(new Dimension(map.getWidth(), map.getHeight()));
 		setDoubleBuffered(true);
+		_multi = multi;
 		_regionCache = gc.createCompatibleImage(map.getWidth(), map.getHeight(), Transparency.TRANSLUCENT);
 		_regionCache2 = gc.createCompatibleImage(map.getWidth(), map.getHeight(), Transparency.TRANSLUCENT);
 		_ow = new OverlayWorker();
@@ -448,7 +447,7 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 	
 	private void update() {
 		if (_world.isGameOver()) {
-			Utils.getParentFrame(this).setPanel(new MultiplayerPostGameMenu(_world, _disease));
+			Utils.getParentFrame(this).setPanel(new PostGameMenu(_world, _disease, _multi));
 		}
 		if (_world.hostDisconnected()) {
 			JOptionPane.showMessageDialog(this, "The host has disconnected.  Returning to Main Menu");
@@ -458,6 +457,11 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 			if (it.next().update().done) {
 				it.remove();
 			}
+		}
+		AirTransmission at;
+		if ((at = _world.getTransmission()) != null) {
+			Airport src = at.getStart(); Airport dest = at.getEnd();
+			addAirplane(true, src.getX(), src.getY(), dest.getX(), dest.getY());
 		}
 	}
 	
@@ -508,10 +512,7 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 			BufferedImage airportOpen = Resources.getImage(Images.AIRPORT_OPEN);
 			BufferedImage airportClosed = Resources.getImage(Images.AIRPORT_CLOSED);
 			for (Airport a : _world.getAirports()) {
-				System.out.printf("(%d, %d)\n", a.getX(), a.getY());
 				g2.drawImage((a.isOpen() ? airportOpen : airportClosed), (int)(a.getX() - airportOpen.getWidth()/2), (int)(a.getY() - airportOpen.getHeight()/2), null);
-			}
-			for (Location l : _airports) {
 			}
 		}
 		
@@ -672,5 +673,11 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 	
 	public void setDrawAirplanes(boolean b) {
 		_drawAirplanes = b;
+	}
+	
+	private void addAirplane(boolean infected, int srcx, int srcy, int destx, int desty) {
+		MovingObject airplane = new MovingObject(new Location(srcx, srcy), AIRPLANE_SPEED, (infected ? Resources.getImage(Images.AIRPLANE_INFECTED) : Resources.getImage(Images.AIRPLANE)));
+		airplane.addWaypoint(new Location(destx, desty));
+		_objects.add(airplane);
 	}
 }
