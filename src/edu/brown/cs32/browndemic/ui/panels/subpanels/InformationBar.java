@@ -10,7 +10,6 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
-import javax.swing.ImageIcon;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -235,10 +234,16 @@ public class InformationBar extends BrowndemicPanel implements ActionListener, C
 	}
 	
 	private void updateInfo() {
-		healthy.setText(Strings.INFO_HEALTHY + NumberFormat.getInstance().format(_world.getHealthy()));
-		infected.setText(Strings.INFO_INFECTED + NumberFormat.getInstance().format(_world.getInfected()));
-		dead.setText(Strings.INFO_DEAD + NumberFormat.getInstance().format(_world.getDead()));
-		total.setText(Strings.INFO_POPULATION + NumberFormat.getInstance().format(_world.getPopulation()));
+		NumberFormat nf = NumberFormat.getInstance();
+		healthy.setText(String.format("%s%s", Strings.INFO_HEALTHY, nf.format(_world.getHealthy())));
+		if (_multi) {
+			infected.setText(String.format("%s%s/%s", Strings.INFO_INFECTED, nf.format(_world.getInfected(_disease)), nf.format(_world.getInfected())));
+			dead.setText(String.format("%s%s/%s", Strings.INFO_DEAD, nf.format(_world.getDead(_disease)), nf.format(_world.getDead())));
+		} else {
+			infected.setText(String.format("%s%s", Strings.INFO_INFECTED, nf.format(_world.getInfected())));
+			dead.setText(String.format("%s%s", Strings.INFO_DEAD, nf.format(_world.getDead())));
+		}
+		total.setText(Strings.INFO_POPULATION + nf.format(_world.getPopulation()));
 		try {
 			cureProgress.setText(String.format("%s%.2f%%", Strings.INFO_CURED, _world.getCurePercentage(_disease)));
 		} catch (IndexOutOfBoundsException e) {

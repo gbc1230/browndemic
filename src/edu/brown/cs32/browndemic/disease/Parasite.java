@@ -31,8 +31,8 @@ public class Parasite extends Disease{
     final private double START_VISIBILITY = 1;
     //the size of this disease's perk array
     final private int PERK_ARRAY_SIZE = 50;
-    //The hardcoded file path for this disease's perks
-    final private String FILE_PATH = "Parasite.csv";
+    //The file path for this disease's perks
+    final private String FILE_PATH = "resources/Parasite.csv";
 
     //Constructor using built in file path for the parasite perks
     public Parasite(String tempname){

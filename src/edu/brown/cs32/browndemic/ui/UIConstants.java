@@ -100,12 +100,12 @@ public class UIConstants {
 		public static final String PEOPLE_KILLED = "People Killed:";
 		public static final String PERKS_BOUGHT = "Perks Bought:";
 		public static final String PERKS_SOLD = "Perks Sold:";
-		public static final String RANDOM_PERKS = "Random Perks Gained:";
+		public static final String RANDOM_PERKS = "Mutations Gained:";
 		public static final String POINTS_EARNED = "Points Gained:";
 		public static final String POINTS_SPENT = "Points Spent:";
 		public static final String ABOUT = "About";
 		public static final String ABOUT_MENU = "ABOUT";
-		public static final String ABOUT_PATH = "About.txt";
+		public static final String ABOUT_PATH = RESOURCE_PATH + "About.txt";
 		
 		public static String ABOUT_HTML = "";
 		

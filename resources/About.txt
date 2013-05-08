@@ -1,0 +1,66 @@
+<html>
+<style type="text/css">
+h1{font-size: 32pt;}
+h2{font-size: 28pt;}
+h3{font-size: 24pt;}
+<body style="width: %d; font-size: 20pt; text-align: center; font-family: GhostWriter">
+
+<h1><u>Browndemic</u></h1><br />
+
+<h2>How To Play:</h2>
+
+<h3>Single Player:</h3>
+<p>
+Pick a disease and a name and try to wipe out the world's population! Over time you will get points that will allow you to buy perks and increase the various stats
+of your disease. Be careful: as you kill people and get noticed, humanity will start working on a cure to destroy you.  You must be careful in order to infect the whole world 
+before you are noticed and it is too late. You can adjust the speed of the game or pause if you like. You can also save the game and continue later.
+</p>
+
+<h3>Multiplayer:</h3>
+<p>
+You don't have to kill everyone in the entire world: just more people than your opponents. The winner is whoever gets the most kills before either everyone in the world is dead 
+or all diseases have no one infected. 
+</p>
+<br />
+
+<h2>Information In Game:</h2>
+<h3>Labels:</h3>
+<p>
+Healthy: Total number of non infected living people.<br />
+Infected: Total number of currently living people who have been infected by your disease.<br />
+Dead: Total number of people who have been killed by your disease.<br />
+Population: Total number of living people.<br />
+Cured: Total number of people who were infected by your disease and then cured.<br />
+Cure progress: How close humanity has gotten to finding a cure to your disease: once this hits 100%% the cure will be distributed.<br />
+</p>
+
+<h3>Tabs:</h3>
+<p>
+Available: Perks available for you to buy.<br />
+Owned: Perks you currently have.<br />
+Stats: Various stats about your disease.<br />
+News: A news feed of events happening around the world.<br />
+Regions: A list of all regions sorted by which have not been infected, which have been infected, and which have populations which are entirely dead.<br />
+Chat (Multiplayer): The chat window between players.<br />
+Players (Multiplayer): A list of all players in the game and their infection and kill counts.<br />
+</p>
+
+<h3>Layers:</h3>
+<p>
+Infected+Dead: Highlight regions based on their infected population and dead population.<br />
+Infected: Highlight regions based only on their infected population.<br />
+Dead: Highlight regions based only on their dead population.<br />
+Population: Highlight regions based on their living population.<br />
+Wealth: Highlight regions based on their wealth.<br />
+Show airports: Toggle to turn airport icons on/off.<br />
+Show airplanes: Toggle to turn airplane flight animations on/off.<br />
+</p>
+<br />
+
+<h2>A Project By:</h2>
+<h3>Graham Carling</h3>
+<h3>Chester Kilfoyle</h3>
+<h3>Benjamin Koatz</h3>
+<h3>Benjamin Most</h3>
+</body>
+</html>

@@ -561,29 +561,45 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 		g2.setFont(Fonts.NORMAL_TEXT);
 		Region r = _world.getRegion(_selected);
 		String name = "";
-		long infected = 0, dead = 0, total = 1, healthy = 0, cured = 0;
+		long infected = 0, dead = 0, total = 1, healthy = 0, cured = 0, tinfected = 0, tdead = 0, tcured = 0;
 		long airports = 0, seaports = 0;
 		
 		if (r != null) {
 			name = r.getName();
-			for (long l : r.getInfected())
-				infected += l;
-			for (long l : r.getKilled())
-				dead += l;
-			for (long l : r.getCured())
-				cured += l;
+			infected = r.getInfected().get(_disease);
+			dead = r.getKilled().get(_disease);
+			cured = r.getCured().get(_disease);
+			for (long l : r.getInfected()) {
+				tinfected += l;
+			}
+			for (long l : r.getKilled()) {
+				tdead += l;
+			}
+			for (long l : r.getCured()) {
+				tcured += l;
+			}
 			healthy = r.getHealthy();
 			total = r.getPopulation();
 			airports = r.getAir();
 			seaports = r.getSea();
 		}
 		g2.drawString(name, 5, getHeight() - 120);
+		NumberFormat nf = NumberFormat.getInstance();
 		
-		g2.drawString(String.format("Healthy: %s (%.2f%%)", NumberFormat.getInstance().format(healthy), 100*(double)healthy/(double)total), 15, getHeight() - 95);
-		g2.drawString(String.format("Infected: %s (%.2f%%)", NumberFormat.getInstance().format(infected), 100*(double)infected/(double)total), 15, getHeight() - 75);
-		g2.drawString(String.format("Dead: %s (%.2f%%)", NumberFormat.getInstance().format(dead), 100*(double)dead/(double)total), 15, getHeight() - 55);
-		g2.drawString(String.format("Cured: %s (%.2f%%)", NumberFormat.getInstance().format(cured), 100*(double)cured/(double)total), 15, getHeight() - 35);
-		g2.drawString(String.format("Total: %s", NumberFormat.getInstance().format(total)), 15, getHeight() - 15);
+		if (_multi) {			
+			g2.drawString(String.format("Healthy: %s (%.2f%%)", nf.format(healthy), 100*(double)healthy/(double)total), 15, getHeight() - 95);
+			g2.drawString(String.format("Infected: %s/%s (%.2f%%/%.2f%%)", nf.format(infected), nf.format(tinfected), 100*(double)infected/(double)total, 100*(double)tinfected/(double)total), 15, getHeight() - 75);
+			g2.drawString(String.format("Dead: %s/%s (%.2f%%/%.2f%%)", nf.format(dead), nf.format(tdead), 100*(double)dead/(double)total, 100*(double)tdead/(double)total), 15, getHeight() - 55);
+			g2.drawString(String.format("Cured: %s/%s (%.2f%%/%.2f%%)", nf.format(cured), nf.format(tcured), 100*(double)cured/(double)total, 100*(double)tcured/(double)total), 15, getHeight() - 35);
+			g2.drawString(String.format("Total: %s", nf.format(total)), 15, getHeight() - 15);
+
+		} else {
+			g2.drawString(String.format("Healthy: %s (%.2f%%)", nf.format(healthy), 100*(double)healthy/(double)total), 15, getHeight() - 95);
+			g2.drawString(String.format("Infected: %s (%.2f%%)", nf.format(infected), 100*(double)infected/(double)total), 15, getHeight() - 75);
+			g2.drawString(String.format("Dead: %s (%.2f%%)", nf.format(dead), 100*(double)dead/(double)total), 15, getHeight() - 55);
+			g2.drawString(String.format("Cured: %s (%.2f%%)", nf.format(cured), 100*(double)cured/(double)total), 15, getHeight() - 35);
+			g2.drawString(String.format("Total: %s", nf.format(total)), 15, getHeight() - 15);
+		}
 		
 		if (airports > 0) {
 			g2.drawImage(Resources.getImage(Images.AIRPORT_OPEN_BIG), 260, getHeight() - 85, null);
