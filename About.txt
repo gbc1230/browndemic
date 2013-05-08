@@ -33,3 +33,4 @@ News: A news feed of events happening around the world.
 Regions: A list of all regions sorted by which have not been infected, which have been infected, and which have populations which are entirely dead.
 Chat (Multiplayer): The chat window between players.
 Players (Multiplayer): A list of all players in the game and their infection / kill counts.
+Layers (Top Right): Pick which information is highlighted in red on your screen.
