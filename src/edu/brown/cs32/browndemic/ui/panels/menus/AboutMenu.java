@@ -1,12 +1,9 @@
 package edu.brown.cs32.browndemic.ui.panels.menus;
 
-import java.awt.Dimension;
+import java.awt.Color;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import edu.brown.cs32.browndemic.ui.UIConstants.Colors;
@@ -33,10 +30,11 @@ public class AboutMenu extends UIPanel {
 		about.setForeground(Colors.RED_TEXT);
 
 		JScrollPane sb = new JScrollPane(about, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		sb.setBackground(Colors.TRANSPARENT);
+		sb.setBackground(new Color(0, 0, 0));
 		sb.setOpaque(false);
-		sb.getViewport().setBackground(Colors.TRANSPARENT);
-		sb.getViewport().setOpaque(false);
+		sb.getViewport().setBackground(new Color(0, 0, 0, 100));
+		sb.getViewport().setOpaque(true);
+		sb.getVerticalScrollBar().setUnitIncrement(16);
 		sb.setBorder(BorderFactory.createEmptyBorder());
 		add(sb);
 	}
