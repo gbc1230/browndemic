@@ -554,6 +554,7 @@ public abstract class MainWorld implements World, Runnable, Serializable{
      * Sets up disease related lists
      */
     protected void setupDiseases(){
+    	System.out.println("setting up diseases... " + _diseases.size());
         for (int i = 0; i < _diseases.size(); i++){
             _cures.add(0L);
             _oldInfects.add(0L);

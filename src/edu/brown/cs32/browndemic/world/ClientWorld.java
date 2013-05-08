@@ -3,10 +3,12 @@
  * and open the template in the editor.
  */
 package edu.brown.cs32.browndemic.world;
+
 import edu.brown.cs32.browndemic.disease.Bacteria;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import edu.brown.cs32.browndemic.disease.Disease;
 import edu.brown.cs32.browndemic.disease.Parasite;
@@ -29,6 +31,8 @@ public class ClientWorld implements ChatServer, World{
     private ChatHandler _handler;
     //for sending off data
     private Queue<GameData> _output;
+    //transmissions to show
+    private Queue<AirTransmission> _transmissions;
     //the lobby
     private List<LobbyMember> _lobby;
     //name of this client
@@ -43,7 +47,8 @@ public class ClientWorld implements ChatServer, World{
     
     public ClientWorld(String name){
         super();
-        _output = new ArrayBlockingQueue<>(10);
+        _output = new ConcurrentLinkedQueue<>();
+        _transmissions = new ConcurrentLinkedQueue<>();
         _name = name;
         _isGameReady = false;
         _diseaseID = -1;
@@ -55,8 +60,11 @@ public class ClientWorld implements ChatServer, World{
         return _output.poll();
     }
     
-    public void setWorld(ServerWorld w){
-        _world = w;
+    public void setWorld(WorldOutput w){
+        _world = w.getWorld();
+        AirTransmission a = w.getTrans();
+        if (a != null)
+        	_transmissions.add(a);
     }
     
     public void setLobby(List<LobbyMember> lobby){
@@ -164,7 +172,7 @@ public class ClientWorld implements ChatServer, World{
     
     @Override
     public AirTransmission getTransmission(){
-        return _world.getTransmission();
+        return _transmissions.poll();
     }
     
     @Override
@@ -278,7 +286,7 @@ public class ClientWorld implements ChatServer, World{
         	System.out.println("Disease added, game ready.");
         	_diseaseID = id;
         	_isGameReady = true;
-        	setWorld(world);
+        	_world = world;
         	System.out.println("Is game ready is true");
         }
     }
@@ -293,7 +301,6 @@ public class ClientWorld implements ChatServer, World{
     
     @Override
     public void addPerk(int dis, int perk, boolean buy){
-        System.out.println(_name + " :Adding perk: " + dis + ", " + perk + ", " + buy);
         PerkInput pi = new PerkInput(dis, perk, buy);
         _output.add(pi);
     }

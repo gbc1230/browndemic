@@ -72,8 +72,7 @@ public class GameClient implements Runnable{
         //received a new world
         if (id.equals("W")){
             WorldOutput wo = (WorldOutput)msg;
-            ServerWorld w = wo.getWorld();
-            _world.setWorld(w);
+            _world.setWorld(wo);
         }
         //new chat message
         else if (id.equals("M")){
