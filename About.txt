@@ -30,7 +30,7 @@ Infected: Total number of currently living people who have been infected by your
 Dead: Total number of people who have been killed by your disease.<br />
 Population: Total number of living people.<br />
 Cured: Total number of people who were infected by your disease and then cured.<br />
-Cure progress: How close humanity has gotten to finding a cure to your disease: once this hits 100% the cure will be distributed.<br />
+Cure progress: How close humanity has gotten to finding a cure to your disease: once this hits 100%% the cure will be distributed.<br />
 </p>
 
 <h3>Tabs:</h3>
@@ -41,7 +41,7 @@ Stats: Various stats about your disease.<br />
 News: A news feed of events happening around the world.<br />
 Regions: A list of all regions sorted by which have not been infected, which have been infected, and which have populations which are entirely dead.<br />
 Chat (Multiplayer): The chat window between players.<br />
-Players (Multiplayer): A list of all players in the game and their infection / kill counts.<br />
+Players (Multiplayer): A list of all players in the game and their infection and kill counts.<br />
 </p>
 
 <h3>Layers:</h3>
