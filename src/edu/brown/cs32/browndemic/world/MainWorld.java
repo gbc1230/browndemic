@@ -153,11 +153,20 @@ public abstract class MainWorld implements World, Runnable, Serializable{
 
     /**
      * Get the population
-     * @return integer population value
+     * @return population value
      */
     @Override
     public long getPopulation(){
         return _population - _dead;
+    }
+    
+    /**
+     * Get total population, including dead
+     * @return total population
+     */
+    @Override
+    public long getTotalPopulation(){
+        return _population;
     }
 
     /**

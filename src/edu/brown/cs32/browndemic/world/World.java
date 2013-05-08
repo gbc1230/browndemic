@@ -25,9 +25,15 @@ public interface World {
 
     /**
      * Get the population
-     * @return integer population value
+     * @return population value
      */
     public long getPopulation();
+    
+    /**
+     * Gets total population, including dead
+     * @return total people
+     */
+    public long getTotalPopulation();
     
     /**
      * getHealthy() gets the number of healthy people in this world

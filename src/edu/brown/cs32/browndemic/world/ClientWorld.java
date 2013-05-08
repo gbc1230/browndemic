@@ -232,6 +232,11 @@ public class ClientWorld implements ChatServer, World{
     }
     
     @Override
+    public long getTotalPopulation(){
+        return _world.getTotalPopulation();
+    }
+    
+    @Override
     public void introduceDisease(int r, int d){
         DiseaseIntroducer di = new DiseaseIntroducer(r, d);
         _output.add(di);
