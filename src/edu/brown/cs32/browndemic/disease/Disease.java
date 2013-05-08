@@ -310,8 +310,7 @@ public abstract class Disease implements Serializable{
      */
     public void buyPerkWithoutPay(int perkID) throws IllegalAccessException{
     	
-        if(!this._perks[perkID].isAvail()
-                || this._perks[perkID].getCost() > this._points){
+        if(!this._perks[perkID].isAvail()){
 
             throw new IllegalAccessException();
 
