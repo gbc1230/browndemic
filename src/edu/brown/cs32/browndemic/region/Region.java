@@ -36,8 +36,9 @@ public class Region implements Serializable{
     private static final double _INFSCALE = 3; //DEFAULT: 3//how much infection scales with infectivity
     
     private double[] _lethDoubleTime;
-    private static final int _LETHTIMESCALE = 90; //DEFAULT: 3//~~ticks to half infected die
+    private static final int _LETHTIMESCALE = 180; //DEFAULT: 3//~~ticks to half infected die
     private static final double _LETHSCALE = 3; //DEFAULT: 3//how much death scales with lethality
+    private static final double _LETHMAXFACTOR = 50; //DEFAULT: 40//increase to scale down death at max lethality
     private static final double _CRITICALLETHRATIO = .1; //DEFAULT: .1//Lethaliy/max before deaths occur
 
     private static final int _PLANEFREQ = 200; //DEFAULT: 240//ticks between flights
@@ -229,10 +230,8 @@ public class Region implements Serializable{
         double leth = disease.getLethality();
         double max = disease.getMaxLethality();
         for (InfWrapper inf : _hash.getAllOfType(index,1)) {
-            double rate = 1 - (leth + max/_LETHSCALE)/(max/_LETHSCALE);
-//            System.out.println("Kill growth factor: " + rate);
-            double number = (1 - Math.pow(rate, _lethDoubleTime[disease.getID()]/_LETHTIMESCALE)) * inf.getInf();
-            //            System.out.println("Kill: " + number);
+            double rate = 1 - leth/(_LETHMAXFACTOR*max);
+            double number = (1 - Math.pow(rate, _lethDoubleTime[index]/_LETHTIMESCALE))/_LETHSCALE * inf.getInf();
             if(leth / max > _CRITICALLETHRATIO)
                 number = Math.ceil(number);
             else number = 0;
@@ -402,8 +401,8 @@ public class Region implements Serializable{
         double infLow = Math.log(2)/Math.log((startInf + maxInf/_INFSCALE)/(maxInf/_INFSCALE));
         double infHigh = Math.log(2)/Math.log(1 + _INFSCALE);
         _infDoubleTime[index] = (infLow + infHigh)/2;
-        double lethLow = Math.log(.5)/Math.log(1 - (startLeth + maxLeth/_LETHSCALE)/(maxLeth/_LETHSCALE));
-        double lethHigh = Math.log(.5)/Math.log(1 + _LETHSCALE);
+        double lethLow = Math.log(.5)/Math.log(1 - startLeth/(maxLeth));
+        double lethHigh = Math.log(.5)/Math.log(1 - 1/_LETHMAXFACTOR);
         _lethDoubleTime[index] = (lethLow + lethHigh)/2;
     }
 
