@@ -46,6 +46,7 @@ import edu.brown.cs32.browndemic.ui.Utils;
 import edu.brown.cs32.browndemic.ui.actions.Action;
 import edu.brown.cs32.browndemic.ui.panels.menus.MainMenu;
 import edu.brown.cs32.browndemic.ui.panels.menus.MultiplayerPostGameMenu;
+import edu.brown.cs32.browndemic.world.Airport;
 import edu.brown.cs32.browndemic.world.World;
 
 public class WorldMap extends JComponent implements MouseListener, MouseMotionListener {
@@ -64,7 +65,7 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 	private List<MovingObject> _objects = new ArrayList<>();
 	private Map<Integer, Float> _highlights = new HashMap<>();
 	private int _selected, _disease, _hover;
-	private boolean _chooseMode;
+	private boolean _chooseMode, _drawAirports = true, _drawAirplanes = true;
 	private static GraphicsConfiguration gc = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
 	private double fps = 0.0f;
 	private long lastUpdate = 0;
@@ -503,10 +504,15 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 		
 		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
 
-		BufferedImage airportOpen = Resources.getImage(Images.AIRPORT_OPEN);
-		BufferedImage airportClosed = Resources.getImage(Images.AIRPORT_CLOSED);
-		for (Location l : _airports) {
-			g2.drawImage(airportOpen, (int)(l.x - airportOpen.getWidth()/2), (int)(l.y - airportOpen.getHeight()/2), null);
+		if (_drawAirports) {
+			BufferedImage airportOpen = Resources.getImage(Images.AIRPORT_OPEN);
+			BufferedImage airportClosed = Resources.getImage(Images.AIRPORT_CLOSED);
+			for (Airport a : _world.getAirports()) {
+				System.out.printf("(%d, %d)\n", a.getX(), a.getY());
+				g2.drawImage((a.isOpen() ? airportOpen : airportClosed), (int)(a.getX() - airportOpen.getWidth()/2), (int)(a.getY() - airportOpen.getHeight()/2), null);
+			}
+			for (Location l : _airports) {
+			}
 		}
 		
 		if (Settings.getBoolean(Settings.FPS)) {
@@ -515,8 +521,10 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 			g.drawString(String.format("FPS: %.0f", fps), 20, 40);
 		}
 		
-		for (MovingObject m : _objects) {
-			m.draw(g);
+		if (_drawAirplanes) {
+			for (MovingObject m : _objects) {
+				m.draw(g);
+			}
 		}
 		_ml.paintComponent(g);
 	}
@@ -656,5 +664,13 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 	public void stop() {
 		_timer.stop();
 		_ow.cancel();
+	}
+	
+	public void setDrawAirports(boolean b) {
+		_drawAirports = b;
+	}
+	
+	public void setDrawAirplanes(boolean b) {
+		_drawAirplanes = b;
 	}
 }

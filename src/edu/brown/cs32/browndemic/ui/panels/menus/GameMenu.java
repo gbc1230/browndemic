@@ -44,7 +44,7 @@ public class GameMenu extends UIPanel implements ChangeListener {
 	private World _world;
 	private WorldMap _map;
 	private boolean _loaded = false, _multiplayer;
-	private int _disease;
+	private int _disease, _prevTab = 0;
 	private InformationBar _info;
 	private NewsPanel _news;
 	private RegionPanel _regions;
@@ -54,6 +54,7 @@ public class GameMenu extends UIPanel implements ChangeListener {
 	private Leaderboard _lb;
 	private ChatPanel _chat;
 	private JTabbedPane _botright;
+	private Timer _timer;
 	
 	public GameMenu(World w, int disease, boolean multiplayer) {
 		super();
@@ -152,12 +153,21 @@ public class GameMenu extends UIPanel implements ChangeListener {
 				Utils.getParentFrame(this).setPanel(new MainMenu());
 			}
 			Utils.getParentFrame(this).setTitle(new InGameTitleBar(_world, !_multiplayer));
-			new Timer(3000, new ActionListener() {
+			_timer = new Timer(1000/3, new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					_map.addRandomPlane();
+					if (_chat != null && _chat.hasNew()) {
+						_botright.setBackgroundAt(0, new Color(80, 0, 0));
+					}
+					if (_multiplayer && _news.hasNew()) {
+						_botright.setBackgroundAt(3, new Color(80, 0, 0));
+					} else if (!_multiplayer && _news.hasNew()) {
+						_botright.setBackgroundAt(1, new Color(80, 0, 0));
+					}
 				}
-			}).start();
+			});
+			_timer.start();
 			if (_chat != null)
 				_chat.requestFocusInWindow();
 			if (_world.getInfected() == 0)
@@ -194,7 +204,20 @@ public class GameMenu extends UIPanel implements ChangeListener {
 	public void stateChanged(ChangeEvent e) {
 		if (_chat != null && _botright.getSelectedIndex() == 0) {
 			_chat.requestFocusInWindow();
+			_botright.setBackgroundAt(0, Colors.MENU_BACKGROUND);
+			_chat.clearNew();
+		} else if (_chat != null && _prevTab == 0) {
+			_botright.setBackgroundAt(0, Colors.MENU_BACKGROUND);
+			_chat.clearNew();
 		}
+		if (_multiplayer && _botright.getSelectedIndex() == (_multiplayer ? 3 : 1)) {
+			_botright.setBackgroundAt((_multiplayer ? 3 : 1), Colors.MENU_BACKGROUND);
+			_news.clearNew();
+		} else if (_prevTab == (_multiplayer ? 3 : 1)) {
+			_botright.setBackgroundAt((_multiplayer ? 3 : 1), Colors.MENU_BACKGROUND);
+			_news.clearNew();
+		}
+		_prevTab = _botright.getSelectedIndex();
 	}
 	
 }

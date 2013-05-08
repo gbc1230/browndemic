@@ -10,23 +10,31 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.Timer;
+import javax.swing.UIManager;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
-import edu.brown.cs32.browndemic.ui.Utils;
+import edu.brown.cs32.browndemic.ui.Resources;
 import edu.brown.cs32.browndemic.ui.UIConstants.Colors;
 import edu.brown.cs32.browndemic.ui.UIConstants.Fonts;
+import edu.brown.cs32.browndemic.ui.UIConstants.Images;
 import edu.brown.cs32.browndemic.ui.UIConstants.Strings;
 import edu.brown.cs32.browndemic.ui.UIConstants.UI;
+import edu.brown.cs32.browndemic.ui.Utils;
+import edu.brown.cs32.browndemic.ui.components.MenuButtonItemIcon;
 import edu.brown.cs32.browndemic.ui.components.WorldMap;
 import edu.brown.cs32.browndemic.ui.components.WorldMap.Layer;
 import edu.brown.cs32.browndemic.ui.panels.BrowndemicPanel;
 import edu.brown.cs32.browndemic.world.World;
 
-public class InformationBar extends BrowndemicPanel implements ActionListener {
+public class InformationBar extends BrowndemicPanel implements ActionListener, ChangeListener {
 	
 	private static final long serialVersionUID = 5751262776229759464L;
 	private World _world;
@@ -34,6 +42,8 @@ public class InformationBar extends BrowndemicPanel implements ActionListener {
 	private Timer _timer;
 	private WorldMap _wm;
 	private JRadioButtonMenuItem _infdead, _pop, _infdeadother, _wealth, _inf, _dead, _infother, _deadother;
+	private JCheckBoxMenuItem _airports, _airplanes;
+	private JMenu _layers;
 	private boolean _multi;
 	
 	private JLabel infected, dead, total, healthy, cureProgress; 
@@ -61,16 +71,18 @@ public class InformationBar extends BrowndemicPanel implements ActionListener {
 		setMaximumSize(new Dimension(UI.WIDTH, UI.TITLE_HEIGHT));
 		setMinimumSize(new Dimension(UI.WIDTH, UI.TITLE_HEIGHT));
 		
+		UIManager.put("RadioButtonMenuItem.checkIcon", new MenuButtonItemIcon(Resources.getImage(Images.UNSELECTED), Resources.getImage(Images.SELECTED)));
+		
 		JMenuBar mb = new JMenuBar();
 		mb.setBackground(Colors.MENU_BACKGROUND);
 		mb.setBorder(BorderFactory.createEmptyBorder());
 		mb.setAlignmentY(CENTER_ALIGNMENT);
 		
-		JMenu layers = new JMenu("Layers");
-		layers.setFont(Fonts.NORMAL_TEXT);
-		layers.setBackground(Colors.MENU_BACKGROUND);
-		layers.setForeground(Colors.RED_TEXT);
-		mb.add(layers);
+		_layers = new JMenu("Layers");
+		_layers.setFont(Fonts.NORMAL_TEXT);
+		_layers.setBackground(Colors.MENU_BACKGROUND);
+		_layers.setForeground(Colors.RED_TEXT);
+		mb.add(_layers);
 		
 		ButtonGroup group = new ButtonGroup();
 
@@ -85,7 +97,7 @@ public class InformationBar extends BrowndemicPanel implements ActionListener {
 		_infdead.setBackground(Colors.MENU_BACKGROUND);
 		_infdead.setForeground(Colors.RED_TEXT);
 		group.add(_infdead);
-		layers.add(_infdead);
+		_layers.add(_infdead);
 		
 		if (_multi) {
 			_infdeadother = new JRadioButtonMenuItem("Infected + Dead (Other Diseases)");
@@ -94,7 +106,7 @@ public class InformationBar extends BrowndemicPanel implements ActionListener {
 			_infdeadother.setBackground(Colors.MENU_BACKGROUND);
 			_infdeadother.setForeground(Colors.RED_TEXT);
 			group.add(_infdeadother);
-			layers.add(_infdeadother);
+			_layers.add(_infdeadother);
 		}
 		
 		if (_multi) {
@@ -107,7 +119,7 @@ public class InformationBar extends BrowndemicPanel implements ActionListener {
 		_inf.setBackground(Colors.MENU_BACKGROUND);
 		_inf.setForeground(Colors.RED_TEXT);
 		group.add(_inf);
-		layers.add(_inf);
+		_layers.add(_inf);
 		
 		if (_multi) {
 			_infother = new JRadioButtonMenuItem("Infected (Other Diseases)");
@@ -116,7 +128,7 @@ public class InformationBar extends BrowndemicPanel implements ActionListener {
 			_infother.setBackground(Colors.MENU_BACKGROUND);
 			_infother.setForeground(Colors.RED_TEXT);
 			group.add(_infother);
-			layers.add(_infother);
+			_layers.add(_infother);
 		}
 		
 		if (_multi) {
@@ -129,7 +141,7 @@ public class InformationBar extends BrowndemicPanel implements ActionListener {
 		_dead.setBackground(Colors.MENU_BACKGROUND);
 		_dead.setForeground(Colors.RED_TEXT);
 		group.add(_dead);
-		layers.add(_dead);
+		_layers.add(_dead);
 		
 		if (_multi) {
 			_deadother = new JRadioButtonMenuItem("Dead (Other Diseases)");
@@ -138,7 +150,7 @@ public class InformationBar extends BrowndemicPanel implements ActionListener {
 			_deadother.setBackground(Colors.MENU_BACKGROUND);
 			_deadother.setForeground(Colors.RED_TEXT);
 			group.add(_deadother);
-			layers.add(_deadother);
+			_layers.add(_deadother);
 		}
 
 		_pop = new JRadioButtonMenuItem("Population");
@@ -147,7 +159,7 @@ public class InformationBar extends BrowndemicPanel implements ActionListener {
 		_pop.setBackground(Colors.MENU_BACKGROUND);
 		_pop.setForeground(Colors.RED_TEXT);
 		group.add(_pop);
-		layers.add(_pop);
+		_layers.add(_pop);
 		
 		_wealth = new JRadioButtonMenuItem("Wealth");
 		_wealth.addActionListener(this);
@@ -155,9 +167,28 @@ public class InformationBar extends BrowndemicPanel implements ActionListener {
 		_wealth.setBackground(Colors.MENU_BACKGROUND);
 		_wealth.setForeground(Colors.RED_TEXT);
 		group.add(_wealth);
-		layers.add(_wealth);
+		_layers.add(_wealth);
 		
-		Utils.setDefaultLook(mb, layers, _infdead, _pop);
+		_layers.addSeparator();
+		
+		UIManager.put("CheckBoxMenuItem.checkIcon", new MenuButtonItemIcon(Resources.getImage(Images.UNCHECKED), Resources.getImage(Images.CHECKED)));
+		
+		_airports = new JCheckBoxMenuItem("Show Airports", true);
+		_airports.setFont(Fonts.NORMAL_TEXT);
+		_airports.setBackground(Colors.MENU_BACKGROUND);
+		_airports.setForeground(Colors.RED_TEXT);
+		_airports.addChangeListener(this);
+		_layers.add(_airports);
+		
+		_airplanes = new JCheckBoxMenuItem("Show Airplanes", true);
+		_airplanes.setFont(Fonts.NORMAL_TEXT);
+		_airplanes.setBackground(Colors.MENU_BACKGROUND);
+		_airplanes.setForeground(Colors.RED_TEXT);
+		_airplanes.addChangeListener(this);
+		_layers.add(_airplanes);
+		
+		
+		Utils.setDefaultLook(mb, _layers);
 		if (_multi) {
 			Utils.setDefaultLook(_infdeadother);
 		}
@@ -243,6 +274,15 @@ public class InformationBar extends BrowndemicPanel implements ActionListener {
 			_wm.setLayer(Layer.DEAD);
 		} else if (e.getSource() == _deadother) {
 			_wm.setLayer(Layer.DEAD_OTHER);
+		}
+	}
+
+	@Override
+	public void stateChanged(ChangeEvent e) {
+		if (e.getSource() == _airports) {
+			_wm.setDrawAirports(_airports.isSelected());
+		} else if (e.getSource() == _airplanes) {
+			_wm.setDrawAirplanes(_airplanes.isSelected());
 		}
 	}
 }
