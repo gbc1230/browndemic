@@ -19,11 +19,11 @@ public class Bacteria extends Disease{
     //SerialVersionUID for this disease
     private static final long serialVersionUID = 9086224726997457013L;
     //Maximum infectivity
-    final private double MAX_INFECTIVITY = 111;
+    final private double MAX_INFECTIVITY = 133;
     //Maximum lethality
-    final private double MAX_LETHALITY = 217;
+    final private double MAX_LETHALITY = 297;
     //Maxium visibility
-    final private double MAX_VISIBILITY = 279;
+    final private double MAX_VISIBILITY = 399;
     //Starting infectivity
     final private double START_INFECTIVITY = 2;
     //Starting lethality
