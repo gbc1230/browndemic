@@ -1,12 +1,15 @@
 package edu.brown.cs32.browndemic.world;
 
+import java.io.Serializable;
+
 /**
  * Representation of an airport
  * @author gcarling
  *
  */
-public class Airport {
-
+public class Airport implements Serializable{
+	private static final long serialVersionUID = -1109102702261472934L;
+	
 	private int _id, _region, _x, _y;
 	private String _descript;
 	private boolean _open;
