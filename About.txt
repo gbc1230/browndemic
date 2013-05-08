@@ -3,7 +3,7 @@
 h1{font-size: 32pt;}
 h2{font-size: 28pt;}
 h3{font-size: 24pt;}
-<body style="width: %d; font-size: 20pt; text-align: center; font-family: GhostWriter">
+<body style="width: %d; font-size: 20pt; text-align: center; font-family: GhostWriter;">
 <h1><u>Browndemic</u></h1><br />
 
 <h2>How To Play:</h2>
