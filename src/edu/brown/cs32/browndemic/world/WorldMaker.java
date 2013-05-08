@@ -19,16 +19,16 @@ public class WorldMaker{
     
     public static WorldSP makeNewEarthSP() throws IOException{
         WorldSP w = new WorldSP();
-        addEarthAirports(w, "EarthAirports.csv");
-        addEarthRegions(w, "EarthRegions.csv");
+        addEarthAirports(w, "resources/EarthAirports.csv");
+        addEarthRegions(w, "resources/EarthRegions.csv");
         w.setPopulation();
         return w;
     }
     
     public static ServerWorld makeNewEarthServer() throws IOException{
         ServerWorld w = new ServerWorld();
-        addEarthAirports(w, "EarthAirports.csv");
-        addEarthRegions(w, "EarthRegions.csv");
+        addEarthAirports(w, "resources/EarthAirports.csv");
+        addEarthRegions(w, "resources/EarthRegions.csv");
         w.setPopulation();
         return w;
     }
@@ -76,7 +76,7 @@ public class WorldMaker{
     private static void addEarthRegions(MainWorld w, String filename) throws IOException{
         BufferedReader f = new BufferedReader(new FileReader(filename));
         HashMap<Integer, Region> regionHash = new HashMap<>();
-        List<NaturalDisaster> disasters = getNaturalDisasters("NaturalDisasters.csv");
+        List<NaturalDisaster> disasters = getNaturalDisasters("resources/NaturalDisasters.csv");
         List<Airport> worldAirports = w.getAirports();
         f.readLine();
         while (f.ready()){

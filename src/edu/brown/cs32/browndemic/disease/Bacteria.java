@@ -33,7 +33,7 @@ public class Bacteria extends Disease{
     //the size of this disease's perk array
     final private int PERK_ARRAY_SIZE = 47;
     //The path to the file with perks for the bacteria
-    final private String FILE_PATH = "Bacteria.csv";
+    final private String FILE_PATH = "resources/Bacteria.csv";
 
     //Constructor using built in file path for the bacteria perks
     public Bacteria(String tempname){
