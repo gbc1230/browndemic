@@ -4,9 +4,11 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.GraphicsEnvironment;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 
 /**
@@ -27,6 +29,7 @@ public class UIConstants {
 	 */
 	public static void init() throws FileNotFoundException, FontFormatException, IOException {
 		Fonts.init();
+		Strings.init();
 	}
 	
 	/**
@@ -48,7 +51,7 @@ public class UIConstants {
 	 * @author Ben
 	 *
 	 */
-	public class Strings {
+	public static class Strings {
 		public static final String TITLE = "Browndemic";
 		public static final String SINGLE_PLAYER = "SINGLE PLAYER";
 		public static final String MULTI_PLAYER = "MULTIPLAYER";
@@ -81,6 +84,7 @@ public class UIConstants {
 		public static final String KICK_PLAYER = "KICK";
 		public static final String CHAT_TOOLTIP = "Press enter to send chat message";
 		public static final String SETTINGS = "Settings";
+		public static final String SETTINGS_MENU = "SETTINGS";
 		public static final String SETTINGS_CACHING = "Caching Enabled";
 		public static final String SETTINGS_FPS = "Show FPS";
 		public static final String INFO_INFECTED = "Infected: ";
@@ -99,6 +103,23 @@ public class UIConstants {
 		public static final String RANDOM_PERKS = "Random Perks Gained:";
 		public static final String POINTS_EARNED = "Points Gained:";
 		public static final String POINTS_SPENT = "Points Spent:";
+		public static final String ABOUT = "About";
+		public static final String ABOUT_MENU = "ABOUT";
+		public static final String ABOUT_PATH = "About.txt";
+		
+		public static String ABOUT_HTML = "";
+		
+		public static void init() {
+			try (BufferedReader br = new BufferedReader(new FileReader(new File(ABOUT_PATH)));) {
+				String line;
+				while ((line = br.readLine()) != null)
+					ABOUT_HTML = ABOUT_HTML + line;
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	/**
@@ -140,6 +161,7 @@ public class UIConstants {
 		public static final String MAP = IMAGE_PATH + "earth_large.png";
 		public static final String REGIONS = IMAGE_PATH + "earth_large_regions.png";
 		public static final String AIRPLANE = IMAGE_PATH + "airplane.png";
+		public static final String AIRPLANE_INFECTED = IMAGE_PATH + "airplane_infected.png";
 		public static final String AIRPORT_OPEN = IMAGE_PATH + "airport_open.png";
 		public static final String AIRPORT_CLOSED = IMAGE_PATH + "airport_closed.png";
 		public static final String AIRPORT_OPEN_BIG = IMAGE_PATH + "airport_open_big.png";
@@ -227,6 +249,7 @@ public class UIConstants {
 			MAP,
 			REGIONS,
 			AIRPLANE,
+			AIRPLANE_INFECTED,
 			AIRPORT_OPEN,
 			AIRPORT_CLOSED,
 			AIRPORT_OPEN_BIG,

@@ -74,7 +74,7 @@ public class GameMenu extends UIPanel implements ChangeListener {
 		}
 		@Override
 		public void doAction() {
-			_map = new WorldMap(_world, Resources.getImage(Images.MAP), Resources.getImage(Images.REGIONS), _disease, _ml);
+			_map = new WorldMap(_world, Resources.getImage(Images.MAP), Resources.getImage(Images.REGIONS), _disease, _ml, _multiplayer);
 			_parent.setPanel(new Loading(true, _map.new Loader(new RegionsDoneLoadingAction(_parent))));
 		}
 	}
@@ -156,7 +156,6 @@ public class GameMenu extends UIPanel implements ChangeListener {
 			_timer = new Timer(1000/3, new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
-					_map.addRandomPlane();
 					if (_chat != null && _chat.hasNew()) {
 						_botright.setBackgroundAt(0, new Color(80, 0, 0));
 					}

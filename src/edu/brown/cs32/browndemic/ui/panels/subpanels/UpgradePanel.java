@@ -191,7 +191,6 @@ public class UpgradePanel extends BrowndemicPanel {
 			return;
 		}
 		_perkName.setText(p.getName());
-		setDescription(p.getDescription());
 		_selected = p;
 		if (p.isOwned()) {
 			if (p.getCumSellPrice() < 0) {
@@ -207,6 +206,7 @@ public class UpgradePanel extends BrowndemicPanel {
 					-p.getCumInf() >= 0 ? "+" : "-", Math.abs(p.getCumInf()), 
 					-p.getCumLeth() >= 0 ? "+" : "-", Math.abs(p.getCumLeth()), 
 					-p.getCumVis() >= 0 ? "+" : "-", Math.abs(p.getCumVis())));
+			setDescription(p.getDescription());
 		} else if (p.isAvail()) {
 			_buysell.setText("BUY (" + p.getCost() + ")");
 			if (p.getCost() > _world.getDisease(_disease).getPoints())
@@ -217,6 +217,14 @@ public class UpgradePanel extends BrowndemicPanel {
 							p.getInf() >= 0 ? "+" : "-", Math.abs(p.getInf()), 
 							p.getLeth() >= 0 ? "+" : "-", Math.abs(p.getLeth()), 
 							p.getVis() >= 0 ? "+" : "-", Math.abs(p.getVis())));
+			String unlocks = "";
+			for (Perk pe : p.getWillBeAvailable()) {
+				unlocks += pe.getName() + ", ";
+			}
+			if (unlocks.length() > 0)
+				unlocks = unlocks.substring(0, unlocks.length() - 2).trim() + ".";
+			
+			setDescription(p.getDescription() + " Unlocks " + unlocks);
 		} else {
 			_buysell.setText("");
 			_buysell.setEnabled(false);
