@@ -84,4 +84,8 @@ public class PopHash implements Serializable{
         }
         _hash.put(id, new InfWrapper(id, num));
     }
+    
+    public ArrayList<InfWrapper> getAll(){
+        return new ArrayList<>(_hash.values());
+    }
 }
