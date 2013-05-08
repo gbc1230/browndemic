@@ -40,8 +40,7 @@ public class PerkList extends JPanel implements MouseListener {
 		removeAll();
 		_buttons.clear();
 		for (Perk p : perks) {
-			System.out.println(Images.PERKS_PATH + p.getImage().replaceFirst("perk_", "").replaceAll("_",""));
-			Image img = Resources.getImage(Images.PERKS_PATH + p.getImage().replaceFirst("perk_", "").replaceAll("_",""));
+			Image img = Resources.getImage(Images.PERKS_PATH + p.getImage());
 			if (img == null) img = Resources.getImage(Images.PERK_LUNGS);
 			PerkPanel pp = new PerkPanel().setImage(img)//Resources.getImage(Images.PERK_LUNGS))
 					.setText(p.getName()).setTextFont(Fonts.TITLE_BAR).setTextColor(Colors.RED_TEXT);

@@ -31,6 +31,7 @@ public class NewsPanel extends BrowndemicPanel {
 	private Timer _timer;
 	private JPanel _news;
 	private MarqueeLabel _ml;
+	private boolean _hasNew = false;
 	
 	public NewsPanel(World world, MarqueeLabel ml) {
 		super();
@@ -71,6 +72,7 @@ public class NewsPanel extends BrowndemicPanel {
 	}
 	
 	private void updateNews() {
+		_hasNew = _localCopy.size() > 0;
 		_news.removeAll();
 		Collections.reverse(_localCopy);
 		for (String s : _localCopy) {
@@ -99,6 +101,14 @@ public class NewsPanel extends BrowndemicPanel {
 	
 	public void stop() {
 		_timer.stop();
+	}
+	
+	public boolean hasNew() {
+		return _hasNew;
+	}
+	
+	public void clearNew() {
+		_hasNew = false;
 	}
 	
 
