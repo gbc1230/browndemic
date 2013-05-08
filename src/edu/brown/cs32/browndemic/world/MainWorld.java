@@ -9,10 +9,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import edu.brown.cs32.browndemic.disease.Disease;
 import edu.brown.cs32.browndemic.region.Region;
-import edu.brown.cs32.browndemic.region.RegionTransmission;
+import edu.brown.cs32.browndemic.region.AirTransmission;
 
 /**
  *
@@ -57,7 +59,7 @@ public abstract class MainWorld implements World, Runnable, Serializable{
     protected boolean _started, _gameOver, _paused, _allDiseasesPicked;
     
     //for keeping track of transmissions
-    protected List<RegionTransmission> _transmissions;
+    protected Queue<AirTransmission> _transmissions;
     
     //minimum ticks to a cure
     protected final int _MINCURETICKS = 540;
@@ -77,7 +79,6 @@ public abstract class MainWorld implements World, Runnable, Serializable{
     //i.e. index 2 of each refers to the disease object, how many it has killed,
     //and how far its cure is, respectively
     
- 
     //set everything up
     public MainWorld(){
         _regions = new ArrayList<>();
@@ -95,7 +96,7 @@ public abstract class MainWorld implements World, Runnable, Serializable{
         _sent = new ArrayList<>();
         _cured = new ArrayList<>();
         _news = new ArrayList<>();
-        _transmissions = new ArrayList<>();
+        _transmissions = new ConcurrentLinkedQueue<>();
         _dead = 0;
         _infected = 0;
         _gameOver = false;
@@ -299,11 +300,8 @@ public abstract class MainWorld implements World, Runnable, Serializable{
      * For airplanes and stuff
      */
     @Override
-    public List<RegionTransmission> getTransmissions(){
-        List<RegionTransmission> temp = new ArrayList<>();
-        temp.addAll(_transmissions);
-        _transmissions.clear();
-        return temp;
+    public AirTransmission getTransmission(){
+        return _transmissions.poll();
     }
     
     //list of winner(s) (probably only one but list just in case)

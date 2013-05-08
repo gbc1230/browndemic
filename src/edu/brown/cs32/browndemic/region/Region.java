@@ -90,7 +90,7 @@ public class Region implements Serializable{
     //wealth of this Region (reflects infrastructure, productivity, actual wealth, etc.)
     private double _wealth,  _wet,  _dry,  _heat,  _cold, _med;
     //Lists of transmissions to other regions and news
-    private List<RegionTransmission> _transmissions;
+    private List<AirTransmission> _transmissions;
     private List<String> _news;
     
     private List<Integer> _disIDs;
@@ -436,8 +436,11 @@ public class Region implements Serializable{
                 if(transmit)
                     transmit = trans > _rand.nextDouble();
                 if (transmit) {
-                    RegionTransmission rt = new RegionTransmission(_name, region.getName(), d.getID(), true);
-                    _transmissions.add(rt);
+                	int rand1 = (int)(Math.random() * _airports.size());
+                	List <Airport> other = region.getAirports();
+                	int rand2 = (int)(Math.random() * other.size());
+                    AirTransmission at = new AirTransmission(_airports.get(rand1), other.get(rand2) , d.getID());
+                    _transmissions.add(at);
                     region.introduceDisease(d);
 //                    System.out.println("Plane Trans");
                     continue;
@@ -453,8 +456,8 @@ public class Region implements Serializable{
                 if(transmit)
                     transmit = trans > _rand.nextDouble();
                 if (transmit) {
-                    RegionTransmission rt = new RegionTransmission(_name, region.getName(), d.getID(), true);
-                    _transmissions.add(rt);
+//                    AirTransmission rt = new AirTransmission(_name, region.getName(), d.getID(), true);
+//                    _transmissions.add(rt);
                     region.introduceDisease(d);
 //                    System.out.println("Ship Trans");
                 }
@@ -528,8 +531,8 @@ public class Region implements Serializable{
      * gets the ArrayList of all air/sea transmissions
      * @return _transmissions
      */
-    public ArrayList<RegionTransmission> getTransmissions() {
-        ArrayList<RegionTransmission> list = new ArrayList<>(_transmissions);
+    public ArrayList<AirTransmission> getTransmissions() {
+        ArrayList<AirTransmission> list = new ArrayList<>(_transmissions);
         _transmissions.clear();
         return list;
     }
