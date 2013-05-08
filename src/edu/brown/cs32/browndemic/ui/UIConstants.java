@@ -281,6 +281,7 @@ public class UIConstants {
 		public static Font NORMAL_TEXT;
 		public static Font BUTTON_TEXT;
 		public static Font HUGE_TEXT;
+		public static Font NUMBER_TEXT;
 		
 		public static void init() throws FileNotFoundException, FontFormatException, IOException {
 			TITLE_BAR = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream(new File(RESOURCE_PATH + "fonts/GhostWriter.ttf"))).deriveFont(22f);
@@ -290,6 +291,8 @@ public class UIConstants {
 			NORMAL_TEXT = TITLE_BAR.deriveFont(16f);
 			BUTTON_TEXT = TITLE_BAR.deriveFont(46f);
 			HUGE_TEXT = TITLE_BAR.deriveFont(68f);
+			
+			NUMBER_TEXT = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream(new File(RESOURCE_PATH + "fonts/kree.ttf"))).deriveFont(26f);
 		}
 	}
 }

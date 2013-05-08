@@ -35,7 +35,7 @@ public class UpgradePanel extends BrowndemicPanel {
 	private int _disease;
 	private List<Perk> _availCopy;
 	private List<Perk> _ownedCopy;
-	private JLabel _perkName, _perkInfo, _points, _buysell, _addPoint;
+	private JLabel _perkName, _perkInfo, _points, _buysell, _addPoint, _perkBonus;
 	private Timer _timer;
 	private PerkList _owned, _available;
 	private Perk _selected;
@@ -133,14 +133,17 @@ public class UpgradePanel extends BrowndemicPanel {
 		_points = new JLabel();
 		_points.setFont(Fonts.TITLE_BAR);
 		_points.setForeground(Colors.RED_TEXT);
+		
+		_perkBonus = new JLabel();
+		_perkBonus.setFont(Fonts.NUMBER_TEXT);
+		_perkBonus.setForeground(Colors.RED_TEXT);
 		//_points.setText("Points: " + _world.getDisease(_disease).getPoints());
 		
 		info.add(_perkName);
-		info.add(Box.createRigidArea(new Dimension(0, 20)));
 		info.add(_perkInfo);
 		info.add(Box.createGlue());
+		info.add(_perkBonus);
 		info.add(_buysell);
-		info.add(Box.createRigidArea(new Dimension(0, 20)));
 		info.add(_points);
 		info.add(_addPoint);
 		
@@ -151,6 +154,17 @@ public class UpgradePanel extends BrowndemicPanel {
 	
 	private void update() {
 		_points.setText("Points: " + _world.getDisease(_disease).getPoints());
+		if (_selected != null && _selected.isOwned()) {
+			if (-1 * _selected.getCumSellPrice() > _world.getDisease(_disease).getPoints())
+				_buysell.setEnabled(false);
+			else
+				_buysell.setEnabled(true);
+		} else if (_selected != null && _selected.isAvail()) {
+			if (_selected.getCost() > _world.getDisease(_disease).getPoints())
+				_buysell.setEnabled(false);
+			else
+				_buysell.setEnabled(true);
+		}
 		if (!_world.getDisease(_disease).getAvailablePerks().equals(_availCopy) || !_world.getDisease(_disease).getOwnedPerks().equals(_ownedCopy)) {
 			_availCopy = new ArrayList<>(_world.getDisease(_disease).getAvailablePerks());
 			_ownedCopy = new ArrayList<>(_world.getDisease(_disease).getOwnedPerks());
@@ -173,23 +187,46 @@ public class UpgradePanel extends BrowndemicPanel {
 			_perkName.setText("");
 			setDescription("");
 			_buysell.setText("");
+			_perkBonus.setText("");
 			return;
 		}
 		_perkName.setText(p.getName());
 		setDescription(p.getDescription());
 		_selected = p;
 		if (p.isOwned()) {
-			_buysell.setText("SELL");
+			if (p.getCumSellPrice() < 0) {
+				_buysell.setText("SELL (" + -1 * p.getCumSellPrice() + ")");
+			} else {
+				_buysell.setText("SELL");
+			}
+			if (-1 * p.getCumSellPrice() > _world.getDisease(_disease).getPoints())
+				_buysell.setEnabled(false);
+			else
+				_buysell.setEnabled(true);
+			_perkBonus.setText(String.format("Inf: %s%.0f  Leth: %s%.0f  Vis: %s%.0f", 
+					-p.getCumInf() >= 0 ? "+" : "-", Math.abs(p.getCumInf()), 
+					-p.getCumLeth() >= 0 ? "+" : "-", Math.abs(p.getCumLeth()), 
+					-p.getCumVis() >= 0 ? "+" : "-", Math.abs(p.getCumVis())));
 		} else if (p.isAvail()) {
 			_buysell.setText("BUY (" + p.getCost() + ")");
+			if (p.getCost() > _world.getDisease(_disease).getPoints())
+				_buysell.setEnabled(false);
+			else
+				_buysell.setEnabled(true);
+			_perkBonus.setText(String.format("Inf: %s%.0f  Leth: %s%.0f  Vis: %s%.0f", 
+							p.getInf() >= 0 ? "+" : "-", Math.abs(p.getInf()), 
+							p.getLeth() >= 0 ? "+" : "-", Math.abs(p.getLeth()), 
+							p.getVis() >= 0 ? "+" : "-", Math.abs(p.getVis())));
 		} else {
 			_buysell.setText("");
+			_buysell.setEnabled(false);
+			_perkBonus.setText("");
 		}
 	}
 	
 	@Override
 	public void mouseReleasedInside(MouseEvent e) {
-		if (e.getSource() == _buysell) {
+		if (e.getSource() == _buysell && _buysell.isEnabled()) {
 			if (_selected != null) {
 				if (_selected.isOwned()) {
 //					try {
@@ -216,7 +253,7 @@ public class UpgradePanel extends BrowndemicPanel {
 						}
 						if (val == JOptionPane.YES_OPTION) {
 							_world.addPerk(_disease, _selected.getID(), false);
-							//_world.getDisease(_disease).sellCumPerk(_selected.getID());
+							
 							setPerk(null);
 						}
 //					} catch (IllegalAccessException e1) {

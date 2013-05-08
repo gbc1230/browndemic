@@ -35,13 +35,29 @@ public class StatPanel extends BrowndemicPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				_infectivity.setValue((int)_world.getDisease(_disease).getInfectivity());
+				_infectivity.setToolTipText(String.format("%.0f/%.0f", 
+						_world.getDisease(_disease).getInfectivity(), _world.getDisease(_disease).getMaxInfectivity()));
 				_lethality.setValue((int)_world.getDisease(_disease).getLethality());
+				_lethality.setToolTipText(String.format("%.0f/%.0f", 
+						_world.getDisease(_disease).getLethality(), _world.getDisease(_disease).getMaxLethality()));
 				_visibility.setValue((int)_world.getDisease(_disease).getVisibility());
+				_visibility.setToolTipText(String.format("%.0f/%.0f", 
+						_world.getDisease(_disease).getVisibility(), _world.getDisease(_disease).getMaxVisibility()));
 				_heat.setValue((int)_world.getDisease(_disease).getHeatRes());
+				_heat.setToolTipText(String.format("%.0f/%d", 
+						_world.getDisease(_disease).getHeatRes(), 4));
 				_cold.setValue((int)_world.getDisease(_disease).getColdRes());
+				_cold.setToolTipText(String.format("%.0f/%d", 
+						_world.getDisease(_disease).getColdRes(), 4));
 				_wet.setValue((int)_world.getDisease(_disease).getWetRes());
+				_wet.setToolTipText(String.format("%.0f/%d", 
+						_world.getDisease(_disease).getWetRes(), 4));
 				_dry.setValue((int)_world.getDisease(_disease).getDryRes());
+				_dry.setToolTipText(String.format("%.0f/%d", 
+						_world.getDisease(_disease).getDryRes(), 4));
 				_medicine.setValue((int)_world.getDisease(_disease).getMedRes());
+				_medicine.setToolTipText(String.format("%.0f/%d", 
+						_world.getDisease(_disease).getMedRes(), 4));
 			}
 		});
 		_timer.setInitialDelay(0);
