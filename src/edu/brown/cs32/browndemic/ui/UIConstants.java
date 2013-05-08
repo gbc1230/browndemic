@@ -158,7 +158,29 @@ public class UIConstants {
 		public static final String PLAY3_HOVER = IMAGE_PATH + "play3_hover.png";
 		public static final String PAUSE = IMAGE_PATH + "pause.png";
 		public static final String PAUSE_HOVER = IMAGE_PATH + "pause_hover.png";
+		
 		public static final String PERK_LUNGS = PERKS_PATH + "lung.png";
+		public static final String PERK_COLD1 = PERKS_PATH + "cold1.png";
+		public static final String PERK_COLD2 = PERKS_PATH + "cold2.png";
+		public static final String PERK_COLD3 = PERKS_PATH + "cold3.png";
+		public static final String PERK_CRACKED_HEAD = PERKS_PATH + "cracked_head.png";
+		public static final String PERK_DRY1 = PERKS_PATH + "dry1.png";
+		public static final String PERK_DRY2 = PERKS_PATH + "dry2.png";
+		public static final String PERK_DRY3 = PERKS_PATH + "dry3.png";
+		public static final String PERK_HEART = PERKS_PATH + "heart.png";
+		public static final String PERK_HEAT1 = PERKS_PATH + "heat1.png";
+		public static final String PERK_HEAT2 = PERKS_PATH + "heat2.png";
+		public static final String PERK_HEAT3 = PERKS_PATH + "heat3.png";
+		public static final String PERK_INTESTINES = PERKS_PATH + "intestines.png";
+		public static final String PERK_MED1 = PERKS_PATH + "med1.png";
+		public static final String PERK_MED2 = PERKS_PATH + "med2.png";
+		public static final String PERK_MED3 = PERKS_PATH + "med3.png";
+		public static final String PERK_SKELETON = PERKS_PATH + "skeleton.png";
+		public static final String PERK_SKULL = PERKS_PATH + "skull.png";
+		public static final String PERK_STOMACH = PERKS_PATH + "stomach.png";
+		public static final String PERK_WET1 = PERKS_PATH + "wet1.png";
+		public static final String PERK_WET2 = PERKS_PATH + "wet2.png";
+		public static final String PERK_WET3 = PERKS_PATH + "wet3.png";
 		
 		/*
 		 * Images that should be loaded when the program starts.
@@ -206,6 +228,27 @@ public class UIConstants {
 			PAUSE,
 			PAUSE_HOVER,
 			PERK_LUNGS,
+			PERK_COLD1,
+			PERK_COLD2,
+			PERK_COLD3,
+			PERK_CRACKED_HEAD,
+			PERK_DRY1,
+			PERK_DRY2,
+			PERK_DRY3,
+			PERK_HEART,
+			PERK_HEAT1,
+			PERK_HEAT2,
+			PERK_HEAT3,
+			PERK_INTESTINES,
+			PERK_MED1,
+			PERK_MED2,
+			PERK_MED3,
+			PERK_SKELETON,
+			PERK_SKULL,
+			PERK_STOMACH,
+			PERK_WET1,
+			PERK_WET2,
+			PERK_WET3,
 		};
 		
 	}
