@@ -63,9 +63,9 @@ public class WorldMaker{
     		String l = f.readLine();
     		String[] line = l.split(",");
     		int id = Integer.parseInt(line[0]);
-    		int region = Integer.parseInt(line[1]);
-    		int x = Integer.parseInt(line[2]);
-    		int y = Integer.parseInt(line[3]);
+    		int x = Integer.parseInt(line[1]);
+    		int y = Integer.parseInt(line[2]);
+    		int region = Integer.parseInt(line[3]);
     		String des = line[4];
     		Airport a = new Airport(id, region, x, y, des);
     		w.addAirport(a);
