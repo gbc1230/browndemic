@@ -35,6 +35,7 @@ public class PostGameMenu extends UIPanel {
 	private Leaderboard _lb;
 	private JLabel menu_, single_, multi_;
 	private boolean _multi;
+	private JPanel _chat;
 
 	public PostGameMenu(World world, int disease, boolean multi) {
 		super();
@@ -83,7 +84,7 @@ public class PostGameMenu extends UIPanel {
 		
 		if (_multi) { 
 			if (_world instanceof ChatServer)
-				left.add(new ChatPanel((ChatServer)_world));
+				left.add(_chat = new ChatPanel((ChatServer)_world));
 			left.add(_lb = new Leaderboard(_world));
 			_lb.setMaximumSize(new Dimension(UI.WIDTH/2, UI.CONTENT_HEIGHT/4));
 			_lb.setPreferredSize(new Dimension(UI.WIDTH/2, UI.CONTENT_HEIGHT/4));
@@ -127,6 +128,8 @@ public class PostGameMenu extends UIPanel {
 			for (Disease d : _world.getDiseases()) {
 				stats.addTab(d.getName(), generateStatsPanel(d.getID()));
 			}
+			
+			stats.setSelectedIndex(_disease);
 		} else {
 			right.add(generateStatsPanel(0));
 		}
@@ -189,6 +192,9 @@ public class PostGameMenu extends UIPanel {
 	@Override
 	public void setupForDisplay() {
 		Utils.getParentFrame(this).setTitle(new DefaultTitleBar(this));
+		if (_chat != null) {
+			_chat.requestFocusInWindow();
+		}
 	}
 
 	public String toString() {

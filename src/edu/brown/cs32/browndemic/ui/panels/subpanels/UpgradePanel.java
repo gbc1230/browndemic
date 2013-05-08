@@ -219,12 +219,13 @@ public class UpgradePanel extends BrowndemicPanel {
 							p.getVis() >= 0 ? "+" : "-", Math.abs(p.getVis())));
 			String unlocks = "";
 			for (Perk pe : p.getWillBeAvailable()) {
+				if (unlocks.equals("")) unlocks = "Unlocks ";
 				unlocks += pe.getName() + ", ";
 			}
 			if (unlocks.length() > 0)
 				unlocks = unlocks.substring(0, unlocks.length() - 2).trim() + ".";
 			
-			setDescription(p.getDescription() + " Unlocks " + unlocks);
+			setDescription(p.getDescription() + " " + unlocks);
 		} else {
 			_buysell.setText("");
 			_buysell.setEnabled(false);
