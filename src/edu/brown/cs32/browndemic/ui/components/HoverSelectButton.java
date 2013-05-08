@@ -6,6 +6,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.ImageIcon;
 
 public class HoverSelectButton extends SelectButton {
+	private static final long serialVersionUID = 884574214620968910L;
 	
 	private ImageIcon _hover;
 

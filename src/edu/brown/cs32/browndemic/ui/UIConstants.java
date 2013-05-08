@@ -59,6 +59,7 @@ public class UIConstants {
 		public static final String SELECT_DISEASE = "Select a Disease: ";
 		public static final String GO_BACK = "Go back to: ";
 		public static final String MAIN_MENU = "Main Menu";
+		public static final String MAIN_MENU_CAPS = "MAIN MENU";
 		public static final String LOADING_MENU = "Loading Menu";
 		public static final String MULTIPLAYER_MENU = "Multiplayer Menu";
 		public static final String SINGLEPLAYER_MENU = "Singleplayer Menu";
@@ -93,6 +94,11 @@ public class UIConstants {
 		public static final String VICTORY = "VICTORY";
 		public static final String DEFEAT = "DEFEAT";
 		public static final String PEOPLE_KILLED = "People Killed:";
+		public static final String PERKS_BOUGHT = "Perks Bought:";
+		public static final String PERKS_SOLD = "Perks Sold:";
+		public static final String RANDOM_PERKS = "Random Perks Gained:";
+		public static final String POINTS_EARNED = "Points Gained:";
+		public static final String POINTS_SPENT = "Points Spent:";
 	}
 	
 	/**

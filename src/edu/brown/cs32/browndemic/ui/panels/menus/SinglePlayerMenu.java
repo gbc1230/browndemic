@@ -54,6 +54,7 @@ public class SinglePlayerMenu extends UIPanel {
 	@Override
 	public void setupForDisplay() {
 		Utils.getParentFrame(this).setTitle(new BackTitleBar(this, new MainMenu()));
+		_diseaseName.requestFocusInWindow();
 	}
 	
 	@Override
@@ -202,6 +203,7 @@ public class SinglePlayerMenu extends UIPanel {
 				}
 			    catch(IOException ex){
 			    	System.out.println("Couldn't load file.");
+//			    	ex.printStackTrace();
 				}
 				if (world != null){
 					world.startFromLoad();

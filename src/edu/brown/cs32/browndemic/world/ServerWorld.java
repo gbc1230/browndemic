@@ -23,7 +23,8 @@ import edu.brown.cs32.browndemic.region.Region;
  * @author Graham
  */
 public class ServerWorld extends MainWorld{
-
+	private static final long serialVersionUID = -5771180367626627782L;
+	
 	//for sending copies of this world out
     transient private Queue<ServerWorld> _outWorlds;
     //the lobby I have
@@ -179,6 +180,7 @@ public class ServerWorld extends MainWorld{
     public void kickLobbyMember(int client){
     	LobbyKick lk = new LobbyKick(client);
     	_outData.add(lk);
+    	removePlayer(client);
     }
     
     @Override

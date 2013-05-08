@@ -11,6 +11,8 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.Timer;
 import javax.swing.UIManager;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import edu.brown.cs32.browndemic.ui.BrowndemicFrame;
 import edu.brown.cs32.browndemic.ui.Resources;
@@ -35,7 +37,7 @@ import edu.brown.cs32.browndemic.ui.panels.subpanels.UpgradePanel;
 import edu.brown.cs32.browndemic.ui.panels.titlebars.InGameTitleBar;
 import edu.brown.cs32.browndemic.world.World;
 
-public class GameMenu extends UIPanel {
+public class GameMenu extends UIPanel implements ChangeListener {
 	
 	private static final long serialVersionUID = 3275157554958820602L;
 	
@@ -50,6 +52,8 @@ public class GameMenu extends UIPanel {
 	private UpgradePanel _upgrade;
 	private MarqueeLabel _ml;
 	private Leaderboard _lb;
+	private ChatPanel _chat;
+	private JTabbedPane _botright;
 	
 	public GameMenu(World w, int disease, boolean multiplayer) {
 		super();
@@ -116,26 +120,27 @@ public class GameMenu extends UIPanel {
 		
 		
 		
-		JTabbedPane botRight = new JTabbedPane();
-		botRight.setMaximumSize(new Dimension((int)(UI.WIDTH/2.52), UI.CONTENT_HEIGHT));
-		botRight.setMinimumSize(new Dimension((int)(UI.WIDTH/2.52), 0));
-		botRight.setPreferredSize(new Dimension((int)(UI.WIDTH/2.52), 0));
-		Utils.setDefaultLook(botRight);
+		_botright = new JTabbedPane();
+		_botright.setMaximumSize(new Dimension((int)(UI.WIDTH/2.52), UI.CONTENT_HEIGHT));
+		_botright.setMinimumSize(new Dimension((int)(UI.WIDTH/2.52), 0));
+		_botright.setPreferredSize(new Dimension((int)(UI.WIDTH/2.52), 0));
+		_botright.addChangeListener(this);
+		Utils.setDefaultLook(_botright);
 		
-		botRight.setForeground(Colors.RED_TEXT);
-		botRight.setFont(Fonts.TITLE_BAR);
-		botRight.addTab("Stats", _stats = new StatPanel(_world, _disease));
+		_botright.setForeground(Colors.RED_TEXT);
+		_botright.setFont(Fonts.TITLE_BAR);
+		if (_world instanceof ChatServer)
+			_botright.addTab("Chat", _chat = new ChatPanel((ChatServer)_world));
+		_botright.addTab("Stats", _stats = new StatPanel(_world, _disease));
 		if (_multiplayer) {
-			if (_world instanceof ChatServer)
-				botRight.addTab("Chat", new ChatPanel((ChatServer)_world));
-			botRight.addTab("Players", _lb = new Leaderboard(_world));
+			_botright.addTab("Players", _lb = new Leaderboard(_world));
 		}
-		botRight.addTab("News", _news = new NewsPanel(_world, _ml));
-		botRight.addTab("Regions", _regions =  new RegionPanel(_world));
-		for (int i = 0; i < botRight.getTabCount(); i++) {
-			botRight.setBackgroundAt(i, Colors.MENU_BACKGROUND);
+		_botright.addTab("News", _news = new NewsPanel(_world, _ml));
+		_botright.addTab("Regions", _regions =  new RegionPanel(_world));
+		for (int i = 0; i < _botright.getTabCount(); i++) {
+			_botright.setBackgroundAt(i, Colors.MENU_BACKGROUND);
 		}
-		bottom.add(botRight);
+		bottom.add(_botright);
 		
 		add(bottom);
 	}
@@ -153,7 +158,12 @@ public class GameMenu extends UIPanel {
 					_map.addRandomPlane();
 				}
 			}).start();
-			_map.setChooseMode(true);
+			if (_chat != null)
+				_chat.requestFocusInWindow();
+			if (_world.getInfected() == 0)
+				_map.setChooseMode(true);
+			else
+				_map.setChooseMode(false);
 		} else {
 			Utils.getParentFrame(this).setPanel(new Loading(true, new Loading.LoadImageWorker(new ImagesDoneLoadingAction(Utils.getParentFrame(this)), Images.GAME_IMAGES)));
 		}
@@ -179,5 +189,12 @@ public class GameMenu extends UIPanel {
 				_world.leaveGame();
 		}
     }
+
+	@Override
+	public void stateChanged(ChangeEvent e) {
+		if (_chat != null && _botright.getSelectedIndex() == 0) {
+			_chat.requestFocusInWindow();
+		}
+	}
 	
 }
