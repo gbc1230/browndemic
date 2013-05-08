@@ -68,7 +68,6 @@ public abstract class Disease implements Serializable{
     protected int _numPerksSold;
     protected int _numPointsEarned;
     protected int _numPointsUsed;
-    protected int _numRandomPointsGot;
     protected int _numRandomPerksGot;
     
     /**
@@ -389,15 +388,6 @@ public abstract class Disease implements Serializable{
      */
     public int getNumPointsUsed(){
     	return this._numPointsUsed;
-    }
-    
-    /**
-     * gets the number of random points accrued over this disease's 
-     * lifespan
-     * @return _numRandomPointsGot
-     */
-    public int getNumRandomPointsGot(){
-    	return this._numRandomPointsGot;
     }
     
     /**

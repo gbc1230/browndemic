@@ -111,7 +111,7 @@ public class Bacteria extends Disease{
             } catch (IllegalAccessException ex) {}
         if(Math.random() < .0011111){
 
-        	this._numRandomPointsGot+=3;
+        	this._numPointsEarned+=3;
             this.addPoints(3);
 
         }
@@ -199,6 +199,7 @@ public class Bacteria extends Disease{
         this._dryResistance -= soldPerk.getDryRes();
         this._medResistance -= soldPerk.getMedRes();
         this._points += soldPerk.getSellPrice();
+        this._numPointsEarned+=soldPerk.getSellPrice();
     }
 
     /**
@@ -241,6 +242,7 @@ public class Bacteria extends Disease{
         this._dryResistance -= soldPerk.getDryRes();
         this._medResistance -= soldPerk.getMedRes();
         this._points += soldPerk.getSellPrice();
+        this._numPointsEarned+=soldPerk.getSellPrice();
 
     }
     

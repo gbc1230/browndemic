@@ -116,7 +116,7 @@ public class Virus extends Disease{
                 this.buyPerkWithoutPay(this.getAvailablePerks().get(0).getID());
             } catch (IllegalAccessException ex) {}
         if(Math.random() < .001111){
-        	this._numRandomPointsGot+=3;
+        	this._numPointsEarned+=3;
             this.addPoints(3);
         }
     }

@@ -21,7 +21,7 @@ ID,Name,Description,Cost,Sell,Infectivity,Lethality,Visibility,Heat Resistance,C
 19,Inflammation,Inflammation is harmful and disrupting for many bodily processes. Can be deadly,9,2,6,10,9,0,0,0,0,0,0,0,8and9,,body.png
 20,Paralysis,Paralysis is deadly but makes it much less likely for infected to infect others.,35,9,-2,40,65,0,0,0,0,0,0,0,16,21,body.png
 21,Coma,Comas are very deadly and make it much less likely for infected to infect others.,45,17,-15,50,70,0,0,0,0,0,0,0,20,,body.png
-22,Delirium,Delerium comes after not sleeping for way too long. It is very dangerous and very noticeable.,15,3,-3,15,20,0,0,0,0,0,0,0,6and18,,crackedhead.png
+22,Delirium,Delirium comes after not sleeping for way too long. It is very dangerous and very noticeable.,15,3,-3,15,20,0,0,0,0,0,0,0,6and18,,crackedhead.png
 23,Heat Resistance I,Resistance to low heat.,10,10,0,0,0,1,0,0,0,0,0,0,,24,heat1.png
 24,Heat Resistance II,Resistance to medium heat.,15,15,0,0,0,1,0,0,0,0,0,0,23,25,heat2.png
 25,Heat Resistance III,Resistance to high heat.,20,20,0,0,0,1,0,0,0,0,0,0,24,,heat3.png

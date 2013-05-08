@@ -93,7 +93,7 @@ public class Parasite extends Disease{
                 this.buyPerkWithoutPay(this.getAvailablePerks().get(0).getID());
             } catch (IllegalAccessException ex) {}
         if(Math.random() < .0001111){
-        	this._numRandomPointsGot+=5;
+        	this._numPointsEarned+=5;
             this.addPoints(5);
 
         }
@@ -179,6 +179,7 @@ public class Parasite extends Disease{
         this._dryResistance -= soldPerk.getDryRes();
         this._medResistance -= soldPerk.getMedRes();
         this._points += soldPerk.getSellPrice();
+        this._numPointsEarned+=soldPerk.getSellPrice();
     }
 
     /**
@@ -221,6 +222,7 @@ public class Parasite extends Disease{
         this._dryResistance -= soldPerk.getDryRes();
         this._medResistance -= soldPerk.getMedRes();
         this._points += soldPerk.getSellPrice();
+        this._numPointsEarned+=soldPerk.getSellPrice();
     }
 
     /**

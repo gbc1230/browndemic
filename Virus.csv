@@ -16,7 +16,7 @@ ID,Name,Description,Cost,Sell,Infectivity,Lethality,Visibility,Heat Resistance,C
 14,Inflammation,Inflammation is harmful and disrupting for many bodily processes. Can be deadly,9,11,6,10,9,0,0,0,0,0,0,0,8,15,body.png
 15,Paralysis,Paralysis is deadly but makes it much less likely for infected to infect others.,17,20,-2,20,30,0,0,0,0,0,0,0,14,16,body.png
 16,Coma,Comas are very deadly and make it much less likely for infected to infect others.,30,40,-15,40,50,0,0,0,0,0,0,0,15,,body.png
-17,Delirium,Delerium comes after not sleeping for way too long. It is very dangerous and very noticeable.,15,17,-3,15,20,0,0,0,0,0,0,0,10,,crackedhead.png
+17,Delirium,Delirium comes after not sleeping for way too long. It is very dangerous and very noticeable.,15,17,-3,15,20,0,0,0,0,0,0,0,10,,crackedhead.png
 18,Pulmonary Edema,Blood in the lungs or Pulmonary Edema makes a disease more infective and deadly and visible.,28,35,10,25,35,0,0,0,0,0,0,0,13,,lung.png
 19,Hypoxia,Hypoxia or the death of organs due to lack of oxygen is extremely deadly and will lead to much notice.,35,37,0,50,70,0,0,0,0,0,0,0,13,,body.png
 20,Heat Resistance I,Resistance to low heat.,10,10,0,0,0,1,0,0,0,0,0,0,,21,heat1.png
