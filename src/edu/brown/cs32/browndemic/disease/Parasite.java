@@ -88,12 +88,11 @@ public class Parasite extends Disease{
     @Override
     public void randomPerkEvents() {
     	
-    	if((int)Math.random()*2500 == 432)
+    	if(Math.random() < .00001111)
             try {
                 this.buyPerkWithoutPay(this.getAvailablePerks().get(0).getID());
             } catch (IllegalAccessException ex) {}
-        if((int)Math.random()*1500 == 432){
-
+        if(Math.random() < .0001111){
         	this._numRandomPointsGot+=5;
             this.addPoints(5);
 

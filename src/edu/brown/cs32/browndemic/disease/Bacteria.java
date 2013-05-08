@@ -105,11 +105,11 @@ public class Bacteria extends Disease{
     @Override
     public void randomPerkEvents() {
 
-    	if((int)Math.random()*1500 == 432)
+    	if(Math.random() < .00011111)
             try {
                 this.buyPerkWithoutPay(this.getAvailablePerks().get(0).getID());
             } catch (IllegalAccessException ex) {}
-        if((int)Math.random()*800 == 432){
+        if(Math.random() < .0011111){
 
         	this._numRandomPointsGot+=3;
             this.addPoints(3);
