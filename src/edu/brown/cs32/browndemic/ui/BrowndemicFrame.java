@@ -95,7 +95,7 @@ public class BrowndemicFrame extends JFrame {
 		setSize(UI.WIDTH, UI.HEIGHT);
 		setLocationRelativeTo(null);
 		setResizable(false);
-		setMinimumSize(new Dimension(1000, 700));
+		setMinimumSize(new Dimension(UI.WIDTH, UI.HEIGHT));
 		setLayout(new BorderLayout());
 		
 		_content = new JPanel();
