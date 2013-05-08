@@ -588,9 +588,9 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 		
 		if (_multi) {			
 			g2.drawString(String.format("Healthy: %s (%.2f%%)", nf.format(healthy), 100*(double)healthy/(double)total), 15, getHeight() - 95);
-			g2.drawString(String.format("Infected: %s/%s (%.2f%%)", nf.format(infected), nf.format(tinfected), 100*(double)infected/(double)total), 15, getHeight() - 75);
-			g2.drawString(String.format("Dead: %s/%s (%.2f%%)", nf.format(dead), nf.format(tdead), 100*(double)dead/(double)total), 15, getHeight() - 55);
-			g2.drawString(String.format("Cured: %s/%s (%.2f%%)", nf.format(cured), nf.format(tcured), 100*(double)cured/(double)total), 15, getHeight() - 35);
+			g2.drawString(String.format("Infected: %s/%s (%.2f%%/%.2f%%)", nf.format(infected), nf.format(tinfected), 100*(double)infected/(double)total, 100*(double)tinfected/(double)total), 15, getHeight() - 75);
+			g2.drawString(String.format("Dead: %s/%s (%.2f%%/%.2f%%)", nf.format(dead), nf.format(tdead), 100*(double)dead/(double)total, 100*(double)tdead/(double)total), 15, getHeight() - 55);
+			g2.drawString(String.format("Cured: %s/%s (%.2f%%/%.2f%%)", nf.format(cured), nf.format(tcured), 100*(double)cured/(double)total, 100*(double)tcured/(double)total), 15, getHeight() - 35);
 			g2.drawString(String.format("Total: %s", nf.format(total)), 15, getHeight() - 15);
 
 		} else {
