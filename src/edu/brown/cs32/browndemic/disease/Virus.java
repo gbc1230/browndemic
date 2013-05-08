@@ -111,11 +111,11 @@ public class Virus extends Disease{
      */
     @Override
     public void randomPerkEvents(){
-        if((int)Math.random()*540 == 432)
+        if(Math.random() < .001111)
             try {
                 this.buyPerkWithoutPay(this.getAvailablePerks().get(0).getID());
             } catch (IllegalAccessException ex) {}
-        if((int)Math.random()*540 == 432){
+        if(Math.random() < .001111){
         	this._numRandomPointsGot+=3;
             this.addPoints(3);
         }
