@@ -17,7 +17,7 @@ import java.util.List;
 public class Virus extends Disease{
 
     //SerialVersionUID for this disease
-	private static final long serialVersionUID = -1644028364764513072L;
+    private static final long serialVersionUID = -1644028364764513072L;
     //Maximum infectivity
     final private double MAX_INFECTIVITY = 134;
     //Maximum lethality
