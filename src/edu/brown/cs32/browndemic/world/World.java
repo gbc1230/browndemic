@@ -6,7 +6,7 @@ package edu.brown.cs32.browndemic.world;
 
 import edu.brown.cs32.browndemic.disease.Disease;
 import edu.brown.cs32.browndemic.region.Region;
-import edu.brown.cs32.browndemic.region.RegionTransmission;
+import edu.brown.cs32.browndemic.region.AirTransmission;
 import java.util.List;
 
 /**
@@ -59,6 +59,9 @@ public interface World {
     //get dead for a specific disease
     public long getDead(int d);
     
+    //get all airports
+    public List<Airport> getAirports();
+    
     //get all regions
     public List<Region> getRegions();
     
@@ -80,8 +83,8 @@ public interface World {
     //gets the news
     public List<String> getNews();
     
-    //get moving transmissions
-    public List<RegionTransmission> getTransmissions();
+    //get airplane transmissions
+    public AirTransmission getTransmission();
     
     //get the winner(s)
     public List<Integer> getWinners();

@@ -158,6 +158,10 @@ public class UIConstants {
 		public static final String PLAY3_HOVER = IMAGE_PATH + "play3_hover.png";
 		public static final String PAUSE = IMAGE_PATH + "pause.png";
 		public static final String PAUSE_HOVER = IMAGE_PATH + "pause_hover.png";
+		public static final String CHECKED = IMAGE_PATH + "checked.png";
+		public static final String UNCHECKED = IMAGE_PATH + "unchecked.png";
+		public static final String SELECTED = IMAGE_PATH + "selected.png";
+		public static final String UNSELECTED = IMAGE_PATH + "unselected.png";
 		
 		public static final String PERK_LUNGS = PERKS_PATH + "lung.png";
 		public static final String PERK_COLD1 = PERKS_PATH + "cold1.png";
@@ -181,6 +185,20 @@ public class UIConstants {
 		public static final String PERK_WET1 = PERKS_PATH + "wet1.png";
 		public static final String PERK_WET2 = PERKS_PATH + "wet2.png";
 		public static final String PERK_WET3 = PERKS_PATH + "wet3.png";
+		public static final String PERK_WATER1 = PERKS_PATH + "water1.png";
+		public static final String PERK_WATER2 = PERKS_PATH + "water2.png";
+		public static final String PERK_WATER3 = PERKS_PATH + "water3.png";
+		public static final String PERK_AIR1 = PERKS_PATH + "air1.png";
+		public static final String PERK_AIR2 = PERKS_PATH + "air2.png";
+		public static final String PERK_AIR3 = PERKS_PATH + "air3.png";
+		public static final String PERK_AVIAN1 = PERKS_PATH + "avian1.png";
+		public static final String PERK_AVIAN2 = PERKS_PATH + "avian2.png";
+		public static final String PERK_AVIAN3 = PERKS_PATH + "avian3.png";
+		public static final String PERK_BODY = PERKS_PATH + "body.png";
+		public static final String PERK_SIMPLEBODY = PERKS_PATH + "simplebody.png";
+		public static final String PERK_INSECT1 = PERKS_PATH + "insect1.png";
+		public static final String PERK_INSECT2 = PERKS_PATH + "insect2.png";
+		public static final String PERK_INSECT3 = PERKS_PATH + "insect3.png";
 		
 		/*
 		 * Images that should be loaded when the program starts.
@@ -227,6 +245,10 @@ public class UIConstants {
 			PLAY3_HOVER,
 			PAUSE,
 			PAUSE_HOVER,
+			CHECKED,
+			UNCHECKED,
+			SELECTED,
+			UNSELECTED,
 			PERK_LUNGS,
 			PERK_COLD1,
 			PERK_COLD2,
@@ -249,6 +271,20 @@ public class UIConstants {
 			PERK_WET1,
 			PERK_WET2,
 			PERK_WET3,
+			PERK_WATER1,
+			PERK_WATER2,
+			PERK_WATER3,
+			PERK_AIR1,
+			PERK_AIR2,
+			PERK_AIR3,
+			PERK_AVIAN1,
+			PERK_AVIAN2,
+			PERK_AVIAN3,
+			PERK_BODY,
+			PERK_SIMPLEBODY,
+			PERK_INSECT1,
+			PERK_INSECT2,
+			PERK_INSECT3,
 		};
 		
 	}

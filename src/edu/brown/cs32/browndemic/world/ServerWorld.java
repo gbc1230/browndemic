@@ -217,7 +217,6 @@ public class ServerWorld extends MainWorld{
     @Override
     public void run(){
         System.out.println("begin the loop");
-        int i = 0;
         while(!allRegionsPicked()){
             try{
                 Thread.sleep(1);

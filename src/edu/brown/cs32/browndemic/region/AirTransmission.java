@@ -7,29 +7,27 @@ package edu.brown.cs32.browndemic.region;
 
 import java.io.Serializable;
 
+import edu.brown.cs32.browndemic.world.Airport;
+
 /**
  *
  * @author ckilfoyl
  * This class represents a transmission of a disease from one region to another
- * by ship or by plane
+ * by plane
  */
-public class RegionTransmission implements Serializable{
+public class AirTransmission implements Serializable{
 	private static final long serialVersionUID = -6843584036923113594L;
 	
-	private String _start;
-    private String _end;
+	private Airport _start, _end;
     private int _disease;
-    private boolean _air;
 
-    public RegionTransmission(String start, String end, int disease, boolean air){
+    public AirTransmission(Airport start, Airport end, int disease){
         _start = start;
         _end = end;
         _disease = disease;
-        _air = air;
     }
 
-    public String getStart(){return _start;}
-    public String getEnd(){return _end;}
+    public Airport getStart(){return _start;}
+    public Airport getEnd(){return _end;}
     public int getDisesase(){return _disease;}
-    public boolean byAir(){return _air;}
 }

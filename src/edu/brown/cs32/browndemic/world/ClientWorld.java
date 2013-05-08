@@ -13,7 +13,7 @@ import edu.brown.cs32.browndemic.disease.Parasite;
 import edu.brown.cs32.browndemic.disease.Virus;
 import edu.brown.cs32.browndemic.network.*;
 import edu.brown.cs32.browndemic.region.Region;
-import edu.brown.cs32.browndemic.region.RegionTransmission;
+import edu.brown.cs32.browndemic.region.AirTransmission;
 import edu.brown.cs32.browndemic.ui.interfaces.ChatHandler;
 import edu.brown.cs32.browndemic.ui.interfaces.ChatServer;
 
@@ -163,8 +163,8 @@ public class ClientWorld implements ChatServer, World{
     }
     
     @Override
-    public List<RegionTransmission> getTransmissions(){
-        return _world.getTransmissions();
+    public AirTransmission getTransmission(){
+        return _world.getTransmission();
     }
     
     @Override
@@ -185,6 +185,11 @@ public class ClientWorld implements ChatServer, World{
     @Override
     public Disease getDisease(int d){
     	return _world.getDisease(d);
+    }
+    
+    @Override
+    public List<Airport> getAirports(){
+    	return _world.getAirports();
     }
     
     @Override

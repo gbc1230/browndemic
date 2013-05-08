@@ -26,6 +26,7 @@ public class ChatPanel extends BrowndemicPanel implements KeyListener, ChatHandl
 	private JTextArea _chat;
 	private JScrollPane _scroll;
 	private ChatServer _chatServer;
+	private boolean _hasNew = false;
 	
 	public ChatPanel(ChatServer chatServer) {
 		super();
@@ -80,11 +81,20 @@ public class ChatPanel extends BrowndemicPanel implements KeyListener, ChatHandl
 	public void addMessage(String message) {
 		_chat.setText((_chat.getText() + "\n" + message).trim());
 		_chat.setCaretPosition(_chat.getDocument().getLength());
+		_hasNew = true;
 	}
 	
 	@Override
 	public boolean requestFocusInWindow() {
 		return _input.requestFocusInWindow();
+	}
+	
+	public boolean hasNew() {
+		return _hasNew;
+	}
+	
+	public void clearNew() {
+		_hasNew = false;
 	}
 
 }
