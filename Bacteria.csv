@@ -1,48 +1,48 @@
 ID,Name,Description,Cost,Sell,Infectivity,Lethality,Visibility,Heat Resistance,Cold Resistance,Wet Resistance,Dry Resistance,Medicinal Resistance,Water Transmission,Air Transmission,Previous,Next,Image
-0,Sneezing,Sneezing allows your disease to spread easier but also brings it some attention.,2,1,3,0,1,0,0,0,0,0,0,0,,7,perk_lung.png
-1,Coughing ,Coughing allows your disease to spread easier but also brings it some attention.,3,1,5,0,2,0,0,0,0,0,0,0,,13,perk_lung.png
-2,Nausea,Nausea allows your disease to spread through mouth to mouth contact and draws some attention to it.,2,1,1,1,1,0,0,0,0,0,0,0,,5,perk_stomach.png
-3,Rash,People avoid the infected more but they are more contagious. And more visible.,3,2,3,1,4,0,0,0,0,0,0,0,,11and12,perk_simplebody.png
-4,Headache,Headaches are annoying and painful. ,3,1,0,1,1,0,0,0,0,0,0,0,,6,perk_skull.png
-5,Vomiting,Vomiting brings a lot of attention but also can make the infected frail and weak.,6,3,5,5,5,0,0,0,0,0,0,0,2,,perk_stomach.png
-6,Migraine,Extremely bad headaches which make you sick in response to too much light or sound. ,6,2,0,3,3,0,0,0,0,0,0,0,4,17,perk_skull.png
-7,Fever,Fevers can be deadly.,6,2,2,4,3,0,0,0,0,0,0,0,0,14and8and17,perk_body.png
-8,Sepsis,Infection of the blood stream which can lead to high temperatures and shaking and death.,20,4,1,20,30,0,0,0,0,0,0,0,7,10and15,perk_body.png
-9,Diarrhea ,Diarrhea and its dehydrating effects can be deadly and can spread infection to the water supply.,7,2,7,6,4,0,0,0,0,0,0,0,2,,perk_intestines.png
-10,Organ Failure,The general breakdown of bodily functions in major organs. Will result in death if not treated quickly.,45,20,-15,60,90,0,0,0,0,0,0,0,8,,perk_body.png
-11,Lesions,Lesions can cause open wounds leading to death and spread of infection.,6,2,6,6,7,0,0,0,0,0,0,0,3,,perk_simplebody.png
-12,Cysts,Cysts hold pathogens and can burst and spread the disease.,6,2,4,4,6,0,0,0,0,0,0,0,3,,perk_simplebody.png
-13,Pulmonary Obstruction,This is a very deadly symptom long term. Limited breathing and lung damage are very visible however.,8,3,6,20,25,0,0,0,0,0,0,0,1,18and19,perk_lungs.png
-14,Inflammation,Inflammation is harmful and disrupting for many bodily processes. Can be deadly,9,2,6,10,9,0,0,0,0,0,0,0,7,15,perk_body.png
-15,Paralysis,Paralysis is deadly but makes it much less likely for infected to infect others.,24,9,-2,25,30,0,0,0,0,0,0,0,14and8,16,perk_body.png
-16,Coma,Comas are very deadly and make it much less likely for infected to infect others.,38,17,-15,40,50,0,0,0,0,0,0,0,15,,perk_body.png
-17,Delirium,Delerium comes after not sleeping for way too long. It is very dangerous and very noticeable.,15,3,-3,15,20,0,0,0,0,0,0,0,6and7,,perk_cracked_head.png
-18,Pulmonary Edema,Blood in the lungs - or Pulmonary Edema - makes a disease more infective and deadly and visible.,28,14,10,25,35,0,0,0,0,0,0,0,13,,perk_lungs.png
-19,Hypoxia,Hypoxia or the death of organs due to lack of oxygen is extremely deadly and will lead to much notice.,35,15,0,50,70,0,0,0,0,0,0,0,13,,perk_body.png
-20,Heat Resistance I,Resistance to low heat.,10,10,0,0,0,1,0,0,0,0,0,0,,21,perk_heat1.png
-21,Heat Resistance II,Resistance to medium heat.,15,15,0,0,0,1,0,0,0,0,0,0,20,22,perk_heat2.png
-22,Heat Resistance III,Resistance to high heat.,20,20,0,0,0,1,0,0,0,0,0,0,21,,perk_heat3.png
-23,Cold Resistance I,Resistance to low cold.,10,10,0,0,0,0,1,0,0,0,0,0,,24,perk_cold1.png
-24,Cold Resistance II,Resistance to medium cold.,15,15,0,0,0,0,1,0,0,0,0,0,23,25,perk_cold2.png
-25,Cold Resistance III,Resistance to high cold.,20,20,0,0,0,0,1,0,0,0,0,0,24,,perk_cold3.png
-26,Wet Resistance I,Resistance to low wetness.,10,10,0,0,0,0,0,1,0,0,0,0,,27,perk_wet1.png
-27,Wet Resistance II,Resistance to medium wetness.,15,15,0,0,0,0,0,1,0,0,0,0,26,28,perk_wet2.png
-28,Wet Resistance III,Resistance to high wetness.,20,20,0,0,0,0,0,1,0,0,0,0,27,,perk_wet3.png
-29,Dry Resistance I,Resistance to low dryness.,10,10,0,0,0,0,0,0,1,0,0,0,,30,perk_dry1.png
-30,Dry Resistance II,Resistance to medium dryness.,15,15,0,0,0,0,0,0,1,0,0,0,29,31,perk_dry2.png
-31,Dry Resistance III,Resistance to high dryness.,20,20,0,0,0,0,0,0,1,0,0,0,30,,perk_dry3.png
-32,Medicinal Resistance I,Resistance to low levels of medicine.,10,10,0,0,0,0,0,0,0,1,0,0,,33,perk_med1.png
-33,Medicinal Resistance II,Resistance to medium levels of medicine.,15,15,0,0,0,0,0,0,0,1,0,0,32,34,perk_med2.png
-34,Medicinal Resistance III,Resistance to high levels of medicine.,20,20,0,0,0,0,0,0,0,1,0,0,33,,perk_med3.png
-35,Water Transmission I,Low ability to be transmitted through water.,10,10,3,0,0,0,0,0,0,0,9,0,,36,perk_water1.png
-36,Water Transmission II,Medium ability to be transmitted through water.,15,15,6,0,0,0,0,0,0,0,15,0,35,37,perk_water2.png
-37,Water Transmission III,High ability to be transmitted through water.,25,25,9,0,0,0,0,0,0,0,25,0,36,,perk_water3.png
-38,Air Transmission I,Low ability to be transmitted through air.,10,10,3,0,0,0,0,0,0,0,0,1,,39,perk_air1.png
-39,Air Transmission II,Medium ability to be transmitted through air.,15,15,6,0,0,0,0,0,0,0,0,3,38,40,perk_air2.png
-40,Air Transmission III,High ability to be transmitted through air.,25,25,9,0,0,0,0,0,0,0,0,7,39,,perk_air3.png
-41,Avian Transmission I,Low ability to be transmitted through birds.,10,10,3,0,0,0,0,0,0,0,1,1,,42,perk_avian1.png
-42,Avian Transmission II,Medium ability to be transmitted through birds.,15,15,6,0,0,0,0,0,0,0,3,3,41,43,perk_avian2.png
-43,Avian Transmission III,High ability to be transmitted through brids.,25,25,9,0,0,0,0,0,0,0,7,7,42,,perk_avian3.png
-44,Insect Transmission I,Low ability to be transmitted through insects.,10,10,3,0,0,0,0,0,0,0,1,1,,45,perk_insect1.png
-45,Insect Transmission II,Medium ability to be transmitted through insects.,15,15,6,0,0,0,0,0,0,0,3,3,44,46,perk_insect2.png
-46,Insect Transmission III,High ability to be transmitted through insects.,25,25,9,0,0,0,0,0,0,0,7,7,45,,perk_insect3.png
+0,Sneezing,Sneezing allows your disease to spread easier but also brings it some attention.,2,1,3,0,1,0,0,0,0,0,0,0,,7,lung.png
+1,Coughing ,Coughing allows your disease to spread easier but also brings it some attention.,3,1,5,0,2,0,0,0,0,0,0,0,,13,lung.png
+2,Nausea,Nausea allows your disease to spread through mouth to mouth contact and draws some attention to it.,2,1,1,1,1,0,0,0,0,0,0,0,,5,stomach.png
+3,Rash,People avoid the infected more but they are more contagious. And more visible.,3,2,3,1,4,0,0,0,0,0,0,0,,11and12,simplebody.png
+4,Headache,Headaches are annoying and painful. ,3,1,0,1,1,0,0,0,0,0,0,0,,6,skull.png
+5,Vomiting,Vomiting brings a lot of attention but also can make the infected frail and weak.,6,3,5,5,5,0,0,0,0,0,0,0,2,,stomach.png
+6,Migraine,Extremely bad headaches which make you sick in response to too much light or sound. ,6,2,0,3,3,0,0,0,0,0,0,0,4,17,skull.png
+7,Fever,Fevers can be deadly.,6,2,2,4,3,0,0,0,0,0,0,0,0,14and8and17,body.png
+8,Sepsis,Infection of the blood stream which can lead to high temperatures and shaking and death.,20,4,1,20,30,0,0,0,0,0,0,0,7,10and15,body.png
+9,Diarrhea ,Diarrhea and its dehydrating effects can be deadly and can spread infection to the water supply.,7,2,7,6,4,0,0,0,0,0,0,0,2,,intestines.png
+10,Organ Failure,The general breakdown of bodily functions in major organs. Will result in death if not treated quickly.,45,20,-15,60,90,0,0,0,0,0,0,0,8,,body.png
+11,Lesions,Lesions can cause open wounds leading to death and spread of infection.,6,2,6,6,7,0,0,0,0,0,0,0,3,,simplebody.png
+12,Cysts,Cysts hold pathogens and can burst and spread the disease.,6,2,4,4,6,0,0,0,0,0,0,0,3,,simplebody.png
+13,Pulmonary Obstruction,This is a very deadly symptom long term. Limited breathing and lung damage are very visible however.,8,3,6,20,25,0,0,0,0,0,0,0,1,18and19,lungs.png
+14,Inflammation,Inflammation is harmful and disrupting for many bodily processes. Can be deadly,9,2,6,10,9,0,0,0,0,0,0,0,7,15,body.png
+15,Paralysis,Paralysis is deadly but makes it much less likely for infected to infect others.,24,9,-2,25,30,0,0,0,0,0,0,0,14and8,16,body.png
+16,Coma,Comas are very deadly and make it much less likely for infected to infect others.,38,17,-15,40,50,0,0,0,0,0,0,0,15,,body.png
+17,Delirium,Delerium comes after not sleeping for way too long. It is very dangerous and very noticeable.,15,3,-3,15,20,0,0,0,0,0,0,0,6and7,,crackedhead.png
+18,Pulmonary Edema,Blood in the lungs - or Pulmonary Edema - makes a disease more infective and deadly and visible.,28,14,10,25,35,0,0,0,0,0,0,0,13,,lungs.png
+19,Hypoxia,Hypoxia or the death of organs due to lack of oxygen is extremely deadly and will lead to much notice.,35,15,0,50,70,0,0,0,0,0,0,0,13,,body.png
+20,Heat Resistance I,Resistance to low heat.,10,10,0,0,0,1,0,0,0,0,0,0,,21,heat1.png
+21,Heat Resistance II,Resistance to medium heat.,15,15,0,0,0,1,0,0,0,0,0,0,20,22,heat2.png
+22,Heat Resistance III,Resistance to high heat.,20,20,0,0,0,1,0,0,0,0,0,0,21,,heat3.png
+23,Cold Resistance I,Resistance to low cold.,10,10,0,0,0,0,1,0,0,0,0,0,,24,cold1.png
+24,Cold Resistance II,Resistance to medium cold.,15,15,0,0,0,0,1,0,0,0,0,0,23,25,cold2.png
+25,Cold Resistance III,Resistance to high cold.,20,20,0,0,0,0,1,0,0,0,0,0,24,,cold3.png
+26,Wet Resistance I,Resistance to low wetness.,10,10,0,0,0,0,0,1,0,0,0,0,,27,wet1.png
+27,Wet Resistance II,Resistance to medium wetness.,15,15,0,0,0,0,0,1,0,0,0,0,26,28,wet2.png
+28,Wet Resistance III,Resistance to high wetness.,20,20,0,0,0,0,0,1,0,0,0,0,27,,wet3.png
+29,Dry Resistance I,Resistance to low dryness.,10,10,0,0,0,0,0,0,1,0,0,0,,30,dry1.png
+30,Dry Resistance II,Resistance to medium dryness.,15,15,0,0,0,0,0,0,1,0,0,0,29,31,dry2.png
+31,Dry Resistance III,Resistance to high dryness.,20,20,0,0,0,0,0,0,1,0,0,0,30,,dry3.png
+32,Medicinal Resistance I,Resistance to low levels of medicine.,10,10,0,0,0,0,0,0,0,1,0,0,,33,med1.png
+33,Medicinal Resistance II,Resistance to medium levels of medicine.,15,15,0,0,0,0,0,0,0,1,0,0,32,34,med2.png
+34,Medicinal Resistance III,Resistance to high levels of medicine.,20,20,0,0,0,0,0,0,0,1,0,0,33,,med3.png
+35,Water Transmission I,Low ability to be transmitted through water.,10,10,3,0,0,0,0,0,0,0,9,0,,36,water1.png
+36,Water Transmission II,Medium ability to be transmitted through water.,15,15,6,0,0,0,0,0,0,0,15,0,35,37,water2.png
+37,Water Transmission III,High ability to be transmitted through water.,25,25,9,0,0,0,0,0,0,0,25,0,36,,water3.png
+38,Air Transmission I,Low ability to be transmitted through air.,10,10,3,0,0,0,0,0,0,0,0,1,,39,air1.png
+39,Air Transmission II,Medium ability to be transmitted through air.,15,15,6,0,0,0,0,0,0,0,0,3,38,40,air2.png
+40,Air Transmission III,High ability to be transmitted through air.,25,25,9,0,0,0,0,0,0,0,0,7,39,,air3.png
+41,Avian Transmission I,Low ability to be transmitted through birds.,10,10,3,0,0,0,0,0,0,0,1,1,,42,avian1.png
+42,Avian Transmission II,Medium ability to be transmitted through birds.,15,15,6,0,0,0,0,0,0,0,3,3,41,43,avian2.png
+43,Avian Transmission III,High ability to be transmitted through brids.,25,25,9,0,0,0,0,0,0,0,7,7,42,,avian3.png
+44,Insect Transmission I,Low ability to be transmitted through insects.,10,10,3,0,0,0,0,0,0,0,1,1,,45,insect1.png
+45,Insect Transmission II,Medium ability to be transmitted through insects.,15,15,6,0,0,0,0,0,0,0,3,3,44,46,insect2.png
+46,Insect Transmission III,High ability to be transmitted through insects.,25,25,9,0,0,0,0,0,0,0,7,7,45,,insect3.png
