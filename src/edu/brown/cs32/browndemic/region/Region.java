@@ -665,8 +665,8 @@ public class Region implements Serializable{
     public long getTotalInfectedNoOverlap(){
         long num = 0;
         for (InfWrapper inf : _hash.getAll()){
-            if(inf.getID().contains("1"));
-            num += inf.getInf();
+            if(inf.getID().contains("1"))
+                num += inf.getInf();
         }
         return num;
     }
