@@ -213,7 +213,9 @@ public class Region implements Serializable{
             uninf += inf.getInf();
         for(InfWrapper inf : _hash.getAllOfType(index,0)){
             double ratio = inf.getInf()/uninf;
-            long number = (long) Math.ceil(totNumber*ratio);
+            long number = (long) Math.floor(totNumber*ratio);
+            if(number > inf.getInf()/_infDoubleTime[index])
+                number = (long) (inf.getInf()/_lethDoubleTime[index]);
 //            System.out.println("infect: " + number);
             String infID = inf.getID().substring(0,index) + "1" + inf.getID().substring(index + 1);
             if (inf.getInf() < number){
@@ -238,8 +240,9 @@ public class Region implements Serializable{
             double rate = 1 - leth/(_LETHMAXFACTOR*max);
             double number = (1 - Math.pow(rate, _lethDoubleTime[index]/_LETHTIMESCALE))/_LETHSCALE * inf.getInf();
             if(leth / max > _CRITICALLETHRATIO)
-                number = Math.ceil(number);
-            else number = 0;
+                number = Math.floor(number);
+            if(number > inf.getInf()/_lethDoubleTime[index])
+                number = inf.getInf()/_lethDoubleTime[index];
             if(number < 1)
                 number = 0;
             if (inf.getInf() < number) {
@@ -359,8 +362,13 @@ public class Region implements Serializable{
         else if(_awareness[index] < _awareMax && tot > _awareMax){
             _awareness[index] = tot;
             notifyNeighbors(d);
-            if(_air != 0 || _sea != 0)
+            if(_air != 0 || _sea != 0){
+                _air = 0;
+                _sea = 0;
+                for(Airport a : _airports)
+                    a.close();
                 _news.add(_name + " has closed its sea and airports.");
+            }
         }
     }
     
@@ -638,7 +646,7 @@ public class Region implements Serializable{
      * getTotalInfected() gets the total number of infected people in this Region
      * @return
      */
-    public Long getTotalInfected() {
+    public long getTotalInfected() {
         long num = 0;
         for (int i = 0; i < _numDiseases; i++) {
             if (_diseases[i] != null) {
@@ -646,6 +654,19 @@ public class Region implements Serializable{
                     num += inf.getInf();
                 }
             }
+        }
+        return num;
+    }
+    
+    /**
+     * gets Total number infected without double counting
+     * @return 
+     */
+    public long getTotalInfectedNoOverlap(){
+        long num = 0;
+        for (InfWrapper inf : _hash.getAll()){
+            if(inf.getID().contains("1"));
+            num += inf.getInf();
         }
         return num;
     }
