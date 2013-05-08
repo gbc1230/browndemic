@@ -26,7 +26,7 @@ public class AboutMenu extends UIPanel {
 	public void makeUI() {
 		super.makeUI();
 		
-		JLabel about = new JLabel(String.format(Strings.ABOUT_HTML, (int)(UI.WIDTH * .9)));
+		JLabel about = new JLabel(String.format(Strings.ABOUT_HTML, (int)(UI.WIDTH * .95)));
 		about.setForeground(Colors.RED_TEXT);
 
 		JScrollPane sb = new JScrollPane(about, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
