@@ -40,7 +40,7 @@ public class InformationBar extends BrowndemicPanel implements ActionListener, C
 	private int _disease;
 	private Timer _timer;
 	private WorldMap _wm;
-	private JRadioButtonMenuItem _infdead, _pop, _infdeadother, _wealth, _inf, _dead, _infother, _deadother;
+	private JRadioButtonMenuItem _infdead, _pop, _infdeadother, _wealth, _inf, _dead, _infother, _deadother, _yours, _total;
 	private JCheckBoxMenuItem _airports, _airplanes;
 	private JMenu _layers;
 	private boolean _multi;
@@ -77,7 +77,7 @@ public class InformationBar extends BrowndemicPanel implements ActionListener, C
 		mb.setBorder(BorderFactory.createEmptyBorder());
 		mb.setAlignmentY(CENTER_ALIGNMENT);
 		
-		_layers = new JMenu("Layers");
+		_layers = new JMenu("Options");
 		_layers.setFont(Fonts.NORMAL_TEXT);
 		_layers.setBackground(Colors.MENU_BACKGROUND);
 		_layers.setForeground(Colors.RED_TEXT);
@@ -186,6 +186,26 @@ public class InformationBar extends BrowndemicPanel implements ActionListener, C
 		_airplanes.addChangeListener(this);
 		_layers.add(_airplanes);
 		
+
+		if (_multi) {
+			_layers.addSeparator();
+			ButtonGroup group2 = new ButtonGroup();
+			_yours = new JRadioButtonMenuItem("Show Your Disease Information");
+			_yours.setSelected(true);
+			_yours.setFont(Fonts.NORMAL_TEXT);
+			_yours.setBackground(Colors.MENU_BACKGROUND);
+			_yours.setForeground(Colors.RED_TEXT);
+			group2.add(_yours);
+			_layers.add(_yours);
+	
+			_total = new JRadioButtonMenuItem("Show Total Disease Information");
+			_total.setFont(Fonts.NORMAL_TEXT);
+			_total.setBackground(Colors.MENU_BACKGROUND);
+			_total.setForeground(Colors.RED_TEXT);
+			group2.add(_total);
+			_layers.add(_total);
+		}
+		
 		
 		Utils.setDefaultLook(mb, _layers);
 		if (_multi) {
@@ -236,9 +256,9 @@ public class InformationBar extends BrowndemicPanel implements ActionListener, C
 	private void updateInfo() {
 		NumberFormat nf = NumberFormat.getInstance();
 		healthy.setText(String.format("%s%s", Strings.INFO_HEALTHY, nf.format(_world.getHealthy())));
-		if (_multi) {
-			infected.setText(String.format("%s%s/%s", Strings.INFO_INFECTED, nf.format(_world.getInfected(_disease)), nf.format(_world.getInfected())));
-			dead.setText(String.format("%s%s/%s", Strings.INFO_DEAD, nf.format(_world.getDead(_disease)), nf.format(_world.getDead())));
+		if (_multi && _yours.isSelected()) {
+			infected.setText(String.format("%s%s", Strings.INFO_INFECTED, nf.format(_world.getInfected(_disease))));
+			dead.setText(String.format("%s%s", Strings.INFO_DEAD, nf.format(_world.getDead(_disease))));
 		} else {
 			infected.setText(String.format("%s%s", Strings.INFO_INFECTED, nf.format(_world.getInfected())));
 			dead.setText(String.format("%s%s", Strings.INFO_DEAD, nf.format(_world.getDead())));
@@ -279,6 +299,8 @@ public class InformationBar extends BrowndemicPanel implements ActionListener, C
 			_wm.setLayer(Layer.DEAD);
 		} else if (e.getSource() == _deadother) {
 			_wm.setLayer(Layer.DEAD_OTHER);
+		} else if (e.getSource() == _yours || e.getSource() == _total) {
+			_wm.setTotalData(_total.isSelected());
 		}
 	}
 

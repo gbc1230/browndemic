@@ -63,7 +63,7 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 	private List<MovingObject> _objects = new ArrayList<>();
 	private Map<Integer, Float> _highlights = new HashMap<>();
 	private int _selected, _disease, _hover;
-	private boolean _chooseMode, _drawAirports = true, _drawAirplanes = true, _multi;
+	private boolean _chooseMode, _drawAirports = true, _drawAirplanes = true, _multi, _totalData = false;
 	private static GraphicsConfiguration gc = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
 	private double fps = 0.0f;
 	private long lastUpdate = 0;
@@ -586,18 +586,18 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 		g2.drawString(name, 5, getHeight() - 120);
 		NumberFormat nf = NumberFormat.getInstance();
 		
-		if (_multi) {			
-			g2.drawString(String.format("Healthy: %s (%.2f%%)", nf.format(healthy), 100*(double)healthy/(double)total), 15, getHeight() - 95);
-			g2.drawString(String.format("Infected: %s/%s (%.2f%%/%.2f%%)", nf.format(infected), nf.format(tinfected), 100*(double)infected/(double)total, 100*(double)tinfected/(double)total), 15, getHeight() - 75);
-			g2.drawString(String.format("Dead: %s/%s (%.2f%%/%.2f%%)", nf.format(dead), nf.format(tdead), 100*(double)dead/(double)total, 100*(double)tdead/(double)total), 15, getHeight() - 55);
-			g2.drawString(String.format("Cured: %s/%s (%.2f%%/%.2f%%)", nf.format(cured), nf.format(tcured), 100*(double)cured/(double)total, 100*(double)tcured/(double)total), 15, getHeight() - 35);
-			g2.drawString(String.format("Total: %s", nf.format(total)), 15, getHeight() - 15);
-
-		} else {
+		if (_multi && !_totalData) {			
 			g2.drawString(String.format("Healthy: %s (%.2f%%)", nf.format(healthy), 100*(double)healthy/(double)total), 15, getHeight() - 95);
 			g2.drawString(String.format("Infected: %s (%.2f%%)", nf.format(infected), 100*(double)infected/(double)total), 15, getHeight() - 75);
 			g2.drawString(String.format("Dead: %s (%.2f%%)", nf.format(dead), 100*(double)dead/(double)total), 15, getHeight() - 55);
 			g2.drawString(String.format("Cured: %s (%.2f%%)", nf.format(cured), 100*(double)cured/(double)total), 15, getHeight() - 35);
+			g2.drawString(String.format("Total: %s", nf.format(total)), 15, getHeight() - 15);
+
+		} else {
+			g2.drawString(String.format("Healthy: %s (%.2f%%)", nf.format(healthy), 100*(double)healthy/(double)total), 15, getHeight() - 95);
+			g2.drawString(String.format("Infected: %s (%.2f%%)", nf.format(tinfected), 100*(double)tinfected/(double)total), 15, getHeight() - 75);
+			g2.drawString(String.format("Dead: %s (%.2f%%)", nf.format(tdead), 100*(double)tdead/(double)total), 15, getHeight() - 55);
+			g2.drawString(String.format("Cured: %s (%.2f%%)", nf.format(tcured), 100*(double)tcured/(double)total), 15, getHeight() - 35);
 			g2.drawString(String.format("Total: %s", nf.format(total)), 15, getHeight() - 15);
 		}
 		
@@ -695,5 +695,9 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 		MovingObject airplane = new MovingObject(new Location(srcx, srcy), AIRPLANE_SPEED, (infected ? Resources.getImage(Images.AIRPLANE_INFECTED) : Resources.getImage(Images.AIRPLANE)));
 		airplane.addWaypoint(new Location(destx, desty));
 		_objects.add(airplane);
+	}
+	
+	public void setTotalData(boolean b) {
+		_totalData = b;
 	}
 }
