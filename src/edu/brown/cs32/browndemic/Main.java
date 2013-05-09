@@ -22,7 +22,6 @@ public class Main {
 		System.setProperty("sun.java2d.ddscale", "true");
 		System.setProperty("sun.java2d.translaccel", "true");
 		System.setProperty("sun.java2d.ddforcevram", "true");
-		System.setProperty("sun.java2d.accthreshold", "0");
 		new BrowndemicFrame();
     }
 
