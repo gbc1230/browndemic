@@ -184,10 +184,8 @@ public class Region implements Serializable{
         double inf = getInfected().get(d);
         double growthFactor =  1 + (infectivity + maxInf/_INFSCALE) / (maxInf/_INFSCALE) *
                 ( wetResFactor + dryResFactor + heatResFactor + coldResFactor + medResFactor)/5;
-//        System.out.println("Inf growth factor: " + growthFactor);
-        double number = inf*(Math.pow(growthFactor,_infDoubleTime[d]/_INFTIMESCALE) - 1);
-//        System.out.println("rate: " + (Math.pow(growthFactor,_infDoubleTime[d]/_INFTIMESCALE) - 1));
-//        System.out.println("infect total: " + number);
+        double rate = (Math.pow(growthFactor,_infDoubleTime[d]/_INFTIMESCALE) - 1);
+        double number = inf*rate;
         if(_remInf >= 1){
             number++;
             _remInf--;
@@ -216,7 +214,7 @@ public class Region implements Serializable{
             long number = (long) Math.floor(totNumber*ratio);
             if(number > inf.getInf()/_infDoubleTime[index])
                 number = (long) (inf.getInf()/_lethDoubleTime[index]);
-//            System.out.println("infect: " + number);
+            System.out.println("infect: " + number);
             String infID = inf.getID().substring(0,index) + "1" + inf.getID().substring(index + 1);
             if (inf.getInf() < number){
                 _hash.put(new InfWrapper(inf.getID(), 0L));
@@ -241,6 +239,7 @@ public class Region implements Serializable{
             double number = (1 - Math.pow(rate, _lethDoubleTime[index]/_LETHTIMESCALE))/_LETHSCALE * inf.getInf();
             if(leth / max > _CRITICALLETHRATIO)
                 number = Math.floor(number);
+            else number = 0;
             if(number > inf.getInf()/_lethDoubleTime[index])
                 number = inf.getInf()/_lethDoubleTime[index];
             if(number < 1)
@@ -411,9 +410,12 @@ public class Region implements Serializable{
         double maxInf = d.getMaxInfectivity();
         double startLeth = d.getStartLethality();
         double maxLeth = d.getMaxLethality();
-        double infLow = Math.log(2)/Math.log((startInf + maxInf/_INFSCALE)/(maxInf/_INFSCALE));
-        double infHigh = Math.log(2)/Math.log(1 + _INFSCALE);
-        _infDoubleTime[index] = (infLow + infHigh)/2;
+//        double infLow = Math.log(2)/Math.log((startInf + maxInf/_INFSCALE)/(maxInf/_INFSCALE));
+//        double infMid = Math.log(2)/Math.log((maxInf/4 + maxInf/_INFSCALE)/(maxInf/_INFSCALE));
+//        double infHigh = Math.log(2)/Math.log(1 + _INFSCALE);
+//        _infDoubleTime[index] = (infLow + infHigh)/2;
+        double infDouble = Math.log(2)/Math.log((maxInf/4 + maxInf/_INFSCALE)/(maxInf/_INFSCALE));
+        _infDoubleTime[index] = infDouble;
         double lethLow = Math.log(.5)/Math.log(1 - startLeth/(maxLeth));
         double lethHigh = Math.log(.5)/Math.log(1 - 1/_LETHMAXFACTOR);
         _lethDoubleTime[index] = (lethLow + lethHigh)/2;
