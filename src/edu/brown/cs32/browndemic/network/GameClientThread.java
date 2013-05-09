@@ -49,8 +49,6 @@ public class GameClientThread extends Thread{
                     _client.handle(input);
                 }
                 catch(IOException e){
-//                	System.out.println("IOException in ClientThread");
-//                	e.printStackTrace();
                     _client.stop();
                     break;
                 }
@@ -60,7 +58,7 @@ public class GameClientThread extends Thread{
             }
         }
         catch(IOException e){
-            System.out.println("Error in GameClientThread when reading.");
+
         }
     }
 

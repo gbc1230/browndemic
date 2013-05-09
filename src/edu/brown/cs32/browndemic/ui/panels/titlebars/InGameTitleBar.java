@@ -184,7 +184,6 @@ public class InGameTitleBar extends TitleBar {
 			
 			if (fc.showSaveDialog(Utils.getParentFrame(this)) == JFileChooser.APPROVE_OPTION) {
 				File f = fc.getSelectedFile();
-				System.out.println("SAVE TO: " + f.getName());
 				WorldSP world = (WorldSP)_world;
 				//save the world to a file
 				try{

@@ -148,10 +148,8 @@ public class ServerWorld extends MainWorld{
     
     //special version for server
     public void addDisease(Disease d, int ind){
-    	System.out.println("adding disease");
     	d.setID(ind);
     	_diseases.set(ind, d);
-    	System.out.println(_diseases);
     	if (diseasesFull())
             start();
     }
@@ -185,7 +183,6 @@ public class ServerWorld extends MainWorld{
     
     @Override
     public void introduceDisease(int d, int r){
-        System.out.println("Introducing " + d + " to " + r);
         _regions.get(r).introduceDisease(_diseases.get(d));
         _regionsPicked.set(d, true);
         System.out.println(allRegionsPicked());
@@ -216,7 +213,6 @@ public class ServerWorld extends MainWorld{
     
     @Override
     public void run(){
-        System.out.println("begin the loop");
         while(!allRegionsPicked()){
             try{
                 Thread.sleep(1);
@@ -225,7 +221,6 @@ public class ServerWorld extends MainWorld{
                 
             }
         }
-        System.out.println("starting game");
         while (!_gameOver){
             long start = System.currentTimeMillis();
             update();
@@ -244,12 +239,8 @@ public class ServerWorld extends MainWorld{
             try{
                 if (offset < _waitTime)
                     Thread.sleep(_waitTime - offset);
-                else
-                    System.out.println("Offset of " + offset + " was higher than " +
-                	"waitTime of " + _waitTime);
                 }
             catch(InterruptedException e){
-                System.out.println("Couldn't sleep...");
             }
         }
     }

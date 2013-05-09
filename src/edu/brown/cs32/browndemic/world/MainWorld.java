@@ -154,7 +154,6 @@ public abstract class MainWorld implements World, Runnable, Serializable{
      */
     @Override
     public void addDisease(Disease d){
-        System.out.println("Adding a disease: " + d.getName());
         int id = _diseases.size();
         _diseases.add(d);
         d.setID(id);
@@ -410,7 +409,6 @@ public abstract class MainWorld implements World, Runnable, Serializable{
     public void checkCures(){
         for (int i = 0; i < _cures.size(); i++){
             if (_cures.get(i) >= _cureTotal && !_sent.get(i)){
-            	System.out.println("Sending cures to " + i);
                 sendCures(i);
                 _sent.set(i, true);
             }
@@ -555,7 +553,6 @@ public abstract class MainWorld implements World, Runnable, Serializable{
      * Sets up disease related lists
      */
     protected void setupDiseases(){
-    	System.out.println("setting up diseases... " + _diseases.size());
         for (int i = 0; i < _diseases.size(); i++){
             _cures.add(0L);
             _oldInfects.add(0L);
