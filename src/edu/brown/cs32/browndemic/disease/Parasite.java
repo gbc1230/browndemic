@@ -17,12 +17,6 @@ public class Parasite extends Disease{
 
     //SerialVersionUID for this disease
     private static final long serialVersionUID = -6836486974707322172L;
-    //Maximum infectivity
-    final private double MAX_INFECTIVITY = 139;
-    //Maximum lethality
-    final private double MAX_LETHALITY = 243;
-    //Maximum visibility
-    final private double MAX_VISIBILITY = 322;
     //Starting infectivity
     final private double START_INFECTIVITY = 1;
     //Starting lethality
@@ -53,6 +47,11 @@ public class Parasite extends Disease{
        int[] availablePerks = {0, 1, 2, 3, 5, 23, 26, 29, 32, 35, 38, 41, 44,
                                 47};
         for(int i : availablePerks) this._perks[i].setAvailability(true);
+        for(Perk p : this._perks){
+        	if(p.getInf() > 0) this.MAX_INFECTIVITY +=p.getInf();
+        	if(p.getLeth() > 0) this.MAX_LETHALITY +=p.getLeth();
+        	if(p.getVis() > 0) this.MAX_LETHALITY +=p.getVis();
+        }
         this._infectivity = 1;
         this._visibility = 1;
         this._lethality = 5;
@@ -78,6 +77,11 @@ public class Parasite extends Disease{
         int[] availablePerks = {0, 1, 2, 3, 5, 23, 26, 29, 32, 35, 38, 41, 44,
                                 47};
         for(Integer i : availablePerks) this._perks[i].setAvailability(true);
+        for(Perk p : this._perks){
+        	if(p.getInf() > 0) this.MAX_INFECTIVITY +=p.getInf();
+        	if(p.getLeth() > 0) this.MAX_LETHALITY +=p.getLeth();
+        	if(p.getVis() > 0) this.MAX_LETHALITY +=p.getVis();
+        }
         this._infectivity = 1;
         this._visibility = 1;
         this._lethality = 5;
