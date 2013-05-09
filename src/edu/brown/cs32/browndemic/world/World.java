@@ -114,7 +114,7 @@ public interface World {
     public boolean allCured();
     
     /**
-     * Used in ClientWorld, won't have to do anything extra in other versions
+     * Leaves the game in MP, ends the game in SP or on the server side
      */
     public void leaveGame();
     

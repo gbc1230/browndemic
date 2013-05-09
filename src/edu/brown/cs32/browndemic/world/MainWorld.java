@@ -535,12 +535,13 @@ public abstract class MainWorld implements World, Runnable, Serializable{
     		}
     	}
     }
-    
+      
     /**
-     * Has no extra requirement here
+     * If the user quits to main menu mid-game
      */
+    @Override
     public void leaveGame(){
-    	
+    	_gameOver = true;
     }
     
     /**
