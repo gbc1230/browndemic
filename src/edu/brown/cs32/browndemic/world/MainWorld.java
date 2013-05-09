@@ -351,8 +351,8 @@ public abstract class MainWorld implements World, Runnable, Serializable{
             for (int i = 0; i < rInfected.size(); i++){
                 long d = infects.get(i);
                 infects.set(i, rInfected.get(i) + d);
-                infected += rInfected.get(i);
             }
+            infected += r.getTotalInfectedNoOverlap();
         }
         _infects = infects;
         _infected = infected;

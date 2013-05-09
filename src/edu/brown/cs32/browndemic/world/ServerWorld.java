@@ -119,7 +119,6 @@ public class ServerWorld extends MainWorld{
     public void addLobbyMember(LobbyMember lm){
         _lobby.add(lm);
         _outData.add(new LobbySender(_lobby));
-        System.out.println("sent " + _lobby);
     }
     
     public void removePlayer(int r){
