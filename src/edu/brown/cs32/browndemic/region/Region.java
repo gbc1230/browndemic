@@ -218,7 +218,7 @@ public class Region implements Serializable{
             if(totNumber == 1 && !inf.getID().equals(_hash.getZero().getID()))
                 continue;
             double ratio = inf.getInf()/uninf;
-            long number = (long) Math.round(totNumber*ratio);
+            long number = Math.round(totNumber*ratio);
             if(totNumber > uninf)
                 number = inf.getInf();
             String infID = inf.getID().substring(0,index) + "1" + inf.getID().substring(index + 1);
