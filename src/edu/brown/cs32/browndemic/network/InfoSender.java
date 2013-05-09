@@ -30,6 +30,16 @@ public class InfoSender extends Thread{
         _server = s;
     }
     
+    public void fixLobby(List<LobbyMember> lobby){
+    	for (LobbyMember lm : lobby){
+    		if (lm.getName().equals("")){
+    			lm.setName("Player");
+    		}
+    		if (lm.getName().length() >= 20)
+    			lm.setName(lm.getName().substring(0, 20));
+    	}
+    }
+    
     @Override
     public synchronized void run(){
         while (!_gameStarted){
