@@ -84,7 +84,7 @@ public class Parasite extends Disease{
         for(Perk p : this._perks){
         	if(p.getInf() > 0) this.MAX_INFECTIVITY +=p.getInf();
         	if(p.getLeth() > 0) this.MAX_LETHALITY +=p.getLeth();
-        	if(p.getVis() > 0) this.MAX_LETHALITY +=p.getVis();
+        	if(p.getVis() > 0) this.MAX_VISIBILITY +=p.getVis();
         }
         this.MAX_INFECTIVITY += this.START_INFECTIVITY;
         this.MAX_LETHALITY += this.START_LETHALITY;
