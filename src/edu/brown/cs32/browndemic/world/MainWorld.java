@@ -557,14 +557,7 @@ public abstract class MainWorld implements World, Runnable, Serializable {
 			int times = 0;
 			while (infBench * 10L <= newInf) {
 				times++;
-				long newbench;
-				if (infBench < 100000000L){
-					newbench = infBench * 10;
-				}
-				else if (infBench == 150000000L)
-					break;
-				else
-					newbench = 150000000L;
+				long newbench = infBench * 10;
 				_infectBenchMarks.set(i, newbench);
 				infBench = _infectBenchMarks.get(i);
 			}
@@ -588,14 +581,7 @@ public abstract class MainWorld implements World, Runnable, Serializable {
 			times = 0;
 			while (killBench * 10L <= newKill) {
 				times++;
-				long newbench;
-				if (infBench < 100000000L){
-					newbench = infBench * 10;
-				}
-				else if (infBench == 150000000L)
-					break;
-				else
-					newbench = 150000000L;
+				long newbench = infBench * 10;
 				_killBenchMarks.set(i, newbench);
 				killBench = _killBenchMarks.get(i);
 				
