@@ -47,7 +47,7 @@ public class Region implements Serializable{
     private static final int _LANDFREQ = 10; //DEFAULT: 40//ticks between land border crossing
     
     private static final double _CUREPERCENT = .002; //DEFAULT: .005//Fraction of population to cure per tick
-    private static double _AWAREMAXSCALE = 4; //DEFAULT: 5//multiplier on max awareness before close ports
+    private static double _AWAREMAXSCALE = 3; //DEFAULT: 5//multiplier on max awareness before close ports
     private static final double _CUREFRAC = 1.5; //DEFAULT: 2//at awareMax/_CUREFRAC, begin curing
     private static final double _NOTIFYFRAC = 5; //DEFAULT: 5//Increase neighbors awareness by this.awareness/_NOTIFYFRAC
     
@@ -396,6 +396,18 @@ public class Region implements Serializable{
     public void updateAwareness(Disease d, double aware) {
         int index = d.getID();
         double tot = _awareness[index] + aware;
+        if(_dead[index] > _population/3 && (_air != 0 || _sea != 0)){
+            notifyNeighbors(d);
+            if(_air != 0 || _sea != 0){
+                _air = 0;
+                _sea = 0;
+                for(Airport a : _airports)
+                    a.close();
+                _news.add(_name + " has closed its sea and airports.");
+            }
+            if(_awareness[index] < _awareMax)
+                _awareness[index] = _awareMax;
+        }
         if(_awareness[index] < _awareMax/6 && tot > _awareMax/6){
             if(this.hasDisease(d))
                 _news.add("An infection has been spotted in " + _name + "!");
