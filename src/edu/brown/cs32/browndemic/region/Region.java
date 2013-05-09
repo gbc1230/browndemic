@@ -229,6 +229,17 @@ public class Region implements Serializable{
             }
         }
     }
+    
+    public double getNumToKill(Disease d){
+        int index = d.getID();
+        double leth = d.getLethality();
+        double max = d.getMaxLethality();
+        double growthFactor = 1 - leth/(_LETHMAXFACTOR*max);
+        long infected = getInfected().get(index);
+        double rate = (1 - Math.pow(growthFactor, _lethDoubleTime[index]/_LETHTIMESCALE))/_LETHSCALE;
+        double number = rate * (infected + _dead[index]);
+        return number;
+    }
 
     /**
      * infect(Disease, int) updates the dead for a given disease
@@ -238,9 +249,10 @@ public class Region implements Serializable{
         int index = disease.getID();
         double leth = disease.getLethality();
         double max = disease.getMaxLethality();
+        long infected = getInfected().get(index);
+        double total = getNumToKill(disease);
         for (InfWrapper inf : _hash.getAllOfType(index,1)) {
-            double rate = 1 - leth/(_LETHMAXFACTOR*max);
-            double number = (1 - Math.pow(rate, _lethDoubleTime[index]/_LETHTIMESCALE))/_LETHSCALE * inf.getInf();
+            double number = total*inf.getInf()/infected;
             if(leth / max > _CRITICALLETHRATIO)
                 number = Math.floor(number);
             else number = 0;
