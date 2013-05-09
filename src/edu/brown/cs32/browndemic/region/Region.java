@@ -708,6 +708,19 @@ public class Region implements Serializable{
     }
     
     /**
+     * gets the total cured, no overlap
+     * @return 
+     */
+    public long getTotalCuredNoOverlap(){
+        long num = 0;
+        for (InfWrapper inf : _hash.getAll()){
+            if(inf.getID().contains("2"))
+                num += inf.getInf();
+        }
+        return num;
+    }
+    
+    /**
      * gets the total killed in this region
      * @return 
      */
