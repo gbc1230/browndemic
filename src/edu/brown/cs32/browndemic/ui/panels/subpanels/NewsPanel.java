@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -29,6 +30,7 @@ public class NewsPanel extends BrowndemicPanel {
 	private Timer _timer;
 	private JPanel _news;
 	private MarqueeLabel _ml;
+	private JLabel _newsLabel;
 	private boolean _hasNew = false;
 	
 	public NewsPanel(World world, MarqueeLabel ml) {
@@ -54,6 +56,13 @@ public class NewsPanel extends BrowndemicPanel {
 		_news.setLayout(new BoxLayout(_news, BoxLayout.Y_AXIS));
 		_news.setBackground(Colors.MENU_BACKGROUND);
 		
+		_newsLabel = new JLabel();
+		_newsLabel.setForeground(Colors.RED_TEXT);
+		_newsLabel.setFont(Fonts.NORMAL_TEXT);
+		
+		_news.add(_newsLabel);
+		_news.add(Box.createGlue());
+		
 		JScrollPane scroll = new JScrollPane(_news, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scroll.getViewport().setBackground(Colors.MENU_BACKGROUND);
 		scroll.getVerticalScrollBar().setUnitIncrement(16);
@@ -71,17 +80,19 @@ public class NewsPanel extends BrowndemicPanel {
 	
 	private void updateNews() {
 		_hasNew = _localCopy.size() > 0;
-		_news.removeAll();
+		//_news.removeAll();
 		Collections.reverse(_localCopy);
+		String text = "";
 		for (String s : _localCopy) {
-			
-			JLabel newsItem = new JLabel(String.format("<html><body style='width: %dpx; padding: 4px'><font size=%dpt family='%s'>%s</font></body></html>", (int)(UI.WIDTH/3.6), Fonts.NORMAL_TEXT.getSize(), Fonts.NORMAL_TEXT.getFamily(), s));
-			newsItem.setForeground(Colors.RED_TEXT);
-			newsItem.setFont(Fonts.NORMAL_TEXT);
-			_news.add(newsItem);
+			text += s + "<br/><br/>";
+			//JLabel newsItem = new JLabel(String.format("<html><body style='width: %dpx; padding: 4px'><font size=%dpt family='%s'>%s</font></body></html>", (int)(UI.WIDTH/3.6), Fonts.NORMAL_TEXT.getSize(), Fonts.NORMAL_TEXT.getFamily(), s));
+			//newsItem.setForeground(Colors.RED_TEXT);
+			//newsItem.setFont(Fonts.NORMAL_TEXT);
+			//_news.add(newsItem);
 		}
-		_news.revalidate();
-		_news.repaint();
+		_newsLabel.setText(String.format("<html><body style='width: %dpx; padding: 4px'><font size=%dpt family='%s'>%s</font></body></html>", (int)(UI.WIDTH/3.6), Fonts.NORMAL_TEXT.getSize(), Fonts.NORMAL_TEXT.getFamily(), text));
+		//_news.revalidate();
+		//_news.repaint();
 		Collections.reverse(_localCopy);
 	}
 	
