@@ -97,7 +97,6 @@ public class ClientWorld implements ChatServer, World{
      */
     @Override
     public void sendMessage(String msg){
-        System.out.println("Sending: " + msg);
         msg = _name + ": " + msg;
         ChatMessage cm = new ChatMessage(msg);
         _output.add(cm);
@@ -109,7 +108,6 @@ public class ClientWorld implements ChatServer, World{
      * @param msg The message to accept
      */
     public void acceptMessage(String msg){
-        System.out.println(_name + ": Accepting message: " + msg);
         _handler.addMessage(msg);
     }
     
@@ -121,13 +119,11 @@ public class ClientWorld implements ChatServer, World{
     public void getDisconnect(String name, int id){
     	String dc = name + " has disconnected.";
     	_handler.addMessage(dc);
-    	System.out.println("handled DC");
 //    	if (id < _diseaseID)
 //    		_diseaseID--;
     }
     
     public void disconnectHost(){
-    	System.out.println(_name + " disconnected because the host left.");
     	_hostDisconnected = true;
     }
     
@@ -275,7 +271,6 @@ public class ClientWorld implements ChatServer, World{
     }
     
     public void sendDisease(int id, ServerWorld world){
-    	System.out.println("Got to this point with " + _picked);
         if (_picked == 1)
             addDisease(new Bacteria(_name));
         else if (_picked == 2)
@@ -283,11 +278,9 @@ public class ClientWorld implements ChatServer, World{
         else if (_picked == 3)
             addDisease(new Parasite(_name));
         if (_picked >= 1 && _picked <= 3){
-        	System.out.println("Disease added, game ready.");
         	_diseaseID = id;
         	_isGameReady = true;
         	_world = world;
-        	System.out.println("Is game ready is true");
         }
     }
     

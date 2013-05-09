@@ -55,8 +55,6 @@ public class GameClient implements Runnable{
                 }
             }
             catch(IOException e){
-            	System.out.println("Client side problem:");
-            	e.printStackTrace();
                 stop();
                 break;
             }
@@ -81,7 +79,6 @@ public class GameClient implements Runnable{
         }
         //another player has disconnected
         else if (id.equals("DC")){
-        	System.out.println("Got DC message");
         	DCMessage dc = (DCMessage)msg;
         	_world.getDisconnect(dc.getName(), dc.getPlayerID());
         }
@@ -93,13 +90,11 @@ public class GameClient implements Runnable{
         }
         //message from server to add diseases
         else if (id.equals("CD")){
-        	System.out.println("Got a collect request.");
         	CollectDiseases cd = (CollectDiseases)msg;
             _world.sendDisease(cd.getDiseaseID(), cd.getWorld());
         }
         //host disconnect
         else if (id.equals("H")){
-        	System.out.println("got an H");
         	stop();
         }
         //got kicked
@@ -113,7 +108,6 @@ public class GameClient implements Runnable{
      * Close down this client
      */
     public void stop(){
-        System.out.println(_world.getName() + " is disconnecting from host...");
         _world.disconnectHost();
         try{
             _output.close();
@@ -122,7 +116,7 @@ public class GameClient implements Runnable{
             _client.close();
         }
         catch(Exception e){
-            System.out.println("Error closing GameClient");
+        	
         }
     }
 

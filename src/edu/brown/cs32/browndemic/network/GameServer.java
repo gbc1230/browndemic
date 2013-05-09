@@ -54,7 +54,6 @@ public class GameServer implements Runnable{
                 if (_accepting){
                     if (temp != null){
                         addThread(temp);
-                        System.out.println("Got new client.");
                     }
                 }
                 else{
@@ -65,7 +64,6 @@ public class GameServer implements Runnable{
                 continue;
             }
             catch(IOException e){
-            	System.out.println("IOException at GameServer");
                 break;
             }
         }
@@ -73,7 +71,6 @@ public class GameServer implements Runnable{
     
     //for once the game starts
     public void stopAccepting(){
-        System.out.println("done accepting");
         _accepting = false;
         _thread.interrupt();
     }
@@ -144,7 +141,6 @@ public class GameServer implements Runnable{
         	_world.updateName(nc.getName(), client);
         }
         else if (id.equals("EG")){
-        	System.out.println("got a gameover");
         	EndGame eg = (EndGame)gd;
         	boolean w = eg.isWinner();
         	if (w)
@@ -165,7 +161,6 @@ public class GameServer implements Runnable{
     		pos = findClient(ID);
     	else 
     		pos = ID;
-    	System.out.println("Removing: " + pos);
         if (pos != -1 && pos < _clients.size()){
             GameServerThread toKill = _clients.get(pos);
             _clients.remove(toKill);
@@ -176,7 +171,6 @@ public class GameServer implements Runnable{
             _world.removeDisease(pos);
             toKill.close();
             if (_world.hasStarted()){
-	            System.out.println("Sending out DC message");
 	            DCMessage msg = new DCMessage(name, pos);            
 	            for (GameServerThread gst : _clients){
 	                gst.sendMessage(msg);
