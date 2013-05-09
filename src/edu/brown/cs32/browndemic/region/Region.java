@@ -37,9 +37,9 @@ public class Region implements Serializable{
     private static final double _INFSCALE = 1; //DEFAULT: 3//how much infection scales with infectivity
     
     private double[] _lethDoubleTime;
-    private static final int _LETHTIMESCALE = 80; //DEFAULT: 3//~~ticks to half infected die
+    private static final int _LETHTIMESCALE = 120; //DEFAULT: 3//~~ticks to half infected die
     private static final double _LETHSCALE = 5; //DEFAULT: 3//how much death scales with lethality
-    private static final double _LETHMAXFACTOR = 1; //DEFAULT: 40//increase to scale down death at max lethality
+    private static final double _LETHMAXFACTOR = 2; //DEFAULT: 40//increase to scale down death at max lethality
     private static final double _CRITICALLETHRATIO = .1; //DEFAULT: .1//Lethaliy/max before deaths occur
 
     private static final int _PLANEFREQ = 240; //DEFAULT: 240//ticks between flights
@@ -229,6 +229,17 @@ public class Region implements Serializable{
             }
         }
     }
+    
+    public double getNumToKill(Disease d){
+        int index = d.getID();
+        double leth = d.getLethality();
+        double max = d.getMaxLethality();
+        double growthFactor = 1 - leth/(_LETHMAXFACTOR*max);
+        long infected = getInfected().get(index);
+        double rate = (1 - Math.pow(growthFactor, _lethDoubleTime[index]/_LETHTIMESCALE))/_LETHSCALE;
+        double number = rate * (infected + _dead[index]);
+        return number;
+    }
 
     /**
      * infect(Disease, int) updates the dead for a given disease
@@ -238,9 +249,10 @@ public class Region implements Serializable{
         int index = disease.getID();
         double leth = disease.getLethality();
         double max = disease.getMaxLethality();
+        long infected = getInfected().get(index);
+        double total = getNumToKill(disease);
         for (InfWrapper inf : _hash.getAllOfType(index,1)) {
-            double rate = 1 - leth/(_LETHMAXFACTOR*max);
-            double number = (1 - Math.pow(rate, _lethDoubleTime[index]/_LETHTIMESCALE))/_LETHSCALE * inf.getInf();
+            double number = total*inf.getInf()/infected;
             if(leth / max > _CRITICALLETHRATIO)
                 number = Math.floor(number);
             else number = 0;
