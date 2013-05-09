@@ -83,7 +83,7 @@ public class NewsPanel extends BrowndemicPanel {
 		//_news.removeAll();
 		Collections.reverse(_localCopy);
 		String text = "";
-		for (String s : _localCopy) {
+		for (String s : _localCopy.subList(0, Math.min(_localCopy.size(), 30))) {
 			text += s + "<br/><br/>";
 			//JLabel newsItem = new JLabel(String.format("<html><body style='width: %dpx; padding: 4px'><font size=%dpt family='%s'>%s</font></body></html>", (int)(UI.WIDTH/3.6), Fonts.NORMAL_TEXT.getSize(), Fonts.NORMAL_TEXT.getFamily(), s));
 			//newsItem.setForeground(Colors.RED_TEXT);
