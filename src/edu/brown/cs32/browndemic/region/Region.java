@@ -397,7 +397,6 @@ public class Region implements Serializable{
         int index = d.getID();
         double tot = _awareness[index] + aware;
         if(_dead[index] > _population/3 && (_air != 0 || _sea != 0)){
-            notifyNeighbors(d);
             if(_air != 0 || _sea != 0){
                 _air = 0;
                 _sea = 0;
@@ -407,6 +406,7 @@ public class Region implements Serializable{
             }
             if(_awareness[index] < _awareMax)
                 _awareness[index] = _awareMax;
+            notifyNeighbors(d);
         }
         if(_awareness[index] < _awareMax/6 && tot > _awareMax/6){
             if(this.hasDisease(d))
