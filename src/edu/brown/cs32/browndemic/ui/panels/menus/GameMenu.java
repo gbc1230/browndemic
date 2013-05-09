@@ -55,6 +55,7 @@ public class GameMenu extends UIPanel implements ChangeListener {
 	private ChatPanel _chat;
 	private JTabbedPane _botright;
 	private Timer _timer;
+	private InGameTitleBar _igt;
 	
 	public GameMenu(World w, int disease, boolean multiplayer) {
 		super();
@@ -152,7 +153,7 @@ public class GameMenu extends UIPanel implements ChangeListener {
 			if (_world.hostDisconnected()) {
 				Utils.getParentFrame(this).setPanel(new MainMenu());
 			}
-			Utils.getParentFrame(this).setTitle(new InGameTitleBar(_world, !_multiplayer));
+			Utils.getParentFrame(this).setTitle(_igt = new InGameTitleBar(_world, !_multiplayer));
 			_timer = new Timer(1000/3, new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
@@ -196,6 +197,7 @@ public class GameMenu extends UIPanel implements ChangeListener {
 				_lb.stop();
 			if (!_world.isGameOver())
 				_world.leaveGame();
+			_igt.hideMenu();
 		}
     }
 

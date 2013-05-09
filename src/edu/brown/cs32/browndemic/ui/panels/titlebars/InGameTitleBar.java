@@ -43,6 +43,7 @@ public class InGameTitleBar extends TitleBar {
 	private JLabel minimize; 
 	private SelectButton pause, play1, play2, play3;
 	private JMenuItem quit, save, exit;
+	private JMenu menu;
 	private World _world;
 	private boolean _single;
 	
@@ -64,7 +65,7 @@ public class InGameTitleBar extends TitleBar {
 		menuBar.setAlignmentY(CENTER_ALIGNMENT);
 		
 
-		JMenu menu = new JMenu("Menu");
+		menu = new JMenu("Menu");
 		menu.setFont(Fonts.TITLE_BAR);
 		menu.setBackground(Colors.MENU_BACKGROUND);
 		menu.setForeground(Colors.RED_TEXT);
@@ -209,6 +210,10 @@ public class InGameTitleBar extends TitleBar {
 			if (choice == 0)
 				System.exit(0);
 		}
+	}
+	
+	public void hideMenu() {
+		menu.setSelected(false);
 	}
 
 }

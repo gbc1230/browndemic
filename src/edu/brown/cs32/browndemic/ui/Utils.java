@@ -25,6 +25,7 @@ public class Utils {
 	 * @return The BrowndemicFrame that is the parent of c.
 	 */
 	public static BrowndemicFrame getParentFrame(Container c) {
+		if (c == null) return null;
 		if (!(c instanceof BrowndemicFrame)) {
 			return getParentFrame(c.getParent());
 		}
