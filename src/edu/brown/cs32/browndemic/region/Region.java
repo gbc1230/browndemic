@@ -38,8 +38,8 @@ public class Region implements Serializable{
     
     private double[] _lethDoubleTime;
     private static final int _LETHTIMESCALE = 120; //DEFAULT: 3//~~ticks to half infected die
-    private static final double _LETHSCALE = 3; //DEFAULT: 3//how much death scales with lethality
-    private static final double _LETHMAXFACTOR = 15; //DEFAULT: 40//increase to scale down death at max lethality
+    private static final double _LETHSCALE = 4; //DEFAULT: 3//how much death scales with lethality
+    private static final double _LETHMAXFACTOR = 5; //DEFAULT: 40//increase to scale down death at max lethality
     private static final double _CRITICALLETHRATIO = .1; //DEFAULT: .1//Lethaliy/max before deaths occur
 
     private static final int _PLANEFREQ = 240; //DEFAULT: 240//ticks between flights
@@ -372,7 +372,7 @@ public class Region implements Serializable{
     public double getAwareIncrement(Disease d){
         int index = d.getID();
         double maxVis = d.getMaxVisibility();
-        return (d.getVisibility() + maxVis)/maxVis * (getInfected().get(index)/3 + 2*_dead[index]);
+        return (d.getVisibility() + maxVis)/maxVis * (4*getInfected().get(index)/5 + 2*_dead[index]);
     }
 
     /**
