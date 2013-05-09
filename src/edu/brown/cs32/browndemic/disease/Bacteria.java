@@ -107,7 +107,7 @@ public class Bacteria extends Disease{
 
     	if(Math.random() < .00011111)
             try {
-                this.buyPerkWithoutPay(this.getAvailablePerks().get(0).getID());
+                this.buyPerkWithoutPay(this.getAvailablePerks().get((int)(Math.random()*this.getAvailablePerks().size())).getID());
             } catch (IllegalAccessException ex) {}
         if(Math.random() < .0011111){
 
