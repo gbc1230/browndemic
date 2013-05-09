@@ -46,14 +46,6 @@ public class SettingsMenu extends UIPanel implements ItemListener, DocumentListe
 	@Override
 	protected void makeUI() {
 		super.makeUI();
-
-		_caching = new JCheckBox(Strings.SETTINGS_CACHING, Settings.getBoolean(Settings.CACHING));
-		_caching.setBackground(Colors.TRANSPARENT);
-		_caching.setForeground(Colors.RED_TEXT);
-		_caching.setFont(Fonts.BIG_TEXT);
-		_caching.setAlignmentX(Component.CENTER_ALIGNMENT);
-		_caching.addItemListener(this);
-		_caching.setOpaque(false);
 		
 		_fps = new JCheckBox(Strings.SETTINGS_FPS, Settings.getBoolean(Settings.FPS));
 		_fps.setBackground(Colors.TRANSPARENT);
@@ -113,7 +105,6 @@ public class SettingsMenu extends UIPanel implements ItemListener, DocumentListe
 		port.add(Box.createGlue());
 
 		add(Box.createGlue());
-		add(_caching);
 		add(_fps);
 		add(name);
 		add(port);
