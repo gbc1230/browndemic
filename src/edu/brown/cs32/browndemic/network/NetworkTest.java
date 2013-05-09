@@ -22,7 +22,8 @@ public class NetworkTest implements Runnable{
 
     private ClientWorld _clientWorld1, _clientWorld2;
     private ServerWorld _serverWorld;
-    private GameClient _client1, _client2;
+    @SuppressWarnings("unused")
+	private GameClient _client1, _client2;
     private GameServer _server;
     private BufferedReader _input;
     private final int PORT = 6000;

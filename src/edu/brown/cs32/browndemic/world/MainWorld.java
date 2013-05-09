@@ -431,6 +431,26 @@ public abstract class MainWorld implements World, Runnable, Serializable{
             d.randomPerkEvents();
         }
     }
+    
+    /**
+     * Generates some random flights
+     */
+    public void generateFlights(){
+    	if ((int)(Math.random()*65) == 0){
+    		int rand1 = (int)(Math.random() * _airports.size());
+    		Airport a = _airports.get(rand1);
+    		Airport b;
+    		while (true){
+    			int rand2 = (int)(Math.random() * _airports.size());
+    			if (rand1 != rand2){
+    				b = _airports.get(rand2);
+    				break;
+    			}
+    		}
+    		AirTransmission trans = new AirTransmission(a, b, -1, false);
+    		_transmissions.add(trans);
+    	}
+    }
 
     /**
      * Updates which diseases have been cured
@@ -577,6 +597,7 @@ public abstract class MainWorld implements World, Runnable, Serializable{
         updateCures();
         updateNews();
         updateTransmissions();
+        generateFlights();
         givePoints();
         checkCures();
         updateCured();

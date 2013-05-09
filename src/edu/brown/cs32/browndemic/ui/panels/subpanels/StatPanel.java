@@ -79,19 +79,19 @@ public class StatPanel extends BrowndemicPanel {
 		_visibility = new JProgressBar(0, (int)_world.getDisease(_disease).getMaxVisibility());
 		JPanel visibility = createPanel("Visibility: ", _visibility);
 		
-		_heat = new JProgressBar(0, 4);
+		_heat = new JProgressBar(1, 4);
 		JPanel heat = createPanel("Heat Resistance: ", _heat);
 		
-		_cold = new JProgressBar(0,4);
+		_cold = new JProgressBar(1,4);
 		JPanel cold = createPanel("Cold Resistance: ", _cold);
 		
-		_wet = new JProgressBar(0,4);
+		_wet = new JProgressBar(1,4);
 		JPanel wet = createPanel("Water Resistance: ", _wet);
 		
-		_dry = new JProgressBar(0,4);
+		_dry = new JProgressBar(1,4);
 		JPanel dry = createPanel("Dry Resistance: ", _dry);
 		
-		_medicine = new JProgressBar(0,4);
+		_medicine = new JProgressBar(1,4);
 		JPanel medicine = createPanel("Medicine Resistance: ", _medicine);
 		
 		

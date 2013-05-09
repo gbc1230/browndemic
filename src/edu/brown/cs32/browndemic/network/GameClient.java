@@ -33,7 +33,7 @@ public class GameClient implements Runnable{
         _output.flush();
         _client = new GameClientThread(this, _socket);
         _world = w;
-        _thread = new Thread(this);
+        _thread = new Thread(this, "Client");
         String name = _world.getName();
         String IP = InetAddress.getLocalHost().getHostAddress();
         LobbyMember lm = new LobbyMember(name, IP);

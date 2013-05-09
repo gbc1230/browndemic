@@ -61,7 +61,6 @@ public class InfoSender extends Thread{
                 startGame();
                 _server.stopAccepting();
                 for (int i = 0; i < _clients.size(); i++){
-                	System.out.println("Sending a collect...");
                 	CollectDiseases temp = new CollectDiseases(i, world);
                 	_clients.get(i).sendMessage(temp);
                 }
@@ -71,12 +70,10 @@ public class InfoSender extends Thread{
             ServerWorld w = _world.getNextCommand();
             if (w == null)
                 continue;
-            synchronized(_clients){
-	            WorldOutput wo = new WorldOutput(w, w.getTransmission());
-	            for (GameServerThread thread : _clients){
-	                thread.sendMessage(wo);
-	            }
-            }
+	        WorldOutput wo = new WorldOutput(w, w.getTransmission());
+	        for (GameServerThread thread : _clients){
+	            thread.sendMessage(wo);
+	        }
         }
     }
     

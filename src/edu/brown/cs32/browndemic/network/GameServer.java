@@ -9,6 +9,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import edu.brown.cs32.browndemic.world.ServerWorld;
@@ -36,8 +37,8 @@ public class GameServer implements Runnable{
     public GameServer(ServerWorld w, int port) throws IOException{
         _server = new ServerSocket(port);
         _server.setSoTimeout(5000);
-        _thread = new Thread(this);
-        _clients = new ArrayList<GameServerThread>();
+        _thread = new Thread(this, "Server");
+        _clients = Collections.synchronizedList(new ArrayList<GameServerThread>());
         _accepting = true;
         _world = w;
         _sender = new InfoSender(_clients, _world, this);
@@ -95,7 +96,7 @@ public class GameServer implements Runnable{
      * @throws java.io.IOException
      */
     public synchronized void handle(int ID, GameData gd) throws IOException, ClassNotFoundException{
-        String id = gd.getID();
+    	String id = gd.getID();
         int client = findClient(ID);
         if (id.equals("P")){
             PerkInput pi = (PerkInput)gd;
@@ -126,6 +127,7 @@ public class GameServer implements Runnable{
         }
         //new lobby member
         else if (id.equals("LM")){
+        	System.out.println("adding lobby member");
             LobbyMember lm = (LobbyMember)gd;
             _world.addLobbyMember(lm);
         }
@@ -156,31 +158,29 @@ public class GameServer implements Runnable{
      * @throws java.io.IOException
      */
     public synchronized void remove(int ID){
-    	synchronized(_clients){
-	    	int pos;
-	    	if (ID > 1000)
-	    		pos = findClient(ID);
-	    	else 
-	    		pos = ID;
-	        if (pos != -1 && pos < _clients.size()){
-	            GameServerThread toKill = _clients.get(pos);
-	            _clients.remove(toKill);
-	            String name = "";
-	            if (_world.hasStarted()){
-		            name = _world.getDiseases().get(pos).getName();
+    	int pos;
+    	if (ID > 1000)
+    		pos = findClient(ID);
+    	else 
+    		pos = ID;
+        if (pos != -1 && pos < _clients.size()){
+            GameServerThread toKill = _clients.get(pos);
+            _clients.remove(toKill);
+            String name = "";
+            if (_world.hasStarted()){
+	            name = _world.getDiseases().get(pos).getName();
+            }
+            _world.removeDisease(pos);
+            toKill.close();
+            if (_world.hasStarted()){
+	            DCMessage msg = new DCMessage(name, pos);            
+	            for (GameServerThread gst : _clients){
+	                gst.sendMessage(msg);
 	            }
-	            _world.removeDisease(pos);
-	            toKill.close();
-	            if (_world.hasStarted()){
-		            DCMessage msg = new DCMessage(name, pos);            
-		            for (GameServerThread gst : _clients){
-		                gst.sendMessage(msg);
-		            }
-	            }
-	        }
-	        if (_clients.size() == 0)
-	        	stop();
-    	}
+            }
+        }
+        if (_clients.size() == 0)
+        	stop();
     }
 
     /**

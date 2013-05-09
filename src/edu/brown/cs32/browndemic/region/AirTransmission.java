@@ -12,7 +12,7 @@ import edu.brown.cs32.browndemic.world.Airport;
 /**
  *
  * @author ckilfoyl
- * This class represents a transmission of a disease from one region to another
+ * This class represents a flight form one region to another
  * by plane
  */
 public class AirTransmission implements Serializable{
@@ -20,14 +20,17 @@ public class AirTransmission implements Serializable{
 	
 	private Airport _start, _end;
     private int _disease;
+    private boolean _infected;
 
-    public AirTransmission(Airport start, Airport end, int disease){
+    public AirTransmission(Airport start, Airport end, int disease, boolean infected){
         _start = start;
         _end = end;
         _disease = disease;
+        _infected = infected;
     }
 
     public Airport getStart(){return _start;}
     public Airport getEnd(){return _end;}
     public int getDisesase(){return _disease;}
+    public boolean isInfected(){return _infected;}
 }

@@ -5,9 +5,9 @@
 package edu.brown.cs32.browndemic.world;
 
 import edu.brown.cs32.browndemic.disease.Bacteria;
+
 import java.util.List;
 import java.util.Queue;
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import edu.brown.cs32.browndemic.disease.Disease;
@@ -68,6 +68,7 @@ public class ClientWorld implements ChatServer, World{
     }
     
     public void setLobby(List<LobbyMember> lobby){
+    	System.out.println("got a lobby: " + lobby);
         _lobby = lobby;
     }
     
@@ -128,7 +129,6 @@ public class ClientWorld implements ChatServer, World{
     }
     
     public void getKicked(){
-    	System.out.println("booted");
     	_kicked = true;
     }
     
