@@ -30,6 +30,7 @@ import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.plaf.basic.BasicMenuBarUI;
 
 import edu.brown.cs32.browndemic.ui.Resources;
@@ -380,7 +381,6 @@ public class InGameTitleBar extends TitleBar implements ActionListener, ChangeLi
 			if (fc.showSaveDialog(Utils.getParentFrame(this)) == JFileChooser.APPROVE_OPTION) {
 				File f = fc.getSelectedFile();
 				WorldSP world = (WorldSP)_world;
-				//save the world to a file
 				try{
 					OutputStream file = new FileOutputStream(f);
 				    OutputStream buffer = new BufferedOutputStream(file);
