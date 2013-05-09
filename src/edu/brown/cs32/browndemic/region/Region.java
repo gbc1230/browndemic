@@ -146,7 +146,7 @@ public class Region implements Serializable{
         updateCures();
         naturalDisaster();
         for (Disease d : _diseases) {
-            if (null != d) {
+            if (null != d && getInfected().get(d.getID()) != 0) {
                 updateDoubleTimes(d);
                 updateAwareness(d,getAwareIncrement(d));
                 if(_hasCure[d.getID()])
