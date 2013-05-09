@@ -195,6 +195,7 @@ public class InformationBar extends BrowndemicPanel implements ActionListener, C
 			_yours.setFont(Fonts.NORMAL_TEXT);
 			_yours.setBackground(Colors.MENU_BACKGROUND);
 			_yours.setForeground(Colors.RED_TEXT);
+			_yours.addActionListener(this);
 			group2.add(_yours);
 			_layers.add(_yours);
 	
@@ -202,6 +203,7 @@ public class InformationBar extends BrowndemicPanel implements ActionListener, C
 			_total.setFont(Fonts.NORMAL_TEXT);
 			_total.setBackground(Colors.MENU_BACKGROUND);
 			_total.setForeground(Colors.RED_TEXT);
+			_total.addActionListener(this);
 			group2.add(_total);
 			_layers.add(_total);
 		}
