@@ -44,7 +44,6 @@ public class SinglePlayerMenu extends UIPanel implements DocumentListener {
 
 	private static final long serialVersionUID = -1231229219691042468L;
 	
-	private BrowndemicFrame _parent;
 	private JTextField _diseaseName;
 	private SelectButton _disease1, _disease2, _disease3;
 	private JLabel _start, _load;

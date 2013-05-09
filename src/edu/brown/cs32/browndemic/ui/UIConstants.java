@@ -189,7 +189,7 @@ public class UIConstants {
 		public static final String PERK_COLD1 = PERKS_PATH + "cold1.png";
 		public static final String PERK_COLD2 = PERKS_PATH + "cold2.png";
 		public static final String PERK_COLD3 = PERKS_PATH + "cold3.png";
-		public static final String PERK_CRACKED_HEAD = PERKS_PATH + "cracked_head.png";
+		public static final String PERK_CRACKED_HEAD = PERKS_PATH + "crackedhead.png";
 		public static final String PERK_DRY1 = PERKS_PATH + "dry1.png";
 		public static final String PERK_DRY2 = PERKS_PATH + "dry2.png";
 		public static final String PERK_DRY3 = PERKS_PATH + "dry3.png";
