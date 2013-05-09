@@ -191,7 +191,7 @@ public class DiseaseAndPerkTest {
         } catch (IllegalAccessException ex) {
         	assertTrue(false);
         }
-        assertTrue(b.getOwnedPerks().get(0).getImage().equals("perk_headache.png"));
+        assertTrue(b.getOwnedPerks().get(0).getImage().equals("skull.png"));
         assertTrue(b.getPoints() == 1000 - b.getPerks()[4].getCost());
         assertTrue(b.getAvailablePerks().size() == 15);
         assertTrue(b.getOwnedPerks().size() == 1);
@@ -272,6 +272,12 @@ public class DiseaseAndPerkTest {
         }
         assertTrue(b.getAvailablePerks().size() == 15);
         assertTrue(b.getOwnedPerks().size() == 0);
+        try {
+            b.buyPerk(20);
+            assertTrue(true);
+        } catch (IllegalAccessException ex) {
+            assertTrue(false);
+        }
     }
 
 }

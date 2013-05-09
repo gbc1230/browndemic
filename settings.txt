@@ -1,0 +1,4 @@
+name=ChetLovesCock
+fps=false
+caching=true
+port=6000
