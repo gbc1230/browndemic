@@ -128,7 +128,6 @@ public class ClientWorld implements ChatServer, World{
     }
     
     public void getKicked(){
-    	System.out.println("booted");
     	_kicked = true;
     }
     

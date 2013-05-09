@@ -95,58 +95,60 @@ public class GameServer implements Runnable{
      * @throws java.io.IOException
      */
     public synchronized void handle(int ID, GameData gd) throws IOException, ClassNotFoundException{
-        String id = gd.getID();
-        int client = findClient(ID);
-        if (id.equals("P")){
-            PerkInput pi = (PerkInput)gd;
-            _world.addPerk(pi.getDiseaseID(), pi.getPerkID(), pi.isBuying());
-        }
-        //chat message
-        else if (id.equals("M")){
-            for (int i = 0; i < _clients.size(); i++){
-                if (i != client){
-                    GameServerThread c = _clients.get(i);
-                    c.sendMessage(gd);
-                }
-            }
-        }
-        //add a new disease
-        else if (id.equals("DA")){
-            DiseaseAdder da = (DiseaseAdder)gd;
-            _world.addDisease(da.getDisease(), client);
-        }
-        //introduce a new disease to a region
-        else if (id.equals("DI")){
-            DiseaseIntroducer di = (DiseaseIntroducer)gd;
-            _world.introduceDisease(di.getRegion(), di.getDisease());
-        }
-        //user  has picked a new disease at the start screen
-        else if (id.equals("DP")){
-            _world.changeDiseasesPicked(client);
-        }
-        //new lobby member
-        else if (id.equals("LM")){
-            LobbyMember lm = (LobbyMember)gd;
-            _world.addLobbyMember(lm);
-        }
-        //someone has left the game
-        else if (id.equals("GL")){
-        	if (client == 0)
-        		stop();
-        	if (client != -1)
-        		_world.removePlayer(client);
-        }
-        else if (id.equals("NC")){
-        	NameChange nc = (NameChange)gd;
-        	_world.updateName(nc.getName(), client);
-        }
-        else if (id.equals("EG")){
-        	EndGame eg = (EndGame)gd;
-        	boolean w = eg.isWinner();
-        	if (w)
-        		_world.endGame(client);
-        	else
-        		_world.endGame(-1);
+        synchronized(_clients){
+	    	String id = gd.getID();
+	        int client = findClient(ID);
+	        if (id.equals("P")){
+	            PerkInput pi = (PerkInput)gd;
+	            _world.addPerk(pi.getDiseaseID(), pi.getPerkID(), pi.isBuying());
+	        }
+	        //chat message
+	        else if (id.equals("M")){
+	            for (int i = 0; i < _clients.size(); i++){
+	                if (i != client){
+	                    GameServerThread c = _clients.get(i);
+	                    c.sendMessage(gd);
+	                }
+	            }
+	        }
+	        //add a new disease
+	        else if (id.equals("DA")){
+	            DiseaseAdder da = (DiseaseAdder)gd;
+	            _world.addDisease(da.getDisease(), client);
+	        }
+	        //introduce a new disease to a region
+	        else if (id.equals("DI")){
+	            DiseaseIntroducer di = (DiseaseIntroducer)gd;
+	            _world.introduceDisease(di.getRegion(), di.getDisease());
+	        }
+	        //user  has picked a new disease at the start screen
+	        else if (id.equals("DP")){
+	            _world.changeDiseasesPicked(client);
+	        }
+	        //new lobby member
+	        else if (id.equals("LM")){
+	            LobbyMember lm = (LobbyMember)gd;
+	            _world.addLobbyMember(lm);
+	        }
+	        //someone has left the game
+	        else if (id.equals("GL")){
+	        	if (client == 0)
+	        		stop();
+	        	if (client != -1)
+	        		_world.removePlayer(client);
+	        }
+	        else if (id.equals("NC")){
+	        	NameChange nc = (NameChange)gd;
+	        	_world.updateName(nc.getName(), client);
+	        }
+	        else if (id.equals("EG")){
+	        	EndGame eg = (EndGame)gd;
+	        	boolean w = eg.isWinner();
+	        	if (w)
+	        		_world.endGame(client);
+	        	else
+	        		_world.endGame(-1);
+	        }
         }
     }
 
