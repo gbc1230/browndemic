@@ -50,7 +50,6 @@ public class MultiplayerLobby extends UIPanel {
 	
 	public MultiplayerLobby(boolean isHost, ClientWorld cli, ServerWorld ser) {
 		super();
-		System.out.println("constructing lobby");
 		_isHost = isHost;
         _thisWorld = cli;
         _serverWorld = ser;
@@ -208,7 +207,6 @@ public class MultiplayerLobby extends UIPanel {
 	@Override
 	public void setupForDisplay() {
 		update();
-		System.out.println("TEST");
 		if (_timer == null) {
 			_timer = new Timer(1000/4, new ActionListener() {
 				@Override

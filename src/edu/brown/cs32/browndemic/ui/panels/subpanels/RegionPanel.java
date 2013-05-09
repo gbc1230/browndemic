@@ -205,8 +205,6 @@ public class RegionPanel extends BrowndemicPanel implements ListSelectionListene
 
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
-		//_table.clearSelection();
-		System.out.println(e.getLastIndex());
 	}
 	
 	public void stop() {

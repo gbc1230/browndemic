@@ -22,7 +22,6 @@ import javax.swing.event.DocumentListener;
 import edu.brown.cs32.browndemic.disease.Bacteria;
 import edu.brown.cs32.browndemic.disease.Parasite;
 import edu.brown.cs32.browndemic.disease.Virus;
-import edu.brown.cs32.browndemic.ui.BrowndemicFrame;
 import edu.brown.cs32.browndemic.ui.Resources;
 import edu.brown.cs32.browndemic.ui.Settings;
 import edu.brown.cs32.browndemic.ui.UIConstants.Colors;
@@ -188,7 +187,6 @@ public class SinglePlayerMenu extends UIPanel implements DocumentListener {
 			
 			if (fc.showOpenDialog(Utils.getParentFrame(this)) == JFileChooser.APPROVE_OPTION) {
 				File f = fc.getSelectedFile();
-				System.out.println("LOAD FROM: " + f.getName());
 				//load the file
 				WorldSP world = null;
 				try{
