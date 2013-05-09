@@ -68,7 +68,6 @@ public class ClientWorld implements ChatServer, World{
     }
     
     public void setLobby(List<LobbyMember> lobby){
-    	System.out.println("got a lobby: " + lobby);
         _lobby = lobby;
     }
     

@@ -60,6 +60,7 @@ public class GameServerThread extends Thread{
             }
             catch(IOException e){
             	System.out.println("IO at server thread");
+            	e.printStackTrace();
                 _server.remove(_ID);
                 break;
             }

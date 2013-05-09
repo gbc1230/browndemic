@@ -127,7 +127,6 @@ public class GameServer implements Runnable{
         }
         //new lobby member
         else if (id.equals("LM")){
-        	System.out.println("adding lobby member");
             LobbyMember lm = (LobbyMember)gd;
             _world.addLobbyMember(lm);
         }
