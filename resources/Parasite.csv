@@ -1,8 +1,8 @@
 ID,Name,Description,Cost,Sell,Infectivity,Lethality,Visibility,Heat Resistance,Cold Resistance,Wet Resistance,Dry Resistance,Medicinal Resistance,Water Transmission,Air Transmission,Previous,Next,Image
-0,Nausea,Nausea allows your disease to spread through mouth to mouth contact and draws some attention to it.,3,1,2,1,1,0,0,0,0,0,0,0,,4,stomach.png
+0,Nausea,Nausea allows your disease to spread through mouth to mouth contact and draws some attention to it.,3,1,2,1,1,0,0,0,0,0,0,0,,4and6,stomach.png
 1,Rash,People avoid the infected more but they are more contagious. And more visible.,3,2,1,1,4,0,0,0,0,0,0,0,,8and9,simplebody.png
 2,Indigestion,Problems in the digestive tract can be uncomfortable and negatively imact quality of life.,3,1,2,1,1,0,0,0,0,0,0,0,,7and4,stomach.png
-3,Fatigue,Fatigue weakens the immune system of the infected.,3,2,0,1,1,0,0,0,0,0,0,0,,11and18,crackedhead.png
+3,Fatigue,Fatigue weakens the immune system of the infected.,3,2,0,1,1,0,0,0,0,0,0,0,,11and18and12,crackedhead.png
 4,Vomiting,Vomiting brings a lot of attention but also can make the infected frail and weak.,6,3,5,5,5,0,0,0,0,0,0,0,2and0,10,stomach.png
 5,Anemia,Can lead to feelings of weakness and low blood levels.,3,1,0,1,1,0,0,0,0,0,0,0,,13,heart.png
 6,Fever,Fevers can be deadly.,6,2,2,4,3,0,0,0,0,0,0,0,0,22,body.png
