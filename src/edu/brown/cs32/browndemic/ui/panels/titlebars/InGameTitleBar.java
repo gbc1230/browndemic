@@ -380,7 +380,6 @@ public class InGameTitleBar extends TitleBar implements ActionListener, ChangeLi
 			if (fc.showSaveDialog(Utils.getParentFrame(this)) == JFileChooser.APPROVE_OPTION) {
 				File f = fc.getSelectedFile();
 				WorldSP world = (WorldSP)_world;
-				//save the world to a file
 				try{
 					OutputStream file = new FileOutputStream(f);
 				    OutputStream buffer = new BufferedOutputStream(file);

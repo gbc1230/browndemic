@@ -20,9 +20,14 @@ import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.awt.image.ConvolveOp;
 import java.awt.image.Kernel;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.security.MessageDigest;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -291,9 +296,28 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 
 		@Override
 		protected Void doInBackground() throws Exception {
+			boolean recache = false;
 			if (Settings.getBoolean(Settings.CACHING)) {
 				File cache = new File("cache");
 				cache.mkdir();
+				File checksum = new File("cache/checksum");
+				try {
+					checksum.createNewFile();
+					byte[] in = Files.readAllBytes(checksum.toPath());
+						
+					MessageDigest md5 = MessageDigest.getInstance("MD5");
+					try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+						ImageIO.write(_regions, "png", baos);
+						baos.flush();
+						md5.update(baos.toByteArray());
+						byte[] hash = md5.digest();
+						if (!Arrays.equals(in, hash)) {
+							recache = true;
+							Files.write(checksum.toPath(), hash);
+						}
+					}
+				} catch (IOException e) {
+				}
 			}
 			
 			for (int x = 0; x < _regions.getWidth(); x++) {
@@ -304,7 +328,7 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 						_highlights.put(id, 0f);
 						File disease = new File("cache/disease" + id + ".png");
 						File highlight = new File("cache/highlight" + id + ".png");
-						if (Settings.getBoolean(Settings.CACHING) && disease.exists() && highlight.exists()) {
+						if (!recache && Settings.getBoolean(Settings.CACHING) && disease.exists() && highlight.exists()) {
 							// ImageIO.read is going to give us the wrong format making rendering way too slow
 							BufferedImage diseaseFromFile = ImageIO.read(disease);
 							BufferedImage highlightFromFile = ImageIO.read(highlight);

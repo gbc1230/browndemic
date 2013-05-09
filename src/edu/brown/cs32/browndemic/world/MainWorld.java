@@ -70,7 +70,7 @@ public abstract class MainWorld implements World, Runnable, Serializable {
 	protected int _numDiseasesPicked, _numRegionsPicked;
 
 	// airports in this world
-	protected List<Airport> _airports;
+	protected List<Airport> _airports, _openAirports;
 
 	// finals for setting various speeds
 	protected final long _SPEED1 = (1000L / 3);
@@ -86,6 +86,7 @@ public abstract class MainWorld implements World, Runnable, Serializable {
 	public MainWorld() {
 		_regions = new ArrayList<>();
 		_airports = new ArrayList<>();
+		_openAirports = new ArrayList<>();
 		_regIndex = new HashMap<>();
 		_diseases = new ArrayList<>();
 		_kills = new ArrayList<>();
@@ -146,6 +147,7 @@ public abstract class MainWorld implements World, Runnable, Serializable {
 
 	public void addAirport(Airport a) {
 		_airports.add(a);
+		_openAirports.add(a);
 	}
 
 	/**
@@ -462,17 +464,22 @@ public abstract class MainWorld implements World, Runnable, Serializable {
 	}
 
 	/**
-	 * Generates some random flights
+	 * Generates some random flights and updates airports
 	 */
 	public void generateFlights() {
-		if ((int) (Math.random() * 65) == 0) {
-			int rand1 = (int) (Math.random() * _airports.size());
-			Airport a = _airports.get(rand1);
+		for (Airport a : _openAirports){
+			if (!a.isOpen()){
+				_openAirports.remove(a);
+			}
+		}
+		if (_openAirports.size() > 1 && (int) (Math.random() * 65) == 0) {
+			int rand1 = (int) (Math.random() * _openAirports.size());
+			Airport a = _openAirports.get(rand1);
 			Airport b;
 			while (true) {
-				int rand2 = (int) (Math.random() * _airports.size());
+				int rand2 = (int) (Math.random() * _openAirports.size());
 				if (rand1 != rand2) {
-					b = _airports.get(rand2);
+					b = _openAirports.get(rand2);
 					break;
 				}
 			}

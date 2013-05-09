@@ -145,7 +145,7 @@ public class UpgradePanel extends BrowndemicPanel {
 		info.add(_perkBonus);
 		info.add(_buysell);
 		info.add(_points);
-		info.add(_addPoint);
+		//info.add(_addPoint);
 		
 		infoContainer.add(info);
 		
