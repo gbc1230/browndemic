@@ -461,7 +461,7 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 		AirTransmission at;
 		if ((at = _world.getTransmission()) != null) {
 			Airport src = at.getStart(); Airport dest = at.getEnd();
-			addAirplane(true, src.getX(), src.getY(), dest.getX(), dest.getY());
+			addAirplane(at.isInfected(), src.getX(), src.getY(), dest.getX(), dest.getY());
 		}
 	}
 	
@@ -570,11 +570,9 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 			dead = r.getKilled().get(_disease);
 			cured = r.getCured().get(_disease);
 			tinfected = r.getTotalInfectedNoOverlap();
+			tcured = r.getTotalCuredNoOverlap();
 			for (long l : r.getKilled()) {
 				tdead += l;
-			}
-			for (long l : r.getCured()) {
-				tcured += l;
 			}
 			healthy = r.getHealthy();
 			total = r.getPopulation();

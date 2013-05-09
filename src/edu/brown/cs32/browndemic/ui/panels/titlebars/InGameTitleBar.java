@@ -26,7 +26,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JRadioButtonMenuItem;
-import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
@@ -49,6 +48,7 @@ import edu.brown.cs32.browndemic.ui.components.WorldMap.Layer;
 import edu.brown.cs32.browndemic.ui.panels.DragWindow;
 import edu.brown.cs32.browndemic.ui.panels.menus.MainMenu;
 import edu.brown.cs32.browndemic.ui.panels.subpanels.InformationBar;
+import edu.brown.cs32.browndemic.ui.panels.subpanels.RegionPanel;
 import edu.brown.cs32.browndemic.world.World;
 import edu.brown.cs32.browndemic.world.WorldSP;
 
@@ -68,13 +68,15 @@ public class InGameTitleBar extends TitleBar implements ActionListener, ChangeLi
 	private WorldMap _wm;
 	private InformationBar _ib;
 	private JMenuBar menuBar;
+	private RegionPanel _rp;
 	
-	public InGameTitleBar(World world, boolean singlePlayer, WorldMap wm, InformationBar ib) {
+	public InGameTitleBar(World world, boolean singlePlayer, WorldMap wm, InformationBar ib, RegionPanel rp) {
 		super();
 		_world = world;
 		_wm = wm;
 		_multi = !singlePlayer;
 		_ib = ib;
+		_rp = rp;
 		makeUI();
 	}
 	
@@ -231,7 +233,6 @@ public class InGameTitleBar extends TitleBar implements ActionListener, ChangeLi
 		_layers.add(_wealth);
 		
 		_layers.addSeparator();
-		_layers.add(new JSeparator());
 		
 		UIManager.put("CheckBoxMenuItem.checkIcon", new MenuButtonItemIcon(Resources.getImage(Images.UNCHECKED), Resources.getImage(Images.CHECKED)));
 		
@@ -431,6 +432,7 @@ public class InGameTitleBar extends TitleBar implements ActionListener, ChangeLi
 		} else if (e.getSource() == _yours || e.getSource() == _total) {
 			_wm.setTotalData(_total.isSelected());
 			_ib.setYours(_yours.isSelected());
+			_rp.setTotal(_total.isSelected());
 		}
 	}
 

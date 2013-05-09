@@ -13,8 +13,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.RowSorter.SortKey;
 import javax.swing.Timer;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
@@ -24,7 +22,7 @@ import edu.brown.cs32.browndemic.ui.UIConstants.Fonts;
 import edu.brown.cs32.browndemic.ui.panels.BrowndemicPanel;
 import edu.brown.cs32.browndemic.world.World;
 
-public class RegionPanel extends BrowndemicPanel implements ListSelectionListener {
+public class RegionPanel extends BrowndemicPanel {
 
 	private static final long serialVersionUID = -8537192795533968336L;
 
@@ -33,10 +31,13 @@ public class RegionPanel extends BrowndemicPanel implements ListSelectionListene
 	private DefaultTableModel _tmhealthy, _tminfected, _tmdead;
 	private TableRowSorter<DefaultTableModel> _shealthy, _sinfected, _sdead;
 	private Timer _timer;
+	private boolean _total = false;
+	private int _disease;
 	
-	public RegionPanel(World w) {
+	public RegionPanel(World w, int disease) {
 		super();
 		_world = w;
+		_disease = disease;
 		makeUI();
 		_timer = new Timer(1000/3, new ActionListener() {
 			@Override
@@ -81,7 +82,6 @@ public class RegionPanel extends BrowndemicPanel implements ListSelectionListene
 		_healthy.setRowSorter(_shealthy);
 		_healthy.getTableHeader().setReorderingAllowed(false);
 		_healthy.getTableHeader().setResizingAllowed(false);
-		_healthy.getSelectionModel().addListSelectionListener(this);
 		_healthy.setRowSelectionAllowed(false);
 
 		_infected = new JTable(_tminfected);
@@ -94,7 +94,6 @@ public class RegionPanel extends BrowndemicPanel implements ListSelectionListene
 		_infected.setRowSorter(_sinfected);
 		_infected.getTableHeader().setReorderingAllowed(false);
 		_infected.getTableHeader().setResizingAllowed(false);
-		_infected.getSelectionModel().addListSelectionListener(this);
 		_infected.setRowSelectionAllowed(false);
 
 		_dead = new JTable(_tmdead);
@@ -107,7 +106,6 @@ public class RegionPanel extends BrowndemicPanel implements ListSelectionListene
 		_dead.setRowSorter(_sdead);
 		_dead.getTableHeader().setReorderingAllowed(false);
 		_dead.getTableHeader().setResizingAllowed(false);
-		_dead.getSelectionModel().addListSelectionListener(this);
 		_dead.setRowSelectionAllowed(false);
 		
 		JPanel tables = new JPanel();
@@ -155,15 +153,30 @@ public class RegionPanel extends BrowndemicPanel implements ListSelectionListene
 		
 		try {
 			for (Region r : _world.getRegions()) {
-				long killed = 0;
-				for (Long l : r.getKilled())
-					killed += l;
-				if (killed == r.getPopulation()) {
-					dead.add(r.getName());
-				} else if (r.getTotalInfected() > 0) {
-					infected.add(r.getName());
+				if (_total) {
+					long killed = 0;
+					for (Long l : r.getKilled())
+						killed += l;
+					if (killed == r.getPopulation()) {
+						dead.add(r.getName());
+					} else if (r.getTotalInfected() > 0) {
+						infected.add(r.getName());
+					} else {
+						healthy.add(r.getName());
+					}
 				} else {
-					healthy.add(r.getName());
+					try {
+						long killed = 0;
+						for (Long l : r.getKilled())
+							killed += l;
+						if (killed == r.getPopulation()) {
+							dead.add(r.getName());
+						} else if (r.getInfected().get(_disease) > 0) {
+							infected.add(r.getName());
+						} else {
+							healthy.add(r.getName());
+						}
+					} catch (IndexOutOfBoundsException e) {}
 				}
 			}
 		} catch (NullPointerException e) {
@@ -202,9 +215,10 @@ public class RegionPanel extends BrowndemicPanel implements ListSelectionListene
 		_infected.setRowSorter(_sinfected);
 		_dead.setRowSorter(_sdead);
 	}
-
-	@Override
-	public void valueChanged(ListSelectionEvent e) {
+	
+	public void setTotal(boolean b) {
+		_total = b;
+		update();
 	}
 	
 	public void stop() {

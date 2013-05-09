@@ -138,7 +138,7 @@ public class GameMenu extends UIPanel implements ChangeListener {
 			_botright.addTab("Players", _lb = new Leaderboard(_world));
 		}
 		_botright.addTab("News", _news = new NewsPanel(_world, _ml));
-		_botright.addTab("Regions", _regions =  new RegionPanel(_world));
+		_botright.addTab("Regions", _regions =  new RegionPanel(_world, _disease));
 		for (int i = 0; i < _botright.getTabCount(); i++) {
 			_botright.setBackgroundAt(i, Colors.MENU_BACKGROUND);
 		}
@@ -153,7 +153,7 @@ public class GameMenu extends UIPanel implements ChangeListener {
 			if (_world.hostDisconnected()) {
 				Utils.getParentFrame(this).setPanel(new MainMenu());
 			}
-			Utils.getParentFrame(this).setTitle(_igt = new InGameTitleBar(_world, !_multiplayer, _map, _info));
+			Utils.getParentFrame(this).setTitle(_igt = new InGameTitleBar(_world, !_multiplayer, _map, _info, _regions));
 			_timer = new Timer(1000/3, new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
