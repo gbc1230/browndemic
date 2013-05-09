@@ -1,7 +1,7 @@
 ID,Name,Description,Cost,Sell,Infectivity,Lethality,Visibility,Heat Resistance,Cold Resistance,Wet Resistance,Dry Resistance,Medicinal Resistance,Water Transmission,Air Transmission,Previous,Next,Image
 0,Sneezing,Sneezing allows your disease to spread easier but also brings it some attention.,2,1,3,0,1,0,0,0,0,0,0,0,,7,lung.png
 1,Coughing ,Coughing allows your disease to spread easier but also brings it some attention.,3,1,5,0,2,0,0,0,0,0,0,0,,13,lung.png
-2,Nausea,Nausea allows your disease to spread through mouth to mouth contact and draws some attention to it.,2,1,1,1,1,0,0,0,0,0,0,0,,5,stomach.png
+2,Nausea,Nausea allows your disease to spread through mouth to mouth contact and draws some attention to it.,2,1,1,1,1,0,0,0,0,0,0,0,,5and9,stomach.png
 3,Rash,People avoid the infected more but they are more contagious. And more visible.,3,2,3,1,4,0,0,0,0,0,0,0,,11and12,simplebody.png
 4,Headache,Headaches are annoying and painful. ,3,1,0,1,1,0,0,0,0,0,0,0,,6,skull.png
 5,Vomiting,Vomiting brings a lot of attention but also can make the infected frail and weak.,6,3,5,5,5,0,0,0,0,0,0,0,2,,stomach.png

@@ -198,6 +198,8 @@ public class Bacteria extends Disease{
         this._wetResistance -= soldPerk.getWetRes();
         this._dryResistance -= soldPerk.getDryRes();
         this._medResistance -= soldPerk.getMedRes();
+        this._waterTrans -= soldPerk.getWaterTrans();
+        this._airTrans -= soldPerk.getWaterTrans();
         this._points += soldPerk.getSellPrice();
         this._numPointsEarned+=soldPerk.getSellPrice();
     }
@@ -241,6 +243,8 @@ public class Bacteria extends Disease{
         this._wetResistance -= soldPerk.getWetRes();
         this._dryResistance -= soldPerk.getDryRes();
         this._medResistance -= soldPerk.getMedRes();
+        this._waterTrans -= soldPerk.getWaterTrans();
+        this._airTrans -= soldPerk.getWaterTrans();
         this._points += soldPerk.getSellPrice();
         this._numPointsEarned+=soldPerk.getSellPrice();
 
