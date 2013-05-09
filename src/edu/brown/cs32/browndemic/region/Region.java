@@ -37,9 +37,9 @@ public class Region implements Serializable{
     private static final double _INFSCALE = 1; //DEFAULT: 3//how much infection scales with infectivity
     
     private double[] _lethDoubleTime;
-    private static final int _LETHTIMESCALE = 120; //DEFAULT: 3//~~ticks to half infected die
-    private static final double _LETHSCALE = 5; //DEFAULT: 3//how much death scales with lethality
-    private static final double _LETHMAXFACTOR = 2; //DEFAULT: 40//increase to scale down death at max lethality
+    private static final int _LETHTIMESCALE = 100; //DEFAULT: 3//~~ticks to half infected die
+    private static final double _LETHSCALE = 10; //DEFAULT: 3//how much death scales with lethality
+    private static final double _LETHMAXFACTOR = 1; //DEFAULT: 40//increase to scale down death at max lethality
     private static final double _CRITICALLETHRATIO = .1; //DEFAULT: .1//Lethaliy/max before deaths occur
 
     private static final int _PLANEFREQ = 240; //DEFAULT: 240//ticks between flights
@@ -48,8 +48,8 @@ public class Region implements Serializable{
     
     private static final double _CUREPERCENT = .002; //DEFAULT: .005//Fraction of population to cure per tick
     private static double _AWAREMAXSCALE = 4; //DEFAULT: 5//multiplier on max awareness before close ports
-    private static final double _CUREFRAC = 1.3; //DEFAULT: 2//at awareMax/_CUREFRAC, begin curing
-    private static final double _NOTIFYFRAC = 6; //DEFAULT: 5//Increase neighbors awareness by this.awareness/_NOTIFYFRAC
+    private static final double _CUREFRAC = 1.5; //DEFAULT: 2//at awareMax/_CUREFRAC, begin curing
+    private static final double _NOTIFYFRAC = 5; //DEFAULT: 5//Increase neighbors awareness by this.awareness/_NOTIFYFRAC
     
     private static final int _NATTYDFREQ = 64800 + 32400; //DEFAULT: 64800// frequency of natural disasters
 
