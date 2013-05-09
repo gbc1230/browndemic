@@ -77,7 +77,6 @@ public class WorldSP extends MainWorld{
                 continue;
             }
         }
-        _waitTime = 0;
         while (!_gameOver){
             try{
                 Thread.sleep(1);
