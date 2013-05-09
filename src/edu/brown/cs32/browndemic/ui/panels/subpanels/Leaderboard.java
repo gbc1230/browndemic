@@ -3,6 +3,7 @@ package edu.brown.cs32.browndemic.ui.panels.subpanels;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.NumberFormat;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -87,7 +88,7 @@ public class Leaderboard extends BrowndemicPanel {
 		_table.setRowSorter(_sorter);
 	}
 	
-	private class SortableNumberString implements Comparable<Long> {
+	private class SortableNumberString implements Comparable<SortableNumberString> {
 		private Long n;
 		private String s;
 		
@@ -97,8 +98,8 @@ public class Leaderboard extends BrowndemicPanel {
 		}
 
 		@Override
-		public int compareTo(Long o) {
-			return n.compareTo(o);
+		public int compareTo(SortableNumberString o) {
+			return n.compareTo(o.n);
 		}
 		@Override
 		public String toString() {
