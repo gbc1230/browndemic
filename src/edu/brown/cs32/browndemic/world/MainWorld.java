@@ -561,6 +561,8 @@ public abstract class MainWorld implements World, Runnable, Serializable {
 				if (infBench < 100000000L){
 					newbench = infBench * 10;
 				}
+				else if (infBench == 150000000L)
+					break;
 				else
 					newbench = 150000000L;
 				_infectBenchMarks.set(i, newbench);
