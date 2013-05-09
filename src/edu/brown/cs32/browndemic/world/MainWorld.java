@@ -8,6 +8,7 @@ package edu.brown.cs32.browndemic.world;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -467,9 +468,9 @@ public abstract class MainWorld implements World, Runnable, Serializable {
 	 * Generates some random flights and updates airports
 	 */
 	public void generateFlights() {
-		for (Airport a : _openAirports){
-			if (!a.isOpen()){
-				_openAirports.remove(a);
+		for (Iterator<Airport> it = _openAirports.iterator(); it.hasNext(); ) {
+			if (!it.next().isOpen()) {
+				it.remove();
 			}
 		}
 		if (_openAirports.size() > 1 && (int) (Math.random() * 65) == 0) {
