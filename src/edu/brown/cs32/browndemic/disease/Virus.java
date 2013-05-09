@@ -113,7 +113,7 @@ public class Virus extends Disease{
     public void randomPerkEvents(){
         if(Math.random() < .001111)
             try {
-                this.buyPerkWithoutPay(this.getAvailablePerks().get(0).getID());
+                this.buyPerkWithoutPay(this.getAvailablePerks().get((int)(Math.random()*this.getAvailablePerks().size())).getID());
             } catch (IllegalAccessException ex) {}
         if(Math.random() < .001111){
         	this._numPointsEarned+=3;

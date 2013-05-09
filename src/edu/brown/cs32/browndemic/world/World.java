@@ -75,7 +75,13 @@ public interface World {
     public List<Disease> getDiseases();
     
     //tells me which diseases are cured
-    public List<Boolean> getCured();
+    public List<Boolean> getWhichCured();
+    
+    //tells me how many of each disease have been cured
+    public List<Long> getCured();
+    
+    //for specific disease
+    public long getCured(int d);
     
     //percentage to the cure
     public double getCurePercentage(int d);

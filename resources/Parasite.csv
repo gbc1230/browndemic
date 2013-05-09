@@ -3,19 +3,19 @@ ID,Name,Description,Cost,Sell,Infectivity,Lethality,Visibility,Heat Resistance,C
 1,Rash,People avoid the infected more but they are more contagious. And more visible.,3,2,1,1,4,0,0,0,0,0,0,0,,8and9,simplebody.png
 2,Indigestion,Problems in the digestive tract can be uncomfortable and negatively imact quality of life.,3,1,2,1,1,0,0,0,0,0,0,0,,7and4,stomach.png
 3,Fatigue,Fatigue weakens the immune system of the infected.,3,2,0,1,1,0,0,0,0,0,0,0,,11and18,crackedhead.png
-4,Vomiting,Vomiting brings a lot of attention but also can make the infected frail and weak.,6,3,5,5,5,0,0,0,0,0,0,0,2and0,,stomach.png
+4,Vomiting,Vomiting brings a lot of attention but also can make the infected frail and weak.,6,3,5,5,5,0,0,0,0,0,0,0,2and0,10,stomach.png
 5,Anemia,Can lead to feelings of weakness and low blood levels.,3,1,0,1,1,0,0,0,0,0,0,0,,13,heart.png
 6,Fever,Fevers can be deadly.,6,2,2,4,3,0,0,0,0,0,0,0,0,22,body.png
 7,Diarrhea ,Diarrhea and its dehydrating effects can be deadly and can spread infection to the water supply.,7,3,7,6,4,0,0,0,0,0,0,0,2,17,intestines.png
-8,Hives,Painful stinging rash that itches badly.,7,2,3,2,4,0,0,0,0,0,0,0,1,,simplebody.png
-9,Eczema,Red and inflammed skin that is itchy and dry.,7,2,3,2,4,0,0,0,0,0,0,0,1,,simplebody.png
+8,Hives,Painful stinging rash that itches badly.,7,2,3,2,4,0,0,0,0,0,0,0,1,19,simplebody.png
+9,Eczema,Red and inflammed skin that is itchy and dry.,7,2,3,2,4,0,0,0,0,0,0,0,1,19,simplebody.png
 10,Stomach Ulcer,Extremely painful hole in your stomach.,12,5,10,13,15,0,0,0,0,0,0,0,4,,stomach.png
 11,Depression,Weakens your immune system. Makes you sad.,7,2,-1,3,1,0,0,0,0,0,0,0,3,,crackedhead.png
 12,Anxiety,The fear and worry can make you tense and tired and too weak to fight infection.,7,2,0,3,1,0,0,0,0,0,0,0,3,14and18,crackedhead.png
 13,Heart Pain,This is discomforting and dangerous and a sign of worse symptoms to come.,7,3,0,2,1,0,0,0,0,0,0,0,5,15,heart.png
 14,Weight Gain,Comes from the parasite taking all essential nutrients and only leaving fats and sugars for you. Very dangerous.,9,3,0,10,5,0,0,0,0,0,0,0,12and5,15,body.png
 15,Tachycardia,Dangerous heart condition where the heart beats too fast. Can be deadly depending on speed and severity. ,15,3,0,20,30,0,0,0,0,0,0,0,13and14,16,heart.png
-16,Heart Attack,Heart attacks are very likely to be fatal.,25,10,0,40,60,0,0,0,0,0,0,0,15,,heart.png
+16,Heart Attack,Heart attacks are very likely to be fatal.,25,10,0,40,60,0,0,0,0,0,0,0,15,20,heart.png
 17,Hemorrhoids,Extremely painful anal structures which cause swelling and discomfort. ,14,5,5,3,14,0,0,0,0,0,0,0,7,,intestines.png
 18,Insomnia,Insomnia weakens immune system responses.,6,2,2,5,2,0,0,0,0,0,0,0,12,22,crackedhead.png
 19,Inflammation,Inflammation is harmful and disrupting for many bodily processes. Can be deadly,9,2,6,10,9,0,0,0,0,0,0,0,8and9,,body.png

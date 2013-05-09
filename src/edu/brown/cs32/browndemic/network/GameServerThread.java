@@ -55,12 +55,9 @@ public class GameServerThread extends Thread{
     public void run(){
         while (true){
             try{
-            	System.out.println("handling");
                 _server.handle(_ID, (GameData)_input.readObject());
             }
             catch(IOException e){
-            	System.out.println("IO at server thread");
-            	e.printStackTrace();
                 _server.remove(_ID);
                 break;
             }
