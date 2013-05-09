@@ -40,7 +40,7 @@ public abstract class MainWorld implements World, Runnable, Serializable{
     //also the progress towards the cure
     //oldInf helps me with giving out points by tracking gains in infection
     //oldKills helps me give out points by tracking gains in kills
-    protected List<Long> _kills, _infects, _cures, _oldInfects, _oldKills;
+    protected List<Long> _kills, _infects, _cures, _oldInfects, _oldKills, _cured;
     
     //winners takes care of the winners: if empty at the end of the game,
     //it signifies that all diseases were erradicated
@@ -50,7 +50,7 @@ public abstract class MainWorld implements World, Runnable, Serializable{
     //which cures have been sent out already
     //NOTE: a cure is the progress towards distributing the cure; a disease
     //is CURED when it is completely erradicated in a region
-    protected List<Boolean> _sent, _cured;
+    protected List<Boolean> _sent, _isCured;
     
     //news
     protected List<String> _news;
@@ -94,7 +94,7 @@ public abstract class MainWorld implements World, Runnable, Serializable{
         _oldInfects = new ArrayList<>();
         _oldKills = new ArrayList<>();
         _sent = new ArrayList<>();
-        _cured = new ArrayList<>();
+        _isCured = new ArrayList<>();
         _news = new ArrayList<>();
         _transmissions = new ConcurrentLinkedQueue<>();
         _dead = 0;
@@ -247,8 +247,13 @@ public abstract class MainWorld implements World, Runnable, Serializable{
     }
     
     @Override
-    public List<Boolean> getCured(){
-        return _cured;
+    public List<Boolean> getWhichCured(){
+        return _isCured;
+    }
+    
+    @Override
+    public List<Long> getCured(){
+    	return _cured;
     }
     
     /**
@@ -457,8 +462,15 @@ public abstract class MainWorld implements World, Runnable, Serializable{
      */
     public void updateCured(){
         for (int i = 0; i < _diseases.size(); i++){
-            if (_infects.get(i) == 0 && !_cured.get(i))
-                _cured.set(i, true);
+            if (_infects.get(i) == 0 && !_isCured.get(i))
+                _isCured.set(i, true);
+        }
+        for (Region r : _regions){
+        	List<Long> rc = r.getCured();
+        	for (int i = 0; i < _cured.size(); i++){
+        		long c = _cured.get(i);
+        		_cured.set(i, c + rc.get(i));
+        	}
         }
     }
     
@@ -582,7 +594,7 @@ public abstract class MainWorld implements World, Runnable, Serializable{
             _kills.add(0L);
             _infects.add(0L);
             _sent.add(false);
-            _cured.add(false);
+            _isCured.add(false);
         }
     }
     
