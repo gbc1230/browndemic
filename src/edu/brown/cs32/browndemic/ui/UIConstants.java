@@ -106,6 +106,7 @@ public class UIConstants {
 		public static final String ABOUT = "About";
 		public static final String ABOUT_MENU = "ABOUT";
 		public static final String ABOUT_PATH = RESOURCE_PATH + "About.txt";
+		public static final String TOTAL_INFECTED = "Total Infected:";
 		
 		public static String ABOUT_HTML = "";
 		

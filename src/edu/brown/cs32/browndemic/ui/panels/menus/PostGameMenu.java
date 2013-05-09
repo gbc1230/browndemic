@@ -78,16 +78,20 @@ public class PostGameMenu extends UIPanel {
 		left.add(multi_);
 		if (_multi) {
 			left.add(Box.createRigidArea(new Dimension(0, UI.CONTENT_HEIGHT/8)));
-		} else {
-			left.add(Box.createGlue());
 		}
+		left.add(Box.createGlue());
 		
 		if (_multi) { 
-			if (_world instanceof ChatServer)
+			if (_world instanceof ChatServer) {
 				left.add(_chat = new ChatPanel((ChatServer)_world));
+				_chat.setMaximumSize(new Dimension(UI.WIDTH/2, UI.CONTENT_HEIGHT/4));
+				_chat.setPreferredSize(new Dimension(UI.WIDTH/2, UI.CONTENT_HEIGHT/4));
+				_chat.setMinimumSize(new Dimension(UI.WIDTH/2, UI.CONTENT_HEIGHT/4));
+			}
 			left.add(_lb = new Leaderboard(_world));
 			_lb.setMaximumSize(new Dimension(UI.WIDTH/2, UI.CONTENT_HEIGHT/4));
 			_lb.setPreferredSize(new Dimension(UI.WIDTH/2, UI.CONTENT_HEIGHT/4));
+			_lb.setMinimumSize(new Dimension(UI.WIDTH/2, UI.CONTENT_HEIGHT/4));
 		}
 		
 		JPanel right = new JPanel();
@@ -154,10 +158,12 @@ public class PostGameMenu extends UIPanel {
 		int randomPerks = d.getNumRandomPerksGot();
 		int pointsEarned = d.getNumPointsEarned();
 		int pointsSpent = d.getNumPointsUsed();
+		long totalInfected = _world.getInfected(disease) + _world.getDead(disease) + _world.getCured(disease);
 		
 		NumberFormat nf = NumberFormat.getInstance();
 
 		out.add(generateSingleStatPanel(Strings.PEOPLE_KILLED, nf.format(dead)));
+		out.add(generateSingleStatPanel(Strings.TOTAL_INFECTED, nf.format(totalInfected)));
 		out.add(generateSingleStatPanel(Strings.PERKS_BOUGHT, nf.format(perksBought)));
 		out.add(generateSingleStatPanel(Strings.PERKS_SOLD, nf.format(perksSold)));
 		out.add(generateSingleStatPanel(Strings.RANDOM_PERKS, nf.format(randomPerks)));
