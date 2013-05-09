@@ -146,7 +146,7 @@ public class Region implements Serializable{
         updateCures();
         naturalDisaster();
         for (Disease d : _diseases) {
-            if (null != d) {
+            if (null != d && getInfected().get(d.getID()) != 0) {
                 updateDoubleTimes(d);
                 updateAwareness(d,getAwareIncrement(d));
                 if(_hasCure[d.getID()])
@@ -703,6 +703,19 @@ public class Region implements Serializable{
         long num = 0;
         for (InfWrapper inf : _hash.getAll()){
             if(inf.getID().contains("1"))
+                num += inf.getInf();
+        }
+        return num;
+    }
+    
+    /**
+     * gets the total cured, no overlap
+     * @return 
+     */
+    public long getTotalCuredNoOverlap(){
+        long num = 0;
+        for (InfWrapper inf : _hash.getAll()){
+            if(inf.getID().contains("2"))
                 num += inf.getInf();
         }
         return num;
