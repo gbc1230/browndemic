@@ -615,6 +615,7 @@ public abstract class MainWorld implements World, Runnable, Serializable {
 	protected void setupDiseases() {
 		for (int i = 0; i < _diseases.size(); i++) {
 			_cures.add(0L);
+			_cured.add(0L);
 			_oldInfects.add(0L);
 			_infectBenchMarks.add(10);
 			_oldKills.add(0L);
