@@ -126,9 +126,4 @@ public class GameClient implements Runnable{
         }
     }
 
-
-    /*public static void main(String [] args) throws Exception{
-        InetAddress local = InetAddress.getByName(args[0]);
-        GameClient client = new GameClient(new EarthSP(), local);
-    }*/
 }
