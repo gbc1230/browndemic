@@ -3,7 +3,6 @@ package edu.brown.cs32.browndemic.ui.panels.subpanels;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.NumberFormat;
-import java.util.Comparator;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -55,6 +54,13 @@ public class Leaderboard extends BrowndemicPanel {
 			@Override
 			public boolean isCellEditable(int row, int column) {
 				return false;
+			}
+			@Override
+			public Class<?> getColumnClass(int columnIndex) {
+				if (columnIndex > 0) {
+					return SortableNumberString.class;
+				}
+				return String.class;
 			}
 		};
 		_table = new JTable(_data);

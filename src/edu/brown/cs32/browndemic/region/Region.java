@@ -38,8 +38,8 @@ public class Region implements Serializable{
     
     private double[] _lethDoubleTime;
     private static final int _LETHTIMESCALE = 120; //DEFAULT: 3//~~ticks to half infected die
-    private static final double _LETHSCALE = 3; //DEFAULT: 3//how much death scales with lethality
-    private static final double _LETHMAXFACTOR = 15; //DEFAULT: 40//increase to scale down death at max lethality
+    private static final double _LETHSCALE = 4; //DEFAULT: 3//how much death scales with lethality
+    private static final double _LETHMAXFACTOR = 5; //DEFAULT: 40//increase to scale down death at max lethality
     private static final double _CRITICALLETHRATIO = .1; //DEFAULT: .1//Lethaliy/max before deaths occur
 
     private static final int _PLANEFREQ = 240; //DEFAULT: 240//ticks between flights
@@ -215,8 +215,6 @@ public class Region implements Serializable{
         for(InfWrapper inf : _hash.getAllOfType(index,0))
             uninf += inf.getInf();
         for(InfWrapper inf : _hash.getAllOfType(index,0)){
-            if(totNumber == 1 && !inf.getID().equals(_hash.getZero().getID()))
-                continue;
             double ratio = inf.getInf()/uninf;
             long number = Math.round(totNumber*ratio);
             if(totNumber > uninf)
@@ -372,7 +370,7 @@ public class Region implements Serializable{
     public double getAwareIncrement(Disease d){
         int index = d.getID();
         double maxVis = d.getMaxVisibility();
-        return (d.getVisibility() + maxVis)/maxVis * (getInfected().get(index)/3 + 2*_dead[index]);
+        return (d.getVisibility() + maxVis)/maxVis * (4*getInfected().get(index)/5 + 2*_dead[index]);
     }
 
     /**
@@ -428,17 +426,30 @@ public class Region implements Serializable{
             return;
         }
         int index = d.getID();
-        String ID = "";
-        for (int i = 0; i < _numDiseases; i++) {
-            if (i == index) {
-                ID += "1";
-            } else {
-                ID += "0";
+        InfWrapper zero = _hash.getZero();
+        if(zero.getInf() == 0){
+            for(InfWrapper infWrap : _hash.getAllOfType(index, 0)){
+                if(infWrap.getInf() != 0){
+                    String infID = infWrap.getID().substring(0,index) + "1" + infWrap.getID().substring(index + 1);
+                    _hash.put(new InfWrapper(infWrap.getID(), infWrap.getInf() - 1));
+                    _hash.put(new InfWrapper(infID, 1));
+                    break;
+                }
             }
         }
-        InfWrapper inf = _hash.get(ID);
-        _hash.put(new InfWrapper(ID, inf.getInf() + 1));
-        _hash.addZero(_hash.getZero().getInf() - 1);
+        else {
+            String ID = "";
+            for (int i = 0; i < _numDiseases; i++) {
+                if (i == index) {
+                    ID += "1";
+                } else {
+                    ID += "0";
+                }
+            }
+            InfWrapper inf = _hash.get(ID);
+            _hash.put(new InfWrapper(ID, inf.getInf() + 1));
+            _hash.addZero(_hash.getZero().getInf() - 1);
+        }
         d.addPoints(2);
         _diseases[index] = d;
         _news.add(d.getName() + " has infected " + _name + ".");
@@ -698,6 +709,20 @@ public class Region implements Serializable{
             if(inf.getID().contains("1"))
                 num += inf.getInf();
         }
+        return num;
+    }
+    
+    /**
+     * gets total infected by any disease other than given
+     * @return 
+     */
+    public long getOtherInfected(Disease d){
+        InfWrapper zero = _hash.getZero();
+        String zeroID = zero.getID();
+        int index = d.getID();
+        String ID = zeroID.substring(0,index) + 1 + zeroID.substring(index + 1);
+        long num = getTotalInfectedNoOverlap();
+        num -= _hash.get(ID).getInf();
         return num;
     }
     

@@ -197,7 +197,10 @@ public abstract class MainWorld implements World, Runnable, Serializable {
 	 */
 	@Override
 	public long getHealthy() {
-		return _population - _infected - _dead;
+		long health = _population - _infected - _dead;
+		if (health > 0L)
+			return health;
+		else return 0L;
 	}
 
 	/**
