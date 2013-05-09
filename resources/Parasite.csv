@@ -15,7 +15,7 @@ ID,Name,Description,Cost,Sell,Infectivity,Lethality,Visibility,Heat Resistance,C
 13,Heart Pain,This is discomforting and dangerous and a sign of worse symptoms to come.,7,3,0,2,1,0,0,0,0,0,0,0,5,15,heart.png
 14,Weight Gain,Comes from the parasite taking all essential nutrients and only leaving fats and sugars for you. Very dangerous.,9,3,0,10,5,0,0,0,0,0,0,0,12and5,15,body.png
 15,Tachycardia,Dangerous heart condition where the heart beats too fast. Can be deadly depending on speed and severity. ,15,3,0,20,30,0,0,0,0,0,0,0,13and14,16,heart.png
-16,Heart Attack,Heart attacks are very likely to be fatal.,25,10,0,40,60,0,0,0,0,0,0,0,15,,heart.png
+16,Heart Attack,Heart attacks are very likely to be fatal.,25,10,0,40,60,0,0,0,0,0,0,0,15,20,heart.png
 17,Hemorrhoids,Extremely painful anal structures which cause swelling and discomfort. ,14,5,5,3,14,0,0,0,0,0,0,0,7,,intestines.png
 18,Insomnia,Insomnia weakens immune system responses.,6,2,2,5,2,0,0,0,0,0,0,0,12,22,crackedhead.png
 19,Inflammation,Inflammation is harmful and disrupting for many bodily processes. Can be deadly,9,2,6,10,9,0,0,0,0,0,0,0,8and9,,body.png

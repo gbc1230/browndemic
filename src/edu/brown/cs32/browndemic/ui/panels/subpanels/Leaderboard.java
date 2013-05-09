@@ -77,7 +77,7 @@ public class Leaderboard extends BrowndemicPanel {
 		Object[][] data = new Object[_world.getDiseases().size()][cols.length];
 		for (int i = 0; i < data.length; i++) {
 			Disease d = _world.getDiseases().get(i);
-			data[i] = new Object[] { d.getName(), NumberFormat.getInstance().format(_world.getInfected(d.getID())), NumberFormat.getInstance().format(_world.getDead(d.getID()))};
+			data[i] = new Object[] { d.getName(), new SortableNumberString(_world.getInfected(d.getID())), new SortableNumberString(_world.getDead(d.getID()))};
 		}
 		
 		List<? extends SortKey> keys = _sorter.getSortKeys();
@@ -85,6 +85,25 @@ public class Leaderboard extends BrowndemicPanel {
 		_sorter = new TableRowSorter<>(_data);
 		_sorter.setSortKeys(keys);
 		_table.setRowSorter(_sorter);
+	}
+	
+	private class SortableNumberString implements Comparable<Long> {
+		private Long n;
+		private String s;
+		
+		public SortableNumberString(long n) {
+			this.n = n;
+			s = NumberFormat.getInstance().format(n);
+		}
+
+		@Override
+		public int compareTo(Long o) {
+			return n.compareTo(o);
+		}
+		@Override
+		public String toString() {
+			return s;
+		}
 	}
 	
 	public void stop() {
