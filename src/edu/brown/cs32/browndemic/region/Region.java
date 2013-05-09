@@ -34,10 +34,10 @@ public class Region implements Serializable{
     
     private double[] _infDoubleTime;
     private static final int _INFTIMESCALE = 120; //DEFAULT: 120//~~ticks to double infection in a region
-    private static final double _INFSCALE = 3; //DEFAULT: 3//how much infection scales with infectivity
+    private static final double _INFSCALE = 1; //DEFAULT: 3//how much infection scales with infectivity
     
     private double[] _lethDoubleTime;
-    private static final int _LETHTIMESCALE = 220; //DEFAULT: 3//~~ticks to half infected die
+    private static final int _LETHTIMESCALE = 120; //DEFAULT: 3//~~ticks to half infected die
     private static final double _LETHSCALE = 3; //DEFAULT: 3//how much death scales with lethality
     private static final double _LETHMAXFACTOR = 60; //DEFAULT: 40//increase to scale down death at max lethality
     private static final double _CRITICALLETHRATIO = .1; //DEFAULT: .1//Lethaliy/max before deaths occur
@@ -46,10 +46,12 @@ public class Region implements Serializable{
     private static final int _SHIPFREQ = 240; //DEFAULT: 240//ticks between shipping
     private static final int _LANDFREQ = 30; //DEFAULT: 40//ticks between land border crossing
     
-    private static final double _CUREPERCENT = .0005; //DEFAULT: .005//Fraction of population to cure per tick
+    private static final double _CUREPERCENT = .002; //DEFAULT: .005//Fraction of population to cure per tick
     private static double _AWAREMAXSCALE = 5; //DEFAULT: 5//multiplier on max awareness before close ports
     private static final double _CUREFRAC = 2; //DEFAULT: 2//at _CUREFRAC/awareMax, begin curing
     private static final double _NOTIFYFRAC = 4; //DEFAULT: 5//Increase neighbors awareness by this.awareness/_NOTIFYFRAC
+    
+    private static final int _NATTYDFREQ = 64800 + 32400; //DEFAULT: 64800// frequency of natural disasters
 
     private double _awareMax;
     //number of diseases in game
@@ -145,6 +147,7 @@ public class Region implements Serializable{
         naturalDisaster();
         for (Disease d : _diseases) {
             if (null != d) {
+                updateDoubleTimes(d);
                 updateAwareness(d,getAwareIncrement(d));
                 if(_hasCure[d.getID()])
                     cure(d);
@@ -156,6 +159,8 @@ public class Region implements Serializable{
             }
         }
     }
+    
+    
     
     /**
      * calculates the number of pop to be infected
@@ -210,8 +215,12 @@ public class Region implements Serializable{
         for(InfWrapper inf : _hash.getAllOfType(index,0))
             uninf += inf.getInf();
         for(InfWrapper inf : _hash.getAllOfType(index,0)){
+            if(totNumber == 1 && !inf.getID().equals(_hash.getZero().getID()))
+                continue;
             double ratio = inf.getInf()/uninf;
-            long number = (long) Math.floor(totNumber*ratio);
+            long number = (long) Math.round(totNumber*ratio);
+            if(totNumber > uninf)
+                number = inf.getInf();
             if(number > inf.getInf()/_infDoubleTime[index])
                 number = (long) (inf.getInf()/_lethDoubleTime[index]);
             String infID = inf.getID().substring(0,index) + "1" + inf.getID().substring(index + 1);
@@ -325,6 +334,36 @@ public class Region implements Serializable{
             else cures.add(0L);
         }
         return cures;
+    }
+    
+    /**
+     * updates the double time for lethality and infectivity at landmark values
+     * @param d 
+     */
+    public void updateDoubleTimes(Disease d){
+        int index = d.getID();
+        double inf = d.getInfectivity();
+        double maxInf = d.getMaxInfectivity();
+        if(inf < maxInf/8)
+            _infDoubleTime[index] = Math.log(2)/Math.log((maxInf/10 + maxInf/_INFSCALE)/(maxInf/_INFSCALE));
+        else if (inf < maxInf/4)
+            _infDoubleTime[index] = Math.log(2)/Math.log((maxInf/5 + maxInf/_INFSCALE)/(maxInf/_INFSCALE));
+        else if (inf < maxInf/2)
+            _infDoubleTime[index] = Math.log(2)/Math.log((maxInf/2 + maxInf/_INFSCALE)/(maxInf/_INFSCALE));
+        else if(inf < 3*maxInf/4)
+            _infDoubleTime[index] = Math.log(2)/Math.log((3*maxInf/4 + maxInf/_INFSCALE)/(maxInf/_INFSCALE));
+        else
+            _infDoubleTime[index] = Math.log(2)/Math.log((maxInf + maxInf/_INFSCALE)/(maxInf/_INFSCALE));
+        double leth = d.getLethality();
+        double maxLeth = d.getMaxLethality();
+        if(leth < maxLeth/8)
+            _lethDoubleTime[index] = Math.log(.5)/Math.log(7.0/8.0);
+        else if(leth < maxLeth/4)
+            _lethDoubleTime[index] = Math.log(.5)/Math.log(3.0/4.0);
+        else if(leth < maxLeth/2)
+            _lethDoubleTime[index] = Math.log(.5)/Math.log(1.0/2.0);
+        else
+            _lethDoubleTime[index] = Math.log(.5)/Math.log(1.0/4.0);
     }
     
     /**
@@ -521,7 +560,7 @@ public class Region implements Serializable{
      * @param intensity
      */
     public void naturalDisaster() {
-        if(_rand.nextInt(64800) == 0){
+        if(_rand.nextInt(_NATTYDFREQ) == 0){
             NaturalDisaster dis = _disasters.get(_disIDs.get(_rand.nextInt(_disIDs.size())));
             _news.add(dis.getName() + " has hit " + _name + ".");
             _wealth *= dis.getWealthFactor();
@@ -666,6 +705,17 @@ public class Region implements Serializable{
                 num += inf.getInf();
         }
         return num;
+    }
+    
+    /**
+     * gets the total killed in this region
+     * @return 
+     */
+    public long getTotalKilled(){
+        long total = 0;
+        for(Long l : getKilled())
+            total += l;
+        return total;
     }
 
     /**
