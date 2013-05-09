@@ -18,12 +18,6 @@ public class Bacteria extends Disease{
 
     //SerialVersionUID for this disease
     private static final long serialVersionUID = 9086224726997457013L;
-    //Maximum infectivity
-    final private double MAX_INFECTIVITY = 133;
-    //Maximum lethality
-    final private double MAX_LETHALITY = 297;
-    //Maxium visibility
-    final private double MAX_VISIBILITY = 399;
     //Starting infectivity
     final private double START_INFECTIVITY = 2;
     //Starting lethality
@@ -54,6 +48,11 @@ public class Bacteria extends Disease{
         int[] availablePerks = {0, 1, 2, 3, 4, 5, 20, 23, 26, 29, 32, 35, 38,
                                 41, 44};
         for(Integer i : availablePerks) this._perks[i].setAvailability(true);
+        for(Perk p : this._perks){
+        	if(p.getInf() > 0) this.MAX_INFECTIVITY +=p.getInf();
+        	if(p.getLeth() > 0) this.MAX_LETHALITY +=p.getLeth();
+        	if(p.getVis() > 0) this.MAX_LETHALITY +=p.getVis();
+        }
         this._infectivity = this.START_INFECTIVITY;
         this._lethality = this.START_LETHALITY;
         this._visibility = this.START_VISIBILITY;
@@ -79,6 +78,11 @@ public class Bacteria extends Disease{
         int[] availablePerks = {0, 1, 2, 3, 4, 7, 20, 23, 26, 29, 32, 35, 38,
                                 41, 44};
         for(Integer i : availablePerks) this._perks[i].setAvailability(true);
+        for(Perk p : this._perks){
+        	if(p.getInf() > 0) this.MAX_INFECTIVITY +=p.getInf();
+        	if(p.getLeth() > 0) this.MAX_LETHALITY +=p.getLeth();
+        	if(p.getVis() > 0) this.MAX_LETHALITY +=p.getVis();
+        }
         this._infectivity = this.START_INFECTIVITY;
         this._lethality = this.START_LETHALITY;
         this._visibility = this.START_VISIBILITY;

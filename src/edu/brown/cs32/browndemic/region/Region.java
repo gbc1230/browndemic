@@ -37,9 +37,9 @@ public class Region implements Serializable{
     private static final double _INFSCALE = 1; //DEFAULT: 3//how much infection scales with infectivity
     
     private double[] _lethDoubleTime;
-    private static final int _LETHTIMESCALE = 90; //DEFAULT: 3//~~ticks to half infected die
-    private static final double _LETHSCALE = 4; //DEFAULT: 3//how much death scales with lethality
-    private static final double _LETHMAXFACTOR = 5; //DEFAULT: 40//increase to scale down death at max lethality
+    private static final int _LETHTIMESCALE = 80; //DEFAULT: 3//~~ticks to half infected die
+    private static final double _LETHSCALE = 5; //DEFAULT: 3//how much death scales with lethality
+    private static final double _LETHMAXFACTOR = 1; //DEFAULT: 40//increase to scale down death at max lethality
     private static final double _CRITICALLETHRATIO = .1; //DEFAULT: .1//Lethaliy/max before deaths occur
 
     private static final int _PLANEFREQ = 240; //DEFAULT: 240//ticks between flights
@@ -716,11 +716,10 @@ public class Region implements Serializable{
      * gets total infected by any disease other than given
      * @return 
      */
-    public long getOtherInfected(Disease d){
+    public long getOtherInfected(int d){
         InfWrapper zero = _hash.getZero();
         String zeroID = zero.getID();
-        int index = d.getID();
-        String ID = zeroID.substring(0,index) + 1 + zeroID.substring(index + 1);
+        String ID = zeroID.substring(0,d) + 1 + zeroID.substring(d + 1);
         long num = getTotalInfectedNoOverlap();
         num -= _hash.get(ID).getInf();
         return num;

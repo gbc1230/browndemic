@@ -159,16 +159,7 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 		Region r = _world.getRegion(id);
 		float percentInfected = 0f;
 		if (r != null) {
-			try {
-				long infected = 0;
-				for (int i = 0; i < r.getInfected().size(); i++) {
-					if (i == _disease) continue;
-					infected += r.getInfected().get(i);
-				}
-				percentInfected = (float)infected / (float)r.getPopulation();
-			} catch (IndexOutOfBoundsException e1) {
-				percentInfected = 0f;
-			}
+			percentInfected = (float)r.getOtherInfected(_disease) / (float)r.getPopulation();
 			if (percentInfected > 0f && percentInfected < .2f) percentInfected = .2f;
 		}
 		return percentInfected/2.0f;
@@ -197,16 +188,7 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 		Region r = _world.getRegion(id);
 		float percentInfected = 0f;
 		if (r != null) {
-			try {
-				long infected = 0;
-				for (int i = 0; i < r.getInfected().size(); i++) {
-					if (i == _disease) continue;
-					infected += r.getInfected().get(i) + r.getKilled().get(i);
-				}
-				percentInfected = (float)infected / (float)r.getPopulation();
-			} catch (IndexOutOfBoundsException e1) {
-				percentInfected = 0f;
-			}
+			percentInfected = (float)(r.getOtherInfected(_disease) + r.getTotalKilled()) / (float)r.getPopulation();
 			if (percentInfected > 0f && percentInfected < .2f) percentInfected = .2f;
 		}
 		return percentInfected/2.0f;
@@ -219,7 +201,7 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 			}
 		}
 		Region r = _world.getRegion(id);
-		return (float)(Math.sqrt((double)r.getPopulation()/(double)_largestCountry)/1.5f);
+		return (float)(Math.sqrt((double)(r.getPopulation() - r.getTotalKilled())/(double)_largestCountry)/1.5f);
 	}
 	
 	private float getWealthPercent(int id) {
@@ -275,6 +257,10 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 							break;
 					}
 					if (percent > 0) {
+						if (percent > 1) {
+							percent = 1;
+							System.out.println("Alpha value too high.");
+						}
 						cacheg2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, percent));
 						cacheg2.drawImage(e.getValue(), 0, 0, null);
 					}

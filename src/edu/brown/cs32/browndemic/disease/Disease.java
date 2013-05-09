@@ -55,6 +55,13 @@ public abstract class Disease implements Serializable{
     //A double reflecting the ability of this disease to be
     //transmitted via air
     protected double _airTrans;
+    //Maximum infectivity
+    protected double MAX_INFECTIVITY;
+    //Maximum lethality
+    protected double MAX_LETHALITY;
+    //Maxium visibility
+    protected double MAX_VISIBILITY;
+    
     
     //A double reflecting how many points this disease has
     protected int _points;

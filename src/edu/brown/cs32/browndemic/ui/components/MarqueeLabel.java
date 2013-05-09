@@ -15,7 +15,7 @@ public class MarqueeLabel extends JComponent {
 	private int _x, _y, _width, _currentX, _currentWidth;
 	private String _current;
 	
-	private static final int SPEED = 2;
+	private static final int SPEED = 3;
 	
 	public MarqueeLabel(int x, int y, int width) {
 		_x = x; _y = y; _width = width;
