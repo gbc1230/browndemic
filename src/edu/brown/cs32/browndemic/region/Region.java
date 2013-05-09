@@ -442,14 +442,9 @@ public class Region implements Serializable{
         d.addPoints(2);
         _diseases[index] = d;
         _news.add(d.getName() + " has infected " + _name + ".");
-        double startInf = d.getStartInfectivity();
         double maxInf = d.getMaxInfectivity();
         double startLeth = d.getStartLethality();
         double maxLeth = d.getMaxLethality();
-//        double infLow = Math.log(2)/Math.log((startInf + maxInf/_INFSCALE)/(maxInf/_INFSCALE));
-//        double infMid = Math.log(2)/Math.log((maxInf/4 + maxInf/_INFSCALE)/(maxInf/_INFSCALE));
-//        double infHigh = Math.log(2)/Math.log(1 + _INFSCALE);
-//        _infDoubleTime[index] = (infLow + infHigh)/2;
         double infDouble = Math.log(2)/Math.log((maxInf/4 + maxInf/_INFSCALE)/(maxInf/_INFSCALE));
         _infDoubleTime[index] = infDouble;
         double lethLow = Math.log(.5)/Math.log(1 - startLeth/(maxLeth));
