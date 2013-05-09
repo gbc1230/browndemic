@@ -181,6 +181,11 @@ public class ClientWorld implements ChatServer, World{
     }
     
     @Override
+    public long getCured(int d){
+    	return _world.getCured(d);
+    }
+    
+    @Override
     public double getCurePercentage(int d){
     	return _world.getCurePercentage(d);
     }
