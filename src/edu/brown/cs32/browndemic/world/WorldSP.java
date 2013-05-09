@@ -87,12 +87,12 @@ public class WorldSP extends MainWorld{
             if (!_paused){
                 long start = System.currentTimeMillis();
                 update();
-                if (allCured()){
+                if (allKilled()){
+                    crownWinners();
                     _gameOver = true;
                     break;
                 }
-                else if (allKilled()){
-                    crownWinners();
+                else if (allCured()){
                     _gameOver = true;
                     break;
                 }

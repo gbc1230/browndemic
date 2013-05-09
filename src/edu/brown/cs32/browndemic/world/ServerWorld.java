@@ -221,11 +221,7 @@ public class ServerWorld extends MainWorld{
         while (!_gameOver){
             long start = System.currentTimeMillis();
             update();
-            if (allCured()){
-                _gameOver = true;
-                break;
-            }
-            else if (allKilled()){
+            if (allKilled() || allCured()){
                 crownWinners();
                 _gameOver = true;
                 break;

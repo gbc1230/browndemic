@@ -5,6 +5,7 @@
 package edu.brown.cs32.browndemic.network;
 
 import edu.brown.cs32.browndemic.world.ServerWorld;
+
 import java.util.List;
 
 /**
@@ -30,13 +31,14 @@ public class InfoSender extends Thread{
         _server = s;
     }
     
-    public void fixLobby(List<LobbyMember> lobby){
+    private void fixLobby(List<LobbyMember> lobby){
     	for (LobbyMember lm : lobby){
-    		if (lm.getName().equals("")){
+    		String name = lm.getName();
+    		if (name.equals("")){
     			lm.setName("Player");
     		}
-    		if (lm.getName().length() >= 20)
-    			lm.setName(lm.getName().substring(0, 20));
+    		if (name.length() > 13)
+    			lm.setName(name.substring(0, 14));
     	}
     }
     
@@ -49,6 +51,7 @@ public class InfoSender extends Thread{
             if (data.getID().equals("LS")){
                 LobbySender out = (LobbySender)data;
                 _server.remove(out.getRemove());
+                fixLobby(out.getLobby());
                 for (GameServerThread thread : _clients){
                     thread.sendMessage(out);
                 }
