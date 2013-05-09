@@ -53,6 +53,9 @@ public class Bacteria extends Disease{
         	if(p.getLeth() > 0) this.MAX_LETHALITY +=p.getLeth();
         	if(p.getVis() > 0) this.MAX_LETHALITY +=p.getVis();
         }
+        this.MAX_INFECTIVITY += this.START_INFECTIVITY;
+        this.MAX_LETHALITY += this.START_LETHALITY;
+        this.MAX_VISIBILITY += this.START_VISIBILITY;
         this._infectivity = this.START_INFECTIVITY;
         this._lethality = this.START_LETHALITY;
         this._visibility = this.START_VISIBILITY;
@@ -83,6 +86,9 @@ public class Bacteria extends Disease{
         	if(p.getLeth() > 0) this.MAX_LETHALITY +=p.getLeth();
         	if(p.getVis() > 0) this.MAX_LETHALITY +=p.getVis();
         }
+        this.MAX_INFECTIVITY += this.START_INFECTIVITY;
+        this.MAX_LETHALITY += this.START_LETHALITY;
+        this.MAX_VISIBILITY += this.START_VISIBILITY;
         this._infectivity = this.START_INFECTIVITY;
         this._lethality = this.START_LETHALITY;
         this._visibility = this.START_VISIBILITY;

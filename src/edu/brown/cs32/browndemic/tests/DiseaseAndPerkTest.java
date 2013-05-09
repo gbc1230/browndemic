@@ -127,7 +127,7 @@ public class DiseaseAndPerkTest {
         }
         assertTrue(p.getPoints() == 1000 - p.getPerks()[1].getCost() -
                 p.getPerks()[0].getCost());
-        assertTrue(p.getAvailablePerks().size() == 15);
+        assertTrue(p.getAvailablePerks().size() == 16);
         assertTrue(p.getOwnedPerks().size() == 2);
         assertTrue(p.getPerks()[0].getCumSellPrice() == p.getPerks()[0].getSellPrice());
         try {

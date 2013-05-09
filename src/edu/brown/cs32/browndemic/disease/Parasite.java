@@ -50,11 +50,15 @@ public class Parasite extends Disease{
         for(Perk p : this._perks){
         	if(p.getInf() > 0) this.MAX_INFECTIVITY +=p.getInf();
         	if(p.getLeth() > 0) this.MAX_LETHALITY +=p.getLeth();
-        	if(p.getVis() > 0) this.MAX_LETHALITY +=p.getVis();
+        	if(p.getVis() > 0) this.MAX_VISIBILITY +=p.getVis();
+        	
         }
-        this._infectivity = 1;
-        this._visibility = 1;
-        this._lethality = 5;
+        this.MAX_INFECTIVITY += this.START_INFECTIVITY;
+        this.MAX_LETHALITY += this.START_LETHALITY;
+        this.MAX_VISIBILITY += this.START_VISIBILITY;
+        this._infectivity = this.START_INFECTIVITY;
+        this._visibility = this.START_VISIBILITY;
+        this._lethality = this.START_LETHALITY;
 
     }
 
@@ -82,9 +86,12 @@ public class Parasite extends Disease{
         	if(p.getLeth() > 0) this.MAX_LETHALITY +=p.getLeth();
         	if(p.getVis() > 0) this.MAX_LETHALITY +=p.getVis();
         }
-        this._infectivity = 1;
-        this._visibility = 1;
-        this._lethality = 5;
+        this.MAX_INFECTIVITY += this.START_INFECTIVITY;
+        this.MAX_LETHALITY += this.START_LETHALITY;
+        this.MAX_VISIBILITY += this.START_VISIBILITY;
+        this._infectivity = this.START_INFECTIVITY;
+        this._visibility = this.START_VISIBILITY;
+        this._lethality = this.START_LETHALITY;
 
     }
 
