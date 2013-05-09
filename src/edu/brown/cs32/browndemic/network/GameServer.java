@@ -156,29 +156,31 @@ public class GameServer implements Runnable{
      * @throws java.io.IOException
      */
     public synchronized void remove(int ID){
-    	int pos;
-    	if (ID > 1000)
-    		pos = findClient(ID);
-    	else 
-    		pos = ID;
-        if (pos != -1 && pos < _clients.size()){
-            GameServerThread toKill = _clients.get(pos);
-            _clients.remove(toKill);
-            String name = "";
-            if (_world.hasStarted()){
-	            name = _world.getDiseases().get(pos).getName();
-            }
-            _world.removeDisease(pos);
-            toKill.close();
-            if (_world.hasStarted()){
-	            DCMessage msg = new DCMessage(name, pos);            
-	            for (GameServerThread gst : _clients){
-	                gst.sendMessage(msg);
+    	synchronized(_clients){
+	    	int pos;
+	    	if (ID > 1000)
+	    		pos = findClient(ID);
+	    	else 
+	    		pos = ID;
+	        if (pos != -1 && pos < _clients.size()){
+	            GameServerThread toKill = _clients.get(pos);
+	            _clients.remove(toKill);
+	            String name = "";
+	            if (_world.hasStarted()){
+		            name = _world.getDiseases().get(pos).getName();
 	            }
-            }
-        }
-        if (_clients.size() == 0)
-        	stop();
+	            _world.removeDisease(pos);
+	            toKill.close();
+	            if (_world.hasStarted()){
+		            DCMessage msg = new DCMessage(name, pos);            
+		            for (GameServerThread gst : _clients){
+		                gst.sendMessage(msg);
+		            }
+	            }
+	        }
+	        if (_clients.size() == 0)
+	        	stop();
+    	}
     }
 
     /**

@@ -71,9 +71,11 @@ public class InfoSender extends Thread{
             ServerWorld w = _world.getNextCommand();
             if (w == null)
                 continue;
-            WorldOutput wo = new WorldOutput(w, w.getTransmission());
-            for (GameServerThread thread : _clients){
-                thread.sendMessage(wo);
+            synchronized(_clients){
+	            WorldOutput wo = new WorldOutput(w, w.getTransmission());
+	            for (GameServerThread thread : _clients){
+	                thread.sendMessage(wo);
+	            }
             }
         }
     }
