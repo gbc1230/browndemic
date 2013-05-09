@@ -25,7 +25,7 @@ public class GameServerThread extends Thread{
     private ObjectOutputStream _output;
 
     public GameServerThread(GameServer server, Socket socket){
-        super();
+        super("GameServerThread");
         _server = server;
         _socket = socket;
         _ID = _socket.getPort();
@@ -55,9 +55,11 @@ public class GameServerThread extends Thread{
     public void run(){
         while (true){
             try{
+            	System.out.println("handling");
                 _server.handle(_ID, (GameData)_input.readObject());
             }
             catch(IOException e){
+            	System.out.println("IO at server thread");
                 _server.remove(_ID);
                 break;
             }

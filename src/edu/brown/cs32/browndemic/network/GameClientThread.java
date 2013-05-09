@@ -23,6 +23,7 @@ public class GameClientThread extends Thread{
 
     //constructor, sets up basic stuff
     public GameClientThread(GameClient client, Socket socket){
+    	super("GameClientThread");
         _client = client;
         _socket = socket;
         start();
