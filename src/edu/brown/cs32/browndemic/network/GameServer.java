@@ -205,6 +205,7 @@ public class GameServer implements Runnable{
     		for (GameServerThread toKill : _clients){
     			toKill.close();
     		}
+    		_world.leaveGame();
     		_clients.clear();
     		_thread = null;
     	}
