@@ -41,13 +41,13 @@ public abstract class MainWorld implements World, Runnable, Serializable {
 	// also the progress towards the cure
 	// oldInf helps me with giving out points by tracking gains in infection
 	// oldKills helps me give out points by tracking gains in kills
+	// benchMarks is for giving out points, tells me how far along they are
 	protected List<Long> _kills, _infects, _cures, _oldInfects, _oldKills,
-			_cured;
+			_cured, _infectBenchMarks, _killBenchMarks;
 
 	// winners takes care of the winners: if empty at the end of the game,
 	// it signifies that all diseases were erradicated
-	// benchMarks is for giving out points, tells me how far along they are
-	protected List<Integer> _winners, _infectBenchMarks, _killBenchMarks;
+	protected List<Integer> _winners;
 
 	// which cures have been sent out already
 	// NOTE: a cure is the progress towards distributing the cure; a disease
@@ -553,11 +553,17 @@ public abstract class MainWorld implements World, Runnable, Serializable {
 			long newInf = _infects.get(i);
 			long oldInf = _oldInfects.get(i);
 			long infChange = newInf - oldInf;
-			int infBench = _infectBenchMarks.get(i);
+			long infBench = _infectBenchMarks.get(i);
 			int times = 0;
 			while (infBench * 10L <= newInf) {
 				times++;
-				_infectBenchMarks.set(i, infBench * 10);
+				long newbench;
+				if (infBench < 100000000L){
+					newbench = infBench * 10;
+				}
+				else
+					newbench = 150000000L;
+				_infectBenchMarks.set(i, newbench);
 				infBench = _infectBenchMarks.get(i);
 			}
 			times--;
@@ -576,10 +582,17 @@ public abstract class MainWorld implements World, Runnable, Serializable {
 			long newKill = _kills.get(i);
 			long oldKill = _oldKills.get(i);
 			long killChange = newKill - oldKill;
-			int killBench = _killBenchMarks.get(i);
+			long killBench = _killBenchMarks.get(i);
 			times = 0;
 			while (killBench * 10L <= newKill) {
-				_killBenchMarks.set(i, killBench * 10);
+				times++;
+				long newbench;
+				if (infBench < 100000000L){
+					newbench = infBench * 10;
+				}
+				else
+					newbench = 150000000L;
+				_killBenchMarks.set(i, newbench);
 				killBench = _killBenchMarks.get(i);
 			}
 			times--;
@@ -620,9 +633,9 @@ public abstract class MainWorld implements World, Runnable, Serializable {
 			_cures.add(0L);
 			_cured.add(0L);
 			_oldInfects.add(0L);
-			_infectBenchMarks.add(10);
+			_infectBenchMarks.add(10L);
 			_oldKills.add(0L);
-			_killBenchMarks.add(10);
+			_killBenchMarks.add(10L);
 			_kills.add(0L);
 			_infects.add(0L);
 			_sent.add(false);
