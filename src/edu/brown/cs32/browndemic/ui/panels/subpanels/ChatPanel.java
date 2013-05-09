@@ -54,6 +54,8 @@ public class ChatPanel extends BrowndemicPanel implements KeyListener, ChatHandl
 		_chat.setFont(Fonts.NORMAL_TEXT);
 		_chat.setEditable(false);
 		_chat.setBorder(BorderFactory.createEmptyBorder());
+		_chat.setLineWrap(true);
+		_chat.setWrapStyleWord(true);
 		
 		_scroll = new JScrollPane(_chat, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		_scroll.setBorder(BorderFactory.createLineBorder(Colors.RED_TEXT, 2));

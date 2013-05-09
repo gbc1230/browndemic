@@ -569,9 +569,7 @@ public class WorldMap extends JComponent implements MouseListener, MouseMotionLi
 			infected = r.getInfected().get(_disease);
 			dead = r.getKilled().get(_disease);
 			cured = r.getCured().get(_disease);
-			for (long l : r.getInfected()) {
-				tinfected += l;
-			}
+			tinfected = r.getTotalInfectedNoOverlap();
 			for (long l : r.getKilled()) {
 				tdead += l;
 			}

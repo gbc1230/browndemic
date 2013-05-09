@@ -97,7 +97,7 @@ public class GameMenu extends UIPanel implements ChangeListener {
 	protected void makeUI() {
 		super.makeUI();
 		
-		add(_info = new InformationBar(_world, _disease, _map, _multiplayer));
+		add(_info = new InformationBar(_world, _disease, _multiplayer));
 		
 		add(_map);
 		
@@ -153,7 +153,7 @@ public class GameMenu extends UIPanel implements ChangeListener {
 			if (_world.hostDisconnected()) {
 				Utils.getParentFrame(this).setPanel(new MainMenu());
 			}
-			Utils.getParentFrame(this).setTitle(_igt = new InGameTitleBar(_world, !_multiplayer));
+			Utils.getParentFrame(this).setTitle(_igt = new InGameTitleBar(_world, !_multiplayer, _map, _info));
 			_timer = new Timer(1000/3, new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
@@ -168,6 +168,7 @@ public class GameMenu extends UIPanel implements ChangeListener {
 				}
 			});
 			_timer.start();
+			_igt.setMB();
 			if (_chat != null)
 				_chat.requestFocusInWindow();
 			if (_world.getInfected() == 0)

@@ -135,10 +135,10 @@ public class BrowndemicFrame extends JFrame {
 	 * @param p The UIPanel to be set.
 	 */
 	public void setPanel(UIPanel p) {
-		_content.removeAll();
 		if (_current != null) {
 			_current.stopPanel();
 		}
+		_content.removeAll();
 		revalidate();
 		repaint();
 		_content.add(p);
@@ -148,10 +148,10 @@ public class BrowndemicFrame extends JFrame {
 	}
 	
 	public void setPanel(UIPanel p, boolean stopPrev) {
-		_content.removeAll();
 		if (_current != null && stopPrev) {
 			_current.stopPanel();
 		}
+		_content.removeAll();
 		revalidate();
 		repaint();
 		_content.add(p);
