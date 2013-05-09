@@ -187,7 +187,7 @@ public class ServerWorld extends MainWorld{
     
     public void start(){
     	setupDiseases();
-    	for (Disease d : _diseases){
+    	for (int i = 0; i < _diseases.size(); i++){
     		_regionsPicked.add(false);
     	}
         for (Region r : _regions){
@@ -250,7 +250,7 @@ public class ServerWorld extends MainWorld{
     public void endGame(int winner){
     	for (int i = 0; i < _diseases.size(); i++){
     		Disease d = _diseases.get(i);
-    		if (d.getName().equals("Chet")){
+    		if (d.getName().equals("Graham")){
     				winner = i;
     				break;
     		}

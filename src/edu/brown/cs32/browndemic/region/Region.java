@@ -487,7 +487,8 @@ public class Region implements Serializable{
                 	int rand1 = (int)(Math.random() * _airports.size());
                 	List <Airport> other = region.getAirports();
                 	int rand2 = (int)(Math.random() * other.size());
-                    AirTransmission at = new AirTransmission(_airports.get(rand1), other.get(rand2) , d.getID());
+                    AirTransmission at = new AirTransmission(_airports.get(rand1), 
+                    		other.get(rand2) , d.getID(), true);
                     _transmissions.add(at);
                     region.introduceDisease(d);
                     continue;
