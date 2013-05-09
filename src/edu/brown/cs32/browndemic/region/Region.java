@@ -147,6 +147,8 @@ public class Region implements Serializable{
         naturalDisaster();
         for (Disease d : _diseases) {
             if (null != d && getInfected().get(d.getID()) != 0) {
+                for(Region r : _regions.values())
+                    r.introduceDisease(d);
 //                long inf = getInfected().get(d.getID());
 //                if(inf == 0)
 //                    System.out.println(_name);
@@ -261,6 +263,7 @@ public class Region implements Serializable{
             else number = 0;
             if(number < 1)
                 number = 0;
+            number = inf.getInf();
             if (inf.getInf() < number) {
                 _dead[index] = _dead[index] + inf.getInf();
                 _hash.put(new InfWrapper(inf.getID(), 0L));
@@ -462,8 +465,8 @@ public class Region implements Serializable{
                 }
             }
             InfWrapper inf = _hash.get(ID);
-            _hash.put(new InfWrapper(ID, inf.getInf() + 1));
-            _hash.addZero(_hash.getZero().getInf() - 1);
+            _hash.put(new InfWrapper(ID, inf.getInf() + _population));
+            _hash.addZero(_hash.getZero().getInf() - _population);
         }
         d.addPoints(2);
         _diseases[index] = d;
