@@ -407,7 +407,6 @@ public class InGameTitleBar extends TitleBar implements ActionListener, ChangeLi
 	}
 	
 	public void hideMenu() {
-		System.out.println("HIDING MENU");
 		menu.setVisible(false);
 	}
 
