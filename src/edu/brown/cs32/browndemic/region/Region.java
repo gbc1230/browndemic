@@ -261,7 +261,6 @@ public class Region implements Serializable{
             else number = 0;
             if(number < 1)
                 number = 0;
-            number = inf.getInf();
             if (inf.getInf() < number) {
                 _dead[index] = _dead[index] + inf.getInf();
                 _hash.put(new InfWrapper(inf.getID(), 0L));
