@@ -172,6 +172,7 @@ public class InGameTitleBar extends TitleBar {
 										"Confirm quit", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, 
 										null, null, null);
 			if (choice == 0) {
+				_world.leaveGame();
 				Utils.getParentFrame(this).setPanel(new MainMenu());
 			}
 		} else if (e.getSource() == save) {

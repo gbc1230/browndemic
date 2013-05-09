@@ -16,12 +16,15 @@ import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 import edu.brown.cs32.browndemic.disease.Bacteria;
 import edu.brown.cs32.browndemic.disease.Parasite;
 import edu.brown.cs32.browndemic.disease.Virus;
 import edu.brown.cs32.browndemic.ui.BrowndemicFrame;
 import edu.brown.cs32.browndemic.ui.Resources;
+import edu.brown.cs32.browndemic.ui.Settings;
 import edu.brown.cs32.browndemic.ui.UIConstants.Colors;
 import edu.brown.cs32.browndemic.ui.UIConstants.Fonts;
 import edu.brown.cs32.browndemic.ui.UIConstants.Images;
@@ -37,14 +40,16 @@ import edu.brown.cs32.browndemic.world.World;
 import edu.brown.cs32.browndemic.world.WorldMaker;
 import edu.brown.cs32.browndemic.world.WorldSP;
 
-public class SinglePlayerMenu extends UIPanel {
+public class SinglePlayerMenu extends UIPanel implements DocumentListener {
 
 	private static final long serialVersionUID = -1231229219691042468L;
 	
-	BrowndemicFrame _parent;
-	JTextField _diseaseName;
-	SelectButton _disease1, _disease2, _disease3;
-	JLabel _start, _load;
+	private BrowndemicFrame _parent;
+	private JTextField _diseaseName;
+	private SelectButton _disease1, _disease2, _disease3;
+	private JLabel _start, _load;
+	private boolean _nameSelected = false;
+	private boolean _diseaseSelected = false;
 	
 	public SinglePlayerMenu() {
 		super();
@@ -55,6 +60,7 @@ public class SinglePlayerMenu extends UIPanel {
 	public void setupForDisplay() {
 		Utils.getParentFrame(this).setTitle(new BackTitleBar(this, new MainMenu()));
 		_diseaseName.requestFocusInWindow();
+		_diseaseName.setText(Settings.get(Settings.NAME));
 	}
 	
 	@Override
@@ -78,10 +84,11 @@ public class SinglePlayerMenu extends UIPanel {
 		JLabel diseaseNameLabel = new JLabel(Strings.ENTER_DISEASE_NAME);
 		diseaseNameLabel.setFont(Fonts.BIG_TEXT);
 		diseaseNameLabel.setForeground(Colors.RED_TEXT);
-		_diseaseName = new JTextField();
+		_diseaseName = new JTextField(Settings.get(Settings.NAME));
 		Utils.setDefaultLook(_diseaseName);
 		_diseaseName.setFont(Fonts.BIG_TEXT);
 		_diseaseName.setForeground(Colors.RED_TEXT);
+		_diseaseName.getDocument().addDocumentListener(this);
 		_diseaseName.setBackground(Colors.MENU_BACKGROUND);
 		diseaseName.add(diseaseNameLabel);
 		diseaseName.add(_diseaseName);
@@ -137,7 +144,8 @@ public class SinglePlayerMenu extends UIPanel {
 
 		@Override
 		public void doAction() {
-			_start.setEnabled(true);
+			_diseaseSelected = true;
+			updateStartGameButton();
 			for (SelectButton b : other) {
 				b.deSelect();
 			}
@@ -156,9 +164,6 @@ public class SinglePlayerMenu extends UIPanel {
 			else
 				disease = 3;
 			String name = _diseaseName.getText();
-			if (name.equals("")) {
-				//TODO: Error, invalid disease name
-			}
 			
 			World w;
 			try {
@@ -203,7 +208,6 @@ public class SinglePlayerMenu extends UIPanel {
 				}
 			    catch(IOException ex){
 			    	System.out.println("Couldn't load file.");
-//			    	ex.printStackTrace();
 				}
 				if (world != null){
 					world.startFromLoad();
@@ -216,5 +220,33 @@ public class SinglePlayerMenu extends UIPanel {
 	@Override
 	public String toString() {
 		return Strings.SINGLEPLAYER_MENU;
+	}
+	
+	private void updateStartGameButton() {
+		if (_diseaseName.getText().equals("")) {
+			_nameSelected = false;
+		} else {
+			_nameSelected = true;
+		}
+		if (_nameSelected && _diseaseSelected) {
+			_start.setEnabled(true);
+		} else {
+			_start.setEnabled(false);
+		}
+	}
+
+	@Override
+	public void insertUpdate(DocumentEvent e) {
+		updateStartGameButton();
+	}
+
+	@Override
+	public void removeUpdate(DocumentEvent e) {
+		updateStartGameButton();
+	}
+
+	@Override
+	public void changedUpdate(DocumentEvent e) {
+		updateStartGameButton();
 	}
 }
