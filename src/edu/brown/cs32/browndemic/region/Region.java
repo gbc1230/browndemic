@@ -44,7 +44,7 @@ public class Region implements Serializable{
 
     private static final int _PLANEFREQ = 240; //DEFAULT: 240//ticks between flights
     private static final int _SHIPFREQ = 240; //DEFAULT: 240//ticks between shipping
-    private static final int _LANDFREQ = 25; //DEFAULT: 40//ticks between land border crossing
+    private static final int _LANDFREQ = 10; //DEFAULT: 40//ticks between land border crossing
     
     private static final double _CUREPERCENT = .002; //DEFAULT: .005//Fraction of population to cure per tick
     private static double _AWAREMAXSCALE = 3.5; //DEFAULT: 5//multiplier on max awareness before close ports
@@ -147,6 +147,9 @@ public class Region implements Serializable{
         naturalDisaster();
         for (Disease d : _diseases) {
             if (null != d && getInfected().get(d.getID()) != 0) {
+//                long inf = getInfected().get(d.getID());
+//                if(inf == 0)
+//                    System.out.println(_name);
                 updateDoubleTimes(d);
                 updateAwareness(d,getAwareIncrement(d));
                 if(_hasCure[d.getID()])
