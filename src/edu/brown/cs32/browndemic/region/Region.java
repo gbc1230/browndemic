@@ -214,7 +214,6 @@ public class Region implements Serializable{
             long number = (long) Math.floor(totNumber*ratio);
             if(number > inf.getInf()/_infDoubleTime[index])
                 number = (long) (inf.getInf()/_lethDoubleTime[index]);
-            System.out.println("infect: " + number);
             String infID = inf.getID().substring(0,index) + "1" + inf.getID().substring(index + 1);
             if (inf.getInf() < number){
                 _hash.put(new InfWrapper(inf.getID(), 0L));
@@ -388,7 +387,7 @@ public class Region implements Serializable{
      */
     public void introduceDisease(Disease d) {
         if(_diseases[d.getID()] != null){
-            System.out.println("Introduced disease that existed already");
+//            System.out.println("Introduced disease that existed already");
             return;
         }
         int index = d.getID();
@@ -452,7 +451,6 @@ public class Region implements Serializable{
                     AirTransmission at = new AirTransmission(_airports.get(rand1), other.get(rand2) , d.getID());
                     _transmissions.add(at);
                     region.introduceDisease(d);
-//                    System.out.println("Plane Trans");
                     continue;
                 }
             }
@@ -469,7 +467,6 @@ public class Region implements Serializable{
 //                    AirTransmission rt = new AirTransmission(_name, region.getName(), d.getID(), true);
 //                    _transmissions.add(rt);
                     region.introduceDisease(d);
-//                    System.out.println("Ship Trans");
                 }
             }
         }
@@ -495,7 +492,6 @@ public class Region implements Serializable{
                 transmit = _rand.nextDouble() < trans;
             }
             if (transmit) {
-//                System.out.println("Land Trans");
                 region.introduceDisease(d);
             }
         }
@@ -515,7 +511,6 @@ public class Region implements Serializable{
             double trans = inf/_population * (d.getAirTrans() + d.getWaterTrans() + 82)/82;
             boolean transmit = _rand.nextDouble() < trans;
             if (transmit) {
-//                System.out.println("Water Trans");
                 region.introduceDisease(d);
             }
         }
