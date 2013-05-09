@@ -37,7 +37,6 @@ public class WorldSP extends MainWorld{
     @Override
     public void introduceDisease(int d, int r){
         start();
-        System.out.println("Introducing " + d + " to " + r);
         _regions.get(r).introduceDisease(_diseases.get(d));
         _numRegionsPicked++;
     }
@@ -70,7 +69,6 @@ public class WorldSP extends MainWorld{
      */
     @Override
     public void run(){
-        System.out.println("begin the loop");
         while(_numRegionsPicked < _diseases.size()){
             try{
                 Thread.sleep(1);
@@ -79,7 +77,6 @@ public class WorldSP extends MainWorld{
                 
             }
         }
-        System.out.println("starting game");
         while (!_gameOver){
             try{
                 Thread.sleep(1);
@@ -104,15 +101,10 @@ public class WorldSP extends MainWorld{
                 try{
                 	if (offset < _waitTime)
                 		Thread.sleep(_waitTime - offset);
-                	else
-                		System.out.println("Offset of " + offset + " was higher than " +
-                				"waitTime of " + _waitTime);
                 }
                 catch(InterruptedException e){
-                    System.out.println("Couldn't sleep...");
                 }
             }
         }
-        System.out.println("Game Over!");
     }
 }

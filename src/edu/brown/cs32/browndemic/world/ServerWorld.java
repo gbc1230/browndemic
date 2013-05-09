@@ -43,6 +43,7 @@ public class ServerWorld extends MainWorld{
         _lobby = new ArrayList<>();
         _outData = new ConcurrentLinkedQueue<>();
         _regionsPicked = new ArrayList<>();
+        _waitTime = _SPEED2;
     }
     
     /**
@@ -54,7 +55,6 @@ public class ServerWorld extends MainWorld{
             _lobby.get(picked).changeReady(true);
             _outData.add(new LobbySender(_lobby));
         }
-        System.out.println("Ready now? " + allReady());
     }
     
     /**
@@ -128,7 +128,6 @@ public class ServerWorld extends MainWorld{
     	else{
 	        _lobby.remove(r);
 	        _outData.add(new LobbySender(_lobby, r));
-	        System.out.println("Lobby ready? " + allReady());
     	}
     }
     
@@ -142,7 +141,6 @@ public class ServerWorld extends MainWorld{
     	for (int i = 0; i < _lobby.size(); i++){
     		_diseases.add(null);
     	}
-    	System.out.println("Collecting diseases: " + _lobby);
         _outData.add(new CollectDiseases(-1, this));
     }
     
@@ -185,7 +183,6 @@ public class ServerWorld extends MainWorld{
     public void introduceDisease(int d, int r){
         _regions.get(r).introduceDisease(_diseases.get(d));
         _regionsPicked.set(d, true);
-        System.out.println(allRegionsPicked());
     }
     
     public void start(){
@@ -261,7 +258,6 @@ public class ServerWorld extends MainWorld{
     	if (winner > -1)
     		_winners.add(winner);
     	_gameOver = true;
-    	System.out.println(isGameOver());
     	addCommand();
     }
 
