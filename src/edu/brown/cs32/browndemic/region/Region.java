@@ -47,9 +47,9 @@ public class Region implements Serializable{
     private static final int _LANDFREQ = 10; //DEFAULT: 40//ticks between land border crossing
     
     private static final double _CUREPERCENT = .002; //DEFAULT: .005//Fraction of population to cure per tick
-    private static double _AWAREMAXSCALE = 3.5; //DEFAULT: 5//multiplier on max awareness before close ports
-    private static final double _CUREFRAC = 1.5; //DEFAULT: 2//at awareMax/_CUREFRAC, begin curing
-    private static final double _NOTIFYFRAC = 4; //DEFAULT: 5//Increase neighbors awareness by this.awareness/_NOTIFYFRAC
+    private static double _AWAREMAXSCALE = 4; //DEFAULT: 5//multiplier on max awareness before close ports
+    private static final double _CUREFRAC = 1.3; //DEFAULT: 2//at awareMax/_CUREFRAC, begin curing
+    private static final double _NOTIFYFRAC = 6; //DEFAULT: 5//Increase neighbors awareness by this.awareness/_NOTIFYFRAC
     
     private static final int _NATTYDFREQ = 64800 + 32400; //DEFAULT: 64800// frequency of natural disasters
 
