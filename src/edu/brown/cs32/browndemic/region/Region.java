@@ -37,8 +37,8 @@ public class Region implements Serializable{
     private static final double _INFSCALE = 1; //DEFAULT: 3//how much infection scales with infectivity
     
     private double[] _lethDoubleTime;
-    private static final int _LETHTIMESCALE = 100; //DEFAULT: 3//~~ticks to half infected die
-    private static final double _LETHSCALE = 10; //DEFAULT: 3//how much death scales with lethality
+    private static final int _LETHTIMESCALE = 90; //DEFAULT: 3//~~ticks to half infected die
+    private static final double _LETHSCALE = 12; //DEFAULT: 3//how much death scales with lethality
     private static final double _LETHMAXFACTOR = 1; //DEFAULT: 40//increase to scale down death at max lethality
     private static final double _CRITICALLETHRATIO = .1; //DEFAULT: .1//Lethaliy/max before deaths occur
 
