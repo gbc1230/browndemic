@@ -215,7 +215,7 @@ public class ServerWorld extends MainWorld{
                 Thread.sleep(1);
             }
             catch(Exception e){
-                
+                continue;
             }
         }
         while (!_gameOver){
@@ -236,8 +236,9 @@ public class ServerWorld extends MainWorld{
             try{
                 if (offset < _waitTime)
                     Thread.sleep(_waitTime - offset);
-                }
+            }
             catch(InterruptedException e){
+            	continue;
             }
         }
     }

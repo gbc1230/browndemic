@@ -74,7 +74,7 @@ public class WorldSP extends MainWorld{
                 Thread.sleep(1);
             }
             catch(Exception e){
-                
+                continue;
             }
         }
         while (!_gameOver){
@@ -82,7 +82,7 @@ public class WorldSP extends MainWorld{
                 Thread.sleep(1);
             }
             catch(Exception e){
-                
+                continue;
             }
             if (!_paused){
                 long start = System.currentTimeMillis();
@@ -103,6 +103,7 @@ public class WorldSP extends MainWorld{
                 		Thread.sleep(_waitTime - offset);
                 }
                 catch(InterruptedException e){
+                	continue;
                 }
             }
         }
