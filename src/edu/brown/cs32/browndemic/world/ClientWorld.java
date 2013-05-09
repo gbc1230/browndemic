@@ -171,8 +171,13 @@ public class ClientWorld implements ChatServer, World{
     }
     
     @Override
-    public List<Boolean> getCured(){
-        return _world.getCured();
+    public List<Boolean> getWhichCured(){
+        return _world.getWhichCured();
+    }
+    
+    @Override
+    public List<Long> getCured(){
+    	return _world.getCured();
     }
     
     @Override
