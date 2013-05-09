@@ -702,6 +702,20 @@ public class Region implements Serializable{
     }
     
     /**
+     * gets total infected by any disease other than given
+     * @return 
+     */
+    public long getOtherInfected(Disease d){
+        InfWrapper zero = _hash.getZero();
+        String zeroID = zero.getID();
+        int index = d.getID();
+        String ID = zeroID.substring(0,index) + 1 + zeroID.substring(index + 1);
+        long num = getTotalInfectedNoOverlap();
+        num -= _hash.get(ID).getInf();
+        return num;
+    }
+    
+    /**
      * gets the total cured, no overlap
      * @return 
      */
