@@ -215,8 +215,6 @@ public class Region implements Serializable{
         for(InfWrapper inf : _hash.getAllOfType(index,0))
             uninf += inf.getInf();
         for(InfWrapper inf : _hash.getAllOfType(index,0)){
-            if(totNumber == 1 && !inf.getID().equals(_hash.getZero().getID()))
-                continue;
             double ratio = inf.getInf()/uninf;
             long number = Math.round(totNumber*ratio);
             if(totNumber > uninf)
