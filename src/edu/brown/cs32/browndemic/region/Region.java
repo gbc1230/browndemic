@@ -39,16 +39,16 @@ public class Region implements Serializable{
     private double[] _lethDoubleTime;
     private static final int _LETHTIMESCALE = 120; //DEFAULT: 3//~~ticks to half infected die
     private static final double _LETHSCALE = 3; //DEFAULT: 3//how much death scales with lethality
-    private static final double _LETHMAXFACTOR = 60; //DEFAULT: 40//increase to scale down death at max lethality
+    private static final double _LETHMAXFACTOR = 15; //DEFAULT: 40//increase to scale down death at max lethality
     private static final double _CRITICALLETHRATIO = .1; //DEFAULT: .1//Lethaliy/max before deaths occur
 
     private static final int _PLANEFREQ = 240; //DEFAULT: 240//ticks between flights
     private static final int _SHIPFREQ = 240; //DEFAULT: 240//ticks between shipping
-    private static final int _LANDFREQ = 30; //DEFAULT: 40//ticks between land border crossing
+    private static final int _LANDFREQ = 25; //DEFAULT: 40//ticks between land border crossing
     
     private static final double _CUREPERCENT = .002; //DEFAULT: .005//Fraction of population to cure per tick
-    private static double _AWAREMAXSCALE = 5; //DEFAULT: 5//multiplier on max awareness before close ports
-    private static final double _CUREFRAC = 2; //DEFAULT: 2//at _CUREFRAC/awareMax, begin curing
+    private static double _AWAREMAXSCALE = 3.5; //DEFAULT: 5//multiplier on max awareness before close ports
+    private static final double _CUREFRAC = 1.5; //DEFAULT: 2//at awareMax/_CUREFRAC, begin curing
     private static final double _NOTIFYFRAC = 4; //DEFAULT: 5//Increase neighbors awareness by this.awareness/_NOTIFYFRAC
     
     private static final int _NATTYDFREQ = 64800 + 32400; //DEFAULT: 64800// frequency of natural disasters
@@ -221,8 +221,6 @@ public class Region implements Serializable{
             long number = (long) Math.round(totNumber*ratio);
             if(totNumber > uninf)
                 number = inf.getInf();
-            if(number > inf.getInf()/_infDoubleTime[index])
-                number = (long) (inf.getInf()/_lethDoubleTime[index]);
             String infID = inf.getID().substring(0,index) + "1" + inf.getID().substring(index + 1);
             if (inf.getInf() < number){
                 _hash.put(new InfWrapper(inf.getID(), 0L));
@@ -248,8 +246,6 @@ public class Region implements Serializable{
             if(leth / max > _CRITICALLETHRATIO)
                 number = Math.floor(number);
             else number = 0;
-            if(number > inf.getInf()/_lethDoubleTime[index])
-                number = inf.getInf()/_lethDoubleTime[index];
             if(number < 1)
                 number = 0;
             if (inf.getInf() < number) {
@@ -259,6 +255,8 @@ public class Region implements Serializable{
                 _dead[index] =  _dead[index] + (long)number;
                 _hash.put(new InfWrapper(inf.getID(), inf.getInf() - (long)number));
             }
+            if(_dead[index] < 0)
+                    _dead[index] = 0;
         }
     }
 
@@ -374,7 +372,7 @@ public class Region implements Serializable{
     public double getAwareIncrement(Disease d){
         int index = d.getID();
         double maxVis = d.getMaxVisibility();
-        return (d.getVisibility() + maxVis)/maxVis * (getInfected().get(index) + 2*_dead[index]);
+        return (d.getVisibility() + maxVis)/maxVis * (getInfected().get(index)/3 + 2*_dead[index]);
     }
 
     /**
