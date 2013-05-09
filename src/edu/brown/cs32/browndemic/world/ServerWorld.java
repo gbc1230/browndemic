@@ -241,6 +241,7 @@ public class ServerWorld extends MainWorld{
             	continue;
             }
         }
+        addCommand();
     }
     
     @Override
