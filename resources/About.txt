@@ -28,8 +28,8 @@ or all diseases have no one infected.
 Virus: Viruses are deadly because of their ability to evolve quickly. They
 achieve random mutation at much higher rate than other diseases, and start off
 virulent. Their draw backs are that they start off visible, and they must pay 
-money to sell their perks. This makes it so that - though you may get a good
-perk randomly - if you get a bad perk, you have to pay to get rid of it!
+money to sell their perks. This makes it so that, though you may get a good
+perk randomly, if you get a bad perk, you have to pay to get rid of it!
 </p>
 <p>
 Parasite: Parasites start off silent, but deadly. Their benefit is in their
