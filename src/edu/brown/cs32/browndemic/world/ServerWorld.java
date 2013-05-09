@@ -43,6 +43,7 @@ public class ServerWorld extends MainWorld{
         _lobby = new ArrayList<>();
         _outData = new ConcurrentLinkedQueue<>();
         _regionsPicked = new ArrayList<>();
+        _waitTime = _SPEED2;
     }
     
     /**
