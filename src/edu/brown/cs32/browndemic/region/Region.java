@@ -428,17 +428,30 @@ public class Region implements Serializable{
             return;
         }
         int index = d.getID();
-        String ID = "";
-        for (int i = 0; i < _numDiseases; i++) {
-            if (i == index) {
-                ID += "1";
-            } else {
-                ID += "0";
+        InfWrapper zero = _hash.getZero();
+        if(zero.getInf() == 0){
+            for(InfWrapper infWrap : _hash.getAllOfType(index, 0)){
+                if(infWrap.getInf() != 0){
+                    String infID = infWrap.getID().substring(0,index) + "1" + infWrap.getID().substring(index + 1);
+                    _hash.put(new InfWrapper(infWrap.getID(), infWrap.getInf() - 1));
+                    _hash.put(new InfWrapper(infID, 1));
+                    break;
+                }
             }
         }
-        InfWrapper inf = _hash.get(ID);
-        _hash.put(new InfWrapper(ID, inf.getInf() + 1));
-        _hash.addZero(_hash.getZero().getInf() - 1);
+        else {
+            String ID = "";
+            for (int i = 0; i < _numDiseases; i++) {
+                if (i == index) {
+                    ID += "1";
+                } else {
+                    ID += "0";
+                }
+            }
+            InfWrapper inf = _hash.get(ID);
+            _hash.put(new InfWrapper(ID, inf.getInf() + 1));
+            _hash.addZero(_hash.getZero().getInf() - 1);
+        }
         d.addPoints(2);
         _diseases[index] = d;
         _news.add(d.getName() + " has infected " + _name + ".");
