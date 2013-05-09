@@ -37,7 +37,7 @@ public class Region implements Serializable{
     private static final double _INFSCALE = 1; //DEFAULT: 3//how much infection scales with infectivity
     
     private double[] _lethDoubleTime;
-    private static final int _LETHTIMESCALE = 180; //DEFAULT: 3//~~ticks to half infected die
+    private static final int _LETHTIMESCALE = 120; //DEFAULT: 3//~~ticks to half infected die
     private static final double _LETHSCALE = 3; //DEFAULT: 3//how much death scales with lethality
     private static final double _LETHMAXFACTOR = 60; //DEFAULT: 40//increase to scale down death at max lethality
     private static final double _CRITICALLETHRATIO = .1; //DEFAULT: .1//Lethaliy/max before deaths occur
@@ -46,12 +46,12 @@ public class Region implements Serializable{
     private static final int _SHIPFREQ = 240; //DEFAULT: 240//ticks between shipping
     private static final int _LANDFREQ = 30; //DEFAULT: 40//ticks between land border crossing
     
-    private static final double _CUREPERCENT = .0005; //DEFAULT: .005//Fraction of population to cure per tick
+    private static final double _CUREPERCENT = .002; //DEFAULT: .005//Fraction of population to cure per tick
     private static double _AWAREMAXSCALE = 5; //DEFAULT: 5//multiplier on max awareness before close ports
     private static final double _CUREFRAC = 2; //DEFAULT: 2//at _CUREFRAC/awareMax, begin curing
     private static final double _NOTIFYFRAC = 4; //DEFAULT: 5//Increase neighbors awareness by this.awareness/_NOTIFYFRAC
     
-    private static final int _NATTYDFREQ = 64800*2; //DEFAULT: 64800// frequency of natural disasters
+    private static final int _NATTYDFREQ = 64800 + 32400; //DEFAULT: 64800// frequency of natural disasters
 
     private double _awareMax;
     //number of diseases in game
@@ -219,6 +219,8 @@ public class Region implements Serializable{
                 continue;
             double ratio = inf.getInf()/uninf;
             long number = (long) Math.round(totNumber*ratio);
+            if(totNumber > uninf)
+                number = inf.getInf();
             if(number > inf.getInf()/_infDoubleTime[index])
                 number = (long) (inf.getInf()/_lethDoubleTime[index]);
             String infID = inf.getID().substring(0,index) + "1" + inf.getID().substring(index + 1);
