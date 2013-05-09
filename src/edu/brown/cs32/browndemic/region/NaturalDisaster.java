@@ -6,7 +6,6 @@
 package edu.brown.cs32.browndemic.region;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 /**
  *
  * @author ckilfoyl
