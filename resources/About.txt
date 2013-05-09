@@ -23,6 +23,30 @@ or all diseases have no one infected.
 </p>
 <br />
 
+<h3>Disease Types:</h3>
+<p>
+Virus: Viruses are deadly because of their ability to evolve quickly. They
+achieve random mutation at much higher rate than other diseases, and start off
+virulent. Their draw backs are that they start off visible, and they must pay 
+money to sell their perks. This makes it so that - though you may get a good
+perk randomly - if you get a bad perk, you have to pay to get rid of it!
+</p>
+<p>
+Parasite: Parasites start off silent, but deadly. Their benefit is in their
+ability to gain lethality and infectivity over time, and sell their perks to
+get money back. They do not acquire random perks except very, very rarely.
+</p>
+<p>
+Bacteria: Bacteria straddle the two above. It is reasonably visible, deadly
+and infectious. They acquire random perks relatively rarely, and can sell
+their unwanted perks for money.
+</p>
+<p>
+All three have different sets of perks, from the Bacteria's super deadly 'Organ
+failure' and Parasite's 'Stomach Ulcers'. Choose wisely!
+</p>
+<br />
+
 <h2>Information In Game:</h2>
 <h3>Labels:</h3>
 <p>
